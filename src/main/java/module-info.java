@@ -1,4 +1,5 @@
 module com.prostep.openpdm.ocxviewer {
+
     requires javafx.fxml;
     requires javafx.controls;
 
@@ -10,6 +11,7 @@ module com.prostep.openpdm.ocxviewer {
     requires org.apache.logging.log4j.core;
 
     requires java.desktop;
+    requires java.sql;
     requires java.prefs;
     requires org.kordamp.ikonli.materialdesign2;
     requires jakarta.xml.bind;
@@ -20,7 +22,17 @@ module com.prostep.openpdm.ocxviewer {
 
 
     opens de.cadoculus.ocxviewer to javafx.fxml;
+
+    opens de.cadoculus.ocx3.impl to org.eclipse.persistence.core;
+    opens de.cadoculus.ocx3 to org.eclipse.persistence.moxy;
+    opens de.cadoculus.unitsml to org.eclipse.persistence.moxy;
+
+    exports de.cadoculus.ocx3;
+    exports de.cadoculus.unitsml;
+
     exports de.cadoculus.ocxviewer;
     exports de.cadoculus.ocxviewer.views;
     opens de.cadoculus.ocxviewer.views to javafx.fxml;
+    exports de.cadoculus.ocxviewer.logging;
+    opens de.cadoculus.ocxviewer.logging to javafx.fxml;
 }

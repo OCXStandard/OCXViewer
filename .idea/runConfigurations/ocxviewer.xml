@@ -3,6 +3,10 @@
     <option name="MAIN_CLASS_NAME" value="de.cadoculus.ocxviewer.Main" />
     <module name="ocxviewer" />
     <option name="PROGRAM_PARAMETERS" value="--log data/log4j2.xml" />
+    <selectedOptions>
+      <option name="environmentVariables" visible="false" />
+    </selectedOptions>
+    <option name="VM_PARAMETERS" value="-Dweglog4j2.debug=true" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

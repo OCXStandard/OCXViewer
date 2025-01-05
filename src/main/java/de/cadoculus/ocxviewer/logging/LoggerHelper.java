@@ -1,5 +1,5 @@
 
-package de.cadoculus.ocxviewer;
+package de.cadoculus.ocxviewer.logging;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
