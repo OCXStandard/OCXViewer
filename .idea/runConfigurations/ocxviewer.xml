@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ocxviewer" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="de.cadoculus.ocxviewer.Main" />
+    <module name="ocxviewer" />
+    <option name="PROGRAM_PARAMETERS" value="--log data/log4j2.xml" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
