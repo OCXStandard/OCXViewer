@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1400" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.cadoculus.ocxviewer.views.HeaderPage">
+    <top>
+        <Label styleClass="title-3" text="Header">
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin></Label>
+    </top>
+    <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="200.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+
+          <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="NEVER" />
+          <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="NEVER" />
+
+            <RowConstraints minHeight="10.0" prefHeight="15.0" vgrow="ALWAYS" />
+        </rowConstraints>
+         <children>
+            <Label text="Timestamp" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
+                <tooltip>
+                    <Tooltip text="Time stamp of the instance." />
+                </tooltip>
+            </Label>
+            <TextField fx:id="timestamp" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+             <Label alignment="BOTTOM_RIGHT" text="Name" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                 <tooltip>
+                     <Tooltip text="Name of the XML instance." />
+                 </tooltip>
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </GridPane.margin>
+             </Label>
+             <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+             <Label text="Author" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                 <tooltip>
+                     <Tooltip text="Name of author." />
+                 </tooltip>
+             </Label>
+             <TextField fx:id="author" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+             <Label text="Originating System" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                 <tooltip>
+                     <Tooltip text="Name of originating system or application." />
+                 </tooltip>
+             </Label>
+             <TextField fx:id="originating_system" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+
+             <Label text="Organization" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                 <tooltip>
+                     <Tooltip text="Name of originating organization." />
+                 </tooltip>
+             </Label>
+             <TextField fx:id="organization" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+             <Label text="Application Version" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                 <tooltip>
+                     <Tooltip text="Version of originating application." />
+                 </tooltip>
+             </Label>
+             <TextField fx:id="application_version" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+             <Label text="Documentation" GridPane.columnIndex="0" GridPane.rowIndex="6">
+                 <tooltip>
+                     <Tooltip text="Documentation of the content of the XML file." />
+                 </tooltip>
+             </Label>
+             <TextField fx:id="documentation" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+         </children>
+      </GridPane>
+   </center>
+
+</BorderPane>

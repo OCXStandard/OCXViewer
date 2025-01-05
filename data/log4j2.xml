@@ -1,0 +1,35 @@
+<Configuration status="WARN" strict="true" name="XMLConfigTest" packages="org.apache.logging.log4j.test">
+
+    <Properties>
+        <Property name="filename">test-out/log.txt</Property>
+    </Properties>
+
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%L %-1p %c{1}  - %m%n"/>
+        </Appender>
+
+        <Appender type="File" name="File" fileName="${filename}">
+            <Layout type="PatternLayout">
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </Layout>
+        </Appender>
+    </Appenders>
+
+    <Loggers>
+
+
+        <Logger name="de.cadoculus.ocxviewer.views.PageTree" level="info"/>
+        <Logger name="de.cadoculus.ocxviewer.LoggerHelper" level="info"/>
+        <Logger name="de.cadoculus.ocxviewer.MainController" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.actions.ActionDispatcher" level="debug"/>
+
+        <Root level="WARN">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+
+
+
+</Configuration>

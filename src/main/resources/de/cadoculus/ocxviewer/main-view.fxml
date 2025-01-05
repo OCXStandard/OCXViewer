@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:id="borderPane"
+            maxHeight="2000" maxWidth="2000"
+            minHeight="600" minWidth="800"
+            prefHeight="1024.0" prefWidth="1400"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.cadoculus.ocxviewer.MainController">
+
+
+
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem accelerator="ctrl-o" mnemonicParsing="false" onAction="#open" text="Open" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem accelerator="ctrl-q" mnemonicParsing="false" onAction="#exit" text="Exit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Actions">
+                    <items>
+                        <!-- <MenuItem mnemonicParsing="false" text="Schema Check"  /> -->
+                        <MenuItem mnemonicParsing="false" onAction="#swithchUIMode" text="UI Mode" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <left>
+            <ScrollPane fx:id="navigationTreeScrollPane" BorderPane.alignment="CENTER"
+                        style="-fx-border-color:lightgray; -fx-border-width: 1; -fx-border-style: solid; -fx-border-radius:10"
+            >
+                <BorderPane.margin>
+                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                </BorderPane.margin>
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10" />
+                </padding>
+            </ScrollPane>
+   </left>
+   <center>
+            <StackPane fx:id="stackPane" />
+   </center>
+
+</BorderPane>
