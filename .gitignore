@@ -27,3 +27,4 @@ target/**
 
 binaries/**
 /target/
+/test-out/log.txt
