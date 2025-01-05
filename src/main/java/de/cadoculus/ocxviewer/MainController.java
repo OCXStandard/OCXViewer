@@ -25,10 +25,7 @@ import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.HotkeyEvent;
 import de.cadoculus.ocxviewer.event.NavigationEvent;
 import de.cadoculus.ocxviewer.models.WorkingContext;
-import de.cadoculus.ocxviewer.views.ClassficationSocietyPage;
-import de.cadoculus.ocxviewer.views.Page;
-import de.cadoculus.ocxviewer.views.PageTree;
-import de.cadoculus.ocxviewer.views.PrincipalParticularsPage;
+import de.cadoculus.ocxviewer.views.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -85,6 +82,9 @@ public class MainController {
 
         // and create pages
         // TODO: do it delayed on first file loading?
+        final LogPage logPage = new LogPage();
+        class2page.put(LogPage.class, logPage);
+
         final ClassficationSocietyPage classficationDataPage = new ClassficationSocietyPage();
         class2page.put(ClassficationSocietyPage.class, classficationDataPage);
 

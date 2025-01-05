@@ -21,10 +21,9 @@ import de.cadoculus.ocxviewer.MainController;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.OpenEvent;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import jakarta.xml.bind.JAXBElement;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -84,12 +83,15 @@ public class OpenAction {
         new Thread(() -> {
 
             try {
-                OcxXML ocx = OCXIO.read(selectedFile);
+                final JAXBElement<OcxXML> element = OCXIO.read(selectedFile);
+                LOG.info("loaded file: {}", element);
+                OcxXML ocx = element.getValue();
 
-                Platform.runLater(() -> {
-                    WorkingContext.getInstance().setOCXFile(selectedFile);
-                    OpenEvent openEvent = new OpenEvent( ocx, selectedFile);
-                    DefaultEventBus.getInstance().publish(openEvent);
+                        Platform.runLater(() -> {
+                            LOG.info("loaded file: {}", element);
+                            WorkingContext.getInstance().setOCXFile(selectedFile);
+                            OpenEvent openEvent = new OpenEvent( ocx, selectedFile);
+                            DefaultEventBus.getInstance().publish(openEvent);
                 });
 
             } catch (Throwable exception) {

@@ -14,19 +14,27 @@
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
             </Layout>
         </Appender>
+
+        <Appender type="ListBoxAppender" name="ListBoxAppender" >
+            <Layout type="PatternLayout">
+                <Pattern>%c{1.} :  %m%n</Pattern>
+            </Layout>
+        </Appender>
+
     </Appenders>
 
     <Loggers>
 
 
         <Logger name="de.cadoculus.ocxviewer.views.PageTree" level="info"/>
-        <Logger name="de.cadoculus.ocxviewer.LoggerHelper" level="info"/>
+        <Logger name="de.cadoculus.ocxviewer.logging.LoggerHelper" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.MainController" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.actions.ActionDispatcher" level="debug"/>
 
         <Root level="WARN">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>
+            <AppenderRef ref="ListBoxAppender"/>
         </Root>
     </Loggers>
 
