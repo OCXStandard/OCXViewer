@@ -27,6 +27,7 @@
 
 
         <Logger name="de.cadoculus.ocxviewer.views.PageTree" level="info"/>
+        <Logger name="de.cadoculus.ocxviewer.views.HeaderPage" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.logging.LoggerHelper" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.MainController" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.actions.ActionDispatcher" level="debug"/>

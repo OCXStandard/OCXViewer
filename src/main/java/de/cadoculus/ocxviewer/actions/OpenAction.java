@@ -90,6 +90,7 @@ public class OpenAction {
                         Platform.runLater(() -> {
                             LOG.info("loaded file: {}", element);
                             WorkingContext.getInstance().setOCXFile(selectedFile);
+                            WorkingContext.getInstance().setOcx( ocx);
                             OpenEvent openEvent = new OpenEvent( ocx, selectedFile);
                             DefaultEventBus.getInstance().publish(openEvent);
                 });
