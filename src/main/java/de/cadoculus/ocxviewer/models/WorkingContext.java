@@ -16,6 +16,7 @@
 package de.cadoculus.ocxviewer.models;
 
 import de.cadoculus.ocx3.OcxXML;
+import de.cadoculus.ocx3.Vessel;
 import de.cadoculus.ocxviewer.OCXViewerApplication;
 
 import java.io.File;
@@ -87,6 +88,7 @@ public class WorkingContext {
     public OcxXML getOcx() {
         return ocx;
     }
+
 
     /**
      * Set the OCX object that is currently open.

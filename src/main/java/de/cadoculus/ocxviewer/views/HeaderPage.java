@@ -48,6 +48,7 @@ public class HeaderPage extends BorderPane implements Page{
         -fx-border-width: 1px;
         -fx-border-color: -color-accent-0;""");
 
+
         var titleBox = new VBox();
         this.setTop(titleBox);
         var title = new Label( NAME);
@@ -66,8 +67,6 @@ public class HeaderPage extends BorderPane implements Page{
         scrollPane.setFitToWidth(true);
 
         GridPane gridPane = new GridPane();
-        //this.setCenter(gridPane);
-        //gridPane.setBackground(new Background(new BackgroundFill(Color.web("#edcccc"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         scrollPane.setContent(gridPane);
         ColumnConstraints col1 = new ColumnConstraints();
@@ -86,7 +85,6 @@ public class HeaderPage extends BorderPane implements Page{
         gridPane.getColumnConstraints().addAll(col1,col2, col3, col4);
         gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 10;");
 
-          //<ocx:Header name="OCX-MODEL1/A" author="MJ" organization="NAPA" originating_system="NAPA Steel" documentation="OCX Export" application_version="TNAPA Release B9999 2024.9 sonmy x64 T" time_stamp="2024-09-17T13:25:33.8320118+03:00" />
 
         int row = 0;
         // Newbuilding Society

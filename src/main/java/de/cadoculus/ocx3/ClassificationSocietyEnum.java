@@ -38,7 +38,8 @@ public enum  ClassificationSocietyEnum {
     @XmlEnumValue("TL") TL,
     @XmlEnumValue("UR") UR,
     @XmlEnumValue("VL") VL,
-    @XmlEnumValue("VR") VR
+    @XmlEnumValue("VR") VR,
+    @XmlEnumValue("OTHER") OTHER
 ;
 
    public static ClassificationSocietyEnum parse(String value) {
@@ -76,6 +77,7 @@ public enum  ClassificationSocietyEnum {
         if ( "UR".equals( value ) ) { return UR;}
         if ( "VL".equals( value ) ) { return VL;}
         if ( "VR".equals( value ) ) { return VR;}
+       if ( "OTHER".equals( value ) ) { return OTHER;}
         return UNKNOWN_VALUE;
    }
 

@@ -204,14 +204,14 @@ public class MainController {
         if (dark) {
             Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
             borderPane.setStyle("""
-                    -fx-background-color: linear-gradient(from 0% 25% to 100% 50%, -color-base-7, -color-base-9);                   
+                    -fx-background-color: linear-gradient(from 0% 25% to 100% 100%, -color-base-8, -color-base-9);                   
                     """);
 
 
         } else {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
             borderPane.setStyle("""
-                     -fx-background-color: linear-gradient(from 0% 25% to 100% 50%, #fefefe, -color-base-2);
+                     -fx-background-color: linear-gradient(from 0% 25% to 100% 100%, #fefefe, -color-base-1);
                     """);
 
 
