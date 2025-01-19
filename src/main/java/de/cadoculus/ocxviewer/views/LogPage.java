@@ -18,6 +18,7 @@ package de.cadoculus.ocxviewer.views;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.BBCodeParser;
 import de.cadoculus.ocxviewer.logging.LogRecord;
+import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -33,7 +34,7 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignI;
 
 public class LogPage extends BorderPane implements Page {
 
-    public static final String NAME = "Log";
+    public static final String NAME = "Log Page";
 
     private static LogPage INSTANCE;
     private final ListView<LogRecord> listBox;
@@ -66,9 +67,18 @@ public class LogPage extends BorderPane implements Page {
 
         //this.setBackground(new Background(new BackgroundFill(Color.web("#bcbcbc"), CornerRadii.EMPTY, Insets.EMPTY)));
         this.setMargin(this, new Insets(15));
-        this.setPadding(new Insets(10));
-        this.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,
-                BorderStrokeStyle.SOLID, new CornerRadii(10), BorderWidths.DEFAULT)));
+
+        this.setStyle( """
+         -fx-hgap: 20px;
+        -fx-padding: 15px;
+
+        -fx-background-color: -color-bg-default;
+        -fx-background-radius: 15px;                         
+                         
+        -fx-border-radius: 15px;
+        -fx-border-width: 1px;
+        -fx-border-color: -color-accent-0;""");
+
 
         this.maxHeight(1950);
         this.setMaxWidth(1800);
@@ -78,15 +88,15 @@ public class LogPage extends BorderPane implements Page {
         this.setPrefWidth(1200);
 
         var titleBox = new VBox();
-        titleBox.setPadding(new Insets(0,0,20,0));
         this.setTop(titleBox);
 
-        var title = new Label(NAME);
+        var title = new Label( NAME);
         title.getStyleClass().add(Styles.TITLE_2);
+        titleBox.setPadding( new Insets(0, 0, 10 , 0));
         titleBox.getChildren().add(title);
-
         final TextFlow formattedText = BBCodeParser.createFormattedText("Shows the applications internal log messages");
         titleBox.getChildren().add(formattedText);
+
 
         ScrollPane scrollPane = new ScrollPane();
         this.setCenter(scrollPane);
@@ -112,8 +122,10 @@ public class LogPage extends BorderPane implements Page {
                         setGraphic(new FontIcon(MaterialDesignI.INFORMATION_OUTLINE));
                         if ( getIndex() %2==0) {
                             setStyle("-fx-background-color: -color-bg-default");
+                        } else if (WorkingContext.getInstance().isDarkMode()) {
+                            setStyle("-fx-background-color: -color-base-8");
                         } else {
-                            setStyle("-fx-background-color: -color-base-0");
+                           setStyle("-fx-background-color: -color-base-1");
                         }
 
                     } else if ( item.category() == Level.WARN) {

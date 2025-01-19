@@ -55,6 +55,16 @@ public final class PageTree extends TreeView<PageRecord> {
         });
 
         getStyleClass().addAll(Tweaks.EDGE_TO_EDGE);
+//        this.setStyle( """
+//
+//
+//
+//        -fx-background-color: -color-bg-default;
+//        -fx-background-radius: 15px;
+//
+//        -fx-border-radius: 15px;
+//        -fx-border-width: 1px;
+//        -fx-border-color: -color-accent-0;""");
         setShowRoot(false);
 
         setCellFactory(p -> new NavTreeCell());

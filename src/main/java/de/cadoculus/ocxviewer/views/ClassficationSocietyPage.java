@@ -25,9 +25,10 @@ public class ClassficationSocietyPage extends BorderPane implements Page {
 
         //this.setBackground(new Background(new BackgroundFill(Color.web("#bcbcbc"), CornerRadii.EMPTY, Insets.EMPTY)));
         this.setMargin(this, new Insets(15));
-        this.setPadding( new Insets(10));
-        this.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,
-                BorderStrokeStyle.SOLID, new CornerRadii(10), BorderWidths.DEFAULT)));
+//        this.setPadding( new Insets(10));
+//        this.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,
+//                BorderStrokeStyle.SOLID, new CornerRadii(10), BorderWidths.DEFAULT)));
+
 
 
 
@@ -38,15 +39,26 @@ public class ClassficationSocietyPage extends BorderPane implements Page {
         this.setPrefHeight(1024);
         this.setPrefWidth(1200);
 ;
+        this.setStyle( """
+         -fx-hgap: 20px;
+        -fx-padding: 15px;
+
+        -fx-background-color: -color-bg-default;
+        -fx-background-radius: 15px;                         
+                         
+        -fx-border-radius: 15px;
+        -fx-border-width: 1px;
+        -fx-border-color: -color-accent-0;""");
+
+
+        this.setMargin(this, new Insets(15));
 
         var titleBox = new VBox();
         this.setTop(titleBox);
-
-
         var title = new Label( NAME);
         title.getStyleClass().add(Styles.TITLE_2);
+        titleBox.setPadding( new Insets(0, 0, 10 , 0));
         titleBox.getChildren().add(title);
-
         final TextFlow formattedText = BBCodeParser.createFormattedText("Information that specifies design and intended performance characteristics of the ship in accordance with classification society rules and statutory regulations (see ISO 10303-218, section 4.2.36).");
         titleBox.getChildren().add(formattedText);
 
