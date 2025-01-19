@@ -21,7 +21,7 @@ import java.time.temporal.Temporal;
 
 public class HeaderPage extends BorderPane implements Page{
 
-    public static final String NAME = "Header Page";
+    public static final String NAME = "Header";
     private static final Logger LOG = LogManager.getLogger(HeaderPage.class);
 
 
