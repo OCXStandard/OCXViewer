@@ -194,15 +194,17 @@ public class MainController {
         if (dark) {
             Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
 
-
-            var css = this.getClass().getResource("light.css").toExternalForm();
+            WorkingContext.getInstance().getMainScene().getStylesheets().clear();
+            var css = this.getClass().getResource("dark.css").toExternalForm();
+            WorkingContext.getInstance().getMainScene().getStylesheets().add( css);
             LOG.error("csss {}", css);
 
         } else {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
 
-            var css = this.getClass().getResource("light.css").toExternalForm();
 
+            WorkingContext.getInstance().getMainScene().getStylesheets().clear();
+            var css = this.getClass().getResource("light.css").toExternalForm();
             WorkingContext.getInstance().getMainScene().getStylesheets().add( css);
             LOG.error("csss {}", css);
 
