@@ -1,35 +1,37 @@
 
 
 .text-field {
-    -fx-background-color: #efefef, white;
-    -fx-background-insets: 0, 0 0 1 0 ;
+    //-fx-background-color: #efefef, white;
+    //-fx-background-insets: 0, 0 0 1 0 ;
     //-fx-background-radius: 0 ;
 }
 .text-field:focused {
-    -fx-background-color: #efefef;
+    //-fx-background-color: #efefef;
 }
 
 .content-pane {
 
     -fx-padding: 15px;
-    -fx-background-color: -color-base-0;
+    -fx-background-color: -color-base-9;
     -fx-background-radius: 15px;
 
     -fx-border-radius: 15px;
     -fx-border-width: 1px;
-    -fx-border-color: -color-accent-0;
+    -fx-border-color: -color-accent-8;
+
+
 }
 
 .tree-view, .tree-cell {
-    -fx-background-color: -color-base-0;
+    -fx-background-color: -color-base-9;
     -fx-text-fill: white ;
 }
 .tree-cell:expanded, .tree-cell:sub-tree-item {
-    -fx-background-color:-color-base-0;
+    -fx-background-color:-color-base-9;
 }
 .tree-cell:selected {
     -fx-font-weight: bold ;
-    -fx-background-color:-color-accent-0;
+    -fx-background-color:-color-accent-9;
 }
 .tree-cell {
     -fx-padding: 0.75em 0em 0.75em 0em ;
@@ -38,6 +40,8 @@
     -fx-padding: 0.25em ;
 }
 
+
 #mainBorderPane {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #efefef, -color-light);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, -color-base-9, -color-dark);
+
 }
