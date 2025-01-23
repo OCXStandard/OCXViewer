@@ -49,7 +49,7 @@ public class MainController {
     private ScrollPane navigationTreeScrollPane;
     private StackPane stackPane;
     @FXML
-    private BorderPane borderPane;
+    private BorderPane mainBorderPane;
 
     private boolean dataViewInitialized = false;
 
@@ -68,12 +68,10 @@ public class MainController {
             initializeViews();
         });
 
-        //borderPane.setStyle( "-fx-background-color: -color-base-0;");
-
         // and create default pages
 
         final LogoPage logoPage = new LogoPage();
-        borderPane.setCenter((Node) logoPage);
+        mainBorderPane.setCenter((Node) logoPage);
 
         // This is initialized here to start collecting log events when the user opens a file
         final LogPage logPage = new LogPage();
@@ -102,15 +100,7 @@ public class MainController {
 
 
         // TODO: move to central style sheet
-        navigationTreeScrollPane.setStyle("""         
-                
-                        -fx-padding: 15px;
-                -fx-background-color: -color-bg-default;
-                                -fx-background-radius: 15px;
-                
-                -fx-border-radius: 15px;
-                -fx-border-width: 1px;
-                -fx-border-color: -color-accent-0;""");
+        navigationTreeScrollPane.getStyleClass().add("content-pane");
 
         navigationTree = new PageTree();
         navigationTreeScrollPane.setContent(navigationTree);
@@ -120,7 +110,7 @@ public class MainController {
         navigationTreeScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         navigationTreeScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        borderPane.setLeft(navigationTreeScrollPane);
+        mainBorderPane.setLeft(navigationTreeScrollPane);
 
         DefaultEventBus.getInstance().subscribe(NavigationEvent.class, event -> {
             this.switchPages(event);
@@ -147,7 +137,7 @@ public class MainController {
             LOG.warn("no page registered for {}", event.getPage());
             LOG.warn("    pages {}", class2page.keySet());
         } else {
-            borderPane.setCenter((Node) page);
+            mainBorderPane.setCenter((Node) page);
         }
 
     }
@@ -203,16 +193,18 @@ public class MainController {
 
         if (dark) {
             Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
-            borderPane.setStyle("""
-                    -fx-background-color: linear-gradient(from 0% 25% to 100% 100%, -color-base-8, -color-base-9);                   
-                    """);
 
+
+            var css = this.getClass().getResource("light.css").toExternalForm();
+            LOG.error("csss {}", css);
 
         } else {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
-            borderPane.setStyle("""
-                     -fx-background-color: linear-gradient(from 0% 25% to 100% 100%, #fefefe, -color-base-1);
-                    """);
+
+            var css = this.getClass().getResource("light.css").toExternalForm();
+
+            WorkingContext.getInstance().getMainScene().getStylesheets().add( css);
+            LOG.error("csss {}", css);
 
 
         }

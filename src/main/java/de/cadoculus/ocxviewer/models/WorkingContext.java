@@ -18,6 +18,8 @@ package de.cadoculus.ocxviewer.models;
 import de.cadoculus.ocx3.OcxXML;
 import de.cadoculus.ocx3.Vessel;
 import de.cadoculus.ocxviewer.OCXViewerApplication;
+import javafx.application.Application;
+import javafx.scene.Scene;
 
 import java.io.File;
 import java.util.prefs.Preferences;
@@ -31,6 +33,7 @@ public class WorkingContext {
     private File ocxFile;
     private Preferences prefs;
     private OcxXML ocx;
+    private Scene mainScene;
 
 
     /**
@@ -103,5 +106,14 @@ public class WorkingContext {
     }
     public void setDarkMode(boolean darkMode) {
         prefs.putBoolean("darkMode", darkMode);
+    }
+
+
+    public Scene getMainScene() {
+        return mainScene;
+    }
+
+    public void setMainScene(Scene mainScene) {
+        this.mainScene = mainScene;
     }
 }

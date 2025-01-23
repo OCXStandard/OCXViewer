@@ -11,7 +11,7 @@
 
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane fx:id="borderPane"
+<BorderPane fx:id="mainBorderPane"
             maxHeight="2000" maxWidth="2000"
             minHeight="600" minWidth="800"
             prefHeight="1024.0" prefWidth="1400"

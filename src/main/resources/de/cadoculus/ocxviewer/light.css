@@ -1,0 +1,25 @@
+
+
+.text-field {
+    -fx-background-color: #efefef, white;
+    -fx-background-insets: 0, 0 0 1 0 ;
+    //-fx-background-radius: 0 ;
+}
+.text-field:focused {
+    -fx-background-color: #efefef;
+}
+
+.content-pane {
+
+    -fx-padding: 15px;
+    -fx-background-color: -color-base-0;
+    -fx-background-radius: 15px;
+
+    -fx-border-radius: 15px;
+    -fx-border-width: 1px;
+    -fx-border-color: -color-accent-0;
+}
+
+#mainBorderPane {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #efefef, -color-light);
+}

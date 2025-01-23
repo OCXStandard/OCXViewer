@@ -37,16 +37,8 @@ public class HeaderPage extends BorderPane implements Page{
 
         this.setMargin(this, new Insets(15));
 
-        this.setStyle( """
-         -fx-hgap: 20px;
-        -fx-padding: 15px;
+        this.getStyleClass().add("content-pane");
 
-        -fx-background-color: -color-bg-default;
-        -fx-background-radius: 15px;                         
-                         
-        -fx-border-radius: 15px;
-        -fx-border-width: 1px;
-        -fx-border-color: -color-accent-0;""");
 
 
         var titleBox = new VBox();
