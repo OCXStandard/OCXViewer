@@ -57,16 +57,7 @@ public class PrincipalParticularsPage extends BorderPane implements Page {
         this.setPrefHeight(1024);
         this.setPrefWidth(1200);
 
-        this.setStyle("""
-                 -fx-hgap: 20px;
-                -fx-padding: 15px;
-                
-                -fx-background-color: -color-bg-default;
-                -fx-background-radius: 15px;                         
-                
-                -fx-border-radius: 15px;
-                -fx-border-width: 1px;
-                -fx-border-color: -color-accent-0;""");
+        this.getStyleClass().add("content-pane");
 
 
         var titleBox = new VBox();

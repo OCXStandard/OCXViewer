@@ -41,7 +41,8 @@ public class OCXViewerApplication extends Application {
         // This loads the main-view.fxml file and thus starts the comple UI of the application
         // See MainController for the actual logic
         FXMLLoader fxmlLoader = new FXMLLoader(OCXViewerApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1280, 1040);
+        Scene scene = new Scene(fxmlLoader.load(), 1200, 900);
+        WorkingContext.getInstance().setMainScene(scene);
         stage.setTitle("OCXViewer");
         stage.setScene(scene);
 
