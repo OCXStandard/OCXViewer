@@ -26,6 +26,10 @@ import de.cadoculus.ocxviewer.event.NavigationEvent;
 import de.cadoculus.ocxviewer.event.OpenEvent;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.views.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +39,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +52,7 @@ public class MainController {
 
     private TreeView navigationTree;
     private ScrollPane navigationTreeScrollPane;
+
     private StackPane stackPane;
     @FXML
     private BorderPane mainBorderPane;
@@ -112,6 +118,11 @@ public class MainController {
 
         mainBorderPane.setLeft(navigationTreeScrollPane);
 
+        stackPane = new StackPane();
+        stackPane.setId("mainStackPane");
+        mainBorderPane.setCenter(stackPane);
+
+
         DefaultEventBus.getInstance().subscribe(NavigationEvent.class, event -> {
             this.switchPages(event);
         });
@@ -132,12 +143,33 @@ public class MainController {
 
         LOG.info("Navigation event: {}", event);
 
-        Page page = class2page.get(event.getPage());
-        if (page == null) {
+        BorderPane paneToAdd = (BorderPane) class2page.get(event.getPage());
+        if (paneToAdd == null) {
             LOG.warn("no page registered for {}", event.getPage());
             LOG.warn("    pages {}", class2page.keySet());
         } else {
-            mainBorderPane.setCenter((Node) page);
+
+            var paneToRemove = stackPane.getChildren().isEmpty() ? null : stackPane.getChildren().get(0);
+            LOG.error("pane to add {}, remove {}", paneToAdd,  paneToRemove);
+
+            if ( paneToRemove != null && paneToRemove.equals(paneToAdd)) {
+                return;
+            }
+
+            paneToAdd.translateXProperty().set(-stackPane.getWidth());
+            stackPane.getChildren().add(paneToAdd);
+
+            var keyValue = new KeyValue(paneToAdd.translateXProperty(), 0, Interpolator.EASE_IN);
+            var keyFrame = new KeyFrame(Duration.millis(450), keyValue);
+            var timeline =  new Timeline(keyFrame);
+            if ( paneToRemove != null) {
+                timeline.setOnFinished(evt -> {
+                    stackPane.getChildren().remove(paneToRemove);
+                });
+            }
+
+            timeline.play();
+
         }
 
     }
