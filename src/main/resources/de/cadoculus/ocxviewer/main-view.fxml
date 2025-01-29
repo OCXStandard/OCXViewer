@@ -58,7 +58,7 @@
             -->
    </left>
    <center>
-            <StackPane fx:id="stackPane" />
+
    </center>
 
 </BorderPane>

@@ -45,3 +45,6 @@
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, -color-base-9, -color-dark);
 
 }
+#mainStackPane {
+    -fx-padding: 15px;
+}
