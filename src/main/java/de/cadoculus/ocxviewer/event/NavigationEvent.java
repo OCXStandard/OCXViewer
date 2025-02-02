@@ -21,13 +21,13 @@ import de.cadoculus.ocxviewer.views.Page;
 
 public final class NavigationEvent extends Event {
 
-    private final Class<? extends Page> page;
+    private final Class page;
 
-    public NavigationEvent(Class<? extends Page> page) {
+    public NavigationEvent(Class page) {
         this.page = page;
     }
 
-    public Class<? extends Page> getPage() {
+    public Class getPage() {
         return page;
     }
 

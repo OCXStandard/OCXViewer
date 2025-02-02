@@ -81,10 +81,10 @@ public final class PageTree extends TreeView<PageRecord> {
         fileGroup.getChildren().add( Item.page("Header",new FontIcon(MaterialDesignI.INFORMATION_OUTLINE), HeaderPage.class));
         fileGroup.getChildren().add( Item.page(ClassficationSocietyPage.NAME,new FontIcon(MaterialDesignA.ANCHOR), ClassficationSocietyPage.class));
         fileGroup.getChildren().add( Item.page(PrincipalParticularsPage.NAME,new FontIcon(MaterialDesignA.ARROW_LEFT_RIGHT), PrincipalParticularsPage.class));
-        fileGroup.getChildren().add( Item.group("Builder Information",new FontIcon(MaterialDesignG.GANTRY_CRANE)));
-        fileGroup.getChildren().add( Item.group("Tonnage Data",new FontIcon(MaterialDesignC.CUBE_OUTLINE)));
-        fileGroup.getChildren().add( Item.group("Statutory Data",new FontIcon(MaterialDesignF.FLAG_OUTLINE)));
-        fileGroup.getChildren().add( Item.group("Ship Designation",new FontIcon(MaterialDesignS.SCRIPT_TEXT_OUTLINE)));
+        fileGroup.getChildren().add( Item.page(BuilderInformationPage.NAME,new FontIcon(MaterialDesignG.GANTRY_CRANE), BuilderInformationPage.class));
+        fileGroup.getChildren().add( Item.page(TonnageInformationPage.NAME,new FontIcon(MaterialDesignC.CUBE_OUTLINE), TonnageInformationPage.class));
+        fileGroup.getChildren().add( Item.page(StatutoryDataPage.NAME,new FontIcon(MaterialDesignF.FLAG_OUTLINE), StatutoryDataPage.class));
+        fileGroup.getChildren().add( Item.page(ShipDesignationPage.NAME,new FontIcon(MaterialDesignS.SCRIPT_TEXT_OUTLINE), ShipDesignationPage.class));
 
         // Reference Surfaces and Grid
         var geomGroup = Item.group("Geometry", new FontIcon(MaterialDesignS.SHIP_WHEEL));
@@ -122,6 +122,9 @@ public final class PageTree extends TreeView<PageRecord> {
 
         var unitsGroup = Item.group("Units", new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM));
         root.getChildren().add(unitsGroup);
+        unitsGroup.setExpanded(true);
+        unitsGroup.getChildren().add( Item.page("Units",new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM), UnitsPage.class));
+        unitsGroup.getChildren().add( Item.page("Dimensions",new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM), UnitDimensionsPage.class));
 
         var internalGroup = Item.group("Internal", new FontIcon(MaterialDesignE.EYE_OUTLINE));
         internalGroup.getChildren().add( Item.page(LogPage.NAME,new FontIcon(MaterialDesignC.COMMENT_TEXT_OUTLINE), LogPage.class));

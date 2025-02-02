@@ -15,8 +15,8 @@
  */
 package de.cadoculus.ocxviewer.actions;
 
-import de.cadoculus.ocx3.OCXIO;
-import de.cadoculus.ocx3.OcxXML;
+import de.cadoculus.ocxviewer.utils.OCXIO;
+
 import de.cadoculus.ocxviewer.MainController;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.OpenEvent;
@@ -32,6 +32,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ocx_schema.v310rc3.OcxXMLT;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -83,9 +84,9 @@ public class OpenAction {
         new Thread(() -> {
 
             try {
-                final JAXBElement<OcxXML> element = OCXIO.read(selectedFile);
+                final JAXBElement<OcxXMLT> element = OCXIO.read(selectedFile);
                 LOG.info("loaded file: {}", element);
-                OcxXML ocx = element.getValue();
+                OcxXMLT ocx = element.getValue();
 
                         Platform.runLater(() -> {
                             LOG.info("loaded file: {}", element);

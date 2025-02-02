@@ -4,6 +4,9 @@ package de.cadoculus.unitsml;
 import de.cadoculus.ocx3.impl.BaseClass;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.ObservableList;
+
 import java.util.*;
 
 /**
@@ -37,14 +40,19 @@ public abstract class UnitSetType extends BaseClass
     * 
     */
 
-    private List<Unit> units = new ArrayList<>();
+    @XmlTransient
+    public ObservableList<Unit> Units = new SimpleListProperty<>();
 
-    public List<Unit> getUnit() {
-        return units;
+    @XmlElement(name = "Unit", namespace = "urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18")
+    public List<Unit> getUnits() {
+        return Units;
     }
 
+    public void setUnits(List<Unit> value) {
+        Units.clear();
+        value.forEach(Units::add);
 
-
+    }
 
     // end the properties serialised to elements
 

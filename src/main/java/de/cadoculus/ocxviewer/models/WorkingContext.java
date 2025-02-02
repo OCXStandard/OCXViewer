@@ -15,10 +15,8 @@
  */
 package de.cadoculus.ocxviewer.models;
 
-import de.cadoculus.ocx3.OcxXML;
-import de.cadoculus.ocx3.Vessel;
+import org.ocx_schema.v310rc3.*;
 import de.cadoculus.ocxviewer.OCXViewerApplication;
-import javafx.application.Application;
 import javafx.scene.Scene;
 
 import java.io.File;
@@ -32,7 +30,8 @@ public class WorkingContext {
     private static WorkingContext INSTANCE;
     private File ocxFile;
     private Preferences prefs;
-    private OcxXML ocx;
+    private OcxXMLT ocx;
+    private Vessel vessl;
     private Scene mainScene;
 
 
@@ -88,18 +87,25 @@ public class WorkingContext {
      * Get the OCX object that is currently open.
      * @return the OCX object that is currently open.
      */
-    public OcxXML getOcx() {
+    public OcxXMLT getOcx() {
         return ocx;
     }
-
-
     /**
      * Set the OCX object that is currently open.
      * @param ocx the OCX object that is currently open.
      */
-    public void setOcx(OcxXML ocx) {
+    public void setOcx(OcxXMLT ocx) {
         this.ocx = ocx;
+
+        if ( ocx.getForm().getValue() instanceof Vessel) {
+            vessl = (Vessel) ocx.getForm().getValue();
+        }
     }
+
+    public Vessel getVessel() {
+        return vessl;
+    }
+
 
     public boolean isDarkMode() {
         return prefs.getBoolean("darkMode", false);

@@ -37,8 +37,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeView;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -122,6 +127,7 @@ public class MainController {
         stackPane.setId("mainStackPane");
         mainBorderPane.setCenter(stackPane);
 
+        stackPane.getChildren().add( (BorderPane) class2page.get(LogPage.class));
 
         DefaultEventBus.getInstance().subscribe(NavigationEvent.class, event -> {
             this.switchPages(event);
@@ -143,28 +149,76 @@ public class MainController {
 
         LOG.info("Navigation event: {}", event);
 
-        BorderPane paneToAdd = (BorderPane) class2page.get(event.getPage());
+        BorderPane existing = (BorderPane) class2page.get(event.getPage());
+        BorderPane newPage = null;
+        if (existing == null) {
+            // Lazy loading of pages
+
+
+            try {
+                newPage =(BorderPane) event.getPage().getConstructor().newInstance();
+            } catch (Exception exp) {
+                LOG.error("Error creating page", exp);
+            }
+
+        }
+
+        BorderPane paneToAdd = existing != null ? existing : newPage;
+
         if (paneToAdd == null) {
             LOG.warn("no page registered for {}", event.getPage());
             LOG.warn("    pages {}", class2page.keySet());
+
+
+
         } else {
 
             var paneToRemove = stackPane.getChildren().isEmpty() ? null : stackPane.getChildren().get(0);
-            LOG.error("pane to add {}, remove {}", paneToAdd,  paneToRemove);
+            LOG.debug("pane to add {}, remove {}", paneToAdd,  paneToRemove);
 
             if ( paneToRemove != null && paneToRemove.equals(paneToAdd)) {
                 return;
             }
 
-            paneToAdd.translateXProperty().set(-stackPane.getWidth());
-            stackPane.getChildren().add(paneToAdd);
+            Rectangle clipRect = null;
+            if ( paneToRemove != null) {
+                var bounds = paneToRemove.getBoundsInParent();
+                LOG.error("bounds {}", bounds);
+                clipRect = new Rectangle();
+                clipRect.setX( bounds.getMinX());
+                clipRect.setY( bounds.getMinY());
+                clipRect.setWidth(bounds.getWidth());
+                clipRect.setHeight(bounds.getHeight());
 
-            var keyValue = new KeyValue(paneToAdd.translateXProperty(), 0, Interpolator.EASE_IN);
-            var keyFrame = new KeyFrame(Duration.millis(450), keyValue);
+                LOG.info("clip rect {}", clipRect);
+
+                stackPane.setClip(clipRect);
+            }
+
+            paneToAdd.translateXProperty().set(-stackPane.getWidth());
+            var blend = new Blend();
+            var blur = new MotionBlur();
+            blur.setRadius(20);
+            blur.setAngle(10);
+            //blend.setBottomInput(blur);
+            blend.setTopInput(new GaussianBlur(5));
+            blend.setBottomInput(blur);
+            paneToAdd.setEffect(blend);
+            stackPane.getChildren().addAll( paneToAdd);
+
+
+            var movePane = new KeyValue(paneToAdd.translateXProperty(), 0, Interpolator.EASE_IN);
+            //var moveClip = new KeyValue(clipRect.translateXProperty(), 0, Interpolator.EASE_IN);
+            //var reduceClip = new KeyValue(clipRect.widthProperty(), 0, Interpolator.EASE_IN);
+            var keyFrame = new KeyFrame(Duration.millis(450), movePane);
             var timeline =  new Timeline(keyFrame);
             if ( paneToRemove != null) {
                 timeline.setOnFinished(evt -> {
                     stackPane.getChildren().remove(paneToRemove);
+                    LOG.info("after {},{} {}x{}", paneToAdd.getLayoutX(), paneToAdd.getLayoutY(), paneToAdd.getWidth(), paneToAdd.getHeight());
+                    stackPane.setClip(null);
+                    paneToAdd.setEffect(null);
+                    LOG.info("after clip {},{} {}x{}", paneToAdd.getLayoutX(), paneToAdd.getLayoutY(), paneToAdd.getWidth(), paneToAdd.getHeight());
                 });
             }
 
@@ -229,7 +283,7 @@ public class MainController {
             WorkingContext.getInstance().getMainScene().getStylesheets().clear();
             var css = this.getClass().getResource("dark.css").toExternalForm();
             WorkingContext.getInstance().getMainScene().getStylesheets().add( css);
-            LOG.error("csss {}", css);
+            LOG.debug("csss {}", css);
 
         } else {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
@@ -238,7 +292,7 @@ public class MainController {
             WorkingContext.getInstance().getMainScene().getStylesheets().clear();
             var css = this.getClass().getResource("light.css").toExternalForm();
             WorkingContext.getInstance().getMainScene().getStylesheets().add( css);
-            LOG.error("csss {}", css);
+            LOG.debug("csss {}", css);
 
 
         }

@@ -15,7 +15,7 @@
  */
 package de.cadoculus.ocxviewer.event;
 
-import de.cadoculus.ocx3.OcxXML;
+import org.ocx_schema.v310rc3.OcxXMLT;
 
 import java.io.File;
 
@@ -25,19 +25,19 @@ import java.io.File;
  */
 public class OpenEvent extends  Event{
 
-    private OcxXML ocx;
+    private OcxXMLT ocx;
     private File ocxFile;
 
-    public OpenEvent(OcxXML ocx, File ocxFile) {
+    public OpenEvent(OcxXMLT ocx, File ocxFile) {
         this.ocx = ocx;
         this.ocxFile = ocxFile;
     }
 
-    public OcxXML getOcx() {
+    public OcxXMLT getOcx() {
         return ocx;
     }
 
-    public void setOcx(OcxXML ocx) {
+    public void setOcx(OcxXMLT ocx) {
         this.ocx = ocx;
     }
 

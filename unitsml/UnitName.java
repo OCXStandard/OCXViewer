@@ -3,6 +3,10 @@ package de.cadoculus.unitsml;
 
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
 *  The <code>UnitName</code> element
@@ -29,6 +33,30 @@ public  class UnitName extends NameType
     // end the properties serialised to elements
 
 
+    @XmlTransient
+    public StringProperty Name = new SimpleStringProperty();
+
+
+    @XmlElement
+    public String getName() {
+        return this.Name.get();
+    };
+
+    public void setName( String value) {
+        this.Name.set( value);
+    }
+
+
+    @XmlTransient
+    public StringProperty Lang = new SimpleStringProperty();
+    @XmlAttribute(name="lang", namespace = "http://www.w3.org/XML/1998/namespace")
+    public String getLang() {
+        return this.Lang.get();
+    };
+
+    public void setLang( String value) {
+        this.Lang.set( value);
+    }
 
 
       public UnitName() {

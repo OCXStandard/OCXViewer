@@ -1,65 +1,49 @@
+/*
+ * Copyright 2025 Carsten Zerbst
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
-import atlantafx.base.util.BBCodeParser;
-import de.cadoculus.ocx3.ClassNotation;
-import de.cadoculus.ocx3.ClassificationSocietyEnum;
+import org.ocx_schema.v310rc3.*;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.TextFlow;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
 import java.util.Arrays;
 
-public class ClassficationSocietyPage extends BorderPane implements Page {
+public class ClassficationSocietyPage extends AbstractDataViewPage {
 
     public static final String NAME = "Classfication Society";
     private static final Logger LOG = LogManager.getLogger(ClassficationSocietyPage.class);
 
 
     public ClassficationSocietyPage() {
-        super();
-
-        //this.setBackground(new Background(new BackgroundFill(Color.web("#bcbcbc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        this.setMargin(this, new Insets(15));
-//        this.setPadding( new Insets(10));
-//        this.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,
-//                BorderStrokeStyle.SOLID, new CornerRadii(10), BorderWidths.DEFAULT)));
+        super(NAME);
 
 
-        this.maxHeight(1950);
-        this.setMaxWidth(1800);
-        this.setMinHeight(500);
-        this.setMinWidth(500);
-        this.setPrefHeight(1024);
-        this.setPrefWidth(1200);
-
-        this.setMargin(this, new Insets(15));
-
-        this.getStyleClass().add("content-pane");
-
-
-        var titleBox = new VBox();
-        this.setTop(titleBox);
-        var title = new Label(NAME);
-        title.getStyleClass().add(Styles.TITLE_2);
-        titleBox.setPadding(new Insets(0, 0, 10, 0));
-        titleBox.getChildren().add(title);
-        final TextFlow formattedText = BBCodeParser.createFormattedText("Information that specifies design and intended performance characteristics of the ship in accordance with classification society rules and statutory regulations (see ISO 10303-218, section 4.2.36).");
-        titleBox.getChildren().add(formattedText);
-
+        createTitle("Information that specifies design and intended performance characteristics of the ship in accordance with classification society rules and statutory regulations (see ISO 10303-218, section 4.2.36).");
 
         ScrollPane scrollPane = new ScrollPane();
         this.setCenter(scrollPane);
@@ -250,27 +234,6 @@ public class ClassficationSocietyPage extends BorderPane implements Page {
 
     }
 
-    @Override
-    public String getName() {
-        return NAME;
-    }
 
-    @Override
-    public Pane getView() {
-        return this;
-    }
 
-    private class CSClassEnumConverter extends Format {
-
-        @Override
-        public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-            toAppendTo.append(obj.toString());
-            return toAppendTo;
-        }
-
-        @Override
-        public Object parseObject(String source, ParsePosition pos) {
-            return null;
-        }
-    }
 }
