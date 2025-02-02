@@ -20,7 +20,6 @@ class OCXIOTest {
 
         var file = new File("data/Schema version 3.0.0/NAPA-OCX_M1.3docx");
 
-
         JAXBElement<OcxXML> result = OCXIO.read(file);
 
         assertNotNull(result);

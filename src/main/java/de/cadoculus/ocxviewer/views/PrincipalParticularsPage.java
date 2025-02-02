@@ -15,60 +15,28 @@
  */
 package de.cadoculus.ocxviewer.views;
 
-import atlantafx.base.layout.InputGroup;
 import atlantafx.base.theme.Styles;
-import atlantafx.base.util.BBCodeParser;
-import de.cadoculus.ocx3.ClassificationData;
-import de.cadoculus.ocx3.Lpp;
-import de.cadoculus.ocx3.PrincipalParticulars;
-import de.cadoculus.ocx3.QuantityT;
+import org.ocx_schema.v310rc3.*;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
-import javafx.scene.text.TextFlow;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
 
-
-public class PrincipalParticularsPage extends BorderPane implements Page {
+public class PrincipalParticularsPage extends AbstractDataViewPage {
 
     public static final String NAME = "Principal Particulars";
 
     public PrincipalParticularsPage() {
-        super();
+        super(NAME);
 
-        //this.setBackground(new Background(new BackgroundFill(Color.web("#bcbcbc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        this.setMargin(this, new Insets(15));
+        createTitle("Information that specifies design and intended performance characteristics of the ship in accordance with classification society rules and statutory regulations (see ISO 10303-218, section 4.2.36).");
 
-        this.maxHeight(1950);
-        this.setMaxWidth(1800);
-        this.setMinHeight(500);
-        this.setMinWidth(500);
-        this.setPrefHeight(1024);
-        this.setPrefWidth(1200);
-
-        this.getStyleClass().add("content-pane");
-
-
-        var titleBox = new VBox();
-        this.setTop(titleBox);
-
-        var title = new Label(NAME);
-        title.getStyleClass().add(Styles.TITLE_2);
-        titleBox.setPadding(new Insets(0, 0, 10, 0));
-        titleBox.getChildren().add(title);
-        final TextFlow formattedText = BBCodeParser.createFormattedText("Information that specifies design and intended performance characteristics of the ship in accordance with classification society rules and statutory regulations (see ISO 10303-218, section 4.2.36).");
-        titleBox.getChildren().add(formattedText);
 
         ScrollPane scrollPane = new ScrollPane();
         this.setCenter(scrollPane);
@@ -98,7 +66,9 @@ public class PrincipalParticularsPage extends BorderPane implements Page {
 
         int row = 0;
 
-        if (WorkingContext.getInstance().getOcx().getVessel().getClassificationData() == null) {
+
+
+        if (WorkingContext.getInstance().getVessel().getClassificationData() == null) {
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
                     "No Classification Data found in Vessel/ClassificationData !",
@@ -111,10 +81,10 @@ public class PrincipalParticularsPage extends BorderPane implements Page {
 
             gridPane.add(warning, 0, ++row, 4, 1);
 
-            WorkingContext.getInstance().getOcx().getVessel().setClassificationData(new ClassificationData());
+            WorkingContext.getInstance().getVessel().setClassificationData(new ClassificationData());
         }
 
-        if (WorkingContext.getInstance().getOcx().getVessel().getClassificationData().getPrincipalParticulars() == null) {
+        if (WorkingContext.getInstance().getVessel().getClassificationData().getPrincipalParticulars() == null) {
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
                     "No PrincipalParticulars found in Vessel/ClassificationData/PrincipalParticulars !",
@@ -125,10 +95,10 @@ public class PrincipalParticularsPage extends BorderPane implements Page {
             warningIcon.getStyleClass().add(Styles.WARNING);
             gridPane.add(warning, 0, ++row, 4, 1);
 
-            WorkingContext.getInstance().getOcx().getVessel().getClassificationData().setPrincipalParticulars(new PrincipalParticulars());
+            WorkingContext.getInstance().getVessel().getClassificationData().setPrincipalParticulars(new PrincipalParticulars());
         }
 
-        final PrincipalParticulars prince = WorkingContext.getInstance().getOcx().getVessel().getClassificationData().getPrincipalParticulars();
+        final PrincipalParticulars prince = WorkingContext.getInstance().getVessel().getClassificationData().getPrincipalParticulars();
 
         var label = new Label("Lengths and Positions");
         label.getStyleClass().add(Styles.TITLE_4);
@@ -141,7 +111,7 @@ public class PrincipalParticularsPage extends BorderPane implements Page {
         label.setTooltip(new Tooltip("Length between perpendiculars"));
         gridPane.add(label, 0, ++row);
 
-        final Lpp lpp = prince.getLpp();
+        final QuantityT lpp = prince.getLpp();
         var group2 = createAndBind(lpp, true);
         gridPane.add(group2, 1, row);
 
@@ -326,63 +296,7 @@ public class PrincipalParticularsPage extends BorderPane implements Page {
 
     }
 
-    private InputGroup createAndBind(QuantityT quantity, boolean mandatory) {
 
-        var valueField = new TextField();
-        valueField.setAlignment(Pos.CENTER_RIGHT);
-        var unitField = new TextField();
-        unitField.setPrefWidth(80);
-        var group = new atlantafx.base.layout.InputGroup(valueField, unitField);
 
-        if (quantity == null) {
-            if (mandatory) {
-                valueField.setText("no value given");
-                valueField.setStyle("-fx-background-color: -color-danger-1;");
-            }
-        } else {
-            valueField.textProperty().bindBidirectional(quantity.Numericvalue, new PPStringConverter());
-            unitField.setText("[" + quantity.getUnitId() + "]");
 
-            if (quantity.getUnit() != null) {
-                var unit = quantity.getUnit();
-                if (unit.getUnitSymbol() != null && unit.getUnitSymbol().size() > 0) {
-                    unitField.setText(unit.getUnitSymbol().get(0).getType());
-                }
-                StringBuilder tt = new StringBuilder();
-                if (unit.getUnitName() != null) {
-                    unit.getUnitName().forEach(name -> {
-                        tt.append("Unit Name: ").append(name.toString()).append("\n");
-                    });
-                    unitField.setTooltip(new Tooltip(tt.toString()));
-                }
-                ;
-            }
-        }
-
-        return group;
-
-    }
-
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
-    @Override
-    public Pane getView() {
-        return this;
-    }
-
-    private class PPStringConverter extends Format {
-        @Override
-        public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-            toAppendTo.append(obj.toString());
-            return toAppendTo;
-        }
-
-        @Override
-        public Object parseObject(String source, ParsePosition pos) {
-            return null;
-        }
-    }
 }

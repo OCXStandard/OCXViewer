@@ -27,12 +27,15 @@ module com.prostep.openpdm.ocxviewer {
     opens de.cadoculus.ocx3 to org.eclipse.persistence.moxy;
     opens de.cadoculus.unitsml to org.eclipse.persistence.moxy;
 
-    exports de.cadoculus.ocx3;
-    exports de.cadoculus.unitsml;
+    exports org.ocx_schema.v310rc3;
+    exports oasis.unitsml;
 
     exports de.cadoculus.ocxviewer;
     exports de.cadoculus.ocxviewer.views;
     opens de.cadoculus.ocxviewer.views to javafx.fxml;
     exports de.cadoculus.ocxviewer.logging;
     opens de.cadoculus.ocxviewer.logging to javafx.fxml;
+
+    opens de.cadoculus.spiel to javafx.graphics;
+
 }
