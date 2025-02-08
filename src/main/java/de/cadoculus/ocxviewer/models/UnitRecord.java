@@ -15,7 +15,11 @@
  */
 package de.cadoculus.ocxviewer.models;
 
+import de.cadoculus.ocxviewer.views.UnitsPage;
 import oasis.unitsml.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,30 +29,78 @@ public record UnitRecord(
         String id,
         String name,
         String symbol,
+        String rootUnits,
         String dimension
         ) {
 
+    private static final Logger LOG = LogManager.getLogger(UnitRecord.class);
+
     public static UnitRecord create(Unit unit) {
+
+        var onLinux = System.getProperty("os.name").toLowerCase().contains("linux");
         StringBuilder names = new StringBuilder();
         final List<UnitName> nameList = unit.getUnitNames();
         for (Iterator<UnitName> unitIt = nameList.iterator();unitIt.hasNext();) {
             UnitName name = unitIt.next();
-            names.append(name.getLang()).append(" :  ").append(name.getValue());
+            FlagsEnum flag = FlagsEnum.fromLocale(name.getLang());
+            LOG.info("found flag: " + flag.name() + " " + flag.getFlag());
+            if (onLinux) {
+                names.append(flag.getLocale().getDisplayLanguage()).append(" :  ").append(name.getValue());
+            } else {
+                names.append(flag.getFlag()).append(" :  ").append(name.getValue());
+            }
             if (unitIt.hasNext()) {
                 names.append(", ");
             }
         }
+        StringBuilder rootUnits = new StringBuilder();
+        if ( unit.getRootUnits() !=null) {
+            for(Iterator<EnumeratedRootUnit> rootUnitIt = unit.getRootUnits().getEnumeratedRootUnits().iterator();rootUnitIt.hasNext();) {
+                EnumeratedRootUnit rootUnit = rootUnitIt.next();
+
+                if ( StringUtils.isNoneEmpty(rootUnit.getPrefix())) {
+                    rootUnits.append( rootUnit.getPrefix()).append(" ");
+                }
+                rootUnits.append(rootUnit.getUnit());
+                switch ( rootUnit.getPowerNumerator()) {
+                    case 1:
+                        rootUnits.append(" ");
+                        break;
+                    case 2:
+                        rootUnits.append("² ");
+                        break;
+                    case 3:
+                        rootUnits.append("³ ");
+                        break;
+                    case 4:
+                        rootUnits.append("⁴ ");
+                        break;
+                    case -1:
+                        rootUnits.append("⁻¹ ");
+                        break;
+                    case -2:
+                        rootUnits.append("⁻² ");
+                        break;
+                    case -3:
+                        rootUnits.append("⁻³ ");
+                        break;
+                    default:
+                        rootUnits.append("^").append(rootUnit.getPowerNumerator()).append(" ");
+                }
+
+                if (rootUnitIt.hasNext()) {
+                    rootUnits.append(", ");
+                }
+            }
+
+        }
 
         StringBuilder symbols = new StringBuilder();
-        // TODO:
-//        final List<UnitSymbol> symbolList = unit.getUnitSymbols();
-//        for (Iterator<UnitSymbol> symbolIt = symbolList.iterator();symbolIt.hasNext();) {
-//            UnitSymbol symbol = symbolIt.next();
-//            names.append(symbol.Lang.get()).append(" :  ").append(symbol.Name.get());
-//            if (symbolIt.hasNext()) {
-//                names.append(", ");
-//            }
-//        }
+        if ( unit.getUnitSymbols() !=null) {
+            unit.getUnitSymbols().forEach((symbol) -> {
+               symbols.append(symbol.getType()).append(", ");
+            });
+        }
 
 
         return new UnitRecord(
@@ -56,6 +108,7 @@ public record UnitRecord(
                 unit.getId(),
                 names.toString(),
                 symbols.toString(),
+                rootUnits.toString(),
                 unit.getDimensionURL()
         );
     }

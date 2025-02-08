@@ -18,17 +18,22 @@ module com.prostep.openpdm.ocxviewer {
     requires org.eclipse.persistence.core;
     requires org.eclipse.persistence.moxy;
     requires vecmath;
-
+    requires hisrc.basicjaxb.runtime;
 
 
     opens de.cadoculus.ocxviewer to javafx.fxml;
 
-    opens de.cadoculus.ocx3.impl to org.eclipse.persistence.core;
-    opens de.cadoculus.ocx3 to org.eclipse.persistence.moxy;
-    opens de.cadoculus.unitsml to org.eclipse.persistence.moxy;
 
-    exports org.ocx_schema.v310rc3;
+
     exports oasis.unitsml;
+    exports org.ocx_schema.v310rc3;
+
+    opens  oasis.unitsml to org.eclipse.persistence.core;
+    opens  org.ocx_schema.v310rc3 to org.eclipse.persistence.core;
+    opens  oasis.unitsml to org.eclipse.persistence.moxy;
+    opens  org.ocx_schema.v310rc3 to org.eclipse.persistence.moxy;
+
+
 
     exports de.cadoculus.ocxviewer;
     exports de.cadoculus.ocxviewer.views;

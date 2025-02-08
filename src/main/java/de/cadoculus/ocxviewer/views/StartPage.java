@@ -25,4 +25,29 @@ public class StartPage extends OutlinePage{
     public String getName() {
                 return NAME;
     }
+
+    @Override
+    public void beforeShow() {
+
+    }
+
+    @Override
+    public void afterShow() {
+
+    }
+
+    @Override
+    public void beforeHide() {
+
+    }
+
+    @Override
+    public void afterHide() {
+
+    }
+
+    @Override
+    public void beforeClose() {
+
+    }
 }

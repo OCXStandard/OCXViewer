@@ -16,23 +16,20 @@
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
-import atlantafx.base.util.BBCodeParser;
-import de.cadoculus.ocxviewer.MainController;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.TextFlow;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.time.temporal.Temporal;
+import java.time.LocalDateTime;
 
 public class HeaderPage extends AbstractDataViewPage implements  Page{
 
@@ -44,7 +41,6 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         super(NAME);
 
         createTitle("Information from the OCX file's header.");
-
 
 
         ScrollPane scrollPane = new ScrollPane();
@@ -85,7 +81,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         label.setTooltip(new Tooltip("Name of the XML instance."));
         gridPane.add(label, 0, row);
         var textField = new TextField();
-        textField.textProperty().bindBidirectional( WorkingContext.getInstance().getOcx().getHeader().Author);
+        bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "author", String.class);
         gridPane.add(textField, 1, row);
 
 
@@ -93,7 +89,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         label.setTooltip(new Tooltip("Name of originating organization."));
         gridPane.add(label, 2,row);
         textField = new TextField();
-        textField.textProperty().bindBidirectional( WorkingContext.getInstance().getOcx().getHeader().Organization);
+        bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "organization", String.class);
         gridPane.add(textField, 3, row++);
 
 
@@ -102,7 +98,9 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         gridPane.add(label, 2, row);
         textField = new TextField();
 
-        textField.textProperty().bindBidirectional( WorkingContext.getInstance().getOcx().getHeader().TimeStamp, new HPStringConverter());
+        LOG.info("timestamp {}", WorkingContext.getInstance().getOcx().getHeader().getTimeStamp());
+
+        bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "timeStamp", LocalDateTime.class);
         gridPane.add(textField, 3, row++);
 
 
@@ -116,7 +114,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         label.setTooltip(new Tooltip("Name of originating system or application."));
         gridPane.add(label, 0, row);
         textField = new TextField();
-        textField.textProperty().bindBidirectional( WorkingContext.getInstance().getOcx().getHeader().OriginatingSystem);
+        bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "originatingSystem", String.class);
         gridPane.add(textField, 1, row);
 
 
@@ -125,7 +123,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         gridPane.add(label, 2,row);
 
         textField = new TextField();
-        textField.textProperty().bindBidirectional( WorkingContext.getInstance().getOcx().getHeader().ApplicationVersion);
+        bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "applicationVersion", String.class);
         gridPane.add(textField, 3, row++);
 
         label = new Label("Documentation");
@@ -136,7 +134,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         GridPane.setHalignment(label, HPos.LEFT);
 
         textField = new TextField();
-        textField.textProperty().bindBidirectional( WorkingContext.getInstance().getOcx().getHeader().getDocumentation());
+        bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "documentation", String.class);
         gridPane.add(textField, 1, row, 3, 1);
 
 

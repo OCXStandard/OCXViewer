@@ -16,7 +16,6 @@
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
-import org.ocx_schema.v310rc3.*;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,6 +29,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
+import org.ocx_schema.v310rc3.ClassNotation;
+import org.ocx_schema.v310rc3.ClassificationSociety;
 
 import java.util.Arrays;
 
@@ -85,21 +86,15 @@ public class ClassficationSocietyPage extends AbstractDataViewPage {
 
         final var combo = new ComboBox<String>();
 
-        Arrays.asList(ClassificationSocietyEnum.values()).stream().filter(enu -> ClassificationSocietyEnum.UNKNOWN_VALUE != enu).
+        Arrays.asList(ClassificationSociety.values()).stream().
                 forEach(classificationSocietyEnum -> {
                     combo.getItems().add(classificationSocietyEnum.name());
                 });
 
         StringProperty nbcs = new SimpleStringProperty();
         try {
-            ClassificationSocietyEnum enu = WorkingContext.getInstance().getOcx().getVessel().getClassificationData().NewbuildingSociety.get();
-            nbcs.setValue(enu != null ? enu.name() : ClassificationSocietyEnum.UNKNOWN_VALUE.name());
-
-            WorkingContext.getInstance().getOcx().getVessel().getClassificationData().NewbuildingSociety.addListener(
-                    (observable, oldValue, newValue) -> {
-                        LOG.error("Newbuilding Society changed to {}", newValue);
-                        nbcs.setValue(newValue.name());
-                    });
+            ClassificationSociety enu = WorkingContext.getInstance().getVessel().getClassificationData().getNewbuildingSociety();
+            nbcs.setValue(enu != null ? enu.name() : "unset");
         } catch (Exception e) {
             LOG.error("Error getting Newbuilding Society", e);
         }
@@ -128,13 +123,9 @@ public class ClassficationSocietyPage extends AbstractDataViewPage {
         societyCombo.valueProperty().bindBidirectional(cs);
 
         try {
-            ClassificationSocietyEnum enu = WorkingContext.getInstance().getOcx().getVessel().getClassificationData().Society.get();
-            cs.setValue(enu != null ? enu.name() : ClassificationSocietyEnum.UNKNOWN_VALUE.name());
+            ClassificationSociety enu = WorkingContext.getInstance().getVessel().getClassificationData().getSociety();
+            cs.setValue(enu != null ? enu.name() : "unset");
 
-            WorkingContext.getInstance().getOcx().getVessel().getClassificationData().Society.addListener(
-                    (observable, oldValue, newValue) -> {
-                        cs.setValue(newValue.name());
-                    });
         } catch (Exception e) {
             LOG.error("Error getting Newbuilding Society", e);
         }
@@ -147,11 +138,9 @@ public class ClassficationSocietyPage extends AbstractDataViewPage {
 
         textField = new TextField();
         gridPane.add(textField, 3, row);
-        try {
-            textField.textProperty().bindBidirectional(WorkingContext.getInstance().getOcx().getVessel().getClassificationData().SocietyName);
-        } catch (Exception e) {
-            LOG.error("Error getting Newbuilding Society", e);
-        }
+
+        bindToBean(textField.textProperty(), WorkingContext.getInstance().getVessel().getClassificationData(), "SocietyName", String.class);
+
 
         label = new Label("Class Notation");
         label.setTooltip(new Tooltip("The notations given to the hull and machinery of the Ship by the classification society as a result of its approval activities during the design, manufacture and in-service maintenance of the ship (see ISO 10303-218, section 4.2.35)"));
@@ -160,7 +149,7 @@ public class ClassficationSocietyPage extends AbstractDataViewPage {
         GridPane.setHalignment(label, HPos.LEFT);
 
 
-        if (  WorkingContext.getInstance().getOcx().getVessel().getClassificationData().ClassNotation.get() == null) {
+        if (WorkingContext.getInstance().getVessel().getClassificationData().getClassNotation() == null) {
 
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
@@ -172,68 +161,62 @@ public class ClassficationSocietyPage extends AbstractDataViewPage {
             var warningIcon = new FontIcon(MaterialDesignA.ALERT);
             warningIcon.getStyleClass().add(Styles.WARNING);
 
-
-
-
             gridPane.add(warning, 0, ++row, 4, 1);
 
 
-            WorkingContext.getInstance().getOcx().getVessel().getClassificationData().ClassNotation.set(new ClassNotation());
+            // we add a dummy objects to prevent null pointer exceptions
+            WorkingContext.getInstance().getVessel().getClassificationData().setClassNotation(new ClassNotation());
         }
-        final ClassNotation classNotation = WorkingContext.getInstance().getOcx().getVessel().getClassificationData().ClassNotation.get();
+        final ClassNotation classNotation = WorkingContext.getInstance().getVessel().getClassificationData().getClassNotation();
 
-            label = new Label("Hull");
-            label.setTooltip(new Tooltip("The notation given to the hull of the ship by the classification society as a result of its approval activities done on the hull."));
-            gridPane.add(label, 0, ++row);
-            var classNotationHull = new TextField();
-            classNotationHull.textProperty().bindBidirectional(classNotation.Hull);
-            gridPane.add(classNotationHull, 1, row);
-
-
-
-            label = new Label("Machinery");
-            label.setTooltip(new Tooltip("The notation given to the machinery on the ship by the classification society as a result of its approval activities done on the machinery."));
-            gridPane.add(label, 2, row);
-            var classNotationMachinery = new TextField();
-            classNotationMachinery.textProperty().bindBidirectional(classNotation.Machinery);
-            gridPane.add(classNotationMachinery, 3, row);
-
-            label = new Label("Service Area");
-            label.setTooltip(new Tooltip("The area or route in which the ship operates. NOTE: This may include information about waterway, wave, weather and wind conditions."));
-            gridPane.add(label, 0, ++row);
-            var classNotationServiceArea = new TextField();
-            classNotationServiceArea.textProperty().bindBidirectional(classNotation.ServiceArea);
-            gridPane.add(classNotationServiceArea, 1, row);
-
-            label = new Label("Service Factor");
-            label.setTooltip(new Tooltip("The service area of the ship and the waves that occur in that area. The service factor should be in the range of 0.5 to 1.0."));
-            gridPane.add(label, 2, row);
-          var  classNotationServiceFactor = new TextField();
-
-            classNotationServiceFactor.textProperty().bind(Bindings.createStringBinding(
-                    () -> Double.toString(classNotation.ServiceFactor.get()),
-                    classNotation.ServiceArea));
-            gridPane.add(classNotationServiceFactor, 3, row);
-
-            label = new Label("Ice Class");
-            label.setTooltip(new Tooltip("The type of class notation given to the ship indicating the ice conditions in which the ship has been approved to operate."));
-            gridPane.add(label, 0, ++row);
-            var classNotationIceClass = new TextField();
-            classNotationIceClass.textProperty().bindBidirectional(classNotation.IceClass);
-            gridPane.add(classNotationIceClass, 1, row);
+        label = new Label("Hull");
+        label.setTooltip(new Tooltip("The notation given to the hull of the ship by the classification society as a result of its approval activities done on the hull."));
+        gridPane.add(label, 0, ++row);
+        var classNotationHull = new TextField();
+        bindToBean(classNotationHull.textProperty(), classNotation, "Hull", String.class);
+        gridPane.add(classNotationHull, 1, row);
 
 
-            label = new Label("Additional Annotations");
-            label.setTooltip(new Tooltip("Additional notations assigned by the society."));
-            gridPane.add(label, 0, ++row);
-            var classNotationAdditional = new TextField();
-            classNotationIceClass.textProperty().bindBidirectional(classNotation.AdditionalNotations);
-            gridPane.add(classNotationAdditional, 1, row);
+        label = new Label("Machinery");
+        label.setTooltip(new Tooltip("The notation given to the machinery on the ship by the classification society as a result of its approval activities done on the machinery."));
+        gridPane.add(label, 2, row);
+        var classNotationMachinery = new TextField();
+        bindToBean(classNotationMachinery.textProperty(), classNotation, "Machinery", String.class);
+        gridPane.add(classNotationMachinery, 3, row);
 
+        label = new Label("Service Area");
+        label.setTooltip(new Tooltip("The area or route in which the ship operates. NOTE: This may include information about waterway, wave, weather and wind conditions."));
+        gridPane.add(label, 0, ++row);
+        var classNotationServiceArea = new TextField();
+        bindToBean(classNotationServiceArea.textProperty(), classNotation, "ServiceArea", String.class);
+        gridPane.add(classNotationServiceArea, 1, row);
+
+        label = new Label("Service Factor");
+        label.setTooltip(new Tooltip("The service area of the ship and the waves that occur in that area. The service factor should be in the range of 0.5 to 1.0."));
+        gridPane.add(label, 2, row);
+        var classNotationServiceFactor = new TextField();
+
+
+        bindToBean(classNotationServiceFactor.textProperty(), classNotation, "ServiceFactor", Double.TYPE);
+        gridPane.add(classNotationServiceFactor, 3, row);
+
+        label = new Label("Ice Class");
+        label.setTooltip(new Tooltip("The type of class notation given to the ship indicating the ice conditions in which the ship has been approved to operate."));
+        gridPane.add(label, 0, ++row);
+        var classNotationIceClass = new TextField();
+        bindToBean(classNotationIceClass.textProperty(), classNotation, "IceClass", String.class);
+        gridPane.add(classNotationIceClass, 1, row);
+
+
+        label = new Label("Additional Annotations");
+        label.setTooltip(new Tooltip("Additional notations assigned by the society."));
+        gridPane.add(label, 0, ++row);
+        var classNotationAdditional = new TextField();
+        bindToBean(classNotationAdditional.textProperty(), classNotation, "AdditionalNotations", String.class);
+        gridPane.add(classNotationAdditional, 1, row);
 
 
     }
-
 
 
 }

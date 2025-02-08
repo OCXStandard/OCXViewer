@@ -29,10 +29,11 @@ public class WorkingContext {
 
     private static WorkingContext INSTANCE;
     private File ocxFile;
-    private Preferences prefs;
+    private final Preferences preferences;
     private OcxXMLT ocx;
-    private Vessel vessl;
+    private Vessel vessel;
     private Scene mainScene;
+    private String targetNamespace;
 
 
     /**
@@ -47,7 +48,7 @@ public class WorkingContext {
     }
 
     private WorkingContext() {
-        prefs = Preferences.userRoot().node(OCXViewerApplication.class.getName());
+        preferences = Preferences.userRoot().node(OCXViewerApplication.class.getName());
     }
 
     /**
@@ -67,14 +68,14 @@ public class WorkingContext {
                 ocxFile.getParentFile().getAbsolutePath() :
                 new File(".").getAbsolutePath();
 
-        prefs.put("lastOpenDir", previous);
+        preferences.put("lastOpenDir", previous);
     }
     /**
      * Get the last open directory.
      * @return the last open directory.
      */
     public String getLastOpenDir() {
-        var previous = prefs.get("lastOpenDir", System.getProperty("user.home"));
+        var previous = preferences.get("lastOpenDir", System.getProperty("user.home"));
 
         if ( ! new File( previous).isDirectory()) {
             previous = System.getProperty("user.home");
@@ -98,20 +99,20 @@ public class WorkingContext {
         this.ocx = ocx;
 
         if ( ocx.getForm().getValue() instanceof Vessel) {
-            vessl = (Vessel) ocx.getForm().getValue();
+            vessel = (Vessel) ocx.getForm().getValue();
         }
     }
 
     public Vessel getVessel() {
-        return vessl;
+        return vessel;
     }
 
 
     public boolean isDarkMode() {
-        return prefs.getBoolean("darkMode", false);
+        return preferences.getBoolean("darkMode", false);
     }
     public void setDarkMode(boolean darkMode) {
-        prefs.putBoolean("darkMode", darkMode);
+        preferences.putBoolean("darkMode", darkMode);
     }
 
 
@@ -122,4 +123,10 @@ public class WorkingContext {
     public void setMainScene(Scene mainScene) {
         this.mainScene = mainScene;
     }
+
+    public void setTargetNamespace(String s) {this.targetNamespace=s;}
+    public String getTargetNamespace() {return targetNamespace;}
+
+
+
 }

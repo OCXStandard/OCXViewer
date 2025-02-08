@@ -20,21 +20,29 @@ import atlantafx.base.util.BBCodeParser;
 import de.cadoculus.ocxviewer.logging.LogRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignE;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignF;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignI;
 
-
+/**
+ * Page that shows the applications internal log messages.
+ */
 public class LogPage extends BorderPane implements Page {
 
     public static final String NAME = "Log Page";
+    private static final Logger LOG = LogManager.getLogger(LogPage.class);
 
     private static LogPage INSTANCE;
     private final ListView<LogRecord> listBox;
@@ -63,13 +71,10 @@ public class LogPage extends BorderPane implements Page {
         super();
         INSTANCE=this;
 
-
-
         //this.setBackground(new Background(new BackgroundFill(Color.web("#bcbcbc"), CornerRadii.EMPTY, Insets.EMPTY)));
-        this.setMargin(this, new Insets(15));
+        BorderPane.setMargin(this, new Insets(15));
 
         this.getStyleClass().add("content-pane");
-
 
         this.maxHeight(1950);
         this.setMaxWidth(1800);
@@ -107,7 +112,16 @@ public class LogPage extends BorderPane implements Page {
                     setGraphic(null);
                 } else {
                     setText(item.msg());
-                    setTooltip( new Tooltip(item.category().name()));
+                    StringBuilder tooltipContent = new StringBuilder(item.category().name());
+                    tooltipContent.append(" \n\n");
+                    tooltipContent.append(item.msg());
+                    if ( item.thrown() != null) {
+                        tooltipContent.append("\n\n");
+                        tooltipContent.append(item.thrown().getMessage());
+                    }
+
+                    setTooltip( new Tooltip(tooltipContent.toString()));
+
                     if ( item.category() == Level.INFO) {
 
                         setGraphic(new FontIcon(MaterialDesignI.INFORMATION_OUTLINE));
@@ -142,6 +156,15 @@ public class LogPage extends BorderPane implements Page {
             }
         });
 
+//        listBox.getSelectionModel().selectedItemProperty().addListener(
+//                new ChangeListener<LogRecord>() {
+//                    public void changed(ObservableValue<? extends LogRecord> ov,
+//                                        LogRecord old_val, LogRecord new_val) {
+//                        LOG.debug("Selected LogRecord: " + new_val);
+//                    }
+//                });
+
+
     }
 
 
@@ -153,6 +176,31 @@ public class LogPage extends BorderPane implements Page {
     @Override
     public Pane getView() {
         return this;
+    }
+
+    @Override
+    public void beforeShow() {
+
+    }
+
+    @Override
+    public void afterShow() {
+
+    }
+
+    @Override
+    public void beforeHide() {
+
+    }
+
+    @Override
+    public void afterHide() {
+
+    }
+
+    @Override
+    public void beforeClose() {
+
     }
 
 }

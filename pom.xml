@@ -15,9 +15,27 @@
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
         <junit.version>5.10.2</junit.version>
         <atlantafx.version>2.0.1</atlantafx.version>
+
+        <hisrc-basicjaxb.version>2.2.1</hisrc-basicjaxb.version>
+        <hisrc-higherjaxb-maven-plugin.version>2.2.1</hisrc-higherjaxb-maven-plugin.version>
+
     </properties>
 
     <dependencies>
+
+        <!--  HiSrc BasicJAXB  -->
+        <dependency>
+            <groupId>org.patrodyne.jvnet</groupId>
+            <artifactId>hisrc-basicjaxb-runtime</artifactId>
+            <version>${hisrc-basicjaxb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.patrodyne.jvnet</groupId>
+            <artifactId>hisrc-basicjaxb-tools</artifactId>
+            <version>${hisrc-basicjaxb.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>commons-cli</groupId>
@@ -100,6 +118,21 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.jvnet.jaxb2_commons/jaxb2-basics-jaxb-xjc -->
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-jaxb-xjc</artifactId>
+            <version>2.2.4-1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
+        </dependency>
+
 
 
 
@@ -113,6 +146,38 @@
 
     <build>
         <plugins>
+
+           <plugin>
+                <groupId>org.patrodyne.jvnet</groupId>
+                <artifactId>hisrc-higherjaxb-maven-plugin</artifactId>
+                <version>${hisrc-higherjaxb-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <debug>false</debug>
+                            <args>
+
+                                <arg>-XpropertyListener</arg>
+                                <arg>-XpropertyListener-constrained=false</arg>
+                            </args>
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.patrodyne.jvnet</groupId>
+                                    <artifactId>hisrc-basicjaxb-plugins</artifactId>
+                                    <version>${hisrc-basicjaxb.version}</version>
+                                </plugin>
+                            </plugins>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+
 
                 <plugin>
                     <groupId>org.jvnet.jaxb</groupId>
@@ -141,7 +206,7 @@
                             </plugin>
                         </plugins>
                     </configuration>
-                </plugin>
+                </plugin> -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -200,6 +265,38 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- https://logging.apache.org/log4j/2.x/manual/plugins.html#plugin-registry -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-log4j-plugin-descriptor</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <proc>only</proc>
+                            <annotationProcessorPaths>
+                                <!-- Include `log4j-core` providing `org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor` that generates `Log4j2Plugins.dat` -->
+                                <path>
+                                    <groupId>org.apache.logging.log4j</groupId>
+                                    <artifactId>log4j-core</artifactId>
+                                    <version>2.24.3</version>
+                                </path>
+                            </annotationProcessorPaths>
+                            <annotationProcessors>
+                                <!-- Process sources using `org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor` to generate `Log4j2Plugins.dat` -->
+                                <processor>org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor</processor>
+                            </annotationProcessors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

@@ -6,9 +6,13 @@
     <jaxb:globalBindings>
         <xjc:simple />
         <xjc:serializable uid="-1" />
-        <jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
-                       parseMethod="jakarta.xml.bind.DatatypeConverter.parseDateTime"
-                       printMethod="jakarta.xml.bind.DatatypeConverter.printDateTime" />
+<!-- adapter="de.cadoculus.ocxviewer.io.DateAdapter" -->
+        <!-- <xjc:javaType name="java.lang.String" xmlType="xs:date"  /> -->
+        <!-- adapter="de.cadoculus.ocxviewer.io.OffsetDateTimeAdapter"  -->
+        <!-- <xjc:javaType name="java.lang.String" xmlType="xs:dateTime" /> -->
+
+
+
     </jaxb:globalBindings>
 
     <jaxb:bindings schemaLocation="OCX_Schema.xsd" >

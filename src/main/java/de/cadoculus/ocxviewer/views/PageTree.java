@@ -89,7 +89,7 @@ public final class PageTree extends TreeView<PageRecord> {
         // Reference Surfaces and Grid
         var geomGroup = Item.group("Geometry", new FontIcon(MaterialDesignS.SHIP_WHEEL));
         root.getChildren().add(geomGroup);
-        geomGroup.setExpanded(true);
+        geomGroup.setExpanded(false);
         geomGroup.getChildren().add( Item.group("Tolerances",new FontIcon(MaterialDesignT.TILDE)));
         geomGroup.getChildren().add( Item.group("Coordinate Systems",new FontIcon(MaterialDesignA.AXIS_ARROW)));
         geomGroup.getChildren().add( Item.group("Reference Surfaces",new FontIcon(MaterialDesignL.LAYERS_TRIPLE_OUTLINE)));
@@ -115,20 +115,21 @@ public final class PageTree extends TreeView<PageRecord> {
 
         var catalogueGroup = Item.group("Catalogue", new FontIcon(MaterialDesignP.PACKAGE_VARIANT));
         root.getChildren().add(catalogueGroup);
-        catalogueGroup.setExpanded(true);
+        catalogueGroup.setExpanded(false);
         catalogueGroup.getChildren().add( Item.group("Materials",new FontIcon(MaterialDesignB.BLUR)));
         catalogueGroup.getChildren().add( Item.group("Holes",new FontIcon(MaterialDesignS.STRETCH_TO_PAGE_OUTLINE)));
         catalogueGroup.getChildren().add( Item.group("Bar Sections",new FontIcon(MaterialDesignS.SHAPE_PLUS)));
 
         var unitsGroup = Item.group("Units", new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM));
         root.getChildren().add(unitsGroup);
-        unitsGroup.setExpanded(true);
+        unitsGroup.setExpanded(false);
         unitsGroup.getChildren().add( Item.page("Units",new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM), UnitsPage.class));
         unitsGroup.getChildren().add( Item.page("Dimensions",new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM), UnitDimensionsPage.class));
 
         var internalGroup = Item.group("Internal", new FontIcon(MaterialDesignE.EYE_OUTLINE));
         internalGroup.getChildren().add( Item.page(LogPage.NAME,new FontIcon(MaterialDesignC.COMMENT_TEXT_OUTLINE), LogPage.class));
         root.getChildren().add(internalGroup);
+        internalGroup.setExpanded(true);
 
 
         rootProperty().setValue(root);
