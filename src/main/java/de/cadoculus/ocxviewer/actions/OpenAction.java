@@ -15,15 +15,16 @@
  */
 package de.cadoculus.ocxviewer.actions;
 
-import de.cadoculus.ocxviewer.utils.OCXIO;
-
-import de.cadoculus.ocxviewer.MainController;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.OpenEvent;
+import de.cadoculus.ocxviewer.io.OCXReadResult;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.io.OCXIO;
 import jakarta.xml.bind.JAXBElement;
 import javafx.application.Platform;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -40,11 +41,9 @@ import java.io.StringWriter;
 
 public class OpenAction {
 
-    private static final Logger LOG = LogManager.getLogger(MainController.class);
-
     public static final KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-    public static final String NAME= "Open";
-
+    public static final String NAME = "Open";
+    private static final Logger LOG = LogManager.getLogger(OpenAction.class);
     private File file;
 
     public OpenAction() {
@@ -59,14 +58,14 @@ public class OpenAction {
                 new FileChooser.ExtensionFilter("OCX Files", "*.3docx"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
-        fileChooser.setInitialDirectory( new File(WorkingContext.getInstance().getLastOpenDir()));
+        fileChooser.setInitialDirectory(new File(WorkingContext.getInstance().getLastOpenDir()));
 
-        while(true) {
+        while (true) {
             file = fileChooser.showOpenDialog(null);
             if (file == null) {
                 return;
             }
-            if ( ! (file.exists() && file.canRead())) {
+            if (!(file.exists() && file.canRead())) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Open OCX File");
                 alert.setHeaderText(null);
@@ -84,16 +83,16 @@ public class OpenAction {
         new Thread(() -> {
 
             try {
-                final JAXBElement<OcxXMLT> element = OCXIO.read(selectedFile);
-                LOG.info("loaded file: {}", element);
-                OcxXMLT ocx = element.getValue();
+                final OCXReadResult result = OCXIO.read(selectedFile);
+                OcxXMLT ocx = result.ocx();
+                WorkingContext.getInstance().setOCXFile(selectedFile);
+                WorkingContext.getInstance().setTargetNamespace(result.originalNamespace());
+                WorkingContext.getInstance().setOcx(ocx);
+                LOG.info("header {}", OCXIO.serialize(ocx.getHeader()));
 
-                        Platform.runLater(() -> {
-                            LOG.info("loaded file: {}", element);
-                            WorkingContext.getInstance().setOCXFile(selectedFile);
-                            WorkingContext.getInstance().setOcx( ocx);
-                            OpenEvent openEvent = new OpenEvent( ocx, selectedFile);
-                            DefaultEventBus.getInstance().publish(openEvent);
+                Platform.runLater(() -> {
+                    OpenEvent openEvent = new OpenEvent(ocx, selectedFile);
+                    DefaultEventBus.getInstance().publish(openEvent);
                 });
 
             } catch (Throwable exception) {

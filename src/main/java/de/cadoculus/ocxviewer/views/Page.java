@@ -17,4 +17,31 @@ public interface Page {
     Parent getView();
 
 
+    /**
+     * Called before the page is shown.
+     */
+    public void beforeShow();
+
+    /**
+     * Called after the page is shown.
+     */
+    public void afterShow();
+
+    /**
+     * Called before the page is hidden.
+     */
+    public void beforeHide();
+
+    /**
+     * Called after the page is hidden.
+     */
+    public void afterHide();
+
+    /**
+     * Called before the page is closed.
+     */
+    public void beforeClose();
+
+
+
 }

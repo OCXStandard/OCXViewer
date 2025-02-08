@@ -42,13 +42,14 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 
 public class MainController {
@@ -63,6 +64,7 @@ public class MainController {
     private BorderPane mainBorderPane;
 
     private boolean dataViewInitialized = false;
+    private boolean viewInitialized = false;
 
     private HashMap<Class, Page> class2page = new HashMap<>();
 
@@ -73,6 +75,20 @@ public class MainController {
 
     @FXML
     public void initialize() throws IOException {
+
+        LOG.warn("initialize");
+
+        try {
+            final URL resource = MainController.class.getResource("media/emoji.ttf");
+            if (resource == null) {
+                LOG.error("Font not found");
+            } else {
+                var fontStream = resource.openStream();
+                Font.loadFont(fontStream, 24);
+            }
+        } catch (IOException exp) {
+            LOG.error("Error loading font", exp);
+        }
 
         // register for navigation
         DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> {
@@ -98,46 +114,43 @@ public class MainController {
      */
     private void initializeViews() {
 
-        // run this only once
-        if (dataViewInitialized) {
-            return;
+
+        if (!viewInitialized) {
+            // run this only once
+            // The tree on the left side of the application
+            navigationTreeScrollPane = new ScrollPane();
+            BorderPane.setMargin(navigationTreeScrollPane, new Insets(15, 15, 15, 15));
+
+
+            // TODO: move to central style sheet
+            navigationTreeScrollPane.getStyleClass().add("content-pane");
+
+            navigationTree = new PageTree();
+            navigationTreeScrollPane.setContent(navigationTree);
+
+            navigationTreeScrollPane.setFitToWidth(true);
+            navigationTreeScrollPane.setFitToHeight(true);
+            navigationTreeScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            navigationTreeScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+            mainBorderPane.setLeft(navigationTreeScrollPane);
+
+            stackPane = new StackPane();
+            stackPane.setId("mainStackPane");
+            mainBorderPane.setCenter(stackPane);
+
+            stackPane.getChildren().add((BorderPane) class2page.get(LogPage.class));
+
+            DefaultEventBus.getInstance().subscribe(NavigationEvent.class, event -> {
+                this.switchPages(event);
+            });
+
+            go(WorkingContext.getInstance().isDarkMode());
+            viewInitialized = true;
         }
-
-        dataViewInitialized = true;
-
-        // The tree on the left side of the application
-        navigationTreeScrollPane = new ScrollPane();
-        BorderPane.setMargin(navigationTreeScrollPane, new Insets(15, 15, 15, 15));
-
-
-        // TODO: move to central style sheet
-        navigationTreeScrollPane.getStyleClass().add("content-pane");
-
-        navigationTree = new PageTree();
-        navigationTreeScrollPane.setContent(navigationTree);
-
-        navigationTreeScrollPane.setFitToWidth(true);
-        navigationTreeScrollPane.setFitToHeight(true);
-        navigationTreeScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        navigationTreeScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-        mainBorderPane.setLeft(navigationTreeScrollPane);
-
-        stackPane = new StackPane();
-        stackPane.setId("mainStackPane");
-        mainBorderPane.setCenter(stackPane);
-
-        stackPane.getChildren().add( (BorderPane) class2page.get(LogPage.class));
-
-        DefaultEventBus.getInstance().subscribe(NavigationEvent.class, event -> {
-            this.switchPages(event);
-        });
-
-        go(WorkingContext.getInstance().isDarkMode());
-
+        // this is called on every file open
         initializeDataViews();
     }
-
 
 
     /**
@@ -153,78 +166,87 @@ public class MainController {
         BorderPane newPage = null;
         if (existing == null) {
             // Lazy loading of pages
-
+            LOG.info("Creating page {}", event.getPage());
 
             try {
-                newPage =(BorderPane) event.getPage().getConstructor().newInstance();
+                newPage = (BorderPane) event.getPage().getConstructor().newInstance();
+                class2page.put(newPage.getClass(), (Page) newPage);
             } catch (Exception exp) {
                 LOG.error("Error creating page", exp);
-            }
+                LOG.warn("no page registered for {}", event.getPage());
+                LOG.warn("    pages {}", class2page.keySet());
 
+                switchPages(new NavigationEvent(LogPage.class));
+                return;
+
+            }
+        } else {
+            LOG.debug("use existing page {}", existing);
         }
 
         BorderPane paneToAdd = existing != null ? existing : newPage;
 
-        if (paneToAdd == null) {
-            LOG.warn("no page registered for {}", event.getPage());
-            LOG.warn("    pages {}", class2page.keySet());
 
+        ((Page) paneToAdd).beforeShow();
 
+        var paneToRemove = stackPane.getChildren().isEmpty() ? null : stackPane.getChildren().get(0);
 
-        } else {
+        LOG.debug("pane to add {}, remove {}", paneToAdd, paneToRemove);
 
-            var paneToRemove = stackPane.getChildren().isEmpty() ? null : stackPane.getChildren().get(0);
-            LOG.debug("pane to add {}, remove {}", paneToAdd,  paneToRemove);
-
-            if ( paneToRemove != null && paneToRemove.equals(paneToAdd)) {
-                return;
-            }
-
-            Rectangle clipRect = null;
-            if ( paneToRemove != null) {
-                var bounds = paneToRemove.getBoundsInParent();
-                LOG.error("bounds {}", bounds);
-                clipRect = new Rectangle();
-                clipRect.setX( bounds.getMinX());
-                clipRect.setY( bounds.getMinY());
-                clipRect.setWidth(bounds.getWidth());
-                clipRect.setHeight(bounds.getHeight());
-
-                LOG.info("clip rect {}", clipRect);
-
-                stackPane.setClip(clipRect);
-            }
-
-            paneToAdd.translateXProperty().set(-stackPane.getWidth());
-            var blend = new Blend();
-            var blur = new MotionBlur();
-            blur.setRadius(20);
-            blur.setAngle(10);
-            //blend.setBottomInput(blur);
-            blend.setTopInput(new GaussianBlur(5));
-            blend.setBottomInput(blur);
-            paneToAdd.setEffect(blend);
-            stackPane.getChildren().addAll( paneToAdd);
-
-
-            var movePane = new KeyValue(paneToAdd.translateXProperty(), 0, Interpolator.EASE_IN);
-            //var moveClip = new KeyValue(clipRect.translateXProperty(), 0, Interpolator.EASE_IN);
-            //var reduceClip = new KeyValue(clipRect.widthProperty(), 0, Interpolator.EASE_IN);
-            var keyFrame = new KeyFrame(Duration.millis(450), movePane);
-            var timeline =  new Timeline(keyFrame);
-            if ( paneToRemove != null) {
-                timeline.setOnFinished(evt -> {
-                    stackPane.getChildren().remove(paneToRemove);
-                    LOG.info("after {},{} {}x{}", paneToAdd.getLayoutX(), paneToAdd.getLayoutY(), paneToAdd.getWidth(), paneToAdd.getHeight());
-                    stackPane.setClip(null);
-                    paneToAdd.setEffect(null);
-                    LOG.info("after clip {},{} {}x{}", paneToAdd.getLayoutX(), paneToAdd.getLayoutY(), paneToAdd.getWidth(), paneToAdd.getHeight());
-                });
-            }
-
-            timeline.play();
-
+        if (paneToRemove != null && paneToRemove.equals(paneToAdd)) {
+            return;
         }
+
+        Rectangle clipRect = null;
+        if (paneToRemove != null) {
+
+            ((Page) paneToRemove).beforeHide();
+
+            var bounds = paneToRemove.getBoundsInParent();
+            //LOG.error("bounds {}", bounds);
+            clipRect = new Rectangle();
+            clipRect.setX(bounds.getMinX());
+            clipRect.setY(bounds.getMinY());
+            clipRect.setWidth(bounds.getWidth());
+            clipRect.setHeight(bounds.getHeight());
+
+            //LOG.info("clip rect {}", clipRect);
+
+            stackPane.setClip(clipRect);
+        }
+
+        paneToAdd.translateXProperty().set(-stackPane.getWidth());
+        var blend = new Blend();
+        var blur = new MotionBlur();
+        blur.setRadius(20);
+        blur.setAngle(10);
+        //blend.setBottomInput(blur);
+        blend.setTopInput(new GaussianBlur(5));
+        blend.setBottomInput(blur);
+        paneToAdd.setEffect(blend);
+        stackPane.getChildren().addAll(paneToAdd);
+
+
+        var movePane = new KeyValue(paneToAdd.translateXProperty(), 0, Interpolator.EASE_IN);
+        //var moveClip = new KeyValue(clipRect.translateXProperty(), 0, Interpolator.EASE_IN);
+        //var reduceClip = new KeyValue(clipRect.widthProperty(), 0, Interpolator.EASE_IN);
+        var keyFrame = new KeyFrame(Duration.millis(450), movePane);
+        var timeline = new Timeline(keyFrame);
+        if (paneToRemove != null) {
+            timeline.setOnFinished(evt -> {
+                stackPane.getChildren().remove(paneToRemove);
+                ((Page) paneToRemove).afterHide();
+                ((Page) paneToAdd).afterShow();
+
+                //LOG.info("after {},{} {}x{}", paneToAdd.getLayoutX(), paneToAdd.getLayoutY(), paneToAdd.getWidth(), paneToAdd.getHeight());
+                stackPane.setClip(null);
+                paneToAdd.setEffect(null);
+                //LOG.info("after clip {},{} {}x{}", paneToAdd.getLayoutX(), paneToAdd.getLayoutY(), paneToAdd.getWidth(), paneToAdd.getHeight());
+            });
+        }
+
+        timeline.play();
+
 
     }
 
@@ -232,10 +254,16 @@ public class MainController {
 
         // get rid of all pages with binding to previous loaded models
 
-        class2page.keySet().forEach( c -> {
-            if (c != LogPage.class) {
+        // raise the log page
+        switchPages(new NavigationEvent(LogPage.class));
 
-            class2page.remove(c);}
+        class2page.keySet().forEach(c -> {
+            if (c != LogPage.class) {
+                final Page page = class2page.get(c);
+                page.beforeHide();
+                page.beforeClose();
+                class2page.remove(c);
+            }
         });
 
         // Now the pages on the right
@@ -243,11 +271,11 @@ public class MainController {
         class2page.put(HeaderPage.class, headerPage);
         this.switchPages(new NavigationEvent(HeaderPage.class));
 
-        final ClassficationSocietyPage classficationDataPage = new ClassficationSocietyPage();
-        class2page.put(ClassficationSocietyPage.class, classficationDataPage);
-
-        final PrincipalParticularsPage principalParticularsPage = new PrincipalParticularsPage();
-        class2page.put(PrincipalParticularsPage.class, principalParticularsPage);
+//        final ClassficationSocietyPage classficationDataPage = new ClassficationSocietyPage();
+//        class2page.put(ClassficationSocietyPage.class, classficationDataPage);
+//
+//        final PrincipalParticularsPage principalParticularsPage = new PrincipalParticularsPage();
+//        class2page.put(PrincipalParticularsPage.class, principalParticularsPage);
 
 
     }
@@ -269,7 +297,7 @@ public class MainController {
         DefaultEventBus.getInstance().publish(hke);
     }
 
-    public void swithchUIMode(ActionEvent actionEvent) {
+    public void switchUIMode(ActionEvent actionEvent) {
 
         boolean dark = !WorkingContext.getInstance().isDarkMode();
         go(dark);
@@ -282,7 +310,7 @@ public class MainController {
 
             WorkingContext.getInstance().getMainScene().getStylesheets().clear();
             var css = this.getClass().getResource("dark.css").toExternalForm();
-            WorkingContext.getInstance().getMainScene().getStylesheets().add( css);
+            WorkingContext.getInstance().getMainScene().getStylesheets().add(css);
             LOG.debug("csss {}", css);
 
         } else {
@@ -291,7 +319,7 @@ public class MainController {
 
             WorkingContext.getInstance().getMainScene().getStylesheets().clear();
             var css = this.getClass().getResource("light.css").toExternalForm();
-            WorkingContext.getInstance().getMainScene().getStylesheets().add( css);
+            WorkingContext.getInstance().getMainScene().getStylesheets().add(css);
             LOG.debug("csss {}", css);
 
 

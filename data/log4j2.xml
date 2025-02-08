@@ -26,13 +26,15 @@
     <Loggers>
 
 
-        <Logger name="de.cadoculus.ocxviewer.views.PageTree" level="info"/>
+        <Logger name="de.cadoculus.ocxviewer.views" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.views.HeaderPage" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.logging.LoggerHelper" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.MainController" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.actions.ActionDispatcher" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.io.OCXIO" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.io.NamespaceReplacingInputStream" level="debug"/>
 
-        <Root level="WARN">
+        <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>
             <AppenderRef ref="ListBoxAppender"/>

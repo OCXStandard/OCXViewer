@@ -111,8 +111,7 @@ public class PrincipalParticularsPage extends AbstractDataViewPage {
         label.setTooltip(new Tooltip("Length between perpendiculars"));
         gridPane.add(label, 0, ++row);
 
-        final QuantityT lpp = prince.getLpp();
-        var group2 = createAndBind(lpp, true);
+        var group2 = createAndBind(prince.getLpp(), true);
         gridPane.add(group2, 1, row);
 
 
