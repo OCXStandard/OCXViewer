@@ -19,7 +19,6 @@ import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.models.UnitRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -39,12 +38,14 @@ import org.ocx_schema.v310rc3.OcxXMLT;
 
 import java.util.List;
 
+/**
+ * The UnitsPage displays the units used in the OCX file.
+ */
 public class UnitsPage extends AbstractDataViewPage{
     public static final String NAME = "Units";
     private static final Logger LOG = LogManager.getLogger(UnitsPage.class);
 
-    private final ObjectProperty<UnitRecord> selectedUnit = new SimpleObjectProperty<>();
-
+    private final TableView<UnitRecord> table;
     private final TextField unitId = new TextField();
     private final TextField unitNames = new TextField();
     private final TextField unitSymbols = new TextField();
@@ -73,6 +74,7 @@ public class UnitsPage extends AbstractDataViewPage{
 
         }
     };
+
 
 
     public UnitsPage() {
@@ -121,13 +123,13 @@ public class UnitsPage extends AbstractDataViewPage{
         final UnitsML unitsML = ocx.getUnitsML();
         final UnitSet unitSet = unitsML.getUnitSet();
         final List<Unit> units = unitSet.getUnits();
-        LOG.debug("found #" + units.size() + " units");
+        LOG.debug("found #{} units", units.size() );
 
         for (Unit unit : units) {
             unitRecords.add(UnitRecord.create(unit));
         }
 
-        var table = new TableView<UnitRecord>(unitRecords);
+        table = new TableView<>(unitRecords);
         table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3);
         table.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
@@ -173,12 +175,14 @@ public class UnitsPage extends AbstractDataViewPage{
         gridPane.add(unitDimensions, 1, row++, 3, 1);
 
 
-        selectedUnit.bind(table.getSelectionModel().selectedItemProperty());
-        selectedUnit.addListener(userListener);
-
-        table.getSelectionModel().selectFirst();
+        table.getSelectionModel().selectedItemProperty().addListener(userListener);
 
     }
 
-    
+    @Override
+    public void afterShow() {
+        super.afterShow();
+
+
+    }
 }

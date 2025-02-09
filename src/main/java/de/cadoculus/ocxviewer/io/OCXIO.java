@@ -24,7 +24,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.stream.XMLInputFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -67,21 +66,26 @@ public class OCXIO  {
         }
         LOG.info("file {} uses namespace {}", file.getName(), usedNamespace);
 
-        try (var fis = new FileInputStream(file); var rep = new ReplacingInputStream(fis, usedNamespace, targetNamespace);) {
+        try (var fis = new FileInputStream(file); var rep = new ReplacingInputStream(fis, usedNamespace, targetNamespace)) {
             var jaxbContext = org.eclipse.persistence.jaxb.JAXBContextFactory
                     .createContext(new Class[]{
                                 oasis.unitsml.ObjectFactory.class,
                             org.ocx_schema.v310rc3.ObjectFactory.class}, null);
             var jaxUnmarshaller = jaxbContext.createUnmarshaller();
-            XMLInputFactory xif = XMLInputFactory.newFactory();
 
             final Object unmarshal = jaxUnmarshaller.unmarshal(rep);
             LOG.info("loaded {} from {}", unmarshal, file.getAbsolutePath());
-            JAXBElement jaxb = (JAXBElement) unmarshal;
 
-            LOG.info("loaded {} {} ",jaxb.getName(),  jaxb.getValue());
+            if ( unmarshal instanceof JAXBElement jaxbElement && jaxbElement.getValue() instanceof OcxXMLT ocxXMLT) {
 
-            return new OCXReadResult(usedNamespace, (OcxXMLT) jaxb.getValue());
+                LOG.info("loaded {} {} ", jaxbElement.getName(), ocxXMLT);
+
+
+                return new OCXReadResult(usedNamespace, ocxXMLT);
+            }
+
+            LOG.error("failed to loaded OCX file, got unexpected type {}", unmarshal.getClass());
+            throw new IOException("unexpected type " + unmarshal.getClass());
 
         } catch (Exception e) {
             LOG.error("failed to read OCX from {}", file.getAbsolutePath(), e);
@@ -131,7 +135,7 @@ public class OCXIO  {
             var jaxMarshaller = jaxbContext.createMarshaller();
             jaxMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
             var qname = new QName("https://3docx.org/fileadmin//ocx_schema//V310rc3//OCX_Schema.xsd", "ocxXML");
-            var jaxb = new JAXBElement<OcxXMLT>(qname, OcxXMLT.class, ocx);
+            var jaxb = new JAXBElement<>(qname, OcxXMLT.class, ocx);
             jaxMarshaller.marshal(jaxb, file);
             LOG.info("saved {} to {}", ocx, file.getAbsolutePath());
         } catch (JAXBException e) {
@@ -158,10 +162,10 @@ public class OCXIO  {
                 for (int i = 0; i < attributes.getLength(); i++) {
                     var attrQName = attributes.getQName(i);
                     int attrIdx = attrQName.indexOf(':');
-                    var attrPrfx  = attrIdx > 0 ? attrQName.substring(0, attrIdx) : "";
+                    var attrPrefix  = attrIdx > 0 ? attrQName.substring(0, attrIdx) : "";
                     var attrLocal = attrIdx > 0 ? attrQName.substring(attrIdx+1) : attrQName;
 
-                    LOG.info("    attr {}|{}={}", attrPrfx, attrLocal, attributes.getValue(i));
+                    LOG.info("    attr {}|{}={}", attrPrefix, attrLocal, attributes.getValue(i));
 
                     if (prefix.equals(attrLocal)) {
                         namespace = attributes.getValue(i);

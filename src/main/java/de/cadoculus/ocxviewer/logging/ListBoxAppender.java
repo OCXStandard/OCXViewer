@@ -27,6 +27,9 @@ import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 
 
+/**
+ * This is a custom Log4j2 appender that appends log events to the ListBox in the LogPage.
+ */
 @Plugin(name="ListBoxAppender", category= Core.CATEGORY_NAME, elementType= Appender.ELEMENT_TYPE)
 public class ListBoxAppender extends AbstractAppender {
     protected ListBoxAppender(String name, Filter filter) {
@@ -36,7 +39,7 @@ public class ListBoxAppender extends AbstractAppender {
     @PluginFactory
     public static ListBoxAppender createAppender(@PluginAttribute("name") String name, @PluginElement("Filter") Filter filter) {
 
-        System.out.println("ListBoxAppender.createAppender");
+
         return new ListBoxAppender(name, filter);
     }
 
@@ -47,7 +50,7 @@ public class ListBoxAppender extends AbstractAppender {
             var page = LogPage.getInstance();
             page.addEvent(new LogRecord(event.getLevel(), event.getMessage().getFormattedMessage(), event.getThrown()));
         } else {
-            System.out.println("ListBoxAppender.append: LogPage.getInstance() is null");
+            // System.out.println("ListBoxAppender.append: LogPage.getInstance() is null");
         }
 
     }

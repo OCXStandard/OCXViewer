@@ -31,7 +31,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
 
-public class HeaderPage extends AbstractDataViewPage implements  Page{
+/**
+ * Page to display the header information of the OCX file.
+ */
+public class HeaderPage extends AbstractDataViewPage implements Page {
 
     public static final String NAME = "Header";
     private static final Logger LOG = LogManager.getLogger(HeaderPage.class);
@@ -66,7 +69,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         col4.setHgrow(Priority.ALWAYS);
         col4.setMaxWidth(600);
 
-        gridPane.getColumnConstraints().addAll(col1,col2, col3, col4);
+        gridPane.getColumnConstraints().addAll(col1, col2, col3, col4);
         gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 10;");
 
 
@@ -74,7 +77,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         // Newbuilding Society
         var label = new Label("File Identification");
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++, 2,1);
+        gridPane.add(label, 0, row++, 2, 1);
         GridPane.setHalignment(label, HPos.LEFT);
 
         label = new Label("Author");
@@ -87,7 +90,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
 
         label = new Label("Organization");
         label.setTooltip(new Tooltip("Name of originating organization."));
-        gridPane.add(label, 2,row);
+        gridPane.add(label, 2, row);
         textField = new TextField();
         bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "organization", String.class);
         gridPane.add(textField, 3, row++);
@@ -106,7 +109,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
 
         label = new Label("Source System");
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++, 2,1);
+        gridPane.add(label, 0, row++, 2, 1);
         GridPane.setHalignment(label, HPos.LEFT);
         GridPane.setMargin(label, new Insets(10, 0, 10, 0));
 
@@ -120,7 +123,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
 
         label = new Label("Application Version");
         label.setTooltip(new Tooltip("Version of originating application."));
-        gridPane.add(label, 2,row);
+        gridPane.add(label, 2, row);
 
         textField = new TextField();
         bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "applicationVersion", String.class);
@@ -129,7 +132,7 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
         label = new Label("Documentation");
         label.getStyleClass().add(Styles.TITLE_4);
         label.setTooltip(new Tooltip("Documentation of the content of the XML file."));
-        gridPane.add(label, 0, row,2,1);
+        gridPane.add(label, 0, row, 2, 1);
         GridPane.setMargin(label, new Insets(10, 0, 10, 0));
         GridPane.setHalignment(label, HPos.LEFT);
 
@@ -139,7 +142,6 @@ public class HeaderPage extends AbstractDataViewPage implements  Page{
 
 
     }
-
 
 
 }

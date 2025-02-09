@@ -25,8 +25,8 @@ import java.io.File;
  */
 public class OpenEvent extends  Event{
 
-    private OcxXMLT ocx;
-    private File ocxFile;
+    private final OcxXMLT ocx;
+    private final File ocxFile;
 
     public OpenEvent(OcxXMLT ocx, File ocxFile) {
         this.ocx = ocx;
@@ -37,8 +37,8 @@ public class OpenEvent extends  Event{
         return ocx;
     }
 
-    public void setOcx(OcxXMLT ocx) {
-        this.ocx = ocx;
+    public File getOcxFile() {
+        return ocxFile;
     }
 
     @Override

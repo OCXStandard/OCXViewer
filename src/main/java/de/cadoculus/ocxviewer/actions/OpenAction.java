@@ -17,10 +17,9 @@ package de.cadoculus.ocxviewer.actions;
 
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.OpenEvent;
+import de.cadoculus.ocxviewer.io.OCXIO;
 import de.cadoculus.ocxviewer.io.OCXReadResult;
 import de.cadoculus.ocxviewer.models.WorkingContext;
-import de.cadoculus.ocxviewer.io.OCXIO;
-import jakarta.xml.bind.JAXBElement;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -39,18 +38,23 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+/**
+ * Action to open an OCX file.
+ */
 public class OpenAction {
 
     public static final KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
     public static final String NAME = "Open";
     private static final Logger LOG = LogManager.getLogger(OpenAction.class);
-    private File file;
+
 
     public OpenAction() {
     }
 
     public void run() {
         LOG.debug("open");
+
+        File file;
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open OCX File");
@@ -97,8 +101,6 @@ public class OpenAction {
 
             } catch (Throwable exception) {
                 handleException(exception);
-
-                return;
             }
 
         }).start();

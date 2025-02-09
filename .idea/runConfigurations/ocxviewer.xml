@@ -1,11 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ocxviewer" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="23" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="de.cadoculus.ocxviewer.Main" />
     <module name="ocxviewer" />
     <option name="PROGRAM_PARAMETERS" value="--log data/log4j2.xml" />
-    <option name="VM_PARAMETERS" value="-Dweglog4j2.debug=true --module-path binaries/javafx-sdk-23.0.1/lib --add-modules javafx.controls,javafx.graphics,javafx.fxml" />
+    <option name="VM_PARAMETERS" value="-Dweglog4j2.debug=true --module-path $PROJECT_DIR$/binaries/javafx-sdk-24/lib --add-modules javafx.controls,javafx.graphics,javafx.fxml" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
