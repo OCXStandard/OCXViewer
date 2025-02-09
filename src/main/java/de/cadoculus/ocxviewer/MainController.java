@@ -56,17 +56,13 @@ public class MainController {
 
     private static final Logger LOG = LogManager.getLogger(MainController.class);
 
-    private TreeView navigationTree;
-    private ScrollPane navigationTreeScrollPane;
-
     private StackPane stackPane;
     @FXML
     private BorderPane mainBorderPane;
 
-    private boolean dataViewInitialized = false;
     private boolean viewInitialized = false;
 
-    private HashMap<Class, Page> class2page = new HashMap<>();
+    private final HashMap<Class, Page> class2page = new HashMap<>();
 
     public MainController() {
         super();
@@ -91,14 +87,12 @@ public class MainController {
         }
 
         // register for navigation
-        DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> {
-            initializeViews();
-        });
+        DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> initializeViews());
 
         // and create default pages
 
         final LogoPage logoPage = new LogoPage();
-        mainBorderPane.setCenter((Node) logoPage);
+        mainBorderPane.setCenter(logoPage);
 
         // This is initialized here to start collecting log events when the user opens a file
         final LogPage logPage = new LogPage();
@@ -118,14 +112,14 @@ public class MainController {
         if (!viewInitialized) {
             // run this only once
             // The tree on the left side of the application
-            navigationTreeScrollPane = new ScrollPane();
+            ScrollPane navigationTreeScrollPane = new ScrollPane();
             BorderPane.setMargin(navigationTreeScrollPane, new Insets(15, 15, 15, 15));
 
 
             // TODO: move to central style sheet
             navigationTreeScrollPane.getStyleClass().add("content-pane");
 
-            navigationTree = new PageTree();
+            PageTree navigationTree = new PageTree();
             navigationTreeScrollPane.setContent(navigationTree);
 
             navigationTreeScrollPane.setFitToWidth(true);
@@ -141,9 +135,7 @@ public class MainController {
 
             stackPane.getChildren().add((BorderPane) class2page.get(LogPage.class));
 
-            DefaultEventBus.getInstance().subscribe(NavigationEvent.class, event -> {
-                this.switchPages(event);
-            });
+            DefaultEventBus.getInstance().subscribe(NavigationEvent.class, this::switchPages);
 
             go(WorkingContext.getInstance().isDarkMode());
             viewInitialized = true;
@@ -156,7 +148,7 @@ public class MainController {
     /**
      * This method is called when a navigation event is received.
      *
-     * @param event
+     * @param event the navigation event
      */
     private void switchPages(NavigationEvent event) {
 
@@ -271,12 +263,6 @@ public class MainController {
         class2page.put(HeaderPage.class, headerPage);
         this.switchPages(new NavigationEvent(HeaderPage.class));
 
-//        final ClassficationSocietyPage classficationDataPage = new ClassficationSocietyPage();
-//        class2page.put(ClassficationSocietyPage.class, classficationDataPage);
-//
-//        final PrincipalParticularsPage principalParticularsPage = new PrincipalParticularsPage();
-//        class2page.put(PrincipalParticularsPage.class, principalParticularsPage);
-
 
     }
 
@@ -311,7 +297,7 @@ public class MainController {
             WorkingContext.getInstance().getMainScene().getStylesheets().clear();
             var css = this.getClass().getResource("dark.css").toExternalForm();
             WorkingContext.getInstance().getMainScene().getStylesheets().add(css);
-            LOG.debug("csss {}", css);
+            LOG.debug("css  dark {}", css);
 
         } else {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
@@ -320,7 +306,7 @@ public class MainController {
             WorkingContext.getInstance().getMainScene().getStylesheets().clear();
             var css = this.getClass().getResource("light.css").toExternalForm();
             WorkingContext.getInstance().getMainScene().getStylesheets().add(css);
-            LOG.debug("csss {}", css);
+            LOG.debug("css light {}", css);
 
 
         }

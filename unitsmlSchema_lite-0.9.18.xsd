@@ -4,10 +4,7 @@
     Website: http://unitsml.nist.gov
     Version History: http://unitsml.nist.gov/Schema/schema_changes.txt
 -->
-<xsd:schema xmlns="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18"
-			xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace"
-			targetNamespace="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18" elementFormDefault="qualified"
-			attributeFormDefault="unqualified" version="0.9.18">
+<xsd:schema xmlns="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" targetNamespace="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.9.18">
 	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
 	<!--=== Root-Node of an UnitsML document ===-->
 	<xsd:element name="UnitsML" type="UnitsMLType">
@@ -163,124 +160,124 @@
 							<xsd:documentation>zetta: sextillion</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="P">
+					<xsd:enumeration value="E">
 						<xsd:annotation>
 							<xsd:documentation>exa: quintillion</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="T">
+					<xsd:enumeration value="P">
 						<xsd:annotation>
 							<xsd:documentation>peta: quadrillion</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="G">
+					<xsd:enumeration value="T">
 						<xsd:annotation>
 							<xsd:documentation>tera: trillion</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="M">
+					<xsd:enumeration value="G">
 						<xsd:annotation>
 							<xsd:documentation>giga: billion</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="k">
+					<xsd:enumeration value="M">
 						<xsd:annotation>
 							<xsd:documentation>mega: million</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="h">
+					<xsd:enumeration value="k">
 						<xsd:annotation>
 							<xsd:documentation>kilo: thousand</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="da">
+					<xsd:enumeration value="h">
 						<xsd:annotation>
 							<xsd:documentation>hecto: hundred</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="d">
+					<xsd:enumeration value="da">
 						<xsd:annotation>
-							<xsd:documentation>deca: ten</xsd:documentation>
+							<xsd:documentation>deka: ten</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="c">
+					<xsd:enumeration value="d">
 						<xsd:annotation>
 							<xsd:documentation>deci: tenth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="m">
+					<xsd:enumeration value="c">
 						<xsd:annotation>
 							<xsd:documentation>centi: hundredth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="u">
+					<xsd:enumeration value="m">
 						<xsd:annotation>
 							<xsd:documentation>milli: thousandth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="n">
+					<xsd:enumeration value="mu">
 						<xsd:annotation>
 							<xsd:documentation>micro: millonth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="p">
+					<xsd:enumeration value="n">
 						<xsd:annotation>
 							<xsd:documentation>nano: billonth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="f">
+					<xsd:enumeration value="p">
 						<xsd:annotation>
 							<xsd:documentation>pico: trillionth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="a">
+					<xsd:enumeration value="f">
 						<xsd:annotation>
 							<xsd:documentation>femto: quadrillionth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="z">
+					<xsd:enumeration value="a">
 						<xsd:annotation>
 							<xsd:documentation>atto: quintillionth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="y">
+					<xsd:enumeration value="z">
 						<xsd:annotation>
 							<xsd:documentation>zepto: sextillionth:</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="Ki">
+					<xsd:enumeration value="y">
 						<xsd:annotation>
 							<xsd:documentation>yocto: septillionth</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="Mi">
+					<xsd:enumeration value="Ki">
 						<xsd:annotation>
 							<xsd:documentation>kibi: kilobinary</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="Gi">
+					<xsd:enumeration value="Mi">
 						<xsd:annotation>
 							<xsd:documentation>mebi: magabinary</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="Ti">
+					<xsd:enumeration value="Gi">
 						<xsd:annotation>
 							<xsd:documentation>gibi: gigabinary</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
-					<xsd:enumeration value="Pi">
+					<xsd:enumeration value="Ti">
 						<xsd:annotation>
 							<xsd:documentation>tebi: terabinary</xsd:documentation>
-						</xsd:annotation>
-					</xsd:enumeration>
-					<xsd:enumeration value="Ei">
-						<xsd:annotation>
-							<xsd:documentation>exbi: exabinary</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
 					<xsd:enumeration value="Zi">
 						<xsd:annotation>
 							<xsd:documentation>pebi: petabinary</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="Ei">
+						<xsd:annotation>
+							<xsd:documentation>exbi: exabinary</xsd:documentation>
 						</xsd:annotation>
 					</xsd:enumeration>
 					<xsd:enumeration value="Yi">
@@ -323,13 +320,14 @@
 		<xsd:sequence>
 			<xsd:element ref="UnitName" maxOccurs="unbounded"/>
 			<xsd:element ref="UnitSymbol" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="RootUnits" minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="RootUnits" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>Container for defining derived units in terms of their root units. This allows a precise definition of a wide range of units. The goal is to improve interoperability among applications and databases which use derived units based on commonly encountered root units.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
-		<xsd:attribute ref="xml:id" use="required"/>
+		<!-- <xsd:attribute ref="xml:id" use="required"/> -->
+		<xsd:attribute name="id" type="xsd:ID" use="required"/>
 		<xsd:attributeGroup ref="dimensionURL">
 			<xsd:annotation>
 				<xsd:documentation>Reference to a representation of the unit or quantity in terms of the 7 SI base dimensions.</xsd:documentation>
@@ -641,7 +639,9 @@
 			<xsd:element ref="AmountOfSubstance" minOccurs="0"/>
 			<xsd:element ref="LuminousIntensity" minOccurs="0"/>
 		</xsd:sequence>
-		<xsd:attribute ref="xml:id" use="required"/>
+		<!--
+		<xsd:attribute ref="xml:id" use="required"/> -->
+		<xsd:attribute name="id" type="xsd:ID" use="required"/>
 		<xsd:attribute name="dimensionless" type="xsd:boolean" use="optional" default="0">
 			<xsd:annotation>
 				<xsd:documentation>Boolean to designate that a quantity or unit is dimensionless.</xsd:documentation>

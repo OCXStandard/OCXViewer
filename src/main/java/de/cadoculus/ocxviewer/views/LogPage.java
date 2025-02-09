@@ -20,8 +20,6 @@ import atlantafx.base.util.BBCodeParser;
 import de.cadoculus.ocxviewer.logging.LogRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -101,9 +99,9 @@ public class LogPage extends BorderPane implements Page {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        this.listBox = new ListView<LogRecord>();
+        this.listBox = new ListView<>();
         scrollPane.setContent(listBox);
-        listBox.setCellFactory(lv -> new ListCell<LogRecord>() {
+        listBox.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(LogRecord item, boolean empty) {
                 super.updateItem(item, empty);
@@ -115,36 +113,36 @@ public class LogPage extends BorderPane implements Page {
                     StringBuilder tooltipContent = new StringBuilder(item.category().name());
                     tooltipContent.append(" \n\n");
                     tooltipContent.append(item.msg());
-                    if ( item.thrown() != null) {
+                    if (item.thrown() != null) {
                         tooltipContent.append("\n\n");
                         tooltipContent.append(item.thrown().getMessage());
                     }
 
-                    setTooltip( new Tooltip(tooltipContent.toString()));
+                    setTooltip(new Tooltip(tooltipContent.toString()));
 
-                    if ( item.category() == Level.INFO) {
+                    if (item.category() == Level.INFO) {
 
                         setGraphic(new FontIcon(MaterialDesignI.INFORMATION_OUTLINE));
-                        if ( getIndex() %2==0) {
+                        if (getIndex() % 2 == 0) {
                             setStyle("-fx-background-color: -color-bg-default");
                         } else if (WorkingContext.getInstance().isDarkMode()) {
                             setStyle("-fx-background-color: -color-base-8");
                         } else {
-                           setStyle("-fx-background-color: -color-base-1");
+                            setStyle("-fx-background-color: -color-base-1");
                         }
 
-                    } else if ( item.category() == Level.WARN) {
+                    } else if (item.category() == Level.WARN) {
                         setGraphic(new FontIcon(MaterialDesignE.EXCLAMATION_THICK));
 
-                        if ( getIndex() %2==0) {
+                        if (getIndex() % 2 == 0) {
                             setStyle("-fx-background-color: -color-warning-0");
                         } else {
                             setStyle("-fx-background-color: -color-warning-1");
                         }
-                    } else if ( item.category() == Level.ERROR) {
+                    } else if (item.category() == Level.ERROR) {
                         setGraphic(new FontIcon(MaterialDesignF.FLASH));
 
-                        if ( getIndex() %2==0) {
+                        if (getIndex() % 2 == 0) {
                             setStyle("-fx-background-color: -color-danger-0");
                         } else {
                             setStyle("-fx-background-color: -color-danger-1");

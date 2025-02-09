@@ -38,6 +38,9 @@ import org.kordamp.ikonli.materialdesign2.*;
 
 import java.util.Objects;
 
+/**
+ * A tree view for navigating between pages.
+ */
 public final class PageTree extends TreeView<PageRecord> {
     private static final Logger LOG = LogManager.getLogger(PageTree.class);
 
@@ -55,16 +58,7 @@ public final class PageTree extends TreeView<PageRecord> {
         });
 
         getStyleClass().addAll(Tweaks.EDGE_TO_EDGE);
-//        this.setStyle( """
-//
-//
-//
-//        -fx-background-color: -color-bg-default;
-//        -fx-background-radius: 15px;
-//
-//        -fx-border-radius: 15px;
-//        -fx-border-width: 1px;
-//        -fx-border-color: -color-accent-0;""");
+
         setShowRoot(false);
 
         setCellFactory(p -> new NavTreeCell());
@@ -79,7 +73,7 @@ public final class PageTree extends TreeView<PageRecord> {
         fileGroup.setExpanded(true);
 
         fileGroup.getChildren().add( Item.page("Header",new FontIcon(MaterialDesignI.INFORMATION_OUTLINE), HeaderPage.class));
-        fileGroup.getChildren().add( Item.page(ClassficationSocietyPage.NAME,new FontIcon(MaterialDesignA.ANCHOR), ClassficationSocietyPage.class));
+        fileGroup.getChildren().add( Item.page(ClassificationSocietyPage.NAME,new FontIcon(MaterialDesignA.ANCHOR), ClassificationSocietyPage.class));
         fileGroup.getChildren().add( Item.page(PrincipalParticularsPage.NAME,new FontIcon(MaterialDesignA.ARROW_LEFT_RIGHT), PrincipalParticularsPage.class));
         fileGroup.getChildren().add( Item.page(BuilderInformationPage.NAME,new FontIcon(MaterialDesignG.GANTRY_CRANE), BuilderInformationPage.class));
         fileGroup.getChildren().add( Item.page(TonnageInformationPage.NAME,new FontIcon(MaterialDesignC.CUBE_OUTLINE), TonnageInformationPage.class));
@@ -155,9 +149,6 @@ public final class PageTree extends TreeView<PageRecord> {
 
             arrowIcon = new FontIcon();
             arrowIcon.getStyleClass().add("arrow");
-
-//            tagLabel = new Label("new");
-//            tagLabel.getStyleClass().add("tag");
 
             root = new HBox();
             root.setAlignment(Pos.CENTER_LEFT);

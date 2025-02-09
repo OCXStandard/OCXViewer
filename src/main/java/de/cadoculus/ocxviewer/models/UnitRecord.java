@@ -15,15 +15,17 @@
  */
 package de.cadoculus.ocxviewer.models;
 
-import de.cadoculus.ocxviewer.views.UnitsPage;
-import oasis.unitsml.*;
+import oasis.unitsml.EnumeratedRootUnit;
+import oasis.unitsml.Unit;
+import oasis.unitsml.UnitName;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Wrapper record for a unit.
+ */
 public record UnitRecord(
         Unit unit,
         String id,
@@ -33,7 +35,7 @@ public record UnitRecord(
         String dimension
         ) {
 
-    private static final Logger LOG = LogManager.getLogger(UnitRecord.class);
+    //private static final Logger LOG = LogManager.getLogger(UnitRecord.class);
 
     public static UnitRecord create(Unit unit) {
 
@@ -43,7 +45,7 @@ public record UnitRecord(
         for (Iterator<UnitName> unitIt = nameList.iterator();unitIt.hasNext();) {
             UnitName name = unitIt.next();
             FlagsEnum flag = FlagsEnum.fromLocale(name.getLang());
-            LOG.info("found flag: " + flag.name() + " " + flag.getFlag());
+            //LOG.info("found flag: " + flag.name() + " " + flag.getFlag());
             if (onLinux) {
                 names.append(flag.getLocale().getDisplayLanguage()).append(" :  ").append(name.getValue());
             } else {
@@ -97,9 +99,7 @@ public record UnitRecord(
 
         StringBuilder symbols = new StringBuilder();
         if ( unit.getUnitSymbols() !=null) {
-            unit.getUnitSymbols().forEach((symbol) -> {
-               symbols.append(symbol.getType()).append(", ");
-            });
+            unit.getUnitSymbols().forEach((symbol) -> symbols.append(symbol.getType()).append(", "));
         }
 
 

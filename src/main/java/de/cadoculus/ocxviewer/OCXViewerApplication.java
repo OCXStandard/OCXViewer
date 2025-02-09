@@ -11,34 +11,33 @@ import de.cadoculus.ocxviewer.event.HotkeyEvent;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The viewer application
+ */
 public class OCXViewerApplication extends Application {
 
-    private static final Logger LOG = LogManager.getLogger(Main.class);
-    public static final boolean IS_DEV_MODE = LOG.isDebugEnabled();
+    private static final Logger LOG = LogManager.getLogger(OCXViewerApplication.class);
 
     @Override
     public void start(Stage stage) throws IOException {
 
+        LOG.debug("Starting OCXViewerApplication");
+
         // Exit JAVA when the window is closed
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Platform.exit();
-                System.exit(0);
-            }
+        stage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
         });
 
-        // This loads the main-view.fxml file and thus starts the comple UI of the application
+        // This loads the main-view.fxml file and thus starts the complete UI of the application
         // See MainController for the actual logic
         FXMLLoader fxmlLoader = new FXMLLoader(OCXViewerApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 900);
@@ -50,16 +49,10 @@ public class OCXViewerApplication extends Application {
         new ActionDispatcher();
 
         // and register some hotkeys
-        scene.getAccelerators().put(OpenAction.KEYS, () -> {
-            DefaultEventBus.getInstance().publish( new HotkeyEvent(OpenAction.KEYS));
-        });
+        scene.getAccelerators().put(OpenAction.KEYS, () -> DefaultEventBus.getInstance().publish( new HotkeyEvent(OpenAction.KEYS)));
 
-        scene.getAccelerators().put(ExitAction.KEYS, () -> {
-            DefaultEventBus.getInstance().publish( new HotkeyEvent(ExitAction.KEYS));
-        });
-        scene.getAccelerators().put(AboutAction.KEYS, () -> {
-            DefaultEventBus.getInstance().publish( new HotkeyEvent(AboutAction.KEYS));
-        });
+        scene.getAccelerators().put(ExitAction.KEYS, () -> DefaultEventBus.getInstance().publish( new HotkeyEvent(ExitAction.KEYS)));
+        scene.getAccelerators().put(AboutAction.KEYS, () -> DefaultEventBus.getInstance().publish( new HotkeyEvent(AboutAction.KEYS)));
 
         // set the theme
         if (! WorkingContext.getInstance().isDarkMode()) {

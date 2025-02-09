@@ -17,7 +17,6 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.models.WorkingContext;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
@@ -34,13 +33,16 @@ import org.ocx_schema.v310rc3.ClassificationSociety;
 
 import java.util.Arrays;
 
-public class ClassficationSocietyPage extends AbstractDataViewPage {
+/**
+ * Page for the Classification Society information
+ */
+public class ClassificationSocietyPage extends AbstractDataViewPage {
 
-    public static final String NAME = "Classfication Society";
-    private static final Logger LOG = LogManager.getLogger(ClassficationSocietyPage.class);
+    public static final String NAME = "Classification Society";
+    private static final Logger LOG = LogManager.getLogger(ClassificationSocietyPage.class);
 
 
-    public ClassficationSocietyPage() {
+    public ClassificationSocietyPage() {
         super(NAME);
 
 
@@ -74,7 +76,7 @@ public class ClassficationSocietyPage extends AbstractDataViewPage {
 
 
         int row = 0;
-        // Newbuilding Society
+
         var label = new Label("Classification Society");
         label.getStyleClass().add(Styles.TITLE_4);
         gridPane.add(label, 0, ++row);
@@ -86,10 +88,8 @@ public class ClassficationSocietyPage extends AbstractDataViewPage {
 
         final var combo = new ComboBox<String>();
 
-        Arrays.asList(ClassificationSociety.values()).stream().
-                forEach(classificationSocietyEnum -> {
-                    combo.getItems().add(classificationSocietyEnum.name());
-                });
+        Arrays.stream(ClassificationSociety.values()).
+                forEach(classificationSocietyEnum -> combo.getItems().add(classificationSocietyEnum.name()));
 
         StringProperty nbcs = new SimpleStringProperty();
         try {

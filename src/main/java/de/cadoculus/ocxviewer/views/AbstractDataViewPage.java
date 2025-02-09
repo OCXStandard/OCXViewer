@@ -44,7 +44,6 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.time.temporal.Temporal;
 import java.util.GregorianCalendar;
 
 /**
@@ -55,7 +54,6 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
     private static final Logger LOG = LogManager.getLogger(AbstractDataViewPage.class);
 
     // I think this is possible, as we never run this outside the event thread
-    private final static DecimalFormat DEC2 = new DecimalFormat("0.00");
     private final static DecimalFormat DEC4 = new DecimalFormat("0.00##");
 
     private final String name;
@@ -140,6 +138,7 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
 
     }
 
+    @SuppressWarnings("rawtypes")
     protected void bindToBean(StringProperty stringProperty, Bound object, String propertyName, Class propertyClass) {
 
         if ( object==null) {
@@ -153,16 +152,9 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
             LOG.error("no string property given to bind with property '{}' in {}", propertyName, object);
             return;
         }
-        if ( object==null) {
-            LOG.error("no object given to bind with property '{}'", propertyName);
-            return;
-        }
+
         if (StringUtils.isBlank(propertyName )) {
-            LOG.error("no property name given to bind in object {}", object);
-            return;
-        }
-        if ( propertyName == null ) {
-            LOG.error("no property class given to bind for properrty '{}' in object {}", propertyName, object);
+            LOG.error("no property class given to bind for property '{}' in object {}", propertyName, object);
             return;
         }
 
@@ -180,7 +172,7 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
                 final JavaBeanDoubleProperty property = JavaBeanDoublePropertyBuilder.create().bean(object).name(propertyName).build();
                 stringProperty.bindBidirectional(property, new PPStringConverter(propertyClass));
             } catch (Exception e) {
-                LOG.error("no doube property {} found in class {}:{}", propertyName, object.getClass().getName(), e);
+                LOG.error("no double property {} found in class {}:{}", propertyName, object.getClass().getName(), e);
             }
         } else if ( Integer.TYPE == propertyClass) {
 
@@ -254,6 +246,7 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
 
     }
 
+    @SuppressWarnings("rawtypes")
     static class PPStringConverter extends Format {
 
         private final Class propertyClass;
@@ -301,25 +294,5 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
     }
 
 
-    static class HPStringConverter extends Format {
-        private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
-
-        @Override
-        public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-            if ( obj instanceof Temporal) {
-                toAppendTo.append( formatter.format((Temporal) obj));
-            } else {
-                toAppendTo.append(obj.toString());
-            }
-            return toAppendTo;
-        }
-
-        @Override
-        public Object parseObject(String source, ParsePosition pos) {
-            return null;
-        }
-
-
-    }
 
 }

@@ -27,7 +27,9 @@ import javafx.scene.layout.*;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
-
+/**
+ * The PrincipalParticularsPage class is a subclass of AbstractDataViewPage and is used to display the principal particulars of a vessel.
+ */
 public class PrincipalParticularsPage extends AbstractDataViewPage {
 
     public static final String NAME = "Principal Particulars";
@@ -161,8 +163,6 @@ public class PrincipalParticularsPage extends AbstractDataViewPage {
         group2 = createAndBind(prince.getAPPos(), true);
         gridPane.add(group2, 3, row);
 
-
-        /// ////////////////////////////////
 
         label = new Label("Breadths and Depths");
         label.getStyleClass().add(Styles.TITLE_4);
