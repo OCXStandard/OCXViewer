@@ -16,9 +16,10 @@
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.OCXViewerApplication;
+import de.cadoculus.ocxviewer.models.FlagsEnum;
 import de.cadoculus.ocxviewer.models.UnitRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -26,17 +27,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import oasis.unitsml.Unit;
+import oasis.unitsml.UnitName;
 import oasis.unitsml.UnitSet;
 import oasis.unitsml.UnitsML;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310rc3.OcxXMLT;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The UnitsPage displays the units used in the OCX file.
@@ -47,10 +54,12 @@ public class UnitsPage extends AbstractDataViewPage{
 
     private final TableView<UnitRecord> table;
     private final TextField unitId = new TextField();
-    private final TextField unitNames = new TextField();
+    private final HBox unitNames = new HBox();
     private final TextField unitSymbols = new TextField();
     private final TextField rootUnits = new TextField();
     private final TextField unitDimensions = new TextField();
+
+    private final Map<FlagsEnum, Image> flagImages = new HashMap<>();
 
     private final ChangeListener<UnitRecord> userListener = (obs, oldRecord, newRecord) -> {
 //        if (oldRecord != null) {
@@ -61,13 +70,37 @@ public class UnitsPage extends AbstractDataViewPage{
 
         if (newRecord == null) {
             unitId.clear();
-            unitNames.clear();
+            unitNames.getChildren().clear();
             unitSymbols.clear();
             rootUnits.clear();
             unitDimensions.clear();
         } else {
             unitId.setText(newRecord.id());
-            unitNames.setText(newRecord.name());
+            unitNames.getChildren().clear();
+            for (UnitName name : newRecord.names()) {
+                var flag = FlagsEnum.fromLocale(name.getLang());
+                Image image = null;
+                if (flagImages.containsKey(flag)) {
+                    image = flagImages.get(flag);
+                } else {
+                    try {
+                        image = new Image(OCXViewerApplication.class.getResourceAsStream(flag.getFlag()));
+                        flagImages.put(flag, image);
+                    } catch (Exception exp) {
+                        LOG.debug("no flag icon found for '{}'", flag.getFlag());
+                    }
+                }
+
+                Label label = null;
+                if ( image != null) {
+                    label = new Label( name.getValue());
+                    label.setGraphic(new ImageView(image));
+                } else {
+                    label = new Label(name.getLang() + " : " + name.getValue());
+                }
+
+                unitNames.getChildren().add(label);
+            }
             unitSymbols.setText(newRecord.symbol());
             rootUnits.setText(newRecord.rootUnits());
             unitDimensions.setText(newRecord.dimension());
@@ -108,9 +141,38 @@ public class UnitsPage extends AbstractDataViewPage{
                 c -> new SimpleStringProperty(c.getValue().id())
         );
 
-        var tableColumn2 = new TableColumn<UnitRecord, String>("Names");
+        var tableColumn2 = new TableColumn<UnitRecord, List<UnitName>>("Names");
         tableColumn2.setCellValueFactory(
-                c -> new SimpleStringProperty(c.getValue().name())
+                c -> new SimpleObjectProperty<>(c.getValue().names()));
+
+        tableColumn2.setCellFactory(column -> {
+            return new TableCell<UnitRecord, List<UnitName>>() {
+                @Override
+                protected void updateItem(List<UnitName> names, boolean empty) {
+                    super.updateItem(names, empty);
+
+                    if (names == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        // Format date.
+                        StringBuilder sb = new StringBuilder();
+                        for (UnitName name : names) {
+                            sb.append(name.getLang()).append(":").append(name.getValue()).append(";");
+                            if ( sb.length() > 40) {
+                                sb.append(" ...");
+                                break;
+                            }
+                        }
+                        setText(sb.toString());
+                    }
+                }
+            };
+        });
+
+
+        tableColumn2.setCellValueFactory(
+                c -> new SimpleObjectProperty<>(c.getValue().names())
         );
 
         var tableColumn3 = new TableColumn<UnitRecord, String>("Symbols");
@@ -123,7 +185,6 @@ public class UnitsPage extends AbstractDataViewPage{
         final UnitsML unitsML = ocx.getUnitsML();
         final UnitSet unitSet = unitsML.getUnitSet();
         final List<Unit> units = unitSet.getUnits();
-        LOG.debug("found #{} units", units.size() );
 
         for (Unit unit : units) {
             unitRecords.add(UnitRecord.create(unit));
@@ -154,6 +215,8 @@ public class UnitsPage extends AbstractDataViewPage{
         gridPane.add(unitId, 1, row++);
 
 
+        unitNames.setId("unitsName");
+        unitNames.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         label = new Label("Names");
         label.setTooltip(new Tooltip("The unit's display names."));
         gridPane.add(label, 0, row);
@@ -182,6 +245,8 @@ public class UnitsPage extends AbstractDataViewPage{
     @Override
     public void afterShow() {
         super.afterShow();
+        table.getSelectionModel().selectFirst();
+        userListener.changed(null, null, table.getSelectionModel().getSelectedItem());
 
 
     }

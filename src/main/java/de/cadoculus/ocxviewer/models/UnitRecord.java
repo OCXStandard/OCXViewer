@@ -29,7 +29,7 @@ import java.util.List;
 public record UnitRecord(
         Unit unit,
         String id,
-        String name,
+        List<UnitName> names,
         String symbol,
         String rootUnits,
         String dimension
@@ -42,19 +42,19 @@ public record UnitRecord(
         var onLinux = System.getProperty("os.name").toLowerCase().contains("linux");
         StringBuilder names = new StringBuilder();
         final List<UnitName> nameList = unit.getUnitNames();
-        for (Iterator<UnitName> unitIt = nameList.iterator();unitIt.hasNext();) {
-            UnitName name = unitIt.next();
-            FlagsEnum flag = FlagsEnum.fromLocale(name.getLang());
-            //LOG.info("found flag: " + flag.name() + " " + flag.getFlag());
-            if (onLinux) {
-                names.append(flag.getLocale().getDisplayLanguage()).append(" :  ").append(name.getValue());
-            } else {
-                names.append(flag.getFlag()).append(" :  ").append(name.getValue());
-            }
-            if (unitIt.hasNext()) {
-                names.append(", ");
-            }
-        }
+//        for (Iterator<UnitName> unitIt = nameList.iterator();unitIt.hasNext();) {
+//            UnitName name = unitIt.next();
+//            FlagsEnum flag = FlagsEnum.fromLocale(name.getLang());
+//            //LOG.info("found flag: " + flag.name() + " " + flag.getFlag());
+//            if (onLinux) {
+//                names.append( flag.getFlag()).append(" ").append(flag.getLocale().getDisplayLanguage()).append(" :  ").append(name.getValue());
+//            } else {
+//                names.append(flag.getFlag()).append(" :  ").append(name.getValue());
+//            }
+//            if (unitIt.hasNext()) {
+//                names.append(", ");
+//            }
+//        }
         StringBuilder rootUnits = new StringBuilder();
         if ( unit.getRootUnits() !=null) {
             for(Iterator<EnumeratedRootUnit> rootUnitIt = unit.getRootUnits().getEnumeratedRootUnits().iterator();rootUnitIt.hasNext();) {
@@ -106,7 +106,7 @@ public record UnitRecord(
         return new UnitRecord(
                 unit,
                 unit.getId(),
-                names.toString(),
+                nameList,
                 symbols.toString(),
                 rootUnits.toString(),
                 unit.getDimensionURL()

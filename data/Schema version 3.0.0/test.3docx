@@ -244,6 +244,10 @@
     <unitsml:UnitSet>
       <unitsml:Unit xml:id="Um" dimensionURL="D_L">
         <unitsml:UnitName xml:lang="en-us">meter</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="en">metre</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="de">Meter</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="jp">メーター</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="kr">미터</unitsml:UnitName>
         <unitsml:UnitSymbol type="m" />
         <unitsml:RootUnits>
           <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="1" />
@@ -251,6 +255,10 @@
       </unitsml:Unit>
       <unitsml:Unit xml:id="Um2" dimensionURL="D_L2">
         <unitsml:UnitName xml:lang="en-us">square meter</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="it">Metro Quadrati</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="es">Metro Quadrados</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="pt">Metro Quadrados</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="fr">Mètre Carrés</unitsml:UnitName>
         <unitsml:UnitSymbol type="m2" />
         <unitsml:RootUnits>
           <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="2" />
@@ -258,6 +266,9 @@
       </unitsml:Unit>
       <unitsml:Unit xml:id="Um3" dimensionURL="D_L3">
         <unitsml:UnitName xml:lang="en-us">cubic meter</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="dk">Kubikmeter</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="nk">Kubikmeter</unitsml:UnitName>
+        <unitsml:UnitName xml:lang="fi">Kuutiometriä</unitsml:UnitName>
         <unitsml:UnitSymbol type="m3" />
         <unitsml:RootUnits>
           <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="3" />

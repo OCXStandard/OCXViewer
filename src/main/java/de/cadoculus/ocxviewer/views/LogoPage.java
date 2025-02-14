@@ -14,41 +14,100 @@
  * limitations under the License.
  */
 package de.cadoculus.ocxviewer.views;
-import javafx.geometry.Pos;
+
 import de.cadoculus.ocxviewer.Main;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /*
-* This class is responsible for displaying the logo of the application directly after startup.
-* It is later discarded in the MainController's {@link MainController#initializeDataView()} method.
+ * This class is responsible for displaying the logo of the application directly after startup.
+ * It is later discarded in the MainController's {@link MainController#initializeDataView()} method.
  */
-public class LogoPage extends StackPane {
+public class LogoPage extends BorderPane {
     private static final Logger LOG = LogManager.getLogger(Main.class);
-        public LogoPage() {
-            super();
+    private final Canvas canvas;
+    private Image background = null;
+    private Image paper = null;
 
-            ImageView imageView = new ImageView();
-            imageView.setPreserveRatio(true);
-            imageView.setSmooth(true);
-            StackPane.setAlignment(imageView, Pos.CENTER);
+    public LogoPage() {
+        super();
 
-            try {
+        this.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        canvas = new Canvas();
+        this.setCenter(canvas);
 
-                LOG.error("load {}",LogoPage.class.getResource("logo.png").toString());
-                Image image = new Image(LogoPage.class.getResource("logo.png").toString());
-                imageView.setImage(image);
-            } catch (Exception e) {
-               LOG.error("Could not load logo.png", e);
+        var g2d = canvas.getGraphicsContext2D();
+
+
+        try {
+
+            background = new Image(LogoPage.class.getResource("windfinder.png").toString());
+            paper = new Image(LogoPage.class.getResource("Rastergrafik.png").toString());
+
+        } catch (Exception e) {
+            LOG.error("Could not load logo.png", e);
+        }
+
+        drawShapes(g2d);
+
+        this.heightProperty().addListener(observable -> layoutChildren());
+        this.widthProperty().addListener(observable -> layoutChildren());
+
+
+    }
+
+    @Override
+    protected void layoutChildren() {
+        super.layoutChildren();
+        double width = getWidth();
+        canvas.setWidth(width);
+        double height = getHeight();
+        canvas.setHeight(height);
+        drawShapes(canvas.getGraphicsContext2D());
+    }
+
+
+    private void drawShapes(GraphicsContext gc) {
+
+        //LOG.info("drawShapes {}x{}", canvas.getWidth(), canvas.getHeight());
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+
+
+        if ( background !=null) {
+            gc.drawImage(background, 0, 0);
+        };
+
+        if ( paper !=null) {
+
+            var endX = canvas.getWidth()*0.4;
+            var endY  =canvas.getHeight()*0.6;
+
+            gc.setStroke(Color.WHITE);
+            gc.setLineWidth(2);
+
+            var lastX = endX;
+            var lastY = endY+160;
+
+            while ( lastY < canvas.getHeight()) {
+                var deltaX =-10 * 5* Math.random();
+                var deltaY = 10 + 10.*Math.random();
+
+                gc.strokeLine(lastX, lastY, lastX+deltaX, lastY+deltaY);
+                lastX +=deltaX;
+                lastY +=deltaY;
             }
 
-            this.getChildren().add(0, imageView);
+            gc.drawImage(paper, endX, endY);
 
-
-
-        }
+        };
+    }
 }
