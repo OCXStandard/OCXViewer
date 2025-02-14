@@ -44,3 +44,14 @@
 #mainStackPane {
     -fx-padding: 15px;
 }
+
+#unitsName {
+    /* -fx-background-color: #ef0000; */
+    -fx-padding: 15px;
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 10px;
+    -fx-spacing: 20px;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+    -fx-border-color: -color-border-default;
+}

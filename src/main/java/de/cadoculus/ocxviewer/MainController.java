@@ -152,7 +152,11 @@ public class MainController {
      */
     private void switchPages(NavigationEvent event) {
 
-        LOG.info("Navigation event: {}", event);
+        LOG.debug("Navigation event: {}", event);
+        if ( event.getPage()==null) {
+            // this is a slection event on a group node
+            return;
+        }
 
         BorderPane existing = (BorderPane) class2page.get(event.getPage());
         BorderPane newPage = null;
