@@ -326,8 +326,8 @@
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
-		<!-- <xsd:attribute ref="xml:id" use="required"/> -->
-		<xsd:attribute name="id" type="xsd:ID" use="required"/>
+		<xsd:attribute ref="xml:id" use="required"/>
+		<!-- <xsd:attribute name="id" type="xsd:ID" use="required"/> -->
 		<xsd:attributeGroup ref="dimensionURL">
 			<xsd:annotation>
 				<xsd:documentation>Reference to a representation of the unit or quantity in terms of the 7 SI base dimensions.</xsd:documentation>
@@ -639,9 +639,9 @@
 			<xsd:element ref="AmountOfSubstance" minOccurs="0"/>
 			<xsd:element ref="LuminousIntensity" minOccurs="0"/>
 		</xsd:sequence>
-		<!--
-		<xsd:attribute ref="xml:id" use="required"/> -->
-		<xsd:attribute name="id" type="xsd:ID" use="required"/>
+
+		<xsd:attribute ref="xml:id" use="required"/>
+		<!-- <xsd:attribute name="id" type="xsd:ID" use="required"/> -->
 		<xsd:attribute name="dimensionless" type="xsd:boolean" use="optional" default="0">
 			<xsd:annotation>
 				<xsd:documentation>Boolean to designate that a quantity or unit is dimensionless.</xsd:documentation>

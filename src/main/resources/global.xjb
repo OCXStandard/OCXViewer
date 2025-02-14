@@ -21,7 +21,7 @@
         </jaxb:schemaBindings>
     </jaxb:bindings>
 
-    <jaxb:bindings schemaLocation="/home/cz/Projekte/ocxviewer/unitsmlSchema_lite-0.9.18.xsd" >
+    <jaxb:bindings schemaLocation="https://3docx.org/fileadmin/ocx_schema/unitsml/unitsmlSchema_lite-0.9.18.xsd" >
         <jaxb:schemaBindings>
             <jaxb:package name="oasis.unitsml"/>
         </jaxb:schemaBindings>
