@@ -18,7 +18,7 @@ module com.prostep.openpdm.ocxviewer {
     requires org.eclipse.persistence.core;
     requires org.eclipse.persistence.moxy;
     requires vecmath;
-    requires hisrc.basicjaxb.runtime;
+
 
 
     opens de.cadoculus.ocxviewer to javafx.fxml;

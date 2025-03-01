@@ -17,6 +17,7 @@ package de.cadoculus.ocxviewer.io;
 
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310rc3.OcxXMLT;
@@ -104,7 +105,7 @@ public class OCXIO  {
                             oasis.unitsml.ObjectFactory.class,
                             org.ocx_schema.v310rc3.ObjectFactory.class}, null);
             var jaxMarshaller = jaxbContext.createMarshaller();
-            jaxMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             StringWriter sw = new StringWriter();
 
             jaxMarshaller.marshal(obj, sw);
@@ -133,7 +134,7 @@ public class OCXIO  {
                                 oasis.unitsml.ObjectFactory.class,
                             org.ocx_schema.v310rc3.ObjectFactory.class}, null);
             var jaxMarshaller = jaxbContext.createMarshaller();
-            jaxMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            jaxMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             var qname = new QName("https://3docx.org/fileadmin//ocx_schema//V310rc3//OCX_Schema.xsd", "ocxXML");
             var jaxb = new JAXBElement<>(qname, OcxXMLT.class, ocx);
             jaxMarshaller.marshal(jaxb, file);

@@ -14,6 +14,10 @@ public class Main {
 
     public static void main(String[] args) {
 
+        var currentTimeMillis = System.currentTimeMillis();
+        var processStartTime = ProcessHandle.current().info().startInstant().get();
+        System.out.println("start delay" + (currentTimeMillis - processStartTime.toEpochMilli()) + " [ms]");
+
         System.setProperty("log4j.debug", "false");
         Options options = new Options();
 
