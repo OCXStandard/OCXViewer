@@ -28,6 +28,7 @@
             <groupId>org.patrodyne.jvnet</groupId>
             <artifactId>hisrc-basicjaxb-runtime</artifactId>
             <version>${hisrc-basicjaxb.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.patrodyne.jvnet</groupId>
@@ -287,6 +288,32 @@
                                 <!-- Process sources using `org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor` to generate `Log4j2Plugins.dat` -->
                                 <processor>org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor</processor>
                             </annotationProcessors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <!--  allow to use unnamed modules -->
+                    <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.7.0</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                            <excludeScope>compile</excludeScope>
                         </configuration>
                     </execution>
                 </executions>
