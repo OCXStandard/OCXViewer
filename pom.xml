@@ -37,6 +37,20 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- JAXB API only -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+
+        <!-- JAXB RI, EclipseLink MOXy -->
+        <!-- <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.moxy</artifactId>
+            <version>3.0.0</version>
+        </dependency> -->
+
 
         <dependency>
             <groupId>commons-cli</groupId>
@@ -54,19 +68,7 @@
             <version>2.24.3</version>
         </dependency>
 
-        <!-- JAXB API only -->
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>3.0.1</version>
-        </dependency>
 
-        <!-- JAXB RI, EclipseLink MOXy -->
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.moxy</artifactId>
-            <version>3.0.0</version>
-        </dependency>
 
         <dependency>
             <groupId>javax.vecmath</groupId>
@@ -90,6 +92,12 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>io.github.mkpaz</groupId>
             <artifactId>atlantafx-base</artifactId>
