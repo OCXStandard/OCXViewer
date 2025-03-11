@@ -108,8 +108,8 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
         var group = new atlantafx.base.layout.InputGroup(valueField, unitField);
 
         if (quantity == null) {
+            valueField.setText("no value given");
             if (mandatory) {
-                valueField.setText("no value given");
                 valueField.setStyle("-fx-background-color: -color-danger-1;");
             }
         } else {

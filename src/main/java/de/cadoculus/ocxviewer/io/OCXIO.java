@@ -15,9 +15,7 @@
  */
 package de.cadoculus.ocxviewer.io;
 
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310rc3.OcxXMLT;
@@ -68,10 +66,13 @@ public class OCXIO  {
         LOG.info("file {} uses namespace {}", file.getName(), usedNamespace);
 
         try (var fis = new FileInputStream(file); var rep = new ReplacingInputStream(fis, usedNamespace, targetNamespace)) {
-            var jaxbContext = org.eclipse.persistence.jaxb.JAXBContextFactory
-                    .createContext(new Class[]{
-                                oasis.unitsml.ObjectFactory.class,
-                            org.ocx_schema.v310rc3.ObjectFactory.class}, null);
+//            var jaxbContext = org.eclipse.persistence.jaxb.JAXBContextFactory
+//                    .createContext(new Class[]{
+//                                oasis.unitsml.ObjectFactory.class,
+//                            org.ocx_schema.v310rc3.ObjectFactory.class}, null);
+            var jaxbContext =  JAXBContext.newInstance( new Class[] {
+                            oasis.unitsml.ObjectFactory.class,
+                            org.ocx_schema.v310rc3.ObjectFactory.class});
             var jaxUnmarshaller = jaxbContext.createUnmarshaller();
 
             final Object unmarshal = jaxUnmarshaller.unmarshal(rep);
@@ -100,17 +101,17 @@ public class OCXIO  {
             return "/NULL";
         }
         try {
-            var jaxbContext = org.eclipse.persistence.jaxb.JAXBContextFactory
-                    .createContext(new Class[]{
-                            oasis.unitsml.ObjectFactory.class,
-                            org.ocx_schema.v310rc3.ObjectFactory.class}, null);
-            var jaxMarshaller = jaxbContext.createMarshaller();
-            jaxMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//            var jaxbContext = org.eclipse.persistence.jaxb.JAXBContextFactory
+//                    .createContext(new Class[]{
+//                            oasis.unitsml.ObjectFactory.class,
+//                            org.ocx_schema.v310rc3.ObjectFactory.class}, null);
+//            var jaxMarshaller = jaxbContext.createMarshaller();
+//            jaxMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             StringWriter sw = new StringWriter();
 
-            jaxMarshaller.marshal(obj, sw);
+//            jaxMarshaller.marshal(obj, sw);
             return sw.toString();
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             LOG.error("failed to serialize", e);
 
         }
@@ -129,17 +130,17 @@ public class OCXIO  {
             throw new IllegalArgumentException("File is write protected: " + file.getAbsolutePath());
         }
         try {
-            var jaxbContext = org.eclipse.persistence.jaxb.JAXBContextFactory
-                    .createContext(new Class[]{
-                                oasis.unitsml.ObjectFactory.class,
-                            org.ocx_schema.v310rc3.ObjectFactory.class}, null);
-            var jaxMarshaller = jaxbContext.createMarshaller();
-            jaxMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            var qname = new QName("https://3docx.org/fileadmin//ocx_schema//V310rc3//OCX_Schema.xsd", "ocxXML");
-            var jaxb = new JAXBElement<>(qname, OcxXMLT.class, ocx);
-            jaxMarshaller.marshal(jaxb, file);
-            LOG.info("saved {} to {}", ocx, file.getAbsolutePath());
-        } catch (JAXBException e) {
+//            var jaxbContext = org.eclipse.persistence.jaxb.JAXBContextFactory
+//                    .createContext(new Class[]{
+//                                oasis.unitsml.ObjectFactory.class,
+//                            org.ocx_schema.v310rc3.ObjectFactory.class}, null);
+//            var jaxMarshaller = jaxbContext.createMarshaller();
+//            jaxMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//            var qname = new QName("https://3docx.org/fileadmin//ocx_schema//V310rc3//OCX_Schema.xsd", "ocxXML");
+//            var jaxb = new JAXBElement<>(qname, OcxXMLT.class, ocx);
+//            jaxMarshaller.marshal(jaxb, file);
+//            LOG.info("saved {} to {}", ocx, file.getAbsolutePath());
+        } catch (Exception e) {
             throw new IOException(e);
         }
     }
