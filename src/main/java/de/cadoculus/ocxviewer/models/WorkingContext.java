@@ -15,6 +15,8 @@
  */
 package de.cadoculus.ocxviewer.models;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.ocx_schema.v310rc3.*;
 import de.cadoculus.ocxviewer.OCXViewerApplication;
 import javafx.scene.Scene;
@@ -34,6 +36,7 @@ public class WorkingContext {
     private Vessel vessel;
     private Scene mainScene;
     private String targetNamespace;
+    private BooleanProperty darkMode = new SimpleBooleanProperty(false);
 
 
     /**
@@ -107,14 +110,9 @@ public class WorkingContext {
         return vessel;
     }
 
-
-    public boolean isDarkMode() {
-        return preferences.getBoolean("darkMode", false);
+    public BooleanProperty darkModeProperty() {
+        return darkMode;
     }
-    public void setDarkMode(boolean darkMode) {
-        preferences.putBoolean("darkMode", darkMode);
-    }
-
 
     public Scene getMainScene() {
         return mainScene;

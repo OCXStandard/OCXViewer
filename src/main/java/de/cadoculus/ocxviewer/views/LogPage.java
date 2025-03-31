@@ -125,7 +125,7 @@ public class LogPage extends BorderPane implements Page {
                         setGraphic(new FontIcon(MaterialDesignI.INFORMATION_OUTLINE));
                         if (getIndex() % 2 == 0) {
                             setStyle("-fx-background-color: -color-bg-default");
-                        } else if (WorkingContext.getInstance().isDarkMode()) {
+                        } else if (WorkingContext.getInstance().darkModeProperty().get()) {
                             setStyle("-fx-background-color: -color-base-8");
                         } else {
                             setStyle("-fx-background-color: -color-base-1");

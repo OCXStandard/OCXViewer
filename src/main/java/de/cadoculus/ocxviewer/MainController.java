@@ -135,7 +135,7 @@ public class MainController {
 
             DefaultEventBus.getInstance().subscribe(NavigationEvent.class, this::switchPages);
 
-            go(WorkingContext.getInstance().isDarkMode());
+            go(WorkingContext.getInstance().darkModeProperty().get());
             viewInitialized = true;
         }
         // this is called on every file open
@@ -287,7 +287,7 @@ public class MainController {
 
     public void switchUIMode(ActionEvent actionEvent) {
 
-        boolean dark = !WorkingContext.getInstance().isDarkMode();
+        boolean dark = !WorkingContext.getInstance().darkModeProperty().get();
         go(dark);
     }
 
@@ -313,7 +313,7 @@ public class MainController {
 
         }
 
-        WorkingContext.getInstance().setDarkMode(dark);
+        WorkingContext.getInstance().darkModeProperty().set(dark);
     }
 
 }

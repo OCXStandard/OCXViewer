@@ -65,7 +65,7 @@ public class OCXViewerApplication extends Application {
         scene.getAccelerators().put(AboutAction.KEYS, () -> DefaultEventBus.getInstance().publish( new HotkeyEvent(AboutAction.KEYS)));
 
         // set the theme
-        if (! WorkingContext.getInstance().isDarkMode()) {
+        if (! WorkingContext.getInstance().darkModeProperty().get()) {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
         } else {
             Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
