@@ -4,7 +4,6 @@ module ocxviewer {
     requires hisrc.basicjaxb.runtime;
     requires jakarta.xml.bind;
     requires java.prefs;
-    requires java.sql;
     requires javafx.fxml;
     requires javafx.swing;
     requires org.apache.commons.lang3;
@@ -13,9 +12,7 @@ module ocxviewer {
     requires org.kordamp.ikonli.materialdesign2;
     requires vecmath;
     requires java.desktop;
-    requires java.xml;
     requires atlantafx.base;
-
 
     exports de.cadoculus.ocxviewer;
     opens de.cadoculus.ocxviewer;

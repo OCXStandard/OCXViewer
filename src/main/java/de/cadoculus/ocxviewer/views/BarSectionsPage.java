@@ -38,7 +38,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.ArcType;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -49,7 +48,12 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.ocx_schema.v310rc3.BarSection;
 import org.ocx_schema.v310rc3.OcxXMLT;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 public class BarSectionsPage extends AbstractDataViewPage implements Page {
     public static final String NAME = "Bar Sections";
@@ -57,11 +61,15 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
     private final TableView<BarSection> table;
     private final GridPane gridPane;
     private final Label barLabel = new Label();
-    private final Label canvasLabel = new Label("canvas");
     private final Canvas canvas = new Canvas();
     private final ObjectProperty<BarSection> selectedBarSection = new SimpleObjectProperty<>();
+    private double hpC;
+    private double hpR;
     private ImagePattern barPattern;
-
+    public static double SIN_30=0.5;
+    public static double COS_30=Math.sqrt(3)/2;
+    public static double SIN_60=Math.sqrt(3)/2;
+    public static double COS_60=Math.sqrt(3)/2;
 
     public BarSectionsPage() {
         super(NAME);
@@ -161,7 +169,6 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             updateCanvas();
         });
 
-
     }
 
     @Override
@@ -214,18 +221,18 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
         if ( SectionType.FLAT_BAR== SectionType.getType(barSection)) {
             var flatBar = selectedBarSection.getValue().getFlatBar();
 
-            var profileWidth = UnitConverter.toDefaultUnit(flatBar.getWidth());
+            var flangeWidth = UnitConverter.toDefaultUnit(flatBar.getWidth());
             var profileHeight = UnitConverter.toDefaultUnit(flatBar.getHeight());
 
             var scaleY = (canvasHeight - 200) / profileHeight;
-            var scaleX = (canvasWidth - 200) / profileWidth;
+            var scaleX = (canvasWidth - 200) / flangeWidth;
 
             var scale = Math.min(scaleX, scaleY);
 
             var coordX = Math.round(canvas.getWidth() / 2.0) + 0.5;
             var coordY = 100.5;
             var rheight = Math.round(profileHeight * scale) + 0.5;
-            var rwidth = Math.round(profileWidth * scale) + 0.5;
+            var rwidth = Math.round(flangeWidth * scale) + 0.5;
 
             gc.setFill(barPattern);
             gc.fillRect(coordX, coordY, rwidth, rheight);
@@ -272,7 +279,7 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
 
             gc.setTextAlign(TextAlignment.LEFT);
-            gc.fillText(String.format("Width %.2f [mm]", profileWidth), p5X + 20, p5Y - 20);
+            gc.fillText(String.format("Width %.2f [mm]", flangeWidth), p5X + 20, p5Y - 20);
 
 
             // paint the coordinate system of the tube
@@ -292,14 +299,14 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
             var tube = selectedBarSection.getValue().getTube();
 
-            var diamter = UnitConverter.toDefaultUnit(tube.getDiameter());
+            var diameter = UnitConverter.toDefaultUnit(tube.getDiameter());
             var thickness = UnitConverter.toDefaultUnit(tube.getThickness());
 
-            var scaleY = (canvasHeight - 200) / diamter;
-            var scaleX = (canvasWidth - 200) / diamter;
+            var scaleY = (canvasHeight - 200) / diameter;
+            var scaleX = (canvasWidth - 200) / diameter;
 
             var scale = Math.min(scaleX, scaleY);
-            var cdia = Math.round(diamter * scale) + 0.5;
+            var cdia = Math.round(diameter * scale) + 0.5;
             var ct = Math.round(thickness * scale);
 
             // paint the coordinate system of the tube
@@ -340,7 +347,6 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             gc.stroke();
             gc.fill();
 
-
             gc.setStroke(Color.DARKRED);
             gc.setLineWidth(2);
             gc.strokeOval( pCX, 100.5, cdia, cdia);
@@ -365,7 +371,7 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             drawArrowHead(gc, p1X - 10, p1Y, 0, -1);
 
             gc.setTextAlign(TextAlignment.LEFT);
-            gc.fillText(String.format("⌀ %.2f [mm]", diamter), p0X, (p0Y + p1Y) / 2.0);
+            gc.fillText(String.format("⌀ %.2f [mm]", diameter), p0X, (p0Y + p1Y) / 2.0);
 
             // thickness
             var p2X =pCX-100;
@@ -390,49 +396,171 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
 
         } else if ( SectionType.BULB_FLAT== SectionType.getType(barSection)) {
+
             var bulbFlat = selectedBarSection.getValue().getBulbFlat();
-            gc.fillText("Bulb Flat", 10, 10);
-            gc.fillText("Height: " + UnitConverter.toDefaultUnit(bulbFlat.getHeight()), 10, 30);
-            gc.fillText("Width: " + bulbFlat.getFlangeWidth(), 10, 50);
-
-            // calculate the scaling of the bulb flat
-            var rawHeight =UnitConverter.toDefaultUnit(bulbFlat.getHeight())/0.9; // --> 90% of the canvasHeight
-            var rawWidth = 3 * UnitConverter.toDefaultUnit(bulbFlat.getFlangeWidth()); // --> 3 times the canvasWidth
-
-            var scale = Math.min(canvas.getWidth() / rawWidth, canvas.getHeight() / rawHeight);
-
-            var coordX = Math.round(( canvas.getWidth() - rawWidth * scale)/2.0) + 0.5;
-            var coordY = Math.round( canvas.getHeight() *0.95) + 0.5;
-            var length = Math.round(UnitConverter.toDefaultUnit(bulbFlat.getHeight())*0.2*scale)+0.5;
-
-            gc.setLineWidth(1.0);
-
-            gc.strokeLine(0, 0, coordX, coordY);
-            gc.strokeLine(0, 0, canvasWidth, canvasHeight);
-
-            gc.fillRect(canvasWidth*0.5, canvasHeight*0.5, 10, 30);
-            gc.strokeRect(canvasWidth*0.5, canvasHeight*0.5, 50,50 );
+            var profileHeight = UnitConverter.toDefaultUnit(bulbFlat.getHeight());
+            var webThickness = UnitConverter.toDefaultUnit(bulbFlat.getWebThickness());
+            var flangeWidth = bulbFlat.getFlangeWidth() != null?
+                    UnitConverter.toDefaultUnit(bulbFlat.getFlangeWidth()) : webThickness*3;
+            var radius = bulbFlat.getBulbOuterRadius() != null ?
+                    UnitConverter.toDefaultUnit(bulbFlat.getBulbOuterRadius()) : webThickness;
+            LOG.info("selected HP {}x{}, width {}, radius {}", profileHeight, webThickness, flangeWidth, radius);
 
 
-            gc.strokeLine(coordX, coordY, coordX+length, coordY);
-            gc.strokeLine(coordX, coordY, coordX, coordY- length);
+            if (Double.isNaN(hpC) || Double.isNaN(hpR)) {
 
-            var flangeWidth = Math.round(UnitConverter.toDefaultUnit(bulbFlat.getFlangeWidth())*scale)+0.5;
-            var webHeight = Math.round(UnitConverter.toDefaultUnit(bulbFlat.getHeight())*scale)+0.5;
+                try (var reader = new BufferedReader(new InputStreamReader(this.getClass().getResource("bulbbars.csv").openStream()));) {
 
-            gc.setFill(Color.GREEN);
+                    final NumberFormat format = NumberFormat.getInstance(Locale.UK);
+                    String line = null;
+                    while ( (line = reader.readLine()) != null) {
+                        if ( line.startsWith("#")) {
+                            continue;
+                        }
+                        final String[] split = line.split(";");
+                        try {
+                            var h = format.parse(split[0]).doubleValue();
+                            var w = format.parse(split[1]).doubleValue();
+                            var c = format.parse(split[2]).doubleValue();
+                            var r = format.parse(split[3]).doubleValue();
+
+                            if (h <= profileHeight && w <= flangeWidth) {
+                                hpC = c;
+                                hpR = r;
+                            }
+                        } catch (ParseException exp) {
+
+                        }
+                    }
+                    LOG.debug("found hpC {} hpR {}", hpC, hpR);
+                    flangeWidth = hpC+hpR;
+                    radius = hpR;
+
+                } catch (Exception e) {
+                    LOG.error("failed to read bulbbar.csv", e);
+                }
+
+            } else {
+                flangeWidth = hpC+hpR;
+                radius = hpR;
+            }
+
+            LOG.info("height {}, bulb width {}, bulb radius {}, flange thickness {}",
+                    profileHeight, flangeWidth, radius, flangeWidth);
+
+            LOG.info("canvas height {}, canvas width {}", canvasHeight, canvasWidth);
+
+            var scaleY = (canvasHeight - 200) / profileHeight;
+            var scaleX = (canvasWidth - 200) / flangeWidth;
+
+            var scale = Math.min(scaleX, scaleY);
+            LOG.info("scale {}", scale);
+
+
+            var t = webThickness*scale; // flange width
+            var r = radius*scale; // radius
+            var h = profileHeight*scale; // profile height
+            var b = flangeWidth*scale; // profile width
+            var sX = b-t-2*COS_60*r; // X part of 30° line
+            var sY = sX/COS_30*SIN_30; // Y part of 30° line
+            var kY = r*(1+2*SIN_60)+sY; // total height of the head starting with fillet curve
+
+            LOG.info("height {}, bulb with {}, bulb radius {}, flange thickness {}",
+                    h, b, r, t);
+
+
+            var oX = Math.round((canvasWidth) / 2.0); // offset X
+            var oY = Math.round(canvasHeight-100); // offset Y
+
+
+            // paint the HP
+            gc.setFill(barPattern);
             gc.beginPath();
-            gc.moveTo(coordX, coordY);
-            gc.lineTo(coordX + flangeWidth, coordY);
-            gc.lineTo(coordX + flangeWidth, coordY-webHeight);
-            gc.lineTo(coordX , coordY-webHeight);
+
+//            gc.moveTo( Math.round( b -COS_60*r+oX)+0.5,
+//                    Math.round(SIN_60*r+100)+0.5);
+
+
+            gc.arc( Math.round( b-r+oX)+0.5, Math.round( r+100)+0.5, // center of circle x,y
+                    r, r, // radius
+                    -60,150);
+            gc.lineTo(oX+0.5, 100.5); // left top
+            gc.lineTo(oX+0.5, oY+0.5); // left bottom
+            gc.lineTo( Math.round(oX+t) + 0.5, oY+0.5); // bottom
+            gc.lineTo( Math.round(oX+t) + 0.5, Math.round(100+kY)+0.5);
+            gc.arc( Math.round(oX+t+r)+0.5, Math.round(100+kY+r)+0.5, // center of circle x,y);
+                    r, r, // radius
+                    180,-60);
             gc.closePath();
-            gc.fill();
             gc.stroke();
+            gc.fill();
 
-            gc.setFill(Color.YELLOW);
-            gc.fillRect( coordX, coordY, flangeWidth, -webHeight);
+            // paint the coordinate system of the tube
+            gc.setStroke(Color.BLUE);
+            gc.setFill(Color.BLUE);
+            gc.setLineWidth(1);
+            gc.strokeLine(oX+0.5, oY+0.5, oX+50.5, oY);
+            gc.strokeLine(oX+0.5, oY+0.5,oX+0.5, oY-49.5);
+            drawArrowHead(gc, oX+50.5, oY, -1, 0);
+            drawArrowHead(gc, oX+0.5, oY-49, 0, 1);
 
+
+            // Height
+            gc.setStroke(Color.BLACK);
+            gc.setFill(Color.BLACK);
+
+            gc.strokeLine(oX -100, 100, oX-100, oY);
+            gc.strokeLine(oX-105, 100, oX, 100);
+            gc.strokeLine(oX-105, oY, oX, oY);
+
+            drawArrowHead(gc, oX-100, 100,  0, 1);
+            drawArrowHead(gc, oX-100, oY, 0, -1);
+
+            gc.setTextAlign(TextAlignment.RIGHT);
+            gc.fillText(String.format("Height %.2f [mm]", profileHeight), oX-150, canvasHeight / 2.0);
+
+            // web thickness
+            var p2X = oX;
+            var p2Y = oY;
+            var p3X = oX;
+            var p3Y = oY + 50;
+
+            var p4X = Math.round(oX+t) + 0.5;
+            var p4Y = oY;
+            var p5X = p4X;
+            var p5Y = oY + 50;
+
+            gc.strokeLine(p2X, p2Y, p3X, p3Y);
+            gc.strokeLine(p4X, p4Y, p5X, p5Y);
+            gc.strokeLine(p3X - 25, p3Y - 10, p5X + 100, p5Y - 10);
+
+            drawArrowHead(gc, p3X, p3Y - 10, -1, 0);
+            drawArrowHead(gc, p5X, p5Y - 10, 1, 0);
+
+            gc.setTextAlign(TextAlignment.LEFT);
+            gc.fillText(String.format("Web Thickness %.2f [mm]", webThickness), p5X + 20, p5Y - 20);
+
+
+            // bulb width
+            var p6X = oX;
+            var p6Y = 50;
+            var p7X = p6X;
+            var p7Y = 100;
+
+            var p8X = oX+b;
+            var p8Y = 50;
+            var p9X = oX+b;
+            var p9Y = 100+r;
+
+            gc.strokeLine(p6X, p6Y, p7X, p7Y);
+            gc.strokeLine(p8X, p8Y, p9X, p9Y);
+            gc.strokeLine(p6X, p6Y+10, p8X, p8Y+10);
+
+            drawArrowHead(gc, p6X, p6Y + 10, -1, 0);
+            drawArrowHead(gc, p8X, p8Y + 10, 1, 0);
+
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText(String.format("Width %.2f [mm]", flangeWidth), oX+0.5*b, p6Y-15);
 
 
         } else {
@@ -519,35 +647,15 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
     private void updateBar(BarSection oldSection, BarSection selectedSection) {
 
+
+        hpC = Double.NaN;
+        hpR = Double.NaN;
         LOG.info("Updating bar section {}", selectedSection);
         selectedBarSection.setValue(selectedSection);
-
 
         barLabel.setText(SectionType.getType(selectedSection).getName() + " " + selectedSection.getId());
         barLabel.getStyleClass().add(Styles.TITLE_4);
 
-//        int row =-1;
-//        switch (SectionType.getType(selectedSection)) {
-//            case SectionType.FLAT_BAR -> createFlatbar(selectedSection, row);
-//            case SectionType.I_BAR -> createIBar(selectedSection, row);
-//            case SectionType.L_BAR -> createLBar(selectedSection, row);
-//            case SectionType.L_BAR_OF -> createLBarOF(selectedSection, row);
-//            case SectionType.L_BAR_OW -> createLBarOW(selectedSection, row);
-//            case SectionType.U_BAR -> createUBar(selectedSection, row);
-//            case SectionType.Z_BAR -> createZBar(selectedSection, row);
-//            case SectionType.T_BAR -> createTBar(selectedSection, row);
-//            case SectionType.HALF_ROUND_BAR -> createHalfRoundBar(selectedSection, row);
-//            case SectionType.HEXAGON_BAR -> createHexagonBar(selectedSection, row);
-//            case SectionType.OCTAGON_BAR -> createOctagonBar(selectedSection, row);
-//            case SectionType.RECTANGULAR_TUBE -> createRectangularTube(selectedSection, row);
-//            case SectionType.ROUND_BAR -> createRoundBar(selectedSection, row);
-//            case SectionType.SQUARE_BAR -> createSquareBar(selectedSection, row);
-//            case SectionType.TUBE -> createTube(selectedSection, row);
-//            case SectionType.USER_DEFINED_BAR_SECTION ->
-//                    createUserDefinedBarSection( selectedSection, row);
-//            case SectionType.BULB_FLAT -> createBulbFlat(selectedSection, row);
-//            default -> createUnknown(selectedSection, row);
-//        }
         repaintCanvas();
     }
 
@@ -565,116 +673,6 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
         gridPane.add(warning, 0, ++row, 4, 1);
     }
 
-    private void createBulbFlat(BarSection selectedSection, int row) {
-//        var label = new Label("Height");
-//        label.setTooltip(new Tooltip("The bublflat's height"));
-//        gridPane.add(label, 0, row);
-//        gridPane.add(createAndBind( selectedSection.getBulbFlat().getHeight(), true), 1, row);
-//
-//        label = new Label("Web Thickness");
-//        label.setTooltip(new Tooltip("The bublflat's WebThickness"));
-//        gridPane.add(label, 2, row);
-//        gridPane.add(createAndBind( selectedSection.getBulbFlat().getWebThickness(), true), 3, row++);
-//
-//        label = new Label("Flange Width");
-//        label.setTooltip(new Tooltip("The bublflat's FlangeWidth"));
-//        gridPane.add(label, 0, row);
-//        gridPane.add(createAndBind( selectedSection.getBulbFlat().getFlangeWidth(), true), 1, row++);
-//
-//        label = new Label("BulbAngle");
-//        label.setTooltip(new Tooltip("The bublflat's BulbAngle"));
-//        gridPane.add(label, 0, row);
-//        gridPane.add(createAndBind( selectedSection.getBulbFlat().getBulbAngle(), false), 1, row++);
-//
-//        label = new Label("Bulb Outer Radius");
-//        label.setTooltip(new Tooltip("The bublflat's BulbOuterRadius"));
-//        gridPane.add(label, 0, row);
-//        gridPane.add(createAndBind( selectedSection.getBulbFlat().getBulbOuterRadius(), false), 1, row);
-//
-//        label = new Label("Bulb Inner Radius");
-//        label.setTooltip(new Tooltip("The bublflat's BulbInnerRadius"));
-//        gridPane.add(label, 2, row);
-//        gridPane.add(createAndBind( selectedSection.getBulbFlat().getBulbInnerRadius(), false), 3, row++);
-//
-//        label = new Label("Bulb Top Radius");
-//        label.setTooltip(new Tooltip("The bublflat's BulbTopRadius"));
-//        gridPane.add(label, 0, row);
-//        gridPane.add(createAndBind( selectedSection.getBulbFlat().getBulbTopRadius(), false), 1, row);
-//
-//        label = new Label("Bulb Bottom Radius");
-//        lastLabelBeforeCanvase = label;
-//        label.setTooltip(new Tooltip("The bublflat's BulbBottomRadius"));
-//        gridPane.add(label, 2, row);
-//        gridPane.add(createAndBind( selectedSection.getBulbFlat().getBulbBottomRadius(), false), 3, row++);
-//
-//        gridPane.add(canvas, 0, row, 4, 1);
-//        GridPane.setFillWidth(gridPane, true);
 
-
-    }
-
-//    private void createUserDefinedBarSection(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createTube(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createSquareBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createRoundBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createRectangularTube(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createOctagonBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createHexagonBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createHalfRoundBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createTBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createZBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createUBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createLBarOW(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createLBarOF(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createLBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createIBar(BarSection selectedSection, int row) {
-//
-//    }
-//
-//    private void createFlatbar(BarSection selectedSection, int row) {
-//
-//    }
 
 }
