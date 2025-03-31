@@ -70,6 +70,13 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
     public static double COS_30=Math.sqrt(3)/2;
     public static double SIN_60=Math.sqrt(3)/2;
     public static double COS_60=Math.sqrt(3)/2;
+    private double canvasWidth;
+    private double canvasHeight;
+
+    private Color textColor = Color.BLACK;
+    private Color dimensionLineColor = Color.BLACK;
+    private Color cosysColor = Color.BLUE;
+    private Color barColor = Color.BLACK;
 
     public BarSectionsPage() {
         super(NAME);
@@ -169,6 +176,10 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             updateCanvas();
         });
 
+        WorkingContext.getInstance().darkModeProperty().addListener(observable -> {
+            updateCanvas();
+        });
+
     }
 
     @Override
@@ -194,6 +205,12 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
         LOG.info(" canvas {}\n{}", canvas.getBoundsInLocal(), canvas.getBoundsInParent());
 
+        // todo: better way to get colour scheme
+        textColor = WorkingContext.getInstance().darkModeProperty().get() ?  Color.WHITE : Color.BLACK;
+        dimensionLineColor = WorkingContext.getInstance().darkModeProperty().get() ?  Color.WHITE : Color.BLACK;
+        cosysColor = WorkingContext.getInstance().darkModeProperty().get() ?  Color.web("#bccadc") : Color.web("#537297");
+        barColor = WorkingContext.getInstance().darkModeProperty().get()?  Color.web("#d29097") : Color.web("#86444a");
+
         if ( selectedBarSection.getValue() != null) {
             repaintCanvas();
         }
@@ -213,12 +230,17 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             barPattern = createHatch();
         }
 
-        var canvasWidth = canvas.getWidth();
-        var canvasHeight = canvas.getHeight();
+        canvasWidth = canvas.getWidth();
+        canvasHeight = canvas.getHeight();
 
         BarSection barSection = selectedBarSection.getValue();
-        LOG.info("bar section {}", barSection.getId());
-        if ( SectionType.FLAT_BAR== SectionType.getType(barSection)) {
+        var sectionType = SectionType.getType(barSection);
+
+        LOG.info("bar section {} {}", sectionType,barSection.getId());
+
+
+
+        if ( SectionType.FLAT_BAR== sectionType) {
             var flatBar = selectedBarSection.getValue().getFlatBar();
 
             var flangeWidth = UnitConverter.toDefaultUnit(flatBar.getWidth());
@@ -236,12 +258,12 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
             gc.setFill(barPattern);
             gc.fillRect(coordX, coordY, rwidth, rheight);
-            gc.setStroke(Color.DARKRED);
+            gc.setStroke(barColor);
             gc.setLineWidth(2);
             gc.strokeRect(coordX, coordY, rwidth, rheight);
 
-            gc.setStroke(Color.BLACK);
-            gc.setFill(Color.BLACK);
+            gc.setStroke(dimensionLineColor);
+            gc.setFill(dimensionLineColor);
             gc.setLineWidth(1);
 
             // Height
@@ -285,8 +307,8 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             // paint the coordinate system of the tube
 
 
-            gc.setStroke(Color.BLUE);
-            gc.setFill(Color.BLUE);
+            gc.setStroke(cosysColor);
+            gc.setFill(cosysColor);
             gc.setLineWidth(1);
             gc.strokeLine(coordX, coordY+rheight, coordX+50, coordY+rheight);
             gc.strokeLine(coordX, coordY+rheight, coordX, coordY+rheight-50);
@@ -295,7 +317,8 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
 
 
-        } else if ( SectionType.TUBE==SectionType.getType(barSection)) {
+        } else if ( SectionType.TUBE==sectionType) {
+
 
             var tube = selectedBarSection.getValue().getTube();
 
@@ -313,8 +336,8 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             var pCX = Math.round((canvasWidth-cdia) / 2.0)  + 0.5;
             var pCY = Math.round(canvasHeight-100) + 0.5;
 
-            gc.setStroke(Color.BLUE);
-            gc.setFill(Color.BLUE);
+            gc.setStroke(cosysColor);
+            gc.setFill(cosysColor);
             gc.setLineWidth(1);
             gc.strokeLine(pCX, pCY, pCX+50, pCY);
             gc.strokeLine(pCX, pCY, pCX, pCY-50);
@@ -347,17 +370,14 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             gc.stroke();
             gc.fill();
 
-            gc.setStroke(Color.DARKRED);
+            gc.setStroke(barColor);
             gc.setLineWidth(2);
             gc.strokeOval( pCX, 100.5, cdia, cdia);
             gc.strokeOval( pCX+ct, 100.5+ct, cdia-2*ct, cdia-2*ct);
 
-
-
-
             // diameter
-            gc.setStroke(Color.BLACK);
-            gc.setFill(Color.BLACK);
+            gc.setStroke(dimensionLineColor);
+            gc.setFill(dimensionLineColor);
             gc.setLineWidth(1);
             var p0X = Math.round( (canvasWidth+cdia) / 2.0)  + 50.5;
             var p0Y = 100.5;
@@ -395,13 +415,13 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
 
 
-        } else if ( SectionType.BULB_FLAT== SectionType.getType(barSection)) {
+        } else if ( SectionType.BULB_FLAT== sectionType) {
 
             var bulbFlat = selectedBarSection.getValue().getBulbFlat();
             var profileHeight = UnitConverter.toDefaultUnit(bulbFlat.getHeight());
             var webThickness = UnitConverter.toDefaultUnit(bulbFlat.getWebThickness());
-            var flangeWidth = bulbFlat.getFlangeWidth() != null?
-                    UnitConverter.toDefaultUnit(bulbFlat.getFlangeWidth()) : webThickness*3;
+            var flangeWidth = bulbFlat.getFlangeWidth() != null ?
+                    UnitConverter.toDefaultUnit(bulbFlat.getFlangeWidth()) : webThickness * 3;
             var radius = bulbFlat.getBulbOuterRadius() != null ?
                     UnitConverter.toDefaultUnit(bulbFlat.getBulbOuterRadius()) : webThickness;
             LOG.info("selected HP {}x{}, width {}, radius {}", profileHeight, webThickness, flangeWidth, radius);
@@ -413,8 +433,8 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
                     final NumberFormat format = NumberFormat.getInstance(Locale.UK);
                     String line = null;
-                    while ( (line = reader.readLine()) != null) {
-                        if ( line.startsWith("#")) {
+                    while ((line = reader.readLine()) != null) {
+                        if (line.startsWith("#")) {
                             continue;
                         }
                         final String[] split = line.split(";");
@@ -433,7 +453,7 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
                         }
                     }
                     LOG.debug("found hpC {} hpR {}", hpC, hpR);
-                    flangeWidth = hpC+hpR;
+                    flangeWidth = hpC + hpR;
                     radius = hpR;
 
                 } catch (Exception e) {
@@ -441,7 +461,7 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
                 }
 
             } else {
-                flangeWidth = hpC+hpR;
+                flangeWidth = hpC + hpR;
                 radius = hpR;
             }
 
@@ -457,78 +477,96 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             LOG.info("scale {}", scale);
 
 
-            var t = webThickness*scale; // flange width
-            var r = radius*scale; // radius
-            var h = profileHeight*scale; // profile height
-            var b = flangeWidth*scale; // profile width
-            var sX = b-t-2*COS_60*r; // X part of 30° line
-            var sY = sX/COS_30*SIN_30; // Y part of 30° line
-            var kY = r*(1+2*SIN_60)+sY; // total height of the head starting with fillet curve
+            var t = webThickness * scale; // flange width
+            var r = radius * scale; // radius
+            var h = profileHeight * scale; // profile height
+            var b = flangeWidth * scale; // profile width
+            var sX = b - t - 2 * COS_60 * r; // X part of 30° line
+            var sY = sX / COS_30 * SIN_30; // Y part of 30° line
+            var kY = r * (1 + 2 * SIN_60) + sY; // total height of the head starting with fillet curve
 
             LOG.info("height {}, bulb with {}, bulb radius {}, flange thickness {}",
                     h, b, r, t);
 
 
-            var oX = Math.round((canvasWidth) / 2.0); // offset X
-            var oY = Math.round(canvasHeight-100); // offset Y
+            var offsetX = Math.round((canvasWidth) / 2.0); // offset X
+            var offsetY = Math.round(canvasHeight - 100); // offset Y
 
 
             // paint the HP
             gc.setFill(barPattern);
             gc.beginPath();
 
-//            gc.moveTo( Math.round( b -COS_60*r+oX)+0.5,
+//            gc.moveTo( Math.round( b -COS_60*r+offsetX)+0.5,
 //                    Math.round(SIN_60*r+100)+0.5);
 
 
-            gc.arc( Math.round( b-r+oX)+0.5, Math.round( r+100)+0.5, // center of circle x,y
+            gc.arc(Math.round(b - r + offsetX) + 0.5, Math.round(r + 100) + 0.5, // center of circle x,y
                     r, r, // radius
-                    -60,150);
-            gc.lineTo(oX+0.5, 100.5); // left top
-            gc.lineTo(oX+0.5, oY+0.5); // left bottom
-            gc.lineTo( Math.round(oX+t) + 0.5, oY+0.5); // bottom
-            gc.lineTo( Math.round(oX+t) + 0.5, Math.round(100+kY)+0.5);
-            gc.arc( Math.round(oX+t+r)+0.5, Math.round(100+kY+r)+0.5, // center of circle x,y);
+                    -60, 150);
+            gc.lineTo(offsetX + 0.5, 100.5); // left top
+            gc.lineTo(offsetX + 0.5, offsetY + 0.5); // left bottom
+            gc.lineTo(Math.round(offsetX + t) + 0.5, offsetY + 0.5); // bottom
+            gc.lineTo(Math.round(offsetX + t) + 0.5, Math.round(100 + kY) + 0.5);
+            gc.arc(Math.round(offsetX + t + r) + 0.5, Math.round(100 + kY + r) + 0.5, // center of circle x,y);
                     r, r, // radius
-                    180,-60);
+                    180, -60);
             gc.closePath();
             gc.stroke();
             gc.fill();
 
+            // example path with hole
+//            gc.beginPath();
+//            gc.moveTo(100,100);
+//            gc.lineTo(200,100);
+//            gc.lineTo(200,200);
+//            gc.lineTo(100,200);
+//            gc.lineTo(100,100);
+//
+//            gc.moveTo(140,140);
+//            gc.lineTo(140,160);
+//            gc.lineTo(160,160);
+//            gc.lineTo(160,140);
+//            gc.lineTo(140,140);
+//            gc.closePath();
+//            gc.stroke();
+//            gc.fill();
+
+
             // paint the coordinate system of the tube
-            gc.setStroke(Color.BLUE);
-            gc.setFill(Color.BLUE);
+            gc.setStroke(cosysColor);
+            gc.setFill(cosysColor);
             gc.setLineWidth(1);
-            gc.strokeLine(oX+0.5, oY+0.5, oX+50.5, oY);
-            gc.strokeLine(oX+0.5, oY+0.5,oX+0.5, oY-49.5);
-            drawArrowHead(gc, oX+50.5, oY, -1, 0);
-            drawArrowHead(gc, oX+0.5, oY-49, 0, 1);
+            gc.strokeLine(offsetX + 0.5, offsetY + 0.5, offsetX + 50.5, offsetY);
+            gc.strokeLine(offsetX + 0.5, offsetY + 0.5, offsetX + 0.5, offsetY - 49.5);
+            drawArrowHead(gc, offsetX + 50.5, offsetY, -1, 0);
+            drawArrowHead(gc, offsetX + 0.5, offsetY - 49, 0, 1);
 
 
             // Height
-            gc.setStroke(Color.BLACK);
-            gc.setFill(Color.BLACK);
+            gc.setStroke(dimensionLineColor);
+            gc.setFill(dimensionLineColor);
 
-            gc.strokeLine(oX -100, 100, oX-100, oY);
-            gc.strokeLine(oX-105, 100, oX, 100);
-            gc.strokeLine(oX-105, oY, oX, oY);
+            gc.strokeLine(offsetX - 100, 100, offsetX - 100, offsetY);
+            gc.strokeLine(offsetX - 105, 100, offsetX, 100);
+            gc.strokeLine(offsetX - 105, offsetY, offsetX, offsetY);
 
-            drawArrowHead(gc, oX-100, 100,  0, 1);
-            drawArrowHead(gc, oX-100, oY, 0, -1);
+            drawArrowHead(gc, offsetX - 100, 100, 0, 1);
+            drawArrowHead(gc, offsetX - 100, offsetY, 0, -1);
 
             gc.setTextAlign(TextAlignment.RIGHT);
-            gc.fillText(String.format("Height %.2f [mm]", profileHeight), oX-150, canvasHeight / 2.0);
+            gc.fillText(String.format("Height %.2f [mm]", profileHeight), offsetX - 150, canvasHeight / 2.0);
 
             // web thickness
-            var p2X = oX;
-            var p2Y = oY;
-            var p3X = oX;
-            var p3Y = oY + 50;
+            var p2X = offsetX;
+            var p2Y = offsetY;
+            var p3X = offsetX;
+            var p3Y = offsetY + 50;
 
-            var p4X = Math.round(oX+t) + 0.5;
-            var p4Y = oY;
+            var p4X = Math.round(offsetX + t) + 0.5;
+            var p4Y = offsetY;
             var p5X = p4X;
-            var p5Y = oY + 50;
+            var p5Y = offsetY + 50;
 
             gc.strokeLine(p2X, p2Y, p3X, p3Y);
             gc.strokeLine(p4X, p4Y, p5X, p5Y);
@@ -542,30 +580,268 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
 
             // bulb width
-            var p6X = oX;
+            var p6X = offsetX;
             var p6Y = 50;
             var p7X = p6X;
             var p7Y = 100;
 
-            var p8X = oX+b;
+            var p8X = offsetX + b;
             var p8Y = 50;
-            var p9X = oX+b;
-            var p9Y = 100+r;
+            var p9X = offsetX + b;
+            var p9Y = 100 + r;
 
             gc.strokeLine(p6X, p6Y, p7X, p7Y);
             gc.strokeLine(p8X, p8Y, p9X, p9Y);
-            gc.strokeLine(p6X, p6Y+10, p8X, p8Y+10);
+            gc.strokeLine(p6X, p6Y + 10, p8X, p8Y + 10);
 
             drawArrowHead(gc, p6X, p6Y + 10, -1, 0);
             drawArrowHead(gc, p8X, p8Y + 10, 1, 0);
 
             gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText(String.format("Width %.2f [mm]", flangeWidth), oX+0.5*b, p6Y-15);
+            gc.fillText(String.format("Width %.2f [mm]", flangeWidth), offsetX + 0.5 * b, p6Y - 15);
 
+
+        } else if ( SectionType.L_BAR== sectionType ||
+                SectionType.L_BAR_OF== sectionType ||
+                SectionType.L_BAR_OW== sectionType  ) {
+
+            drawLBars(gc, barSection, sectionType);
+
+        } else if ( SectionType.RECTANGULAR_TUBE ==sectionType) {
+
+            drawRectangularTube(gc, barSection);
 
         } else {
             LOG.info("unsupported bar section {}", SectionType.getType( barSection));
         }
+
+
+    }
+
+    private void drawRectangularTube(GraphicsContext gc, BarSection barSection) {
+
+        var tube = selectedBarSection.getValue().getRectangularTube();
+        double profileHeight = UnitConverter.toDefaultUnit(tube.getHeight());
+        double profileWidth = UnitConverter.toDefaultUnit(tube.getWidth());
+        double thickness = UnitConverter.toDefaultUnit(tube.getThickness());
+
+        var scaleX = (canvasWidth -300) / profileWidth *0.75;
+        var scaleY = (canvasHeight - 200) / profileHeight*0.75;
+
+        var scale = Math.min(scaleX, scaleY);
+
+        LOG.info("tube {}x{}", profileWidth, profileHeight);
+        LOG.info("canvas {}x{}", canvasWidth, canvasHeight);
+        LOG.info("scale {}, x  {}, y {}", scale, scaleX, scaleY);
+
+        var h = profileHeight * scale; // web height
+        var w = profileWidth*scale; // web thickness
+        var t = thickness*scale; // thickness
+        var innerRadius = t;
+        var outerRadius =2*t;
+
+        var offsetX = Math.round((canvasWidth-w) / 2.0); // offset X
+        var offsetY = Math.round(canvasHeight - 100); // offset Y
+
+        gc.setFill(barPattern);
+        gc.beginPath();
+
+        gc.moveTo(Math.round( offsetX+outerRadius),100);
+        gc.arcTo(offsetX, 100, offsetX, 100+outerRadius, outerRadius);
+        gc.lineTo(offsetX, offsetY-outerRadius);
+        gc.arcTo(offsetX, offsetY, offsetX+outerRadius, offsetY, outerRadius);
+        gc.lineTo(offsetX+w-outerRadius, offsetY);
+        gc.arcTo(offsetX+w, offsetY, offsetX+w, offsetY-outerRadius, outerRadius);
+        gc.lineTo(offsetX+w, 100+outerRadius);
+        gc.arcTo(offsetX+w, 100, offsetX+w-outerRadius, 100, outerRadius);
+        gc.lineTo(offsetX+outerRadius,100);
+
+        gc.moveTo(Math.round( offsetX+t+innerRadius),100+t);
+        gc.lineTo(offsetX+w-t-innerRadius, 100+t);
+        gc.arcTo(offsetX+w-t, 100+t, offsetX+w-t, 100+t+innerRadius, innerRadius);
+        gc.lineTo(offsetX+w-t, offsetY-t-innerRadius);
+        gc.arcTo(offsetX+w-t, offsetY-t, offsetX+w-t-innerRadius, offsetY-t, innerRadius);
+        gc.lineTo(offsetX+t+innerRadius, offsetY-t);
+        gc.arcTo(offsetX+t, offsetY-t, offsetX+t, offsetY-t-innerRadius, innerRadius);
+        gc.lineTo(offsetX+t, 100+t+innerRadius);
+        gc.arcTo(offsetX+t, 100+t, offsetX+t+innerRadius, 100+t, innerRadius);
+
+
+            gc.closePath();
+            gc.stroke();
+            gc.fill();
+
+
+        // paint the coordinate system of the tube
+        gc.setStroke(cosysColor);
+        gc.setFill(cosysColor);
+        gc.setLineWidth(1);
+        gc.strokeLine(offsetX + 0.5, offsetY + 0.5, offsetX + 50.5, offsetY);
+        gc.strokeLine(offsetX + 0.5, offsetY + 0.5, offsetX + 0.5, offsetY - 49.5);
+        drawArrowHead(gc, offsetX + 50.5, offsetY, -1, 0);
+        drawArrowHead(gc, offsetX + 0.5, offsetY - 49, 0, 1);
+
+        // Height
+        gc.setStroke(dimensionLineColor);
+        gc.setFill(dimensionLineColor);
+
+        gc.strokeLine(offsetX - 50, 100, offsetX+outerRadius, 100);
+        gc.strokeLine(offsetX - 50, offsetY, offsetX+outerRadius, offsetY);
+        gc.strokeLine(offsetX - 40, 100, offsetX - 40, offsetY);
+
+        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
+
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.fillText(String.format("Height %.2f [mm]", profileHeight), offsetX - 60, canvasHeight / 2.0);
+
+        // width
+        gc.strokeLine(offsetX, 50, offsetX, 100+outerRadius);
+        gc.strokeLine(offsetX +w, 50, offsetX+w, 100+outerRadius);
+        gc.strokeLine(offsetX , 60, offsetX+w, 60);
+
+        drawArrowHead(gc, offsetX, 60, 1, 0);
+        drawArrowHead(gc, offsetX +w, 60, -1,0);
+
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(String.format("Width %.2f [mm]", profileWidth), canvasWidth/2.0, 40);
+
+        // web thickness
+        gc.strokeLine(offsetX+w-t-50, canvasHeight/2.0, offsetX+w-t, canvasHeight/2.0);
+        gc.strokeLine(offsetX+w, canvasHeight/2.0, offsetX+w+50, canvasHeight/2.0);
+
+        drawArrowHead(gc, offsetX+w-t, canvasHeight/2.0, -1,0);
+        drawArrowHead(gc, offsetX+w, canvasHeight/2.0, 1, 0);
+
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.fillText(String.format("t=%.2f [mm]", thickness), offsetX+w+60, canvasHeight/2.0);
+
+
+
+    }
+
+    private void drawLBars(GraphicsContext gc, BarSection barSection, SectionType sectionType) {
+
+        double webHeight =0.0;
+        double webThickness = 0.0;
+        double flangeWidth = 0.0;
+        double flangeThickness = 0.0;
+        double overshoot = 0.0;
+        double overallHeight = 0.0;
+        double overallWidth = 0.0;
+
+
+        if (SectionType.L_BAR==sectionType) {
+            var lbar = selectedBarSection.getValue().getLBar();
+            webHeight = UnitConverter.toDefaultUnit(lbar.getHeight());
+            webThickness = UnitConverter.toDefaultUnit(lbar.getWebThickness());
+            flangeWidth = UnitConverter.toDefaultUnit(lbar.getWidth());
+            flangeThickness=UnitConverter.toDefaultUnit(lbar.getFlangeThickness());
+            overallHeight = webHeight;
+            overallWidth = flangeWidth;
+        } else if ( SectionType.L_BAR_OF==sectionType) {
+            var lbar = selectedBarSection.getValue().getLBarOF();
+            overshoot = UnitConverter.toDefaultUnit(lbar.getOvershoot());
+            webHeight = UnitConverter.toDefaultUnit(lbar.getHeight());
+            webThickness = UnitConverter.toDefaultUnit(lbar.getWebThickness());
+            flangeWidth = UnitConverter.toDefaultUnit(lbar.getWidth());
+            flangeThickness=UnitConverter.toDefaultUnit(lbar.getFlangeThickness());
+            overallHeight = webHeight + flangeThickness;
+            overallWidth = flangeWidth;
+        } else {
+            var lbar = selectedBarSection.getValue().getLBarOW();
+            overshoot = UnitConverter.toDefaultUnit(lbar.getOvershoot());
+            webHeight = UnitConverter.toDefaultUnit(lbar.getHeight());
+            webThickness = UnitConverter.toDefaultUnit(lbar.getWebThickness());
+            flangeWidth = UnitConverter.toDefaultUnit(lbar.getWidth());
+            flangeThickness=UnitConverter.toDefaultUnit(lbar.getFlangeThickness());
+            overallHeight = webHeight;
+            overallWidth = flangeWidth + webThickness;
+        }
+
+        var scaleY = (canvasHeight - 200) / overallHeight;
+        var scaleX = (canvasWidth - 200) / overallWidth;
+
+        var scale = Math.min(scaleX, scaleY);
+        LOG.info("scale {}", scale);
+
+
+        var offsetX = Math.round((canvasWidth) / 2.0); // offset X
+        var offsetY = Math.round(canvasHeight - 100); // offset Y
+
+        var h = webHeight * scale; // web height
+        var wt = webThickness*scale; // web thickness
+
+        var f = flangeWidth * scale; // flange width
+        var ft = flangeThickness*scale; // flange thickness
+
+        var over = overshoot*scale; // overshoot
+
+        var wX =  Math.round(offsetX+over)+0.5;
+        var wY = SectionType.L_BAR_OF == sectionType ? Math.round(100+ft)+0.5: 100.5;
+
+        var fX =  SectionType.L_BAR_OW == sectionType ? Math.round( offsetX+ft)+0.5: offsetX;
+        var fY = SectionType.L_BAR_OW == sectionType ? Math.round(100+over)+0.5: 100.5;
+
+        // the web
+        gc.setStroke(barColor);
+        gc.setLineWidth(1);
+        gc.setFill(barPattern);
+
+        gc.fillRect(wX, wY, wt,h);
+        gc.strokeRect(wX, wY, wt,h);
+
+        // the flange
+        gc.fillRect(fX, fY, f, ft);
+        gc.strokeRect(fX, fY, f, ft);
+
+        // paint the coordinate system of the tube
+        gc.setStroke(cosysColor);
+        gc.setFill(cosysColor);
+        gc.setLineWidth(1);
+        gc.strokeLine(offsetX, offsetY, offsetX+50, offsetY);
+        gc.strokeLine(offsetX, offsetY, offsetX, offsetY-50);
+        drawArrowHead(gc, offsetX+50, offsetY, -1, 0);
+        drawArrowHead(gc, offsetX, offsetY-50,0, 1);
+
+        gc.setStroke(dimensionLineColor);
+        gc.setFill(dimensionLineColor);
+        gc.setLineWidth(1);
+
+        gc.strokeLine(offsetX-50, wY, wX, wY);
+        gc.strokeLine(offsetX-50, offsetY, wX, offsetY);
+        gc.strokeLine(offsetX-40, wY, offsetX-40, offsetY);
+        drawArrowHead(gc, offsetX-40, wY, 0, 1);
+        drawArrowHead(gc, offsetX-40, offsetY,0, -1);
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.fillText(String.format("height %.2f [mm]", webHeight), offsetX - 150, canvasHeight / 2.0);
+
+        gc.strokeLine(wX, offsetY, wX,offsetY+40);
+        gc.strokeLine(wX+wt, offsetY, wX+wt,offsetY+40);
+        gc.strokeLine(wX-50, offsetY+30, wX, offsetY+30);
+        gc.strokeLine(wX+wt, offsetY+30, wX+wt+50, offsetY+30);
+        drawArrowHead(gc, wX, offsetY+30, -1, 0);
+        drawArrowHead(gc, wX+wt, offsetY+30,1, 0);
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.fillText(String.format("web t=%.2f [mm]", webHeight), wX+wt+60, offsetY+30);
+
+        gc.strokeLine(fX, fY, fX, 50);
+        gc.strokeLine(fX+f, fY, fX+f, 50);
+        gc.strokeLine(fX, 60, fX+f, 60);
+        drawArrowHead(gc, fX, 60, -1, 0);
+        drawArrowHead(gc, fX+f, 60,1, 0);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(String.format("width %.2f [mm]", flangeWidth), fX +0.5*f, 40);
+
+        gc.strokeLine(fX+f, fY, fX+f+40, fY);
+        gc.strokeLine(fX+f, fY+ft, fX+f+40, fY+ft);
+        gc.strokeLine(fX+f+30, fY-30, fX+f+30, fY);
+        gc.strokeLine(fX+f+30, fY+ft, fX+f+30, fY+ft+30);
+        drawArrowHead(gc, fX+f+30, fY, 0,-1);
+        drawArrowHead(gc, fX+f+30, fY+ft, 0, 1);
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.fillText(String.format("flange t=%.2f [mm]", flangeThickness), fX+f+60, fY+0.5*ft);
+
 
 
     }
