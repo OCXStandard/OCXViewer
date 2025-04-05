@@ -509,6 +509,83 @@
           <ocx:Thickness numericvalue="0.01" unit="Um" />
         </ocx:RectangularTube>
       </ocx:BarSection>
+      <ocx:BarSection id="czHFR" name="Halb50" ocx:GUIDRef="3afcc204-639e-4280-ac7e-cd43d181b801">
+        <ocx:HalfRoundBar>
+          <ocx:Diameter numericvalue="0.1" unit="Um" />
+        </ocx:HalfRoundBar>
+      </ocx:BarSection>
+      <ocx:BarSection id="czHEX" name="HexHex" ocx:GUIDRef="ff0eb4bb-2e25-4f35-9809-4af3ec180ee7">
+        <ocx:HexagonBar>
+          <ocx:Height numericvalue="0.1" unit="Um" />
+        </ocx:HexagonBar>
+      </ocx:BarSection>
+
+      <ocx:BarSection id="czLBOF" name="LBarOf" ocx:GUIDRef="c5445d02-c3b4-461b-ba9d-eb27837ea38a">
+        <ocx:LBarOF>
+          <ocx:Height numericvalue="0.2" unit="Um" />
+          <ocx:Width numericvalue="0.1" unit="Um" />
+          <ocx:WebThickness numericvalue="0.01" unit="Um" />
+          <ocx:FlangeThickness numericvalue="0.02" unit="Um" />
+          <ocx:Overshoot numericvalue="0.005" unit="Um" />
+        </ocx:LBarOF>
+      </ocx:BarSection>
+
+      <ocx:BarSection id="czLBOW" name="LBarOW" ocx:GUIDRef="aa36332a-e957-4fdf-9873-3982da466d4b">
+        <ocx:LBarOW>
+          <ocx:Height numericvalue="0.2" unit="Um" />
+          <ocx:Width numericvalue="0.1" unit="Um" />
+          <ocx:WebThickness numericvalue="0.01" unit="Um" />
+          <ocx:FlangeThickness numericvalue="0.02" unit="Um" />
+          <ocx:Overshoot numericvalue="0.005" unit="Um" />
+        </ocx:LBarOW>
+      </ocx:BarSection>
+
+      <ocx:BarSection id="czLB" name="LBar" ocx:GUIDRef="d43eba7f-e0b3-4b59-90af-f6505a61bb04">
+        <ocx:LBar>
+          <ocx:Height numericvalue="0.2" unit="Um" />
+          <ocx:Width numericvalue="0.1" unit="Um" />
+          <ocx:WebThickness numericvalue="0.01" unit="Um" />
+          <ocx:FlangeThickness numericvalue="0.02" unit="Um" />
+        </ocx:LBar>
+      </ocx:BarSection>
+
+      <ocx:BarSection id="czOCT" name="Octogon" ocx:GUIDRef="4651f098-7d57-4a12-abdf-68513fa307ad">
+        <ocx:OctagonBar>
+          <ocx:Height numericvalue="0.1" unit="Um" />
+        </ocx:OctagonBar>
+      </ocx:BarSection>
+
+      <ocx:BarSection id="czRND" name="Round" ocx:GUIDRef="a5fc454e-4471-4f31-b694-b0068be5ff98">
+        <ocx:RoundBar>
+          <ocx:Height numericvalue="0.1" unit="Um" />
+        </ocx:RoundBar>
+      </ocx:BarSection>
+
+      <ocx:BarSection id="czSQU" name="Rechteck" ocx:GUIDRef="1f67d849-b02c-43c9-b914-3351bb00d20b">
+        <ocx:SquareBar>
+          <ocx:Height numericvalue="0.1" unit="Um" />
+        </ocx:SquareBar>
+      </ocx:BarSection>
+
+      <ocx:BarSection id="czU" name="LBar" ocx:GUIDRef="192b92d1-2c38-4688-a892-23c7f23844ba">
+        <ocx:UBar>
+          <ocx:Height numericvalue="0.2" unit="Um" />
+          <ocx:Width numericvalue="0.1" unit="Um" />
+          <ocx:WebThickness numericvalue="0.01" unit="Um" />
+          <ocx:FlangeThickness numericvalue="0.02" unit="Um" />
+        </ocx:UBar>
+      </ocx:BarSection>
+
+      <ocx:BarSection id="czZ" name="ZBar" ocx:GUIDRef="95684534-6d6e-4455-93f6-91810b189a02">
+        <ocx:ZBar>
+          <ocx:Height numericvalue="0.2" unit="Um" />
+          <ocx:Width numericvalue="0.1" unit="Um" />
+          <ocx:WebThickness numericvalue="0.01" unit="Um" />
+          <ocx:FlangeThickness numericvalue="0.02" unit="Um" />
+        </ocx:ZBar>
+      </ocx:BarSection>
+
+
     </ocx:XSectionCatalogue>
   </ocx:ClassCatalogue>
   <unitsml:UnitsML xmlns:unitsml="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18">
