@@ -457,6 +457,15 @@
         <ocx:YieldStress numericvalue="235" unit="UNOvermm2" />
         <ocx:UltimateStress numericvalue="400" unit="UNOvermm2" />
       </ocx:Material>
+
+      <ocx:Material id="matcz" name="A36" ocx:grade="A36" ocx:GUIDRef="d3802883-7d97-46a0-b8c3-c8c6e386a999">
+        <ocx:Density numericvalue="7851" unit="UKgOverm3" />
+        <ocx:YoungsModulus numericvalue="206001" unit="UNOvermm2" />
+        <ocx:PoissonRatio numericvalue="0.31" unit="UDimless" />
+        <ocx:YieldStress numericvalue="260" unit="UNOvermm2" />
+        <ocx:UltimateStress numericvalue="500" unit="UNOvermm2" />
+      </ocx:Material>
+
     </ocx:MaterialCatalogue>
     <ocx:XSectionCatalogue id="nplcid5" name="Stiffener Profiles">
       <ocx:BarSection id="nplcid6" name="FB200X10" ocx:GUIDRef="45d0e7fb-8782-4b4b-9464-9ce64249f9c9">

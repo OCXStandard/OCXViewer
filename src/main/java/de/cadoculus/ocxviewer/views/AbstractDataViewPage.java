@@ -24,6 +24,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -93,6 +94,51 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
         titleBox.getChildren().add(formattedText);
     }
 
+
+    protected InputGroup createOrRebind( InputGroup inputGroup, QuantityT quantity, boolean mandatory) {
+
+        TextField valueField = null;
+        TextField unitField = null;
+        InputGroup group;
+
+        if ( inputGroup== null) {
+            valueField = new TextField();
+            valueField.setAlignment(Pos.CENTER_RIGHT);
+            unitField = new TextField();
+            unitField.setPrefWidth(80);
+        } else {
+            valueField = (TextField) inputGroup.getChildren().get(0);
+            unitField = (TextField) inputGroup.getChildren().get(1);
+            valueField.textProperty().unbind();
+            unitField.textProperty().unbind();
+        }
+
+        if (quantity == null) {
+            valueField.setText("no value given");
+            if (mandatory) {
+                valueField.setStyle("-fx-background-color: -color-danger-1;");
+            }
+        } else {
+
+            var unit="unset";
+            if ( quantity.getUnit() instanceof  Unit unit1) {
+                unit = unit1.getUnitNames().getFirst().getValue();
+            }
+
+            try {
+                valueField.setText(DEC4.format(quantity.getNumericvalue()));
+            } catch (Exception e) {
+                LOG.error("no double property 'numericvalue' found in class {}:{}", quantity.getClass().getName(), e);
+            }
+
+            unitField.setText("[" + unit+ "]");
+            unitField.setTooltip( new Tooltip("[ " + unit+ "]"));
+        }
+
+        return inputGroup;
+
+    }
+
     /**
      * Creates an input group for a quantity
      * @param quantity the quantity to display
@@ -107,12 +153,15 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
         unitField.setPrefWidth(80);
         var group = new atlantafx.base.layout.InputGroup(valueField, unitField);
 
+        valueField.setStyle("-fx-background-color: -color-bg-default;");
+
         if (quantity == null) {
             valueField.setText("no value given");
             if (mandatory) {
                 valueField.setStyle("-fx-background-color: -color-danger-1;");
             }
         } else {
+
 
             var unit="unset";
             if ( quantity.getUnit() instanceof  Unit unit1) {
@@ -131,6 +180,8 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
             }
 
             unitField.setText("[" + unit+ "]");
+
+
 
         }
 
