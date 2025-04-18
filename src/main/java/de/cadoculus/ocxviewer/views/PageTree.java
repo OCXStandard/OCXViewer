@@ -110,7 +110,7 @@ public final class PageTree extends TreeView<PageRecord> {
         var catalogueGroup = Item.group("Catalogue", new FontIcon(MaterialDesignP.PACKAGE_VARIANT));
         root.getChildren().add(catalogueGroup);
         catalogueGroup.setExpanded(false);
-        catalogueGroup.getChildren().add( Item.group("Materials",new FontIcon(MaterialDesignB.BLUR)));
+        catalogueGroup.getChildren().add( Item.page("Materials",new FontIcon(MaterialDesignB.BLUR), MaterialsPage.class));
         catalogueGroup.getChildren().add( Item.group("Holes",new FontIcon(MaterialDesignS.STRETCH_TO_PAGE_OUTLINE)));
         catalogueGroup.getChildren().add( Item.page("Bar Sections",new FontIcon(MaterialDesignS.SHAPE_PLUS), BarSectionsPage.class));
 
