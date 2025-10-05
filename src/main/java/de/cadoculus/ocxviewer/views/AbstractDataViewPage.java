@@ -34,7 +34,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jvnet.basicjaxb.lang.Bound;
 import org.jvnet.basicjaxb.lang.StringUtils;
+import org.ocx_schema.v310rc3.Point3DT;
 import org.ocx_schema.v310rc3.QuantityT;
+import org.ocx_schema.v310rc3.Vector3DT;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DecimalFormat;
@@ -53,6 +55,15 @@ import java.util.GregorianCalendar;
 abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.ocxviewer.views.Page {
 
     private static final Logger LOG = LogManager.getLogger(AbstractDataViewPage.class);
+    public static double SIN_30 = 0.5;
+    public static double COS_30 = Math.sqrt(3) / 2;
+    public static double SIN_60 = Math.sqrt(3) / 2;
+    public static double COS_60 = Math.sqrt(3) / 2;
+    public static double SIN_45 = 1/Math.sqrt(2);
+    public static double COS_45 = SIN_45;
+    public static double COS_225 = 0.923879533;
+    public static double SIN_225 = 0.382683432;
+
 
     // I think this is possible, as we never run this outside the event thread
     private final static DecimalFormat DEC4 = new DecimalFormat("0.00##");
@@ -92,6 +103,92 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
         titleBox.getChildren().add(title);
         final TextFlow formattedText = BBCodeParser.createFormattedText(description);
         titleBox.getChildren().add(formattedText);
+    }
+
+    protected  InputGroup createOrRebind(InputGroup inputGroup,  Point3DT point3DT,  boolean mandatory) {
+
+        TextField valueField = null;
+        TextField unitField = null;
+        InputGroup group;
+
+        if ( inputGroup== null) {
+            valueField = new TextField();
+            valueField.setAlignment(Pos.CENTER_RIGHT);
+            unitField = new TextField();
+            unitField.setPrefWidth(80);
+            inputGroup = new atlantafx.base.layout.InputGroup(valueField, unitField);
+        } else {
+            valueField = (TextField) inputGroup.getChildren().get(0);
+            unitField = (TextField) inputGroup.getChildren().get(1);
+            valueField.textProperty().unbind();
+            unitField.textProperty().unbind();
+        }
+
+        if (point3DT == null || point3DT.getCoordinates() == null || point3DT.getCoordinates().size() != 3) {
+            valueField.setText("no value given");
+        } else {
+
+            var text =
+                    "("+
+                    DEC4.format(point3DT.getCoordinates().get(0)) + ", " +
+                            DEC4.format(point3DT.getCoordinates().get(1)) + ", " +
+                            DEC4.format(point3DT.getCoordinates().get(2)) + ")";
+            LOG.info("set coordinates {}", text);
+            valueField.setText(text);
+            var unit="unset";
+            if ( point3DT.getUnit() instanceof  Unit unit1) {
+                unit = unit1.getUnitNames().getFirst().getValue();
+            }
+
+            unitField.setText("[" + unit+ "]");
+            unitField.setTooltip( new Tooltip("[ " + unit+ "]"));
+        }
+
+        if (mandatory && (point3DT == null || point3DT.getCoordinates() == null || point3DT.getCoordinates().size() != 3)) {
+            valueField.setStyle("-fx-background-color: -color-danger-1;");
+        } else {
+            valueField.setStyle("-fx-background-color: -color-bg-default;");
+        }
+
+        return inputGroup;
+
+    }
+
+    protected  InputGroup createOrRebind(InputGroup inputGroup, Vector3DT vector3DT, boolean mandatory) {
+
+        TextField valueField = null;
+        InputGroup group;
+
+        if ( inputGroup== null) {
+            valueField = new TextField();
+            valueField.setAlignment(Pos.CENTER_RIGHT);
+            inputGroup = new atlantafx.base.layout.InputGroup(valueField);
+        } else {
+            valueField = (TextField) inputGroup.getChildren().get(0);
+            valueField.textProperty().unbind();
+        }
+
+        if (vector3DT == null || vector3DT.getDirections() == null || vector3DT.getDirections().size() != 3) {
+            valueField.setText("no value given");
+        } else {
+
+            var text =
+                    "("+
+                            DEC4.format(vector3DT.getDirections().get(0)) + ", " +
+                            DEC4.format(vector3DT.getDirections().get(1)) + ", " +
+                            DEC4.format(vector3DT.getDirections().get(2)) + ")";
+            valueField.setText(text);
+            var unit="unset";
+        }
+
+        if (mandatory && (vector3DT == null || vector3DT.getDirections() == null || vector3DT.getDirections().size() != 3)) {
+            valueField.setStyle("-fx-background-color: -color-danger-1;");
+        } else {
+            valueField.setStyle("-fx-background-color: -color-bg-default;");
+        }
+
+        return inputGroup;
+
     }
 
 
@@ -153,15 +250,13 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
         unitField.setPrefWidth(80);
         var group = new atlantafx.base.layout.InputGroup(valueField, unitField);
 
-        valueField.setStyle("-fx-background-color: -color-bg-default;");
-
         if (quantity == null) {
             valueField.setText("no value given");
             if (mandatory) {
                 valueField.setStyle("-fx-background-color: -color-danger-1;");
             }
         } else {
-
+            valueField.setStyle("-fx-background-color: -color-bg-default;");
 
             var unit="unset";
             if ( quantity.getUnit() instanceof  Unit unit1) {

@@ -41,7 +41,8 @@ public class ActionDispatcher {
             case "Ctrl+O" -> new OpenAction().run();
             case "Ctrl+Q" -> new ExitAction().run();
             case "Ctrl+I" -> new AboutAction().run();
-            default -> LOG.warn("Unhandled hotkey: {}", key);
+            case "Alt+V" -> new ThreeDAction().run();
+            default -> LOG.warn("Unhandled hotkey: '{}'", key);
         }
 
     }

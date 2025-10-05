@@ -20,6 +20,7 @@ import atlantafx.base.theme.CupertinoLight;
 import de.cadoculus.ocxviewer.actions.AboutAction;
 import de.cadoculus.ocxviewer.actions.ExitAction;
 import de.cadoculus.ocxviewer.actions.OpenAction;
+import de.cadoculus.ocxviewer.actions.ThreeDAction;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.HotkeyEvent;
 import de.cadoculus.ocxviewer.event.NavigationEvent;
@@ -152,7 +153,7 @@ public class MainController {
 
         LOG.debug("Navigation event: {}", event);
         if ( event.getPage()==null) {
-            // this is a slection event on a group node
+            // this is a selection event on a group node
             return;
         }
 
@@ -179,7 +180,6 @@ public class MainController {
         }
 
         BorderPane paneToAdd = existing != null ? existing : newPage;
-
 
         ((Page) paneToAdd).beforeShow();
 
@@ -316,4 +316,8 @@ public class MainController {
         WorkingContext.getInstance().darkModeProperty().set(dark);
     }
 
+    public void open3DView(ActionEvent actionEvent) {
+        var hke = new HotkeyEvent(ThreeDAction.KEYS);
+        DefaultEventBus.getInstance().publish(hke);
+    }
 }

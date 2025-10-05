@@ -51,25 +51,9 @@ public class PrincipalParticularsPage extends AbstractDataViewPage {
 
         scrollPane.setContent(gridPane);
 
-        ColumnConstraints col1 = new ColumnConstraints();
-        col1.setHalignment(HPos.RIGHT);
-        ColumnConstraints col2 = new ColumnConstraints();
-        col2.setHalignment(HPos.LEFT);
-        col2.setHgrow(Priority.ALWAYS);
-        col2.setMaxWidth(600);
-        ColumnConstraints col3 = new ColumnConstraints();
-        col3.setHalignment(HPos.RIGHT);
-        ColumnConstraints col4 = new ColumnConstraints();
-        col4.setHalignment(HPos.LEFT);
-        col4.setHgrow(Priority.ALWAYS);
-        col4.setMaxWidth(600);
-
-        gridPane.getColumnConstraints().addAll(col1, col2, col3, col4);
         gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 10;");
 
         int row = 0;
-
-
 
         if (WorkingContext.getInstance().getVessel().getClassificationData() == null) {
             var warning = new atlantafx.base.controls.Message(
@@ -86,7 +70,20 @@ public class PrincipalParticularsPage extends AbstractDataViewPage {
 
             WorkingContext.getInstance().getVessel().setClassificationData(new ClassificationData());
         }
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setHalignment(HPos.RIGHT);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setHalignment(HPos.LEFT);
+        col2.setHgrow(Priority.ALWAYS);
+        col2.setMaxWidth(600);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setHalignment(HPos.RIGHT);
+        ColumnConstraints col4 = new ColumnConstraints();
+        col4.setHalignment(HPos.LEFT);
+        col4.setHgrow(Priority.ALWAYS);
+        col4.setMaxWidth(600);
 
+        gridPane.getColumnConstraints().addAll(col1, col2, col3, col4);
         if (WorkingContext.getInstance().getVessel().getClassificationData().getPrincipalParticulars() == null) {
             var warning = new atlantafx.base.controls.Message(
                     "Warning",

@@ -33,6 +33,7 @@
                     <items>
                         <!-- <MenuItem mnemonicParsing="false" text="Schema Check"  /> -->
                         <MenuItem mnemonicParsing="false" onAction="#switchUIMode" text="UI Mode" />
+                        <MenuItem mnemonicParsing="false" onAction="#open3DView" text="3D View" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
