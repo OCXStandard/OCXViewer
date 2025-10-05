@@ -474,11 +474,64 @@
     <ocx:HoleShapeCatalogue id="nplcid7">
       <ocx:Hole2D id="nplcid9" name="E1500X1000" ocx:GUIDRef="ad8ea64a-2028-4567-8848-17e162291325">
         <ocx:SymmetricalHole id="nplcid8">
+          <ocx:Height numericvalue="1.5" unit="Um" />
+          <ocx:Width numericvalue="1" unit="Um" />
+        </ocx:SymmetricalHole>
+      </ocx:Hole2D>
+
+      <ocx:Hole2D id="nplcid10" name="E1000X1500" ocx:GUIDRef="798a9c68-dd8f-478d-9728-78aa95f81211">
+        <ocx:SymmetricalHole id="nplcid80">
           <ocx:Height numericvalue="1" unit="Um" />
           <ocx:Width numericvalue="1.5" unit="Um" />
         </ocx:SymmetricalHole>
       </ocx:Hole2D>
+
+      <ocx:Hole2D id="cz1" name="R500" ocx:GUIDRef="ad8ea64a-2028-4567-8848-17e16229500">
+        <ocx:ParametricCircle id="cz2">
+          <ocx:Diameter numericvalue="1" unit="Um" />
+        </ocx:ParametricCircle>
+      </ocx:Hole2D>
+      <ocx:Hole2D id="cz15" name="SEL1000x500_25" ocx:GUIDRef="05de670e-8317-4716-90a0-8444045ecf91"  >
+        <ocx:SuperElliptical id="cz16" exponent="2.5" >
+          <ocx:Height numericvalue="1" unit="Um" />
+          <ocx:Width numericvalue="0.5" unit="Um" />
+        </ocx:SuperElliptical>
+      </ocx:Hole2D>
+
+      <ocx:Hole2D id="cz10" name="SEL1000x500" ocx:GUIDRef="ad8ea64a-2028-4567-8848-17e161000500"  >
+        <ocx:SuperElliptical id="cz11" exponent="2">
+          <ocx:Height numericvalue="0.5" unit="Um" />
+          <ocx:Width numericvalue="1" unit="Um" />
+        </ocx:SuperElliptical>
+      </ocx:Hole2D>
+
+
+      <ocx:Hole2D id="cz20" name="rect1000x500" ocx:GUIDRef="ad8ea64a-2028-4567-8848-17ee16100500"  >
+        <ocx:RectangularHole id="cz21">
+          <ocx:Height numericvalue="0.5" unit="Um" />
+          <ocx:Width numericvalue="1" unit="Um" />
+        </ocx:RectangularHole>
+      </ocx:Hole2D>
+
+      <ocx:Hole2D id="cz22" name="rect1000x500r100" ocx:GUIDRef="4c11826f-c7e2-475c-b9a1-efc4cc7cab9f"  >
+        <ocx:RectangularHole id="cz23">
+          <ocx:Height numericvalue="0.5" unit="Um" />
+          <ocx:Width numericvalue="1" unit="Um" />
+          <ocx:FilletRadius numericvalue="0.1" unit="Um" />
+        </ocx:RectangularHole>
+      </ocx:Hole2D>
+
+
+      <ocx:Hole2D id="cz30" name="mm1000x500x100" ocx:GUIDRef="737f53f8-1cef-4e86-a951-42632918cdb1">
+        <ocx:RectangularMickeyMouseEars id="cz31">
+          <ocx:Height numericvalue="1" unit="Um" />
+          <ocx:Width numericvalue="0.5" unit="Um" />
+          <ocx:Radius numericvalue="0.1" unit="Um" />
+        </ocx:RectangularMickeyMouseEars>
+      </ocx:Hole2D>
+
     </ocx:HoleShapeCatalogue>
+
   </ocx:ClassCatalogue>
   <unitsml:UnitsML xmlns:unitsml="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18">
     <unitsml:UnitSet>

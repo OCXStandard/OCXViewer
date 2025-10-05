@@ -35,7 +35,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
+import org.ocx_schema.v310rc3.CoordinateSystem;
 
+import java.lang.ref.Reference;
 import java.util.Objects;
 
 /**
@@ -84,9 +86,9 @@ public final class PageTree extends TreeView<PageRecord> {
         var geomGroup = Item.group("Geometry", new FontIcon(MaterialDesignS.SHIP_WHEEL));
         root.getChildren().add(geomGroup);
         geomGroup.setExpanded(false);
-        geomGroup.getChildren().add( Item.group("Tolerances",new FontIcon(MaterialDesignT.TILDE)));
-        geomGroup.getChildren().add( Item.group("Coordinate Systems",new FontIcon(MaterialDesignA.AXIS_ARROW)));
-        geomGroup.getChildren().add( Item.group("Reference Surfaces",new FontIcon(MaterialDesignL.LAYERS_TRIPLE_OUTLINE)));
+        geomGroup.getChildren().add( Item.page("Tolerances",new FontIcon(MaterialDesignT.TILDE), TolerancesPage.class));
+        geomGroup.getChildren().add( Item.page("Coordinate Systems",new FontIcon(MaterialDesignA.AXIS_ARROW), CoordinateSystemsPage.class));
+        geomGroup.getChildren().add( Item.page("Reference Surfaces",new FontIcon(MaterialDesignL.LAYERS_TRIPLE_OUTLINE), ReferenceSurfacesPage.class));
 
 
         // DesignView
@@ -111,7 +113,7 @@ public final class PageTree extends TreeView<PageRecord> {
         root.getChildren().add(catalogueGroup);
         catalogueGroup.setExpanded(false);
         catalogueGroup.getChildren().add( Item.page("Materials",new FontIcon(MaterialDesignB.BLUR), MaterialsPage.class));
-        catalogueGroup.getChildren().add( Item.group("Holes",new FontIcon(MaterialDesignS.STRETCH_TO_PAGE_OUTLINE)));
+        catalogueGroup.getChildren().add( Item.page("Holes",new FontIcon(MaterialDesignS.STRETCH_TO_PAGE_OUTLINE), HoleShapePage.class));
         catalogueGroup.getChildren().add( Item.page("Bar Sections",new FontIcon(MaterialDesignS.SHAPE_PLUS), BarSectionsPage.class));
 
         var unitsGroup = Item.group("Units", new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM));

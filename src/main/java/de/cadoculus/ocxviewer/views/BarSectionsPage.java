@@ -52,17 +52,13 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
+/**
+ * This page shows the bar sections from the catalogue.
+ */
 public class BarSectionsPage extends AbstractDataViewPage implements Page {
     public static final String NAME = "Bar Sections";
     private static final Logger LOG = LogManager.getLogger(BarSectionsPage.class);
-    public static double SIN_30 = 0.5;
-    public static double COS_30 = Math.sqrt(3) / 2;
-    public static double SIN_60 = Math.sqrt(3) / 2;
-    public static double COS_60 = Math.sqrt(3) / 2;
-    public static double SIN_45 = 1/Math.sqrt(2);
-    public static double COS_45 = SIN_45;
-    public static double COS_225 = 0.923879533;
-    public static double SIN_225 = 0.382683432;
+
 
     private final TableView<BarSection> table;
     private final GridPane gridPane;

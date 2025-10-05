@@ -13,6 +13,8 @@ module ocxviewer {
     requires vecmath;
     requires java.desktop;
     requires atlantafx.base;
+    requires javafx.graphics;
+    requires org.apache.logging.log4j;
 
     exports de.cadoculus.ocxviewer;
     opens de.cadoculus.ocxviewer;
