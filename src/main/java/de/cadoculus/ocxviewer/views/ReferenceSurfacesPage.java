@@ -34,9 +34,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310rc3.CoordinateSystem;
-import org.ocx_schema.v310rc3.SurfaceCollection;
-import org.ocx_schema.v310rc3.SurfaceT;
+import org.ocx_schema.v310.CoordinateSystem;
+import org.ocx_schema.v310.SurfaceCollection;
+import org.ocx_schema.v310.SurfaceT;
 
 /**
  * This class displays the reference surfaces contained in the OCX file
@@ -136,7 +136,7 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
 
         LOG.debug("found #{} surfaces and surface collection", surfaces.size());
 
-        table.getSelectionModel().selectedItemProperty().addListener((_, oldSurfaceRec, newSurfaceRec) -> updateSurface(oldSurfaceRec, newSurfaceRec));
+        table.getSelectionModel().selectedItemProperty().addListener((surfaceRecord, oldSurfaceRec, newSurfaceRec) -> updateSurface(oldSurfaceRec, newSurfaceRec));
 
     }
 

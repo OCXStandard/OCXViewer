@@ -29,7 +29,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310rc3.*;
+import org.ocx_schema.v310.*;
 
 import java.util.ArrayList;
 
@@ -173,7 +173,7 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
 
         LOG.debug("found #{} coordinate systems", coordinateSystems.size());
 
-        table.getSelectionModel().selectedItemProperty().addListener((_, oldCosys, newCosys) -> updateCoordinateSystem(oldCosys, newCosys));
+        table.getSelectionModel().selectedItemProperty().addListener((cosys, oldCosys, newCosys) -> updateCoordinateSystem(oldCosys, newCosys));
 
     }
 

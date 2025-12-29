@@ -50,6 +50,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class MainController {
 
@@ -58,6 +59,9 @@ public class MainController {
     private StackPane stackPane;
     @FXML
     private BorderPane mainBorderPane;
+    @FXML
+    public LogoPage logoPage;
+
 
     private boolean viewInitialized = false;
 
@@ -65,7 +69,6 @@ public class MainController {
 
     public MainController() {
         super();
-
     }
 
     @FXML
@@ -89,9 +92,8 @@ public class MainController {
         DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> initializeViews());
 
         // and create default pages
+        logoPage.setRepaint(logoPage.getRepaint());
 
-        final LogoPage logoPage = new LogoPage();
-        mainBorderPane.setCenter(logoPage);
 
         // This is initialized here to start collecting log events when the user opens a file
         final LogPage logPage = new LogPage();
@@ -106,7 +108,6 @@ public class MainController {
      * This method is called when the data view should be initialized.
      */
     private void initializeViews() {
-
 
         if (!viewInitialized) {
             // run this only once
@@ -251,7 +252,8 @@ public class MainController {
         // raise the log page
         switchPages(new NavigationEvent(LogPage.class));
 
-        class2page.keySet().forEach(c -> {
+        var pagesToRemove = class2page.keySet().stream().filter( clazz-> LogPage.class != clazz).collect(Collectors.toSet());
+        pagesToRemove.forEach(c -> {
             if (c != LogPage.class) {
                 final Page page = class2page.get(c);
                 page.beforeHide();

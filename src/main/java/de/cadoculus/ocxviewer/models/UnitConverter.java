@@ -18,7 +18,7 @@ package de.cadoculus.ocxviewer.models;
 import oasis.unitsml.Unit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310rc3.QuantityT;
+import org.ocx_schema.v310.QuantityT;
 
 public class UnitConverter {
     private static final Logger LOG = LogManager.getLogger(UnitConverter.class);

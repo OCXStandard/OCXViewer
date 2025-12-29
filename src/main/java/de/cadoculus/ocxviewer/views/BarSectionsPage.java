@@ -43,8 +43,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310rc3.BarSection;
-import org.ocx_schema.v310rc3.OcxXMLT;
+import org.ocx_schema.v310.BarSection;
+import org.ocx_schema.v310.OcxXMLT;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -169,11 +169,11 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
         LOG.debug("found #{} bar sections", barSections.size());
 
-        table.getSelectionModel().selectedItemProperty().addListener((_, oldSection, selectedSection) -> updateBar(oldSection, selectedSection));
+        table.getSelectionModel().selectedItemProperty().addListener((section, oldSection, selectedSection) -> updateBar(oldSection, selectedSection));
 
-        this.boundsInLocalProperty().addListener((_, _, _) -> updateCanvas());
+        this.boundsInLocalProperty().addListener((bound, oldBound, newBound) -> updateCanvas());
 
-        WorkingContext.getInstance().darkModeProperty().addListener(_ -> updateCanvas());
+        WorkingContext.getInstance().darkModeProperty().addListener(obs -> updateCanvas());
 
     }
 
@@ -962,7 +962,7 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
                             hpC = c;
                             hpR = r;
                         }
-                    } catch (ParseException _) {
+                    } catch (ParseException exp) {
 
                     }
                 }

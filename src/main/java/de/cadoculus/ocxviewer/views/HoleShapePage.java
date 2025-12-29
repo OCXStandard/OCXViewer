@@ -43,7 +43,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310rc3.*;
+import org.ocx_schema.v310.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -170,11 +170,11 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
 
         LOG.debug("found #{} hole shapes", holeShapes.size());
 
-        table.getSelectionModel().selectedItemProperty().addListener((_, oldHole, newHole) -> updateHoleShape(oldHole, newHole));
+        table.getSelectionModel().selectedItemProperty().addListener((hole2d, oldHole, newHole) -> updateHoleShape(oldHole, newHole));
 
-        this.boundsInLocalProperty().addListener((_, _, _) -> updateCanvas());
+        this.boundsInLocalProperty().addListener((bound, oldBound, newBounds) -> updateCanvas());
 
-        WorkingContext.getInstance().darkModeProperty().addListener(_ -> updateCanvas());
+        WorkingContext.getInstance().darkModeProperty().addListener(observable -> updateCanvas());
 
     }
 
@@ -245,7 +245,7 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
     private void drawMickeyMouse(GraphicsContext gc) {
 
         var shape = selectedHoleShape.getValue().getParametricHole2D().getValue();
-        if ( ! (shape instanceof RectangularMickeyMouseEarsT mickeyMouseEarsT)) {
+        if ( ! (shape instanceof RectangularMickeyMouseEars mickeyMouseEarsT)) {
             LOG.error("expected a RectangularMickeyMouseEarsT but got {}", shape.getClass());
             return;
         }

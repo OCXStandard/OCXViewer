@@ -27,10 +27,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-import org.ocx_schema.v310rc3.ClassificationData;
-import org.ocx_schema.v310rc3.PrincipalParticulars;
-import org.ocx_schema.v310rc3.Quantity;
-import org.ocx_schema.v310rc3.QuantityT;
+import org.ocx_schema.v310.ClassificationData;
+import org.ocx_schema.v310.PrincipalParticulars;
+import org.ocx_schema.v310.Quantity;
+import org.ocx_schema.v310.QuantityT;
 
 /**
  * The PrincipalParticularsPage class is a subclass of AbstractDataViewPage and is used to display the principal particulars of a vessel.

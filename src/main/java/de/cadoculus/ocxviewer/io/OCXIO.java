@@ -18,11 +18,12 @@ package de.cadoculus.ocxviewer.io;
 import jakarta.xml.bind.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310rc3.OcxXMLT;
+import org.ocx_schema.v310.OcxXMLT;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.SAXParserFactory;
+import java.beans.PropertyChangeListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -37,18 +38,20 @@ public class OCXIO  {
     /**
      * Reads an OCX file from the given file.
      * @param file the file to read the OCX file from.
-     * @return the OCX element
+     * @param listener an optional PropertyChangeListener
+     * @return the OCXReadResult
      * @throws IOException when io failed
      * @throws IllegalArgumentException if the given file does not exist
      */
-    public static OCXReadResult read(java.io.File file) throws IOException {
+    public static OCXReadResult read(java.io.File file, PropertyChangeListener ... listener) throws IOException {
 
         if ( ! file.exists()) {
             throw new IllegalArgumentException("File does not exist: " + file.getAbsolutePath());
         }
+        PropertyChangeListener pcl = listener !=null && listener.length > 0 ? listener[0] : null;
 
         // first we need to check the namespace used in the file
-        final String targetNamespace = "https://3docx.org/fileadmin//ocx_schema//V310rc3//OCX_Schema.xsd";
+        final String targetNamespace = "https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd";
         String usedNamespace = null;
         final var handler = new FindNamespaceHandler();
         try (FileInputStream fis = new FileInputStream(file)) {
@@ -65,14 +68,17 @@ public class OCXIO  {
         }
         LOG.info("file {} uses namespace {}", file.getName(), usedNamespace);
 
-        try (var fis = new FileInputStream(file); var rep = new ReplacingInputStream(fis, usedNamespace, targetNamespace)) {
+        try (var fis = new ProgressInputStream(file); var rep = new ReplacingInputStream(fis, usedNamespace, targetNamespace)) {
 //            var jaxbContext = org.eclipse.persistence.jaxb.JAXBContextFactory
 //                    .createContext(new Class[]{
 //                                oasis.unitsml.ObjectFactory.class,
 //                            org.ocx_schema.v310rc3.ObjectFactory.class}, null);
+            if ( pcl !=null) {
+                fis.addPropertyChangeListener(pcl);
+            }
             var jaxbContext =  JAXBContext.newInstance( new Class[] {
                             oasis.unitsml.ObjectFactory.class,
-                            org.ocx_schema.v310rc3.ObjectFactory.class});
+                            org.ocx_schema.v310.ObjectFactory.class});
             var jaxUnmarshaller = jaxbContext.createUnmarshaller();
 
             final Object unmarshal = jaxUnmarshaller.unmarshal(rep);
@@ -81,7 +87,6 @@ public class OCXIO  {
             if ( unmarshal instanceof JAXBElement jaxbElement && jaxbElement.getValue() instanceof OcxXMLT ocxXMLT) {
 
                 LOG.info("loaded {} {} ", jaxbElement.getName(), ocxXMLT);
-
 
                 return new OCXReadResult(usedNamespace, ocxXMLT);
             }

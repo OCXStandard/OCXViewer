@@ -39,7 +39,7 @@ import oasis.unitsml.UnitSet;
 import oasis.unitsml.UnitsML;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310rc3.OcxXMLT;
+import org.ocx_schema.v310.OcxXMLT;
 
 import java.util.HashMap;
 import java.util.List;

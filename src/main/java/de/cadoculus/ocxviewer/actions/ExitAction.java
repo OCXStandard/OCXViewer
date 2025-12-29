@@ -19,11 +19,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
-public class ExitAction {
+public class ExitAction extends  AbstractAction {
 
     public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
     public final static  String NAME = "Exit";
 
+    @Override
     public void run() {
         javafx.application.Platform.exit();
     }

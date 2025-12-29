@@ -26,12 +26,12 @@ module com.prostep.openpdm.ocxviewer {
 
 
     exports oasis.unitsml;
-    exports org.ocx_schema.v310rc3;
+    exports org.ocx_schema.v310;
 
     opens  oasis.unitsml to org.eclipse.persistence.core;
-    opens  org.ocx_schema.v310rc3 to org.eclipse.persistence.core;
+    opens  org.ocx_schema.v310 to org.eclipse.persistence.core;
     opens  oasis.unitsml to org.eclipse.persistence.moxy;
-    opens  org.ocx_schema.v310rc3 to org.eclipse.persistence.moxy;
+    opens  org.ocx_schema.v310 to org.eclipse.persistence.moxy;
 
 
 
