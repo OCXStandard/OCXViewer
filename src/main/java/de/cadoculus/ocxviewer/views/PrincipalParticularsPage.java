@@ -16,7 +16,7 @@
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
-import org.ocx_schema.v310rc3.*;
+import org.ocx_schema.v310.*;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -38,7 +38,6 @@ public class PrincipalParticularsPage extends AbstractDataViewPage {
         super(NAME);
 
         createTitle("Information that specifies design and intended performance characteristics of the ship in accordance with classification society rules and statutory regulations (see ISO 10303-218, section 4.2.36).");
-
 
         ScrollPane scrollPane = new ScrollPane();
         this.setCenter(scrollPane);

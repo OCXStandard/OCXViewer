@@ -16,10 +16,13 @@
 package de.cadoculus.ocxviewer.actions;
 
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.EventBus;
+import de.cadoculus.ocxviewer.event.NavigationEvent;
 import de.cadoculus.ocxviewer.event.OpenEvent;
 import de.cadoculus.ocxviewer.io.OCXIO;
 import de.cadoculus.ocxviewer.io.OCXReadResult;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.views.LogPage;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -32,8 +35,10 @@ import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310rc3.OcxXMLT;
+import org.ocx_schema.v310.OcxXMLT;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -41,7 +46,7 @@ import java.io.StringWriter;
 /**
  * Action to open an OCX file.
  */
-public class OpenAction {
+public class OpenAction extends AbstractAction {
 
     public static final KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
     public static final String NAME = "Open";
@@ -51,8 +56,13 @@ public class OpenAction {
     public OpenAction() {
     }
 
+    @Override
     public void run() {
         LOG.debug("open");
+
+        DefaultEventBus.getInstance().publish(
+                new NavigationEvent(LogPage.class)
+        );
 
         File file;
 
@@ -81,13 +91,22 @@ public class OpenAction {
 
             break;
         }
+
+
         LOG.info("Selected file: {}", file);
         final File selectedFile = file;
 
         new Thread(() -> {
 
             try {
-                final OCXReadResult result = OCXIO.read(selectedFile);
+                var pcl = new PropertyChangeListener() {
+
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        LOG.info("pcl " + evt);
+                    }
+                };
+                final OCXReadResult result = OCXIO.read(selectedFile,pcl);
                 OcxXMLT ocx = result.ocx();
                 WorkingContext.getInstance().setOCXFile(selectedFile);
                 WorkingContext.getInstance().setTargetNamespace(result.originalNamespace());
@@ -99,10 +118,6 @@ public class OpenAction {
                 long free = rt.freeMemory();
                 long max = rt.maxMemory();
                 long used = total -free;
-
-
-
-
 
                 LOG.info("Memory: total {} free {} used {} max {}",
                         total, free, used, max);

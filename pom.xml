@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>23</javafx.version>
+        <javafx.version>21</javafx.version>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
         <junit.version>5.10.2</junit.version>
         <atlantafx.version>2.0.1</atlantafx.version>
@@ -169,7 +169,7 @@
                         <configuration>
                             <debug>false</debug>
                             <args>
-
+                                <arg>-Xinheritance</arg>
                                 <arg>-XpropertyListener</arg>
                                 <arg>-XpropertyListener-constrained=false</arg>
                             </args>
@@ -275,8 +275,8 @@
 
                 <configuration>
                     <useModulePath>true</useModulePath>
-                    <source>23</source>
-                    <target>23</target>
+                    <source>21</source>
+                    <target>21</target>
 
 
                 </configuration>

@@ -35,7 +35,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
-import org.ocx_schema.v310rc3.CoordinateSystem;
+import org.ocx_schema.v310.CoordinateSystem;
 
 import java.lang.ref.Reference;
 import java.util.Objects;

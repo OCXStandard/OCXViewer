@@ -16,98 +16,119 @@
 package de.cadoculus.ocxviewer.views;
 
 import de.cadoculus.ocxviewer.Main;
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.WindowEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.function.Consumer;
+import javafx.scene.text.Text;
 /*
  * This class is responsible for displaying the logo of the application directly after startup.
  * It is later discarded in the MainController's {@link MainController#initializeDataView()} method.
  */
-public class LogoPage extends BorderPane {
-    private static final Logger LOG = LogManager.getLogger(Main.class);
+public class LogoPage extends Region {
+    private static final Logger LOG = LogManager.getLogger(LogoPage.class);
     private final Canvas canvas;
     private Image background = null;
-    private Image paper = null;
+    private double imgW, imgH;
+    private Consumer<Canvas> repaint ;
 
     public LogoPage() {
         super();
 
-        this.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+       // this.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
         canvas = new Canvas();
-        this.setCenter(canvas);
-
-        var g2d = canvas.getGraphicsContext2D();
-
+        getChildren().add(canvas);
+        repaint = c -> drawShapes() ;
 
         try {
-
-            background = new Image(LogoPage.class.getResource("windfinder.png").toString());
-            paper = new Image(LogoPage.class.getResource("Rastergrafik.png").toString());
-
+            background = new Image(LogoPage.class.getResource("logo.png").toString());
+            imgW = background.getWidth();
+            imgH =background.getHeight();
         } catch (Exception e) {
             LOG.error("Could not load logo.png", e);
         }
 
-        drawShapes(g2d);
-
+        /*
         this.heightProperty().addListener(observable -> layoutChildren());
         this.widthProperty().addListener(observable -> layoutChildren());
 
-
+        DefaultEventBus.getInstance().subscribe(WindowEvent.class, new Consumer<WindowEvent>() {
+            @Override
+            public void accept(WindowEvent windowEvent) {
+                LOG.error(windowEvent.toString());
+                layoutChildren();
+            }
+        });
+*/
     }
 
     @Override
     protected void layoutChildren() {
+        LOG.info("layoutChildren {}x{}", this.getWidth(), this.getHeight());
         super.layoutChildren();
         double width = getWidth();
         canvas.setWidth(width);
         double height = getHeight();
         canvas.setHeight(height);
-        drawShapes(canvas.getGraphicsContext2D());
+        repaint.accept(canvas);
+        //drawShapes(canvas.getGraphicsContext2D());
     }
 
+    public Consumer<Canvas> getRepaint() {
+        return repaint;
+    }
 
-    private void drawShapes(GraphicsContext gc) {
+    public void setRepaint(Consumer<Canvas> repaint) {
+        this.repaint = repaint ;
+    }
 
-        //LOG.info("drawShapes {}x{}", canvas.getWidth(), canvas.getHeight());
+    private void drawShapes() {
+
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        LOG.info("drawShapes {}x{}", canvas.getWidth(), canvas.getHeight());
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
+        gc.strokeLine(0,0, canvas.getWidth(), canvas.getHeight());
 
+        var txt="OCXViewer";
+        var font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20);
+        Text text = new Text(txt);
+        text.setFont(font);
+        var textWidth = text.getLayoutBounds().getWidth();
+        var textHeight = text.getLayoutBounds().getHeight();
+        var x = 10.0;
+        var y = canvas.getHeight() - textHeight-25;
+        gc.setFont(font );
+        gc.fillText(txt, x, y);
 
         if ( background !=null) {
-            gc.drawImage(background, 0, 0);
-        };
+            var cnvsW = canvas.getWidth();
+            var cnvsH =canvas.getHeight();
 
-        if ( paper !=null) {
+            var scaleX = Math.min(1, cnvsW/imgW);
+            var scaleY = Math.min(1, cnvsH/imgH);
+            var scale = Math.min(scaleX, scaleY);
 
-            var endX = canvas.getWidth()*0.4;
-            var endY  =canvas.getHeight()*0.6;
+            var imgWS = imgW*scale;
+            var imgHS = imgH*scale;
 
-            gc.setStroke(Color.WHITE);
-            gc.setLineWidth(2);
-
-            var lastX = endX;
-            var lastY = endY+160;
-
-            while ( lastY < canvas.getHeight()) {
-                var deltaX =-10 * 5* Math.random();
-                var deltaY = 10 + 10.*Math.random();
-
-                gc.strokeLine(lastX, lastY, lastX+deltaX, lastY+deltaY);
-                lastX +=deltaX;
-                lastY +=deltaY;
-            }
-
-            gc.drawImage(paper, endX, endY);
-
+            var ix = canvas.getWidth()-imgWS-10;
+            var iy = canvas.getHeight()-imgHS-25;
+            gc.drawImage(background, ix, iy, imgWS, imgHS);
         };
     }
 }

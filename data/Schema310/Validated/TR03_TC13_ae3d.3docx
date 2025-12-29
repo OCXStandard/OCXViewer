@@ -1,0 +1,1413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ocx:ocxXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="3.1.0" xsi:schemaLocation="https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd" language="en" xmlns:ocx="https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd">
+  <ocx:Header time_stamp="2025-11-10T09:00:01" name="OCX Export" author="AVEVA E3D Design User" organization="AVEVA E3D Design User" application_version="4.3" originating_system="AVEVA E3D Design" />
+  <ocx:Vessel id="ID1" ocx:GUIDRef="{ba3a77c2-bae6-4317-be03-15bcede2745f}" name="IMC2023">
+    <ocx:DistanceTolerance numericvalue="0.10000000000000001" unit="u2" />
+    <ocx:AngleTolerance numericvalue="0.5" unit="u9" />
+    <ocx:CoordinateSystem id="ID2" ocx:GUIDRef="{e6a0c746-7549-404f-8d74-2f688a0e5834}" isGlobal="true">
+      <ocx:XRefPlanes>
+        <ocx:RefPlane name="F0" id="ID3" ocx:GUIDRef="{496cbb24-d8bf-4722-94e2-875182f8be70}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="0" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F1" id="ID4" ocx:GUIDRef="{d1f94f9f-954a-4499-8edc-262faecc4733}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="750" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F2" id="ID5" ocx:GUIDRef="{b36af500-6072-460b-a0ca-b04ca7dff1b0}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="1500" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F3" id="ID6" ocx:GUIDRef="{2eb5805b-a1b9-46de-91b8-8dbeb5150096}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="2250" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F4" id="ID7" ocx:GUIDRef="{b57b3320-1456-4f8e-b5fd-f02b4ed73074}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="3000" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F5" id="ID8" ocx:GUIDRef="{0cb24302-10ed-4948-9bd6-774c5b65b2c5}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="3750" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F6" id="ID9" ocx:GUIDRef="{111ecc3e-4362-4bb4-85e8-f60b9a7c6a22}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="4500" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F7" id="ID10" ocx:GUIDRef="{0ab1d26b-0e2f-4784-81ce-082db7b10738}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="5250" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F8" id="ID11" ocx:GUIDRef="{0e714082-fd60-4a07-8fd3-5296ef71947a}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6000" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F9" id="ID12" ocx:GUIDRef="{f6b78d29-9cfc-4d8e-80ab-e1f25863d244}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6750" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F10" id="ID13" ocx:GUIDRef="{fa141558-c08d-4da2-b530-12670564f370}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="7500" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F11" id="ID14" ocx:GUIDRef="{a35a83c8-40d6-49cd-b15a-fe1154cd0371}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="8250" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F12" id="ID15" ocx:GUIDRef="{f5df15f9-b3a2-438d-9be4-fa40a456f05f}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="9000" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F13" id="ID16" ocx:GUIDRef="{a6e9b4cd-b212-4011-8bb8-98d58bac3390}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="9750" unit="u2" />
+        </ocx:RefPlane>
+      </ocx:XRefPlanes>
+      <ocx:YRefPlanes>
+        <ocx:RefPlane name="L-12" id="ID17" ocx:GUIDRef="{3379cdee-23d2-4ab0-a913-9578b12b4aad}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-10320" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-11" id="ID18" ocx:GUIDRef="{9b6b2919-78fd-41a2-b77b-b328cdd354b8}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-9460" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-10" id="ID19" ocx:GUIDRef="{075125a5-e280-4626-8e91-e70aa4841e85}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-8600" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-9" id="ID20" ocx:GUIDRef="{5b3bff64-a233-48fe-bf35-9f22f8ae974c}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-7740" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-8" id="ID21" ocx:GUIDRef="{1db50810-d838-402b-a08b-7bf9fe7a27ea}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-6880" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-7" id="ID22" ocx:GUIDRef="{78749a73-d9bb-466b-b9ca-4b030d5a4916}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-6020" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-6" id="ID23" ocx:GUIDRef="{0f41f7fd-cdff-42aa-80b6-07a2d9c11943}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-5160" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-5" id="ID24" ocx:GUIDRef="{700659e2-c0bb-41e2-aa57-fbab6eaf3002}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-4300" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-4" id="ID25" ocx:GUIDRef="{770b1fd4-75e6-4543-845e-1a7532c65674}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-3440" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-3" id="ID26" ocx:GUIDRef="{94da01ad-eb5b-42d4-b672-fc072c04fd2c}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-2580" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-2" id="ID27" ocx:GUIDRef="{810eec08-e5d0-4374-89a0-304b29111766}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-1720" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-1" id="ID28" ocx:GUIDRef="{9cede442-0b67-4d02-94ee-60d7e5fccca6}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-860" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L0" id="ID29" ocx:GUIDRef="{39ab563d-a086-49e7-818c-d1cdebd6b678}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="0" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L1" id="ID30" ocx:GUIDRef="{860a9478-3d90-4019-95fd-a85ac83d9ba5}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="860" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L2" id="ID31" ocx:GUIDRef="{a68d9c8f-9352-4062-9647-168f9ef361f3}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="1720" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L3" id="ID32" ocx:GUIDRef="{af4021e8-8a7a-45f2-9a2d-016552526c30}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="2580" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L4" id="ID33" ocx:GUIDRef="{35bc5d97-8d63-476a-926f-05ef3bab5f4c}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="3440" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L5" id="ID34" ocx:GUIDRef="{b7f30310-bfcb-4ef8-8496-684ad75a9329}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="4300" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L6" id="ID35" ocx:GUIDRef="{2e0d2518-664d-4e4d-ae6b-0208f488fe6e}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="5160" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L7" id="ID36" ocx:GUIDRef="{3b885c63-8b68-4faf-999a-8e888fbd34e5}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6020" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L8" id="ID37" ocx:GUIDRef="{6fa377bd-d522-4e9e-adaf-5753f0701461}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6880" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L9" id="ID38" ocx:GUIDRef="{e93ebc39-88aa-4acf-9037-cf2dc8947282}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="7740" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L10" id="ID39" ocx:GUIDRef="{f0fbb3b0-05fe-4177-a123-d51cf5e4fdf7}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="8600" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L11" id="ID40" ocx:GUIDRef="{4a31f904-0dcc-4b88-86d6-bbdf882dc52f}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="9460" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L12" id="ID41" ocx:GUIDRef="{90e5fb8f-cd8b-463a-9d60-8a0d54d660bc}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="10320" unit="u2" />
+        </ocx:RefPlane>
+      </ocx:YRefPlanes>
+      <ocx:ZRefPlanes>
+        <ocx:RefPlane name="D0" id="ID42" ocx:GUIDRef="{2dacaf39-2d48-46b6-a041-f90577be237d}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="0" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="D1" id="ID43" ocx:GUIDRef="{b8883994-40d1-40e8-8a2d-86d684d8c030}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="1500" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="D2" id="ID44" ocx:GUIDRef="{8a3f2fe7-222b-443b-bd08-50be103b445f}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6000" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="D3" id="ID45" ocx:GUIDRef="{a5694853-a845-4abe-8271-13425fb5a218}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="9900" unit="u2" />
+        </ocx:RefPlane>
+      </ocx:ZRefPlanes>
+    </ocx:CoordinateSystem>
+    <ocx:ClassificationData ocx:newbuildingSociety="DNV" identification="">
+      <ocx:PrincipalParticulars>
+        <ocx:Lpp numericvalue="70000" unit="u2" />
+        <ocx:RuleLength numericvalue="0" unit="u2" />
+        <ocx:BlockCoefficient numericvalue="0" unit="u6" />
+        <ocx:FP_Pos numericvalue="0" unit="u2" />
+        <ocx:MouldedBreadth numericvalue="20000" unit="u2" />
+        <ocx:MouldedDepth numericvalue="12000" unit="u2" />
+        <ocx:ScantlingDraught numericvalue="8000" unit="u2" />
+        <ocx:DesignSpeed numericvalue="0" unit="u2" />
+        <ocx:FreeboardLength numericvalue="0" unit="u2" />
+        <ocx:NormalBallastDraught numericvalue="0" unit="u2" />
+        <ocx:HeavyBallastDraught numericvalue="0" unit="u2" />
+        <ocx:SlammingDraughtEmptyFP numericvalue="0" unit="u2" />
+        <ocx:SlammingDraughtFullFP numericvalue="0" unit="u2" />
+      </ocx:PrincipalParticulars>
+      <ocx:ClassNotation hull="" machinery="" serviceArea="" additionalNotations="" />
+    </ocx:ClassificationData>
+    <ocx:StatutoryData portRegistration="Sweden" flagState="Swedish" />
+    <ocx:ShipDesignation shipName="IMC2023" callSign="" numberIMO="1004871" shipType="Bulk Carrier" />
+    <ocx:Panel ocx:GUIDRef="{66178685-7847-4f98-b182-61b55a99ed02}" id="ID46" name="MODEL13" ocx:functionType="SHELL: Bulwark shell" ocx:tightness="NonTight">
+      <ocx:UnboundedGeometry>
+        <ocx:Plane3D id="ID47">
+          <ocx:FaceBoundaryCurve>
+            <ocx:NURBS3D id="ID48">
+              <ocx:CurveLength numericvalue="3800" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="60000 10000 9200" unit="u2" />
+                <ocx:ControlPoint coordinates="60000 10000 13000" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID49">
+              <ocx:CurveLength numericvalue="60000" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="60000 10000 13000" unit="u2" />
+                <ocx:ControlPoint coordinates="0 10000 13000" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID50">
+              <ocx:CurveLength numericvalue="3800" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="0 10000 13000" unit="u2" />
+                <ocx:ControlPoint coordinates="0 10000 9200" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID51">
+              <ocx:CurveLength numericvalue="60000" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="0 10000 9200" unit="u2" />
+                <ocx:ControlPoint coordinates="60000 10000 9200" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+          </ocx:FaceBoundaryCurve>
+          <ocx:Origin coordinates="0 9999.9999999999964 10599.999999999996" unit="u2" />
+          <ocx:Normal direction="0 -1 0" />
+        </ocx:Plane3D>
+        <ocx:NURBSSurface id="ID52">
+          <ocx:FaceBoundaryCurve>
+            <ocx:NURBS3D id="ID53">
+              <ocx:CurveLength numericvalue="11680.804818328623" unit="u2" />
+              <ocx:NURBSproperties degree="2" numCtrlPts="3" numKnots="6" isRational="true" />
+              <ocx:KnotVector value="5.1151048219653523 5.1151048219653523 5.1151048219653523 6.2831853071795862 6.2831853071795862 6.2831853071795862 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint weight="1" coordinates="60000 3919.1835884530892 9.5992312737398352e-13" unit="u2" />
+                <ocx:ControlPoint weight="0.83424167926486081" coordinates="60000.000000000022 10000 2590.4169439707503" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="59999.999999999993 10000.000000000002 9200" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID54">
+              <ocx:CurveLength numericvalue="60000" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="60000 10000 9200" unit="u2" />
+                <ocx:ControlPoint coordinates="0 10000 9200" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID55">
+              <ocx:CurveLength numericvalue="11680.804818328639" unit="u2" />
+              <ocx:NURBSproperties degree="2" numCtrlPts="3" numKnots="6" isRational="true" />
+              <ocx:KnotVector value="0 0 0 1.1680804852142341 1.1680804852142341 1.1680804852142341 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint weight="1" coordinates="-8.3565436037832696e-12 10000 9200.0000000000018" unit="u2" />
+                <ocx:ControlPoint weight="0.83424167926486059" coordinates="3.1245809256285291e-11 9999.9999999999982 2590.4169439707462" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="0 3919.1835884530869 0" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID56">
+              <ocx:CurveLength numericvalue="60000" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="0 3919.1835884530865 0" unit="u2" />
+                <ocx:ControlPoint coordinates="60000 3919.1835884530865 0" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+          </ocx:FaceBoundaryCurve>
+          <ocx:U_NURBSproperties degree="2" numCtrlPts="3" numKnots="6" form="Open" isRational="true" />
+          <ocx:UknotVector value="0 0 0 0.18345745441521488 0.18345745441521488 0.18345745441521488 " />
+          <ocx:V_NURBSproperties degree="1" numCtrlPts="2" numKnots="4" form="Open" isRational="true" />
+          <ocx:VknotVector value="0.083347221759274739 0.083347221759274739 0.91665277824072533 0.91665277824072533 " />
+          <ocx:ControlPtList>
+            <ocx:ControlPoint weight="1" coordinates="60000.000000000015 3919.1835884531165 9.0949470177292824e-12" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="-1.1823431123048067e-11 3919.1835884530892 1.8189894035458565e-12" unit="u2" />
+            <ocx:ControlPoint weight="0.83424167926486104" coordinates="60000.000000000015 10000.000000000018 2590.4169439707634" unit="u2" />
+            <ocx:ControlPoint weight="0.83424167926486104" coordinates="-1.3821474183961181e-11 9999.9999999999891 2590.4169439707489" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="60000.000000000015 10000.000000000018 9200.0000000000109" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="-1.4604543941296513e-11 9999.9999999999964 9199.9999999999927" unit="u2" />
+          </ocx:ControlPtList>
+        </ocx:NURBSSurface>
+        <ocx:Plane3D id="ID57">
+          <ocx:FaceBoundaryCurve>
+            <ocx:NURBS3D id="ID58">
+              <ocx:CurveLength numericvalue="7838.367176906173" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="60000 -3919.1835884530865 0" unit="u2" />
+                <ocx:ControlPoint coordinates="60000 3919.1835884530865 0" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID59">
+              <ocx:CurveLength numericvalue="60000" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="60000 3919.1835884530865 0" unit="u2" />
+                <ocx:ControlPoint coordinates="0 3919.1835884530865 0" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID60">
+              <ocx:CurveLength numericvalue="7838.367176906173" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="0 3919.1835884530865 0" unit="u2" />
+                <ocx:ControlPoint coordinates="0 -3919.1835884530865 0" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:NURBS3D id="ID61">
+              <ocx:CurveLength numericvalue="60000" unit="u2" />
+              <ocx:NURBSproperties degree="1" numCtrlPts="2" numKnots="4" isRational="false" />
+              <ocx:KnotVector value="0 0 1 1 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint coordinates="0 -3919.1835884530865 0" unit="u2" />
+                <ocx:ControlPoint coordinates="60000 -3919.1835884530865 0" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+          </ocx:FaceBoundaryCurve>
+          <ocx:Origin coordinates="2.2204460492503131e-16 1959.5917942265432 0" unit="u2" />
+          <ocx:Normal direction="0 0 1" />
+        </ocx:Plane3D>
+      </ocx:UnboundedGeometry>
+      <ocx:LimitedBy>
+        <ocx:FreeEdgeCurve3D id="ID62" ocx:GUIDRef="{0c7a6993-25cd-47be-8ff7-cec6d65e43ac}">
+          <ocx:CurveLength numericvalue="8999.9999999999782" unit="u2" />
+          <ocx:Line3D id="ID63">
+            <ocx:CurveLength numericvalue="8999.9999999999782" unit="u2" />
+            <ocx:StartPoint coordinates="2.1827872842550278e-11 -1.1368683772161603e-13 0" unit="u2" />
+            <ocx:EndPoint coordinates="9000 -1.1368683772161603e-13 0" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID64" ocx:GUIDRef="{a9f7853c-e95e-4b7a-8dea-de97c7db4a23}">
+          <ocx:CurveLength numericvalue="18399.98835540298" unit="u2" />
+          <ocx:NURBS3D id="ID65">
+            <ocx:CurveLength numericvalue="18399.98835540298" unit="u2" />
+            <ocx:NURBSproperties degree="2" numCtrlPts="7" numKnots="10" isRational="true" />
+            <ocx:KnotVector value="0 0 0 2801.7369131472005 2801.7369131472005 14482.54176528955 14482.54176528955 18401.725353742637 18401.725353742637 18401.725353742637 " />
+            <ocx:ControlPtList>
+              <ocx:ControlPoint weight="1" coordinates="0 10000 12000" unit="u2" />
+              <ocx:ControlPoint weight="1" coordinates="0 10000 10600" unit="u2" />
+              <ocx:ControlPoint weight="1" coordinates="-7.2759576141834259e-12 10000 9200.0000000000018" unit="u2" />
+              <ocx:ControlPoint weight="0.83424167926486059" coordinates="3.637978807091713e-11 9999.9999999999982 2590.4169439707448" unit="u2" />
+              <ocx:ControlPoint weight="1" coordinates="0 3919.1835884530865 0" unit="u2" />
+              <ocx:ControlPoint weight="1" coordinates="0 1959.5917942265432 0" unit="u2" />
+              <ocx:ControlPoint weight="1" coordinates="0 0 0" unit="u2" />
+            </ocx:ControlPtList>
+          </ocx:NURBS3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID66" ocx:GUIDRef="{f84ed68e-199f-421e-90ed-6742cbf989bb}">
+          <ocx:CurveLength numericvalue="18399.988168365639" unit="u2" />
+          <ocx:NURBS3D id="ID67">
+            <ocx:CurveLength numericvalue="18399.988168365639" unit="u2" />
+            <ocx:NURBSproperties degree="3" numCtrlPts="115" numKnots="119" isRational="false" />
+            <ocx:KnotVector value="0 0 0 0 3919.1835884531274 3919.1835884531274 3919.1835884531274 4255.8896376795337 4255.8896376795337 4255.8896376795337 4405.3090629702774 4405.3090629702774 4405.3090629702774 4449.5431601161099 4449.5431601161099 4449.5431601161099 4955.1141564204618 4955.1141564204618 4955.1141564204618 5460.3517514170999 5460.3517514170999 5460.3517514170999 5609.7340070413356 5609.7340070413356 5609.7340070413356 6114.8956939919635 6114.8956939919635 6114.8956939919635 6619.7289570625062 6619.7289570625062 6619.7289570625062 6719.2812627467629 6719.2812627467629 6719.2812627467629 7224.0772737011648 7224.0772737011648 7224.0772737011648 7728.5487093759966 7728.5487093759966 7728.5487093759966 7828.0859490604098 7828.0859490604098 7828.0859490604098 8332.5245205561114 8332.5245205561114 8332.5245205561114 8836.6412725205737 8836.6412725205737 8836.6412725205737 8936.1632486557992 8936.1632486557992 8936.1632486557992 9440.250227426548 9440.250227426548 9440.250227426548 9944.0171200144941 9944.0171200144941 9944.0171200144941 10043.523706413078 10043.523706413078 10043.523706413078 10547.262687135904 10547.262687135904 10547.262687135904 11050.682336151925 11050.682336151925 11050.682336151925 11150.173529321579 11150.173529321579 11150.173529321579 11653.565933643476 11653.565933643476 11653.565933643476 12156.63880079646 12156.63880079646 12156.63880079646 12305.83136718996 12305.83136718996 12305.83136718996 12808.845020376844 12808.845020376844 12808.845020376844 13311.53755041134 13311.53755041134 13311.53755041134 13411.002668128302 13411.002668128302 13411.002668128302 13913.665948008502 13913.665948008502 13913.665948008502 14416.005871156925 14416.005871156925 14416.005871156925 14515.454025758796 14515.454025758796 14515.454025758796 15017.761670031779 15017.761670031779 15017.761670031779 15519.742670335421 15519.742670335421 15519.742670335421 15599.988304465147 15599.988304465147 15599.988304465147 15616.612032311921 15616.612032311921 15616.612032311921 15716.123418900972 15716.123418900972 15716.123418900972 16849.620306766872 16849.620306766872 16849.620306766872 18399.988304465158 18399.988304465158 18399.988304465158 18399.988304465158 " />
+            <ocx:ControlPtList>
+              <ocx:ControlPoint coordinates="8999.9999999999964 -4.0145664570445661e-11 0" unit="u2" />
+              <ocx:ControlPoint coordinates="8999.9999999999964 1306.3945294843356 0" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 2612.7890589687113 -9.0949470177292824e-13" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 3919.1835884530874 -9.0949470177292824e-13" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4022.4352329400222 43.985016364561488" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4124.9608291670475 89.714947292184661" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4226.6732282002286 137.15092137050124" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4271.8116649929625 158.2022950278797" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4316.7940798968993 179.59149979469385" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4361.6129412314422 201.31495434569024" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4374.8812206973162 207.74601612111928" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4388.1353089462846 214.20643926344292" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4401.3750114767572 220.69612896700619" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4552.6814182138714 294.86181566766754" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4702.1603350855339 372.87802503262992" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4849.5254069533175 454.59530225648541" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 4996.7933188663828 536.25870208012566" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 5142.04412082821 621.67038356498415" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 5284.9999240735506 710.6669400628025" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 5327.271388412425 736.98286903438657" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 5369.3474660136135 763.61527702604963" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 5411.221115326749 790.55970702912873" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 5552.8102959892367 881.66807303335372" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000073 5692.1421642984833 976.38365365625032" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000073 5828.9502354238357 1074.5252967625011" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000073 5965.6693815670451 1172.6031479901812" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6099.9550900535278 1274.1650730567389" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6231.5508609056051 1379.0170778893344" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6257.503983154349 1399.6958343708411" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6283.3544938906825 1420.5040343459323" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6309.1004716987063 1441.4401311834145" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6439.6362819324504 1547.5891531468042" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6567.5330400125877 1657.0684093675982" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6692.54648556338 1769.6688136683078" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6817.4795666363343 1882.1968331734779" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 6939.6125001092196 1997.913553820109" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7058.7123331521943 2116.5982608773911" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7082.2143113546381 2140.0183222406777" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7105.600019792415 2163.5556421598976" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7128.8677207794262 2187.2084716833879" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7246.7726386824252 2307.0649596405601" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7361.69041900918 2429.9349100588661" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7473.4018994426879 2555.5839948565463" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7585.0421257654671 2681.1529355744378" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7693.5510463195333 2809.577212994267" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7798.7219850497531 2940.6122184432656" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7819.4867874023557 2966.4835857836324" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7840.1231056958986 2992.4586032634315" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7860.6294070092426 3018.5353413886114" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 7964.4849398650758 3150.6027235922597" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8065.0430033675393 3285.3310220284293" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8162.1120880016133 3422.4636510967748" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8259.1195485460685 3559.5092218246064" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8352.7039854059822 3699.0429861668163" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8442.6873962247428 3840.7995438099219" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8460.4631809955954 3868.8028617058858" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8478.099857167952 3896.8949683957612" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8495.5961150472831 3925.073777767735" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8584.1596169733803 4067.7107950831974" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8669.1567009445644 4212.6248479736278" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8750.4257160881298 4359.5403330650915" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 8831.6432238183297 4506.3627047281852" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 8909.1888284437391 4655.2769598669711" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 8982.9152374083824 4806.0002460700625" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 8997.4873199179765 4835.7908217065624" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 9011.9113846730888 4865.6542571242599" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 9026.1863608781532 4895.5883353590289" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 9098.4056739087864 5047.0294680982361" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9166.8341192855696 5200.3372297952483" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9231.3417359293271 5355.2204543707094" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9295.8084138673694 5510.0053848364078" unit="u2" />
+              <ocx:ControlPoint coordinates="8999.9999999999964 9356.400014618237 5666.4616750747418" unit="u2" />
+              <ocx:ControlPoint coordinates="8999.9999999999964 9413.0016069894955 5824.2925560983113" unit="u2" />
+              <ocx:ControlPoint coordinates="8999.9999999999964 9429.7891331952615 5871.1037841973948" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9446.227915897347 5918.0415491609347" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9462.315211000976 5965.0980157569556" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9516.549489084824 6123.7370833299819" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9566.8089248454107 6283.7910386637359" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9612.9982077444711 6444.9563600731071" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9659.1580096856414 6606.0188154547859" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9701.2820068106903 6768.2929316671298" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9739.2904182832826 6931.4713692934092" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9746.8117028555989 6963.7618917831005" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 9754.1724880974998 6996.0902196309908" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 9761.3722278546629 7028.4539541451677" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 9797.7536131092784 7191.9928504596983" unit="u2" />
+              <ocx:ControlPoint coordinates="8999.9999999999927 9830.0340679439723 7356.49822379749" unit="u2" />
+              <ocx:ControlPoint coordinates="8999.9999999999927 9858.1524618305775 7521.6585450797438" unit="u2" />
+              <ocx:ControlPoint coordinates="8999.9999999999927 9886.2527713252912 7686.7126432261048" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9910.2140962312169 7852.5249354556818" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9929.991118543574 8018.7818213192868" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9933.9067680097069 8051.6989954060009" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9937.6587848981653 8084.63604702456" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9941.2468909123654 8117.5905331505419" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9959.3684042048408 8284.025180291801" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9973.3133622660316 8450.9676515270003" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9983.0553944122912 8618.10224944947" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9992.7910927752764 8785.1281847946757" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9998.3354628793986 8952.4511793023703" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.6780336378724 9119.7552270845863" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.8926761515795 9146.5028388157825" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 10000.000000000002 9173.2515270579443" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000036 10000.000000000002 9199.9999999999927" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 9205.541242615589" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 9211.082485231178" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 9216.623727846767" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 9249.7941900431179" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000073 9999.9999999999964 9282.9646522394669" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000073 9999.9999999999964 9316.1351144358177" unit="u2" />
+              <ocx:ControlPoint coordinates="9000.0000000000073 9999.9999999999964 9693.9674103911184" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 10071.799706346417" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 10449.632002301718" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 10966.421334867811" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 11483.210667433907" unit="u2" />
+              <ocx:ControlPoint coordinates="9000 9999.9999999999964 12000.000000000002" unit="u2" />
+            </ocx:ControlPtList>
+          </ocx:NURBS3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID68" ocx:GUIDRef="{3cc6cd91-72dd-4030-9375-e2e0d265c6cf}">
+          <ocx:CurveLength numericvalue="9000" unit="u2" />
+          <ocx:Line3D id="ID69">
+            <ocx:CurveLength numericvalue="9000" unit="u2" />
+            <ocx:StartPoint coordinates="9000.0000000000073 9999.9999999999964 12000" unit="u2" />
+            <ocx:EndPoint coordinates="7.2759576141834259e-12 9999.9999999999964 12000" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+      </ocx:LimitedBy>
+      <ocx:ComposedOf>
+        <ocx:Plate id="ID70" ocx:GUIDRef="{39c85f06-84d7-4f5e-8823-c0323865a0d3}">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="12614.985853309106" unit="u8" />
+            <ocx:CenterOfGravity coordinates="4458.5742050313766 6873.9948366417448 4095.0618617031341" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:NetArea numericvalue="160700456.73005232" unit="u2" />
+          <ocx:OuterContour>
+            <ocx:Line3D id="ID71">
+              <ocx:CurveLength numericvalue="2800.0000000000018" unit="u2" />
+              <ocx:StartPoint coordinates="9000 9999.9999999999964 9200" unit="u2" />
+              <ocx:EndPoint coordinates="9000 9999.9999999999964 12000.000000000002" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID72">
+              <ocx:CurveLength numericvalue="8999.9999999999927" unit="u2" />
+              <ocx:StartPoint coordinates="9000 9999.9999999999964 12000.000000000002" unit="u2" />
+              <ocx:EndPoint coordinates="7.2759576141834259e-12 9999.9999999999964 12000" unit="u2" />
+            </ocx:Line3D>
+            <ocx:NURBS3D id="ID73">
+              <ocx:CurveLength numericvalue="14480.804818328637" unit="u2" />
+              <ocx:NURBSproperties degree="3" numCtrlPts="7" numKnots="11" isRational="true" />
+              <ocx:KnotVector value="11799.999999999995 11799.999999999995 11799.999999999995 11799.999999999995 14599.999999999995 14599.999999999995 14599.999999999995 26280.804852142348 26280.804852142348 26280.804852142348 26280.804852142348 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint weight="1" coordinates="7.2759576141834259e-12 9999.9999999999964 12000" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="0 10000 11066.666666666666" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="0 10000 10133.333333333332" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="0 10000 9200" unit="u2" />
+                <ocx:ControlPoint weight="0.88949445284324025" coordinates="2.0020028679667276e-11 10000 5067.3231742089583" unit="u2" />
+                <ocx:ControlPoint weight="0.88949445284324025" coordinates="2.2746655244875589e-11 7721.2462681808447 1619.6719192020651" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="0 3919.1835884530869 0" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+            <ocx:Line3D id="ID74">
+              <ocx:CurveLength numericvalue="3919.1835884530869" unit="u2" />
+              <ocx:StartPoint coordinates="0 3919.1835884530869 0" unit="u2" />
+              <ocx:EndPoint coordinates="0 0 0" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID75">
+              <ocx:CurveLength numericvalue="9000" unit="u2" />
+              <ocx:StartPoint coordinates="0 0 0" unit="u2" />
+              <ocx:EndPoint coordinates="9000 -1.1368683772161603e-13 0" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID76">
+              <ocx:CurveLength numericvalue="3919.1835884530874" unit="u2" />
+              <ocx:StartPoint coordinates="9000 -1.1368683772161603e-13 0" unit="u2" />
+              <ocx:EndPoint coordinates="9000 3919.1835884530874 -9.0949470177292824e-13" unit="u2" />
+            </ocx:Line3D>
+            <ocx:NURBS3D id="ID77">
+              <ocx:CurveLength numericvalue="11680.804579912521" unit="u2" />
+              <ocx:NURBSproperties degree="3" numCtrlPts="100" numKnots="104" isRational="true" />
+              <ocx:KnotVector value="43119.172029048525 43119.172029048525 43119.172029048525 43119.172029048525 43455.878078274931 43455.878078274931 43455.878078274931 43605.297503565678 43605.297503565678 43605.297503565678 43649.531600711511 43649.531600711511 43649.531600711511 44155.102597015866 44155.102597015866 44155.102597015866 44660.340192012503 44660.340192012503 44660.340192012503 44809.722447636741 44809.722447636741 44809.722447636741 45314.884134587366 45314.884134587366 45314.884134587366 45819.717397657907 45819.717397657907 45819.717397657907 45919.269703342165 45919.269703342165 45919.269703342165 46424.065714296565 46424.065714296565 46424.065714296565 46928.537149971395 46928.537149971395 46928.537149971395 47028.074389655805 47028.074389655805 47028.074389655805 47532.512961151508 47532.512961151508 47532.512961151508 48036.629713115966 48036.629713115966 48036.629713115966 48136.151689251194 48136.151689251194 48136.151689251194 48640.238668021942 48640.238668021942 48640.238668021942 49144.00556060989 49144.00556060989 49144.00556060989 49243.512147008478 49243.512147008478 49243.512147008478 49747.251127731302 49747.251127731302 49747.251127731302 50250.670776747327 50250.670776747327 50250.670776747327 50350.161969916982 50350.161969916982 50350.161969916982 50853.554374238884 50853.554374238884 50853.554374238884 51356.627241391863 51356.627241391863 51356.627241391863 51505.819807785359 51505.819807785359 51505.819807785359 52008.833460972244 52008.833460972244 52008.833460972244 52511.52599100674 52511.52599100674 52511.52599100674 52610.991108723705 52610.991108723705 52610.991108723705 53113.654388603907 53113.654388603907 53113.654388603907 53615.994311752329 53615.994311752329 53615.994311752329 53715.442466354201 53715.442466354201 53715.442466354201 54217.750110627188 54217.750110627188 54217.750110627188 54719.731110930828 54719.731110930828 54719.731110930828 54799.976760927777 54799.976760927777 54799.976760927777 54799.976760927777 " />
+              <ocx:ControlPtList>
+                <ocx:ControlPoint weight="1" coordinates="9000 3919.1835884530874 -9.0949470177292824e-13" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4022.4352329400222 43.985016364561488" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4124.9608291670475 89.714947292184661" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4226.6732282002286 137.15092137050124" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4271.8116649929625 158.2022950278797" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4316.7940798968993 179.59149979469385" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4361.6129412314422 201.31495434569024" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4374.8812206973162 207.74601612111928" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4388.1353089462846 214.20643926344292" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4401.3750114767572 220.69612896700619" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4552.6814182138714 294.86181566766754" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4702.1603350855339 372.87802503262992" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4849.5254069533175 454.59530225648541" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 4996.7933188663828 536.25870208012566" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 5142.04412082821 621.67038356498415" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 5284.9999240735506 710.6669400628025" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 5327.271388412425 736.98286903438657" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 5369.3474660136135 763.61527702604963" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 5411.221115326749 790.55970702912873" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 5552.8102959892367 881.66807303335372" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 5692.1421642984833 976.38365365625032" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 5828.9502354238357 1074.5252967625011" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 5965.6693815670451 1172.6031479901812" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6099.9550900535278 1274.1650730567389" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6231.5508609056051 1379.0170778893344" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6257.503983154349 1399.6958343708411" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6283.3544938906825 1420.5040343459323" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6309.1004716987063 1441.4401311834145" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6439.6362819324504 1547.5891531468042" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6567.5330400125877 1657.0684093675982" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6692.54648556338 1769.6688136683078" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6817.4795666363343 1882.1968331734779" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 6939.6125001092196 1997.913553820109" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7058.7123331521943 2116.5982608773911" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7082.2143113546381 2140.0183222406777" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7105.600019792415 2163.5556421598976" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7128.8677207794262 2187.2084716833879" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7246.7726386824252 2307.0649596405601" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7361.69041900918 2429.9349100588661" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7473.4018994426879 2555.5839948565463" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7585.0421257654671 2681.1529355744378" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7693.5510463195333 2809.577212994267" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7798.7219850497531 2940.6122184432656" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7819.4867874023557 2966.4835857836324" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7840.1231056958986 2992.4586032634315" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7860.6294070092426 3018.5353413886114" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 7964.4849398650758 3150.6027235922597" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8065.0430033675393 3285.3310220284293" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8162.1120880016133 3422.4636510967748" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8259.1195485460685 3559.5092218246064" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8352.7039854059822 3699.0429861668163" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8442.6873962247428 3840.7995438099219" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8460.4631809955954 3868.8028617058858" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8478.099857167952 3896.8949683957612" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8495.5961150472831 3925.073777767735" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8584.1596169733803 4067.7107950831974" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8669.1567009445644 4212.6248479736278" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8750.4257160881298 4359.5403330650915" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 8831.6432238183297 4506.3627047281852" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 8909.1888284437391 4655.2769598669711" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 8982.9152374083824 4806.0002460700625" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 8997.4873199179765 4835.7908217065624" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9011.9113846730888 4865.6542571242599" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9026.1863608781532 4895.5883353590289" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9098.4056739087864 5047.0294680982361" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9166.8341192855696 5200.3372297952483" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9231.3417359293271 5355.2204543707094" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9295.8084138673694 5510.0053848364078" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="8999.9999999999964 9356.400014618237 5666.4616750747418" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="8999.9999999999964 9413.0016069894955 5824.2925560983113" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="8999.9999999999964 9429.7891331952615 5871.1037841973948" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9446.227915897347 5918.0415491609347" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9462.315211000976 5965.0980157569556" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9516.549489084824 6123.7370833299819" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9566.8089248454107 6283.7910386637359" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9612.9982077444711 6444.9563600731071" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9659.1580096856414 6606.0188154547859" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9701.2820068106903 6768.2929316671298" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9739.2904182832826 6931.4713692934092" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9746.8117028555989 6963.7618917831005" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9754.1724880974998 6996.0902196309908" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9761.3722278546629 7028.4539541451677" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9797.7536131092784 7191.9928504596983" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="8999.9999999999927 9830.0340679439723 7356.49822379749" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="8999.9999999999927 9858.1524618305775 7521.6585450797438" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="8999.9999999999927 9886.2527713252912 7686.7126432261048" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9910.2140962312169 7852.5249354556818" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9929.991118543574 8018.7818213192868" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9933.9067680097069 8051.6989954060009" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9937.6587848981653 8084.63604702456" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9941.2468909123654 8117.5905331505419" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9959.3684042048408 8284.025180291801" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9973.3133622660316 8450.9676515270003" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9983.0553944122912 8618.10224944947" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9992.7910927752764 8785.1281847946757" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9998.3354628793986 8952.4511793023703" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9999.6780336378724 9119.7552270845863" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000 9999.8926761515795 9146.5028388157825" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 10000.000000000002 9173.2515270579443" unit="u2" />
+                <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 10000.000000000002 9199.9999999999927" unit="u2" />
+              </ocx:ControlPtList>
+            </ocx:NURBS3D>
+          </ocx:OuterContour>
+          <ocx:PlateMaterial ocx:GUIDRef="{8c096010-2aff-4d21-bbf3-53608ed505f4}" localRef="ID98" ocx:refType="ocx:Material">
+            <ocx:Thickness numericvalue="10" unit="u2" />
+          </ocx:PlateMaterial>
+          <ocx:LimitedBy>
+            <ocx:FreeEdgeCurve3D id="ID78" ocx:GUIDRef="{0c7a6993-25cd-47be-8ff7-cec6d65e43ac}">
+              <ocx:CurveLength numericvalue="8999.9999999999782" unit="u2" />
+              <ocx:Line3D id="ID79">
+                <ocx:CurveLength numericvalue="8999.9999999999782" unit="u2" />
+                <ocx:StartPoint coordinates="2.1827872842550278e-11 -1.1368683772161603e-13 0" unit="u2" />
+                <ocx:EndPoint coordinates="9000 -1.1368683772161603e-13 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID80" ocx:GUIDRef="{a9f7853c-e95e-4b7a-8dea-de97c7db4a23}">
+              <ocx:CurveLength numericvalue="18399.98835540298" unit="u2" />
+              <ocx:NURBS3D id="ID81">
+                <ocx:CurveLength numericvalue="18399.98835540298" unit="u2" />
+                <ocx:NURBSproperties degree="2" numCtrlPts="7" numKnots="10" isRational="true" />
+                <ocx:KnotVector value="0 0 0 2801.7369131472005 2801.7369131472005 14482.54176528955 14482.54176528955 18401.725353742637 18401.725353742637 18401.725353742637 " />
+                <ocx:ControlPtList>
+                  <ocx:ControlPoint weight="1" coordinates="0 10000 12000" unit="u2" />
+                  <ocx:ControlPoint weight="1" coordinates="0 10000 10600" unit="u2" />
+                  <ocx:ControlPoint weight="1" coordinates="-7.2759576141834259e-12 10000 9200.0000000000018" unit="u2" />
+                  <ocx:ControlPoint weight="0.83424167926486059" coordinates="3.637978807091713e-11 9999.9999999999982 2590.4169439707448" unit="u2" />
+                  <ocx:ControlPoint weight="1" coordinates="0 3919.1835884530865 0" unit="u2" />
+                  <ocx:ControlPoint weight="1" coordinates="0 1959.5917942265432 0" unit="u2" />
+                  <ocx:ControlPoint weight="1" coordinates="0 0 0" unit="u2" />
+                </ocx:ControlPtList>
+              </ocx:NURBS3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID82" ocx:GUIDRef="{f84ed68e-199f-421e-90ed-6742cbf989bb}">
+              <ocx:CurveLength numericvalue="18399.988168365639" unit="u2" />
+              <ocx:NURBS3D id="ID83">
+                <ocx:CurveLength numericvalue="18399.988168365639" unit="u2" />
+                <ocx:NURBSproperties degree="3" numCtrlPts="115" numKnots="119" isRational="false" />
+                <ocx:KnotVector value="0 0 0 0 3919.1835884531274 3919.1835884531274 3919.1835884531274 4255.8896376795337 4255.8896376795337 4255.8896376795337 4405.3090629702774 4405.3090629702774 4405.3090629702774 4449.5431601161099 4449.5431601161099 4449.5431601161099 4955.1141564204618 4955.1141564204618 4955.1141564204618 5460.3517514170999 5460.3517514170999 5460.3517514170999 5609.7340070413356 5609.7340070413356 5609.7340070413356 6114.8956939919635 6114.8956939919635 6114.8956939919635 6619.7289570625062 6619.7289570625062 6619.7289570625062 6719.2812627467629 6719.2812627467629 6719.2812627467629 7224.0772737011648 7224.0772737011648 7224.0772737011648 7728.5487093759966 7728.5487093759966 7728.5487093759966 7828.0859490604098 7828.0859490604098 7828.0859490604098 8332.5245205561114 8332.5245205561114 8332.5245205561114 8836.6412725205737 8836.6412725205737 8836.6412725205737 8936.1632486557992 8936.1632486557992 8936.1632486557992 9440.250227426548 9440.250227426548 9440.250227426548 9944.0171200144941 9944.0171200144941 9944.0171200144941 10043.523706413078 10043.523706413078 10043.523706413078 10547.262687135904 10547.262687135904 10547.262687135904 11050.682336151925 11050.682336151925 11050.682336151925 11150.173529321579 11150.173529321579 11150.173529321579 11653.565933643476 11653.565933643476 11653.565933643476 12156.63880079646 12156.63880079646 12156.63880079646 12305.83136718996 12305.83136718996 12305.83136718996 12808.845020376844 12808.845020376844 12808.845020376844 13311.53755041134 13311.53755041134 13311.53755041134 13411.002668128302 13411.002668128302 13411.002668128302 13913.665948008502 13913.665948008502 13913.665948008502 14416.005871156925 14416.005871156925 14416.005871156925 14515.454025758796 14515.454025758796 14515.454025758796 15017.761670031779 15017.761670031779 15017.761670031779 15519.742670335421 15519.742670335421 15519.742670335421 15599.988304465147 15599.988304465147 15599.988304465147 15616.612032311921 15616.612032311921 15616.612032311921 15716.123418900972 15716.123418900972 15716.123418900972 16849.620306766872 16849.620306766872 16849.620306766872 18399.988304465158 18399.988304465158 18399.988304465158 18399.988304465158 " />
+                <ocx:ControlPtList>
+                  <ocx:ControlPoint coordinates="8999.9999999999964 -4.0145664570445661e-11 0" unit="u2" />
+                  <ocx:ControlPoint coordinates="8999.9999999999964 1306.3945294843356 0" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 2612.7890589687113 -9.0949470177292824e-13" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 3919.1835884530874 -9.0949470177292824e-13" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4022.4352329400222 43.985016364561488" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4124.9608291670475 89.714947292184661" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4226.6732282002286 137.15092137050124" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4271.8116649929625 158.2022950278797" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4316.7940798968993 179.59149979469385" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4361.6129412314422 201.31495434569024" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4374.8812206973162 207.74601612111928" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4388.1353089462846 214.20643926344292" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4401.3750114767572 220.69612896700619" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4552.6814182138714 294.86181566766754" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4702.1603350855339 372.87802503262992" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4849.5254069533175 454.59530225648541" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 4996.7933188663828 536.25870208012566" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 5142.04412082821 621.67038356498415" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 5284.9999240735506 710.6669400628025" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 5327.271388412425 736.98286903438657" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 5369.3474660136135 763.61527702604963" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 5411.221115326749 790.55970702912873" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 5552.8102959892367 881.66807303335372" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000073 5692.1421642984833 976.38365365625032" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000073 5828.9502354238357 1074.5252967625011" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000073 5965.6693815670451 1172.6031479901812" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6099.9550900535278 1274.1650730567389" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6231.5508609056051 1379.0170778893344" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6257.503983154349 1399.6958343708411" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6283.3544938906825 1420.5040343459323" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6309.1004716987063 1441.4401311834145" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6439.6362819324504 1547.5891531468042" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6567.5330400125877 1657.0684093675982" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6692.54648556338 1769.6688136683078" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6817.4795666363343 1882.1968331734779" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 6939.6125001092196 1997.913553820109" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7058.7123331521943 2116.5982608773911" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7082.2143113546381 2140.0183222406777" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7105.600019792415 2163.5556421598976" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7128.8677207794262 2187.2084716833879" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7246.7726386824252 2307.0649596405601" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7361.69041900918 2429.9349100588661" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7473.4018994426879 2555.5839948565463" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7585.0421257654671 2681.1529355744378" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7693.5510463195333 2809.577212994267" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7798.7219850497531 2940.6122184432656" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7819.4867874023557 2966.4835857836324" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7840.1231056958986 2992.4586032634315" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7860.6294070092426 3018.5353413886114" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 7964.4849398650758 3150.6027235922597" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8065.0430033675393 3285.3310220284293" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8162.1120880016133 3422.4636510967748" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8259.1195485460685 3559.5092218246064" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8352.7039854059822 3699.0429861668163" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8442.6873962247428 3840.7995438099219" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8460.4631809955954 3868.8028617058858" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8478.099857167952 3896.8949683957612" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8495.5961150472831 3925.073777767735" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8584.1596169733803 4067.7107950831974" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8669.1567009445644 4212.6248479736278" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8750.4257160881298 4359.5403330650915" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 8831.6432238183297 4506.3627047281852" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 8909.1888284437391 4655.2769598669711" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 8982.9152374083824 4806.0002460700625" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 8997.4873199179765 4835.7908217065624" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 9011.9113846730888 4865.6542571242599" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 9026.1863608781532 4895.5883353590289" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 9098.4056739087864 5047.0294680982361" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9166.8341192855696 5200.3372297952483" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9231.3417359293271 5355.2204543707094" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9295.8084138673694 5510.0053848364078" unit="u2" />
+                  <ocx:ControlPoint coordinates="8999.9999999999964 9356.400014618237 5666.4616750747418" unit="u2" />
+                  <ocx:ControlPoint coordinates="8999.9999999999964 9413.0016069894955 5824.2925560983113" unit="u2" />
+                  <ocx:ControlPoint coordinates="8999.9999999999964 9429.7891331952615 5871.1037841973948" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9446.227915897347 5918.0415491609347" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9462.315211000976 5965.0980157569556" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9516.549489084824 6123.7370833299819" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9566.8089248454107 6283.7910386637359" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9612.9982077444711 6444.9563600731071" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9659.1580096856414 6606.0188154547859" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9701.2820068106903 6768.2929316671298" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9739.2904182832826 6931.4713692934092" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9746.8117028555989 6963.7618917831005" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 9754.1724880974998 6996.0902196309908" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 9761.3722278546629 7028.4539541451677" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 9797.7536131092784 7191.9928504596983" unit="u2" />
+                  <ocx:ControlPoint coordinates="8999.9999999999927 9830.0340679439723 7356.49822379749" unit="u2" />
+                  <ocx:ControlPoint coordinates="8999.9999999999927 9858.1524618305775 7521.6585450797438" unit="u2" />
+                  <ocx:ControlPoint coordinates="8999.9999999999927 9886.2527713252912 7686.7126432261048" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9910.2140962312169 7852.5249354556818" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9929.991118543574 8018.7818213192868" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9933.9067680097069 8051.6989954060009" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9937.6587848981653 8084.63604702456" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9941.2468909123654 8117.5905331505419" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9959.3684042048408 8284.025180291801" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9973.3133622660316 8450.9676515270003" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9983.0553944122912 8618.10224944947" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9992.7910927752764 8785.1281847946757" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9998.3354628793986 8952.4511793023703" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.6780336378724 9119.7552270845863" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.8926761515795 9146.5028388157825" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 10000.000000000002 9173.2515270579443" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000036 10000.000000000002 9199.9999999999927" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 9205.541242615589" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 9211.082485231178" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 9216.623727846767" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 9249.7941900431179" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000073 9999.9999999999964 9282.9646522394669" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000073 9999.9999999999964 9316.1351144358177" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000.0000000000073 9999.9999999999964 9693.9674103911184" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 10071.799706346417" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 10449.632002301718" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 10966.421334867811" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 11483.210667433907" unit="u2" />
+                  <ocx:ControlPoint coordinates="9000 9999.9999999999964 12000.000000000002" unit="u2" />
+                </ocx:ControlPtList>
+              </ocx:NURBS3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID84" ocx:GUIDRef="{3cc6cd91-72dd-4030-9375-e2e0d265c6cf}">
+              <ocx:CurveLength numericvalue="9000" unit="u2" />
+              <ocx:Line3D id="ID85">
+                <ocx:CurveLength numericvalue="9000" unit="u2" />
+                <ocx:StartPoint coordinates="9000.0000000000073 9999.9999999999964 12000" unit="u2" />
+                <ocx:EndPoint coordinates="7.2759576141834259e-12 9999.9999999999964 12000" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+          </ocx:LimitedBy>
+          <ocx:Offset numericvalue="0" unit="u2" />
+        </ocx:Plate>
+      </ocx:ComposedOf>
+      <ocx:OuterContour>
+        <ocx:NURBS3D id="ID86">
+          <ocx:CurveLength numericvalue="54799.976653030237" unit="u2" />
+          <ocx:NURBSproperties degree="3" numCtrlPts="130" numKnots="134" isRational="true" />
+          <ocx:KnotVector value="0 0 0 0 16.623727846766997 16.623727846766997 16.623727846766997 116.13511443581774 116.13511443581774 116.13511443581774 1249.6320023017179 1249.6320023017179 1249.6320023017179 2800.0000000000018 2800.0000000000018 2800.0000000000018 11799.999999999995 11799.999999999995 11799.999999999995 14599.999999999995 14599.999999999995 14599.999999999995 26280.804852142348 26280.804852142348 26280.804852142348 30199.988440595436 30199.988440595436 30199.988440595436 39199.988440595436 39199.988440595436 39199.988440595436 43119.172029048525 43119.172029048525 43119.172029048525 43455.878078274931 43455.878078274931 43455.878078274931 43605.297503565678 43605.297503565678 43605.297503565678 43649.531600711511 43649.531600711511 43649.531600711511 44155.102597015866 44155.102597015866 44155.102597015866 44660.340192012503 44660.340192012503 44660.340192012503 44809.722447636741 44809.722447636741 44809.722447636741 45314.884134587366 45314.884134587366 45314.884134587366 45819.717397657907 45819.717397657907 45819.717397657907 45919.269703342165 45919.269703342165 45919.269703342165 46424.065714296565 46424.065714296565 46424.065714296565 46928.537149971395 46928.537149971395 46928.537149971395 47028.074389655805 47028.074389655805 47028.074389655805 47532.512961151508 47532.512961151508 47532.512961151508 48036.629713115966 48036.629713115966 48036.629713115966 48136.151689251194 48136.151689251194 48136.151689251194 48640.238668021942 48640.238668021942 48640.238668021942 49144.00556060989 49144.00556060989 49144.00556060989 49243.512147008478 49243.512147008478 49243.512147008478 49747.251127731302 49747.251127731302 49747.251127731302 50250.670776747327 50250.670776747327 50250.670776747327 50350.161969916982 50350.161969916982 50350.161969916982 50853.554374238884 50853.554374238884 50853.554374238884 51356.627241391863 51356.627241391863 51356.627241391863 51505.819807785359 51505.819807785359 51505.819807785359 52008.833460972244 52008.833460972244 52008.833460972244 52511.52599100674 52511.52599100674 52511.52599100674 52610.991108723705 52610.991108723705 52610.991108723705 53113.654388603907 53113.654388603907 53113.654388603907 53615.994311752329 53615.994311752329 53615.994311752329 53715.442466354201 53715.442466354201 53715.442466354201 54217.750110627188 54217.750110627188 54217.750110627188 54719.731110930828 54719.731110930828 54719.731110930828 54799.976760927777 54799.976760927777 54799.976760927777 54799.976760927777 " />
+          <ocx:ControlPtList>
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 9200" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 9205.541242615589" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 9211.082485231178" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 9216.623727846767" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 9249.7941900431179" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 9999.9999999999964 9282.9646522394669" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 9999.9999999999964 9316.1351144358177" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 9999.9999999999964 9693.9674103911184" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 10071.799706346417" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 10449.632002301718" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 10966.421334867811" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 11483.210667433907" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.9999999999964 12000.000000000002" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="6000.0000000000073 9999.9999999999964 12000" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="3000.0000000000073 9999.9999999999964 12000" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="7.2759576141834259e-12 9999.9999999999964 12000" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="0 10000 11066.666666666666" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="0 10000 10133.333333333332" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="0 10000 9200" unit="u2" />
+            <ocx:ControlPoint weight="0.88949445284324025" coordinates="2.0020028679667276e-11 10000 5067.3231742089583" unit="u2" />
+            <ocx:ControlPoint weight="0.88949445284324025" coordinates="2.2746655244875589e-11 7721.2462681808447 1619.6719192020651" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="0 3919.1835884530869 0" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="0 2612.789058968724 0" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="0 1306.394529484362 0" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="0 0 0" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="3000.0000000000146 -1.1368683772161603e-13 0" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="6000.0000000000073 -1.1368683772161603e-13 0" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 -1.1368683772161603e-13 0" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="8999.9999999999964 1306.3945294843356 0" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 2612.7890589687113 -9.0949470177292824e-13" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 3919.1835884530874 -9.0949470177292824e-13" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4022.4352329400222 43.985016364561488" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4124.9608291670475 89.714947292184661" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4226.6732282002286 137.15092137050124" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4271.8116649929625 158.2022950278797" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4316.7940798968993 179.59149979469385" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4361.6129412314422 201.31495434569024" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4374.8812206973162 207.74601612111928" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4388.1353089462846 214.20643926344292" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4401.3750114767572 220.69612896700619" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4552.6814182138714 294.86181566766754" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4702.1603350855339 372.87802503262992" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4849.5254069533175 454.59530225648541" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 4996.7933188663828 536.25870208012566" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 5142.04412082821 621.67038356498415" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 5284.9999240735506 710.6669400628025" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 5327.271388412425 736.98286903438657" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 5369.3474660136135 763.61527702604963" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 5411.221115326749 790.55970702912873" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 5552.8102959892367 881.66807303335372" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 5692.1421642984833 976.38365365625032" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 5828.9502354238357 1074.5252967625011" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000073 5965.6693815670451 1172.6031479901812" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6099.9550900535278 1274.1650730567389" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6231.5508609056051 1379.0170778893344" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6257.503983154349 1399.6958343708411" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6283.3544938906825 1420.5040343459323" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6309.1004716987063 1441.4401311834145" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6439.6362819324504 1547.5891531468042" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6567.5330400125877 1657.0684093675982" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6692.54648556338 1769.6688136683078" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6817.4795666363343 1882.1968331734779" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 6939.6125001092196 1997.913553820109" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7058.7123331521943 2116.5982608773911" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7082.2143113546381 2140.0183222406777" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7105.600019792415 2163.5556421598976" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7128.8677207794262 2187.2084716833879" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7246.7726386824252 2307.0649596405601" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7361.69041900918 2429.9349100588661" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7473.4018994426879 2555.5839948565463" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7585.0421257654671 2681.1529355744378" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7693.5510463195333 2809.577212994267" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7798.7219850497531 2940.6122184432656" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7819.4867874023557 2966.4835857836324" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7840.1231056958986 2992.4586032634315" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7860.6294070092426 3018.5353413886114" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 7964.4849398650758 3150.6027235922597" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8065.0430033675393 3285.3310220284293" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8162.1120880016133 3422.4636510967748" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8259.1195485460685 3559.5092218246064" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8352.7039854059822 3699.0429861668163" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8442.6873962247428 3840.7995438099219" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8460.4631809955954 3868.8028617058858" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8478.099857167952 3896.8949683957612" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8495.5961150472831 3925.073777767735" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8584.1596169733803 4067.7107950831974" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8669.1567009445644 4212.6248479736278" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8750.4257160881298 4359.5403330650915" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 8831.6432238183297 4506.3627047281852" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 8909.1888284437391 4655.2769598669711" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 8982.9152374083824 4806.0002460700625" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 8997.4873199179765 4835.7908217065624" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9011.9113846730888 4865.6542571242599" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9026.1863608781532 4895.5883353590289" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9098.4056739087864 5047.0294680982361" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9166.8341192855696 5200.3372297952483" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9231.3417359293271 5355.2204543707094" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9295.8084138673694 5510.0053848364078" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="8999.9999999999964 9356.400014618237 5666.4616750747418" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="8999.9999999999964 9413.0016069894955 5824.2925560983113" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="8999.9999999999964 9429.7891331952615 5871.1037841973948" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9446.227915897347 5918.0415491609347" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9462.315211000976 5965.0980157569556" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9516.549489084824 6123.7370833299819" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9566.8089248454107 6283.7910386637359" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9612.9982077444711 6444.9563600731071" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9659.1580096856414 6606.0188154547859" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9701.2820068106903 6768.2929316671298" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9739.2904182832826 6931.4713692934092" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9746.8117028555989 6963.7618917831005" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9754.1724880974998 6996.0902196309908" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9761.3722278546629 7028.4539541451677" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 9797.7536131092784 7191.9928504596983" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="8999.9999999999927 9830.0340679439723 7356.49822379749" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="8999.9999999999927 9858.1524618305775 7521.6585450797438" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="8999.9999999999927 9886.2527713252912 7686.7126432261048" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9910.2140962312169 7852.5249354556818" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9929.991118543574 8018.7818213192868" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9933.9067680097069 8051.6989954060009" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9937.6587848981653 8084.63604702456" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9941.2468909123654 8117.5905331505419" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9959.3684042048408 8284.025180291801" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9973.3133622660316 8450.9676515270003" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9983.0553944122912 8618.10224944947" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9992.7910927752764 8785.1281847946757" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9998.3354628793986 8952.4511793023703" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.6780336378724 9119.7552270845863" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000 9999.8926761515795 9146.5028388157825" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 10000.000000000002 9173.2515270579443" unit="u2" />
+            <ocx:ControlPoint weight="1" coordinates="9000.0000000000036 10000.000000000002 9199.9999999999927" unit="u2" />
+          </ocx:ControlPtList>
+        </ocx:NURBS3D>
+      </ocx:OuterContour>
+      <ocx:CutBy>
+        <ocx:Hole2DContour ocx:GUIDRef="{17b5be22-4362-49ab-954f-e302bf7c222a}" id="ID87">
+          <ocx:HoleRef ocx:GUIDRef="{4be7c555-bcff-4654-832d-4e9f5e350e51}" localRef="ID100" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="8500 9999.9999999999964 9917.2491751038979" unit="u2" />
+            <ocx:PrimaryAxis direction="0 0 -1" />
+            <ocx:SecondaryAxis direction="1 0 0" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+        <ocx:Hole2DContour ocx:GUIDRef="{3b990365-c1eb-4926-9f43-7f963094c0e6}" id="ID88">
+          <ocx:HoleRef ocx:GUIDRef="{0b853f87-726e-473a-8af1-525ad5da0e18}" localRef="ID106" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="8000.0000000000009 9927.6333174143529 7999.1266865465641" unit="u2" />
+            <ocx:PrimaryAxis direction="2.3094743782314888e-28 -0.12008733134534401 -0.99276333174143461" />
+            <ocx:SecondaryAxis direction="1 3.3733716351080613e-16 -4.080521352287469e-17" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+        <ocx:Hole2DContour ocx:GUIDRef="{6acfafd6-f30d-4dd0-b642-438054419170}" id="ID89">
+          <ocx:HoleRef ocx:GUIDRef="{e6b5cdd5-0028-46b3-b6df-4169596966b7}" localRef="ID119" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="7000 9754.8154491221994 6999.1875242158976" unit="u2" />
+            <ocx:PrimaryAxis direction="-1.8391112439458925e-29 -0.22008124757841058 -0.97548154491221939" />
+            <ocx:SecondaryAxis direction="1 3.2496907587609714e-16 -7.3317224724808962e-17" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+        <ocx:Hole2DContour ocx:GUIDRef="{611a7a06-1ff1-446e-a8ea-0acd22327e26}" id="ID90">
+          <ocx:HoleRef ocx:GUIDRef="{671bf078-7a4e-4160-8151-14abdad4cf7c}" localRef="ID128" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="5999.9999999999982 9474.2192413622815 6000.1297265981566" unit="u2" />
+            <ocx:PrimaryAxis direction="3.017045459919956e-29 -0.31998702734018436 -0.94742192413622783" />
+            <ocx:SecondaryAxis direction="1 2.9374002956588044e-16 -9.920922925365901e-17" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+        <ocx:Hole2DContour ocx:GUIDRef="{26b61c01-cbb8-4cc0-941a-0ea348658d3d}" id="ID91">
+          <ocx:HoleRef ocx:GUIDRef="{f88cc416-24c7-4762-bfe4-2d795ef88aa6}" localRef="ID133" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="4999.9999999999955 9075.2476058594111 5000.0141795068976" unit="u2" />
+            <ocx:PrimaryAxis direction="1.5904159774671577e-28 -0.41999858204931012 -0.90752476058594067" />
+            <ocx:SecondaryAxis direction="1 2.4701630056079569e-16 -1.1431808859017547e-16" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+        <ocx:Hole2DContour ocx:GUIDRef="{b90e6175-69d9-46d4-997c-54016c711b49}" id="ID92">
+          <ocx:HoleRef ocx:GUIDRef="{90f20d6e-258b-48ee-bc73-f2103210a0c6}" localRef="ID142" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="4000.0000000000027 8541.8806457937717 4000.3581822385258" unit="u2" />
+            <ocx:PrimaryAxis direction="-0.70710678119139303 -0.367670198905509 -0.60400217286855096" />
+            <ocx:SecondaryAxis direction="0.707106781181702 -0.36767019891054753 -0.60400217287682911" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+        <ocx:Hole2DContour ocx:GUIDRef="{d5d6b445-3be3-470d-aecb-d1c885af6fc9}" id="ID93">
+          <ocx:HoleRef ocx:GUIDRef="{20f214e0-1d7c-4f3b-9026-43eb2604e459}" localRef="ID147" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="3000.0000000000009 7846.4772402220069 3000.5810821756777" unit="u2" />
+            <ocx:PrimaryAxis direction="-1 7.000844348684494e-12 8.8610230264447896e-12" />
+            <ocx:SecondaryAxis direction="-1.1292898239806028e-11 -0.61994189178243175 -0.78464772402220073" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+        <ocx:Hole2DContour ocx:GUIDRef="{41e56a54-e94b-4b79-bb23-7e594236a3ee}" id="ID94">
+          <ocx:HoleRef ocx:GUIDRef="{a36be7b2-6d39-4619-92ea-cce48612cff8}" localRef="ID152" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="1999.9999999999993 6940.3835068341396 2000.6196948581255" unit="u2" />
+            <ocx:PrimaryAxis direction="-4.46851752543603e-29 -0.71993803051418703 -0.69403835068341402" />
+            <ocx:SecondaryAxis direction="1 1.2746625603987025e-16 -1.3222296035952904e-16" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+        <ocx:Hole2DContour ocx:GUIDRef="{e5b8d572-4c89-4196-9d87-3790e626f6fa}" id="ID95">
+          <ocx:HoleRef ocx:GUIDRef="{07b6cc65-b64d-4be6-9629-9807656d65d2}" localRef="ID157" ocx:refType="ocx:Hole2D" />
+          <ocx:Transformation>
+            <ocx:Origin coordinates="999.99999999999761 5724.7330687728954 1000.7664204940376" unit="u2" />
+            <ocx:PrimaryAxis direction="-8.1546208185163622e-30 -0.81992335795059546 -0.57247330687728992" />
+            <ocx:SecondaryAxis direction="1 7.6243577547487939e-17 -1.0919965939706422e-16" />
+          </ocx:Transformation>
+        </ocx:Hole2DContour>
+      </ocx:CutBy>
+    </ocx:Panel>
+  </ocx:Vessel>
+  <ocx:ClassCatalogue id="ID96">
+    <ocx:MaterialCatalogue id="ID97">
+      <ocx:Description />
+      <ocx:Material id="ID98" ocx:GUIDRef="{8c096010-2aff-4d21-bbf3-53608ed505f4}" ocx:grade="A" name="GradeA">
+        <ocx:Density numericvalue="7850" unit="u7" />
+        <ocx:YoungsModulus numericvalue="210000" unit="u4" />
+        <ocx:PoissonRatio numericvalue="0.29999999999999999" unit="u6" />
+        <ocx:YieldStress numericvalue="207" unit="u4" />
+        <ocx:UltimateStress numericvalue="331" unit="u4" />
+      </ocx:Material>
+    </ocx:MaterialCatalogue>
+    <ocx:HoleShapeCatalogue id="ID99">
+      <ocx:Hole2D ocx:GUIDRef="{4be7c555-bcff-4654-832d-4e9f5e350e51}" name="HOR600X200100" id="ID100">
+        <ocx:Contour>
+          <ocx:CircumArc3D id="ID101" is2D="true">
+            <ocx:CurveLength numericvalue="382.12664724980368" unit="u2" />
+            <ocx:StartPoint coordinates="66.666666666666657 -188.56180831641268 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-115.47005383792515 -163.29931618554519 0" unit="u2" />
+            <ocx:EndPoint coordinates="-200 0 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID102" is2D="true">
+            <ocx:CurveLength numericvalue="382.12664724980368" unit="u2" />
+            <ocx:StartPoint coordinates="-200 0 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-115.47005383792515 163.29931618554519 0" unit="u2" />
+            <ocx:EndPoint coordinates="66.666666666666657 188.56180831641268 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID103" is2D="true">
+            <ocx:CurveLength numericvalue="282.84271247461896" unit="u2" />
+            <ocx:StartPoint coordinates="66.666666666666657 188.56180831641268 0" unit="u2" />
+            <ocx:EndPoint coordinates="333.33333333333331 94.28090415820634 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID104" is2D="true">
+            <ocx:CurveLength numericvalue="246.19188346815491" unit="u2" />
+            <ocx:StartPoint coordinates="333.33333333333331 94.28090415820634 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="400 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="333.33333333333331 -94.28090415820634 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID105" is2D="true">
+            <ocx:CurveLength numericvalue="282.84271247461896" unit="u2" />
+            <ocx:StartPoint coordinates="333.33333333333331 -94.28090415820634 0" unit="u2" />
+            <ocx:EndPoint coordinates="66.666666666666657 -188.56180831641268 0" unit="u2" />
+          </ocx:Line3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+      <ocx:Hole2D ocx:GUIDRef="{0b853f87-726e-473a-8af1-525ad5da0e18}" name="HRM2000X80050X10" id="ID106">
+        <ocx:Contour>
+          <ocx:CircumArc3D id="ID107" is2D="true">
+            <ocx:CurveLength numericvalue="87.746513675661006" unit="u2" />
+            <ocx:StartPoint coordinates="-930.48467249636155 -400 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-967.1188805775015 -421.50397020426715 0" unit="u2" />
+            <ocx:EndPoint coordinates="-1007.0710678118656 -407.07106781186559 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID108" is2D="true">
+            <ocx:CurveLength numericvalue="87.746513675661021" unit="u2" />
+            <ocx:StartPoint coordinates="-1007.0710678118656 -407.07106781186559 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-1021.5039702042673 -367.1188805775015 0" unit="u2" />
+            <ocx:EndPoint coordinates="-1000 -330.4846724963615 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID109" is2D="true">
+            <ocx:CurveLength numericvalue="660.96934499272299" unit="u2" />
+            <ocx:StartPoint coordinates="-1000 -330.4846724963615 0" unit="u2" />
+            <ocx:EndPoint coordinates="-1000 330.4846724963615 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID110" is2D="true">
+            <ocx:CurveLength numericvalue="87.746513675661021" unit="u2" />
+            <ocx:StartPoint coordinates="-1000 330.4846724963615 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-1021.5039702042673 367.1188805775015 0" unit="u2" />
+            <ocx:EndPoint coordinates="-1007.0710678118656 407.07106781186559 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID111" is2D="true">
+            <ocx:CurveLength numericvalue="87.746513675661006" unit="u2" />
+            <ocx:StartPoint coordinates="-1007.0710678118656 407.07106781186559 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-967.1188805775015 421.50397020426715 0" unit="u2" />
+            <ocx:EndPoint coordinates="-930.48467249636155 400 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID112" is2D="true">
+            <ocx:CurveLength numericvalue="1860.9693449927231" unit="u2" />
+            <ocx:StartPoint coordinates="-930.48467249636155 400 0" unit="u2" />
+            <ocx:EndPoint coordinates="930.48467249636155 400 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID113" is2D="true">
+            <ocx:CurveLength numericvalue="87.746513675661006" unit="u2" />
+            <ocx:StartPoint coordinates="930.48467249636155 400 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="967.1188805775015 421.50397020426715 0" unit="u2" />
+            <ocx:EndPoint coordinates="1007.0710678118656 407.07106781186559 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID114" is2D="true">
+            <ocx:CurveLength numericvalue="87.746513675661021" unit="u2" />
+            <ocx:StartPoint coordinates="1007.0710678118656 407.07106781186559 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="1021.5039702042673 367.1188805775015 0" unit="u2" />
+            <ocx:EndPoint coordinates="1000 330.4846724963615 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID115" is2D="true">
+            <ocx:CurveLength numericvalue="660.96934499272299" unit="u2" />
+            <ocx:StartPoint coordinates="1000 330.4846724963615 0" unit="u2" />
+            <ocx:EndPoint coordinates="1000 -330.4846724963615 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID116" is2D="true">
+            <ocx:CurveLength numericvalue="87.746513675661021" unit="u2" />
+            <ocx:StartPoint coordinates="1000 -330.4846724963615 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="1021.5039702042673 -367.1188805775015 0" unit="u2" />
+            <ocx:EndPoint coordinates="1007.0710678118656 -407.07106781186559 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID117" is2D="true">
+            <ocx:CurveLength numericvalue="87.746513675661006" unit="u2" />
+            <ocx:StartPoint coordinates="1007.0710678118656 -407.07106781186559 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="967.1188805775015 -421.50397020426715 0" unit="u2" />
+            <ocx:EndPoint coordinates="930.48467249636155 -400 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID118" is2D="true">
+            <ocx:CurveLength numericvalue="1860.9693449927231" unit="u2" />
+            <ocx:StartPoint coordinates="930.48467249636155 -400 0" unit="u2" />
+            <ocx:EndPoint coordinates="-930.48467249636155 -400 0" unit="u2" />
+          </ocx:Line3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+      <ocx:Hole2D ocx:GUIDRef="{e6b5cdd5-0028-46b3-b6df-4169596966b7}" name="HR1000X70040" id="ID119">
+        <ocx:Contour>
+          <ocx:Line3D id="ID120" is2D="true">
+            <ocx:CurveLength numericvalue="920" unit="u2" />
+            <ocx:StartPoint coordinates="-460 350 0" unit="u2" />
+            <ocx:EndPoint coordinates="460 350 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID121" is2D="true">
+            <ocx:CurveLength numericvalue="62.831853071795862" unit="u2" />
+            <ocx:StartPoint coordinates="460 350 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="488.2842712474619 338.2842712474619 0" unit="u2" />
+            <ocx:EndPoint coordinates="500 310 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID122" is2D="true">
+            <ocx:CurveLength numericvalue="620" unit="u2" />
+            <ocx:StartPoint coordinates="500 310 0" unit="u2" />
+            <ocx:EndPoint coordinates="500 -310 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID123" is2D="true">
+            <ocx:CurveLength numericvalue="62.831853071795862" unit="u2" />
+            <ocx:StartPoint coordinates="500 -310 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="488.2842712474619 -338.2842712474619 0" unit="u2" />
+            <ocx:EndPoint coordinates="460 -350 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID124" is2D="true">
+            <ocx:CurveLength numericvalue="920" unit="u2" />
+            <ocx:StartPoint coordinates="460 -350 0" unit="u2" />
+            <ocx:EndPoint coordinates="-460 -350 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID125" is2D="true">
+            <ocx:CurveLength numericvalue="62.831853071795862" unit="u2" />
+            <ocx:StartPoint coordinates="-460 -350 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-488.2842712474619 -338.2842712474619 0" unit="u2" />
+            <ocx:EndPoint coordinates="-500 -310 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID126" is2D="true">
+            <ocx:CurveLength numericvalue="620" unit="u2" />
+            <ocx:StartPoint coordinates="-500 -310 0" unit="u2" />
+            <ocx:EndPoint coordinates="-500 310 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID127" is2D="true">
+            <ocx:CurveLength numericvalue="62.831853071795862" unit="u2" />
+            <ocx:StartPoint coordinates="-500 310 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-488.2842712474619 338.2842712474619 0" unit="u2" />
+            <ocx:EndPoint coordinates="-460 350 0" unit="u2" />
+          </ocx:CircumArc3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+      <ocx:Hole2D ocx:GUIDRef="{671bf078-7a4e-4160-8151-14abdad4cf7c}" name="HE1200X600" id="ID128">
+        <ocx:Contour>
+          <ocx:CircumArc3D id="ID129" is2D="true">
+            <ocx:CurveLength numericvalue="1077.6504813908596" unit="u2" />
+            <ocx:StartPoint coordinates="-512.31056256176601 156.155281280883 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="0 299.99999999999994 0" unit="u2" />
+            <ocx:EndPoint coordinates="512.31056256176601 156.155281280883 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID130" is2D="true">
+            <ocx:CurveLength numericvalue="374.30382133814106" unit="u2" />
+            <ocx:StartPoint coordinates="512.31056256176601 156.155281280883 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="599.99999999999977 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="512.31056256176601 -156.155281280883 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID131" is2D="true">
+            <ocx:CurveLength numericvalue="1077.6504813908596" unit="u2" />
+            <ocx:StartPoint coordinates="512.31056256176601 -156.155281280883 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="0 -299.99999999999994 0" unit="u2" />
+            <ocx:EndPoint coordinates="-512.31056256176601 -156.155281280883 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID132" is2D="true">
+            <ocx:CurveLength numericvalue="374.30382133814106" unit="u2" />
+            <ocx:StartPoint coordinates="-512.31056256176601 -156.155281280883 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-599.99999999999977 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="-512.31056256176601 156.155281280883 0" unit="u2" />
+          </ocx:CircumArc3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+      <ocx:Hole2D ocx:GUIDRef="{f88cc416-24c7-4762-bfe4-2d795ef88aa6}" name="HR800X600150" id="ID133">
+        <ocx:Contour>
+          <ocx:Line3D id="ID134" is2D="true">
+            <ocx:CurveLength numericvalue="500" unit="u2" />
+            <ocx:StartPoint coordinates="-250 300 0" unit="u2" />
+            <ocx:EndPoint coordinates="250 300 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID135" is2D="true">
+            <ocx:CurveLength numericvalue="235.61944901923445" unit="u2" />
+            <ocx:StartPoint coordinates="250 300 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="356.06601717798213 256.06601717798213 0" unit="u2" />
+            <ocx:EndPoint coordinates="400 150 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID136" is2D="true">
+            <ocx:CurveLength numericvalue="300" unit="u2" />
+            <ocx:StartPoint coordinates="400 150 0" unit="u2" />
+            <ocx:EndPoint coordinates="400 -150 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID137" is2D="true">
+            <ocx:CurveLength numericvalue="235.61944901923445" unit="u2" />
+            <ocx:StartPoint coordinates="400 -150 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="356.06601717798213 -256.06601717798213 0" unit="u2" />
+            <ocx:EndPoint coordinates="250 -300 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID138" is2D="true">
+            <ocx:CurveLength numericvalue="500" unit="u2" />
+            <ocx:StartPoint coordinates="250 -300 0" unit="u2" />
+            <ocx:EndPoint coordinates="-250 -300 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID139" is2D="true">
+            <ocx:CurveLength numericvalue="235.61944901923445" unit="u2" />
+            <ocx:StartPoint coordinates="-250 -300 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-356.06601717798213 -256.06601717798213 0" unit="u2" />
+            <ocx:EndPoint coordinates="-400 -150 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID140" is2D="true">
+            <ocx:CurveLength numericvalue="300" unit="u2" />
+            <ocx:StartPoint coordinates="-400 -150 0" unit="u2" />
+            <ocx:EndPoint coordinates="-400 150 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID141" is2D="true">
+            <ocx:CurveLength numericvalue="235.61944901923445" unit="u2" />
+            <ocx:StartPoint coordinates="-400 150 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-356.06601717798213 256.06601717798213 0" unit="u2" />
+            <ocx:EndPoint coordinates="-250 300 0" unit="u2" />
+          </ocx:CircumArc3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+      <ocx:Hole2D ocx:GUIDRef="{90f20d6e-258b-48ee-bc73-f2103210a0c6}" name="HO800X600" id="ID142">
+        <ocx:Contour>
+          <ocx:Line3D id="ID143" is2D="true">
+            <ocx:CurveLength numericvalue="200" unit="u2" />
+            <ocx:StartPoint coordinates="-100 300 0" unit="u2" />
+            <ocx:EndPoint coordinates="100 300 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID144" is2D="true">
+            <ocx:CurveLength numericvalue="942.47779607693792" unit="u2" />
+            <ocx:StartPoint coordinates="100 300 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="400 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="100 -300 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID145" is2D="true">
+            <ocx:CurveLength numericvalue="200" unit="u2" />
+            <ocx:StartPoint coordinates="100 -300 0" unit="u2" />
+            <ocx:EndPoint coordinates="-100 -300 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID146" is2D="true">
+            <ocx:CurveLength numericvalue="942.47779607693792" unit="u2" />
+            <ocx:StartPoint coordinates="-100 -300 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-400 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="-100 300 0" unit="u2" />
+          </ocx:CircumArc3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+      <ocx:Hole2D ocx:GUIDRef="{20f214e0-1d7c-4f3b-9026-43eb2604e459}" name="HO800X600" id="ID147">
+        <ocx:Contour>
+          <ocx:Line3D id="ID148" is2D="true">
+            <ocx:CurveLength numericvalue="200" unit="u2" />
+            <ocx:StartPoint coordinates="-100 300 0" unit="u2" />
+            <ocx:EndPoint coordinates="100 300 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID149" is2D="true">
+            <ocx:CurveLength numericvalue="942.47779607693792" unit="u2" />
+            <ocx:StartPoint coordinates="100 300 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="400 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="100 -300 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID150" is2D="true">
+            <ocx:CurveLength numericvalue="200" unit="u2" />
+            <ocx:StartPoint coordinates="100 -300 0" unit="u2" />
+            <ocx:EndPoint coordinates="-100 -300 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID151" is2D="true">
+            <ocx:CurveLength numericvalue="942.47779607693792" unit="u2" />
+            <ocx:StartPoint coordinates="-100 -300 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-400 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="-100 300 0" unit="u2" />
+          </ocx:CircumArc3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+      <ocx:Hole2D ocx:GUIDRef="{a36be7b2-6d39-4619-92ea-cce48612cff8}" name="HO800X600" id="ID152">
+        <ocx:Contour>
+          <ocx:Line3D id="ID153" is2D="true">
+            <ocx:CurveLength numericvalue="200" unit="u2" />
+            <ocx:StartPoint coordinates="-100 300 0" unit="u2" />
+            <ocx:EndPoint coordinates="100 300 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID154" is2D="true">
+            <ocx:CurveLength numericvalue="942.47779607693792" unit="u2" />
+            <ocx:StartPoint coordinates="100 300 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="400 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="100 -300 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:Line3D id="ID155" is2D="true">
+            <ocx:CurveLength numericvalue="200" unit="u2" />
+            <ocx:StartPoint coordinates="100 -300 0" unit="u2" />
+            <ocx:EndPoint coordinates="-100 -300 0" unit="u2" />
+          </ocx:Line3D>
+          <ocx:CircumArc3D id="ID156" is2D="true">
+            <ocx:CurveLength numericvalue="942.47779607693792" unit="u2" />
+            <ocx:StartPoint coordinates="-100 -300 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="-400 0 0" unit="u2" />
+            <ocx:EndPoint coordinates="-100 300 0" unit="u2" />
+          </ocx:CircumArc3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+      <ocx:Hole2D ocx:GUIDRef="{07b6cc65-b64d-4be6-9629-9807656d65d2}" name="D500" id="ID157">
+        <ocx:Contour>
+          <ocx:CircumArc3D id="ID158" is2D="true">
+            <ocx:CurveLength numericvalue="785.39816339744823" unit="u2" />
+            <ocx:StartPoint coordinates="-250 0 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="0 250 0" unit="u2" />
+            <ocx:EndPoint coordinates="250 0 0" unit="u2" />
+          </ocx:CircumArc3D>
+          <ocx:CircumArc3D id="ID159" is2D="true">
+            <ocx:CurveLength numericvalue="785.39816339744823" unit="u2" />
+            <ocx:StartPoint coordinates="250 0 0" unit="u2" />
+            <ocx:IntermediatePoint coordinates="0 -250 0" unit="u2" />
+            <ocx:EndPoint coordinates="-250 0 0" unit="u2" />
+          </ocx:CircumArc3D>
+        </ocx:Contour>
+      </ocx:Hole2D>
+    </ocx:HoleShapeCatalogue>
+  </ocx:ClassCatalogue>
+  <unitsml:UnitsML xmlns:unitsml="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18">
+    <unitsml:UnitSet>
+      <unitsml:Unit xml:id="u1" dimensionURL="ID1">
+        <unitsml:UnitName xml:lang="en-us">meter</unitsml:UnitName>
+        <unitsml:UnitSymbol type="m" />
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u2" dimensionURL="ID2">
+        <unitsml:UnitName xml:lang="en-us">millimeter</unitsml:UnitName>
+        <unitsml:UnitSymbol type="mm" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="meter" prefix="m" powerNumerator="1" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u3" dimensionURL="ID3">
+        <unitsml:UnitName xml:lang="en-us">knot</unitsml:UnitName>
+        <unitsml:UnitSymbol type="kn" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="knot" powerNumerator="1" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u4" dimensionURL="ID4">
+        <unitsml:UnitName xml:lang="en-us">megapascal</unitsml:UnitName>
+        <unitsml:UnitSymbol type="MPa" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="pascal" prefix="M" powerNumerator="1" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u5" dimensionURL="ID5">
+        <unitsml:UnitName xml:lang="en-us">area</unitsml:UnitName>
+        <unitsml:UnitSymbol type="A" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="2" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u6" dimensionURL="ID6">
+        <unitsml:UnitName xml:lang="en-us">nondimensional</unitsml:UnitName>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u7" dimensionURL="ID7">
+        <unitsml:UnitName xml:lang="en-us">kilo gram per cubic meter</unitsml:UnitName>
+        <unitsml:UnitSymbol type="kg/m3" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="gram" prefix="k" powerNumerator="1" />
+          <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="-3" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u8" dimensionURL="ID8">
+        <unitsml:UnitName xml:lang="en-us">kg</unitsml:UnitName>
+        <unitsml:UnitSymbol type="kg" />
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u9" dimensionURL="ID9">
+        <unitsml:UnitName xml:lang="en-us">angle</unitsml:UnitName>
+        <unitsml:UnitSymbol type="rad" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="radian" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u10" dimensionURL="ID10">
+        <unitsml:UnitName xml:lang="en-us">volume</unitsml:UnitName>
+        <unitsml:UnitSymbol type="m3" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="3" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+    </unitsml:UnitSet>
+    <unitsml:DimensionSet>
+      <unitsml:Dimension xml:id="ID_F" dimensionless="false">
+        <unitsml:Length symbol="L" powerNumerator="1" />
+        <unitsml:Mass symbol="M" powerNumerator="1" />
+        <unitsml:Time symbol="T" powerNumerator="1" />
+        <unitsml:ElectricCurrent symbol="I" powerNumerator="1" />
+        <unitsml:AmountOfSubstance symbol="N" powerNumerator="1" />
+        <unitsml:LuminousIntensity symbol="J" powerNumerator="1" />
+      </unitsml:Dimension>
+      <unitsml:Dimension xml:id="ID_T" dimensionless="true" />
+    </unitsml:DimensionSet>
+  </unitsml:UnitsML>
+</ocx:ocxXML>

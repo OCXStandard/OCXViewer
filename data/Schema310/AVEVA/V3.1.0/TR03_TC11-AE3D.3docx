@@ -1,0 +1,1711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ocx:ocxXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="3.1.0" xsi:schemaLocation="https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd" language="en" xmlns:ocx="https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd">
+  <ocx:Header time_stamp="2025-10-23T12:31:16" name="OCX Export" author="AVEVA E3D Design User" organization="AVEVA E3D Design User" application_version="4.3" originating_system="AVEVA E3D Design" />
+  <ocx:Vessel id="ID1" ocx:GUIDRef="{ba3a77c2-bae6-4317-be03-15bcede2745f}" name="IMC2023">
+    <ocx:DistanceTolerance numericvalue="0.10000000000000001" unit="u2" />
+    <ocx:AngleTolerance numericvalue="0.5" unit="u9" />
+    <ocx:CoordinateSystem id="ID2" ocx:GUIDRef="{e6a0c746-7549-404f-8d74-2f688a0e5834}" isGlobal="true">
+      <ocx:XRefPlanes>
+        <ocx:RefPlane name="F0" id="ID3" ocx:GUIDRef="{496cbb24-d8bf-4722-94e2-875182f8be70}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="0" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F1" id="ID4" ocx:GUIDRef="{d1f94f9f-954a-4499-8edc-262faecc4733}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="750" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F2" id="ID5" ocx:GUIDRef="{b36af500-6072-460b-a0ca-b04ca7dff1b0}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="1500" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F3" id="ID6" ocx:GUIDRef="{2eb5805b-a1b9-46de-91b8-8dbeb5150096}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="2250" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F4" id="ID7" ocx:GUIDRef="{b57b3320-1456-4f8e-b5fd-f02b4ed73074}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="3000" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F5" id="ID8" ocx:GUIDRef="{0cb24302-10ed-4948-9bd6-774c5b65b2c5}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="3750" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F6" id="ID9" ocx:GUIDRef="{111ecc3e-4362-4bb4-85e8-f60b9a7c6a22}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="4500" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F7" id="ID10" ocx:GUIDRef="{0ab1d26b-0e2f-4784-81ce-082db7b10738}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="5250" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F8" id="ID11" ocx:GUIDRef="{0e714082-fd60-4a07-8fd3-5296ef71947a}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6000" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F9" id="ID12" ocx:GUIDRef="{f6b78d29-9cfc-4d8e-80ab-e1f25863d244}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6750" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F10" id="ID13" ocx:GUIDRef="{fa141558-c08d-4da2-b530-12670564f370}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="7500" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F11" id="ID14" ocx:GUIDRef="{a35a83c8-40d6-49cd-b15a-fe1154cd0371}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="8250" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F12" id="ID15" ocx:GUIDRef="{f5df15f9-b3a2-438d-9be4-fa40a456f05f}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="9000" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="F13" id="ID16" ocx:GUIDRef="{a6e9b4cd-b212-4011-8bb8-98d58bac3390}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="9750" unit="u2" />
+        </ocx:RefPlane>
+      </ocx:XRefPlanes>
+      <ocx:YRefPlanes>
+        <ocx:RefPlane name="L-12" id="ID17" ocx:GUIDRef="{3379cdee-23d2-4ab0-a913-9578b12b4aad}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-10320" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-11" id="ID18" ocx:GUIDRef="{9b6b2919-78fd-41a2-b77b-b328cdd354b8}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-9460" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-10" id="ID19" ocx:GUIDRef="{075125a5-e280-4626-8e91-e70aa4841e85}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-8600" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-9" id="ID20" ocx:GUIDRef="{5b3bff64-a233-48fe-bf35-9f22f8ae974c}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-7740" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-8" id="ID21" ocx:GUIDRef="{1db50810-d838-402b-a08b-7bf9fe7a27ea}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-6880" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-7" id="ID22" ocx:GUIDRef="{78749a73-d9bb-466b-b9ca-4b030d5a4916}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-6020" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-6" id="ID23" ocx:GUIDRef="{0f41f7fd-cdff-42aa-80b6-07a2d9c11943}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-5160" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-5" id="ID24" ocx:GUIDRef="{700659e2-c0bb-41e2-aa57-fbab6eaf3002}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-4300" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-4" id="ID25" ocx:GUIDRef="{770b1fd4-75e6-4543-845e-1a7532c65674}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-3440" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-3" id="ID26" ocx:GUIDRef="{94da01ad-eb5b-42d4-b672-fc072c04fd2c}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-2580" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-2" id="ID27" ocx:GUIDRef="{810eec08-e5d0-4374-89a0-304b29111766}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-1720" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L-1" id="ID28" ocx:GUIDRef="{9cede442-0b67-4d02-94ee-60d7e5fccca6}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="-860" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L0" id="ID29" ocx:GUIDRef="{39ab563d-a086-49e7-818c-d1cdebd6b678}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="0" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L1" id="ID30" ocx:GUIDRef="{860a9478-3d90-4019-95fd-a85ac83d9ba5}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="860" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L2" id="ID31" ocx:GUIDRef="{a68d9c8f-9352-4062-9647-168f9ef361f3}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="1720" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L3" id="ID32" ocx:GUIDRef="{af4021e8-8a7a-45f2-9a2d-016552526c30}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="2580" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L4" id="ID33" ocx:GUIDRef="{35bc5d97-8d63-476a-926f-05ef3bab5f4c}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="3440" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L5" id="ID34" ocx:GUIDRef="{b7f30310-bfcb-4ef8-8496-684ad75a9329}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="4300" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L6" id="ID35" ocx:GUIDRef="{2e0d2518-664d-4e4d-ae6b-0208f488fe6e}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="5160" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L7" id="ID36" ocx:GUIDRef="{3b885c63-8b68-4faf-999a-8e888fbd34e5}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6020" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L8" id="ID37" ocx:GUIDRef="{6fa377bd-d522-4e9e-adaf-5753f0701461}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6880" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L9" id="ID38" ocx:GUIDRef="{e93ebc39-88aa-4acf-9037-cf2dc8947282}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="7740" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L10" id="ID39" ocx:GUIDRef="{f0fbb3b0-05fe-4177-a123-d51cf5e4fdf7}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="8600" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L11" id="ID40" ocx:GUIDRef="{4a31f904-0dcc-4b88-86d6-bbdf882dc52f}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="9460" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="L12" id="ID41" ocx:GUIDRef="{90e5fb8f-cd8b-463a-9d60-8a0d54d660bc}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="10320" unit="u2" />
+        </ocx:RefPlane>
+      </ocx:YRefPlanes>
+      <ocx:ZRefPlanes>
+        <ocx:RefPlane name="D0" id="ID42" ocx:GUIDRef="{2dacaf39-2d48-46b6-a041-f90577be237d}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="0" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="D1" id="ID43" ocx:GUIDRef="{b8883994-40d1-40e8-8a2d-86d684d8c030}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="1500" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="D2" id="ID44" ocx:GUIDRef="{8a3f2fe7-222b-443b-bd08-50be103b445f}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="6000" unit="u2" />
+        </ocx:RefPlane>
+        <ocx:RefPlane name="D3" id="ID45" ocx:GUIDRef="{a5694853-a845-4abe-8271-13425fb5a218}" displayGrid="true">
+          <ocx:ReferenceLocation numericvalue="9900" unit="u2" />
+        </ocx:RefPlane>
+      </ocx:ZRefPlanes>
+    </ocx:CoordinateSystem>
+    <ocx:ClassificationData ocx:newbuildingSociety="DNV" identification="">
+      <ocx:PrincipalParticulars>
+        <ocx:Lpp numericvalue="70000" unit="u2" />
+        <ocx:RuleLength numericvalue="0" unit="u2" />
+        <ocx:BlockCoefficient numericvalue="0" unit="u6" />
+        <ocx:FP_Pos numericvalue="0" unit="u2" />
+        <ocx:MouldedBreadth numericvalue="20000" unit="u2" />
+        <ocx:MouldedDepth numericvalue="12000" unit="u2" />
+        <ocx:ScantlingDraught numericvalue="8000" unit="u2" />
+        <ocx:DesignSpeed numericvalue="0" unit="u2" />
+        <ocx:FreeboardLength numericvalue="0" unit="u2" />
+        <ocx:NormalBallastDraught numericvalue="0" unit="u2" />
+        <ocx:HeavyBallastDraught numericvalue="0" unit="u2" />
+        <ocx:SlammingDraughtEmptyFP numericvalue="0" unit="u2" />
+        <ocx:SlammingDraughtFullFP numericvalue="0" unit="u2" />
+      </ocx:PrincipalParticulars>
+      <ocx:ClassNotation hull="" machinery="" serviceArea="" additionalNotations="" />
+    </ocx:ClassificationData>
+    <ocx:StatutoryData portRegistration="Sweden" flagState="Swedish" />
+    <ocx:ShipDesignation shipName="IMC2023" callSign="" numberIMO="1004871" shipType="Bulk Carrier" />
+    <ocx:DesignView id="ID46">
+      <ocx:VesselRef ocx:refType="ocx:Vessel" ocx:GUIDRef="{ba3a77c2-bae6-4317-be03-15bcede2745f}" localRef="ID1" />
+      <ocx:OccurrenceGroup id="ID47" name="PrtByStrType">
+        <ocx:OccurrenceGroup id="ID48" name="UNDEFINED: Miscellaneous">
+          <ocx:Occurrence id="ID49" name="MODEL_11_Y-1000_02">
+            <ocx:PlateRef ocx:GUIDRef="{2306a704-bbbb-465b-8a80-3a3a8ca6232f}" localRef="ID63" ocx:refType="ocx:Plate" />
+            <ocx:StiffenerRef ocx:GUIDRef="{a3b88cfc-4d5f-430f-b377-5e7c020cd44f}" localRef="ID77" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{e8304641-8f78-4dcf-bd9e-6c69901950e6}" localRef="ID80" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{317a65e7-8703-4ee4-ac2d-05f9c28ebd6d}" localRef="ID83" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{92fee18d-f979-432c-b80f-233e35e82eae}" localRef="ID86" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{ab5cd6fe-831b-49ae-a95c-9c2272c05cc6}" localRef="ID89" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{178c6e2e-d606-49b5-acaa-d0006663aa9f}" localRef="ID92" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{62a985c9-5dbe-4888-95fc-02f71120a923}" localRef="ID95" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{89eff44a-d860-429f-affe-ca95993c671a}" localRef="ID98" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{95581ae0-3ef4-44dd-9101-383d616aea4c}" localRef="ID101" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{6d4d7281-763d-461b-b368-e6ee06d487f5}" localRef="ID104" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{437d7a31-ba59-4b10-892f-ca7b91c282d1}" localRef="ID107" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{f09bde91-220d-4bde-a190-7d8b22c50a9b}" localRef="ID110" ocx:refType="ocx:Stiffener" />
+          </ocx:Occurrence>
+          <ocx:Occurrence id="ID50" name="MODEL_11_X40000_01">
+            <ocx:PlateRef ocx:GUIDRef="{c8798e8a-6c8e-4bb1-8e9c-78432872b106}" localRef="ID119" ocx:refType="ocx:Plate" />
+            <ocx:StiffenerRef ocx:GUIDRef="{372a8365-19c2-44bb-93d9-230fe6d9763b}" localRef="ID129" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{338858d1-03cf-4d1c-b326-30eed7151151}" localRef="ID132" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{e8395164-c42d-4e08-9b39-b3cc467bff5e}" localRef="ID135" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{f9215884-3426-468d-871c-4bbc0adadb67}" localRef="ID138" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{34c4c61f-3d05-4547-a8b5-43caf65ddbf7}" localRef="ID141" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{b1f533b7-b81e-4e06-af1a-2a91a2ee4f24}" localRef="ID144" ocx:refType="ocx:Stiffener" />
+          </ocx:Occurrence>
+          <ocx:Occurrence id="ID51" name="MODEL_11_Y1000_02">
+            <ocx:PlateRef ocx:GUIDRef="{3209ca2d-bc2e-4344-a6df-6d2b8746957f}" localRef="ID157" ocx:refType="ocx:Plate" />
+            <ocx:StiffenerRef ocx:GUIDRef="{bf7cad1f-b026-48dd-80be-50057c47ec59}" localRef="ID171" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{74ee6bd2-8a8c-46e9-8d49-e5676fe8fedd}" localRef="ID174" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{5a5a68b9-ac6a-4c84-8b77-941040c130bb}" localRef="ID177" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{6ab5ef75-cfbe-4de1-afe4-c589c7348507}" localRef="ID180" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{e9a7780a-23f9-4538-af3b-309982f2d4bc}" localRef="ID183" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{e455cb8c-9ece-4d42-904d-6c7586b01e5f}" localRef="ID186" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{c767f045-fde8-415c-8e9d-478a202362b6}" localRef="ID189" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{3065e94b-dee0-45b3-a4c7-1e693a49fca3}" localRef="ID192" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{0a65f878-0589-490e-b975-44a30d4b5085}" localRef="ID195" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{b104be6c-41c6-4863-b128-b34bbcf7781c}" localRef="ID198" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{a29019a7-adfa-427b-b793-3d7f88361d5f}" localRef="ID201" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{9e73e95f-e1b0-4b53-9d5f-e0686b0d806d}" localRef="ID204" ocx:refType="ocx:Stiffener" />
+          </ocx:Occurrence>
+          <ocx:Occurrence id="ID52" name="MODEL_11_X60000_01">
+            <ocx:PlateRef ocx:GUIDRef="{5e9948ea-ff8f-4df0-91a7-19207f4f22ed}" localRef="ID213" ocx:refType="ocx:Plate" />
+            <ocx:StiffenerRef ocx:GUIDRef="{6124aa8c-135a-4ed0-9198-6e27079bb245}" localRef="ID223" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{f8f96a50-58c5-40f9-94e3-7201600d69db}" localRef="ID226" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{240c1d42-042e-49a3-818d-7f4fed8fec7f}" localRef="ID229" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{5d281f0e-d492-4034-b75c-0eda307b353d}" localRef="ID232" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{21aea06a-61ef-46ec-aa24-bcbbfd93433e}" localRef="ID235" ocx:refType="ocx:Stiffener" />
+            <ocx:StiffenerRef ocx:GUIDRef="{7b56ecf0-f4ac-49ee-b4eb-2f6701bd5ee2}" localRef="ID238" ocx:refType="ocx:Stiffener" />
+          </ocx:Occurrence>
+        </ocx:OccurrenceGroup>
+      </ocx:OccurrenceGroup>
+    </ocx:DesignView>
+    <ocx:ReferenceSurfaces />
+    <ocx:Panel ocx:GUIDRef="{4b2ba24a-c933-45d3-b44b-199195e7c6ce}" id="ID53" name="MODEL_11_Y-1000_02" ocx:functionType="UNDEFINED: Miscellaneous" ocx:tightness="NonTight">
+      <ocx:UnboundedGeometry>
+        <ocx:Plane3D id="ID54">
+          <ocx:Origin coordinates="0 -1000 0" unit="u2" />
+          <ocx:Normal direction="0 1 0" />
+        </ocx:Plane3D>
+      </ocx:UnboundedGeometry>
+      <ocx:LimitedBy>
+        <ocx:FreeEdgeCurve3D id="ID55" ocx:GUIDRef="{5fae585d-7389-41ea-a02d-ead174e38f92}">
+          <ocx:CurveLength numericvalue="20000" unit="u2" />
+          <ocx:Line3D id="ID56">
+            <ocx:CurveLength numericvalue="20000" unit="u2" />
+            <ocx:StartPoint coordinates="60000 -1000 0" unit="u2" />
+            <ocx:EndPoint coordinates="40000 -1000 0" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID57" ocx:GUIDRef="{72b90c2a-54ba-43d4-a635-92251b6e833b}">
+          <ocx:CurveLength numericvalue="20000.000000000007" unit="u2" />
+          <ocx:Line3D id="ID58">
+            <ocx:CurveLength numericvalue="20000.000000000007" unit="u2" />
+            <ocx:StartPoint coordinates="39999.999999999993 -1000 1000.0000000000036" unit="u2" />
+            <ocx:EndPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID59" ocx:GUIDRef="{19785668-a005-4aca-82fa-80aa9082c22e}">
+          <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+          <ocx:Line3D id="ID60">
+            <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+            <ocx:StartPoint coordinates="40000 -1000 0" unit="u2" />
+            <ocx:EndPoint coordinates="40000 -1000 1000.0000000000036" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID61" ocx:GUIDRef="{97ef4a71-7411-4f02-bcec-baf1ff5b3322}">
+          <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+          <ocx:Line3D id="ID62">
+            <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+            <ocx:StartPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+            <ocx:EndPoint coordinates="60000 -1000 0" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+      </ocx:LimitedBy>
+      <ocx:ComposedOf>
+        <ocx:Plate id="ID63" ocx:GUIDRef="{2306a704-bbbb-465b-8a80-3a3a8ca6232f}">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="7850.0000000000282" unit="u8" />
+            <ocx:CenterOfGravity coordinates="50000 -1000.0000000000001 500.00000000000188" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:NetArea numericvalue="20000000.000000075" unit="u2" />
+          <ocx:OuterContour>
+            <ocx:Line3D id="ID64">
+              <ocx:CurveLength numericvalue="20000" unit="u2" />
+              <ocx:StartPoint coordinates="60000 -1000 0" unit="u2" />
+              <ocx:EndPoint coordinates="40000 -1000 0" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID65">
+              <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+              <ocx:StartPoint coordinates="40000 -1000 0" unit="u2" />
+              <ocx:EndPoint coordinates="40000 -1000 1000.0000000000036" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID66">
+              <ocx:CurveLength numericvalue="20000" unit="u2" />
+              <ocx:StartPoint coordinates="40000 -1000 1000.0000000000036" unit="u2" />
+              <ocx:EndPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID67">
+              <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+              <ocx:StartPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+              <ocx:EndPoint coordinates="60000 -1000 0" unit="u2" />
+            </ocx:Line3D>
+          </ocx:OuterContour>
+          <ocx:PlateMaterial ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material">
+            <ocx:Thickness numericvalue="50" unit="u2" />
+          </ocx:PlateMaterial>
+          <ocx:LimitedBy>
+            <ocx:FreeEdgeCurve3D id="ID68" ocx:GUIDRef="{5fae585d-7389-41ea-a02d-ead174e38f92}">
+              <ocx:CurveLength numericvalue="20000" unit="u2" />
+              <ocx:Line3D id="ID69">
+                <ocx:CurveLength numericvalue="20000" unit="u2" />
+                <ocx:StartPoint coordinates="60000 -1000 0" unit="u2" />
+                <ocx:EndPoint coordinates="40000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID70" ocx:GUIDRef="{72b90c2a-54ba-43d4-a635-92251b6e833b}">
+              <ocx:CurveLength numericvalue="20000.000000000007" unit="u2" />
+              <ocx:Line3D id="ID71">
+                <ocx:CurveLength numericvalue="20000.000000000007" unit="u2" />
+                <ocx:StartPoint coordinates="39999.999999999993 -1000 1000.0000000000036" unit="u2" />
+                <ocx:EndPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID72" ocx:GUIDRef="{19785668-a005-4aca-82fa-80aa9082c22e}">
+              <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+              <ocx:Line3D id="ID73">
+                <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+                <ocx:StartPoint coordinates="40000 -1000 0" unit="u2" />
+                <ocx:EndPoint coordinates="40000 -1000 1000.0000000000036" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID74" ocx:GUIDRef="{97ef4a71-7411-4f02-bcec-baf1ff5b3322}">
+              <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+              <ocx:Line3D id="ID75">
+                <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+                <ocx:StartPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+                <ocx:EndPoint coordinates="60000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+          </ocx:LimitedBy>
+          <ocx:Offset numericvalue="0" unit="u2" />
+        </ocx:Plate>
+      </ocx:ComposedOf>
+      <ocx:OuterContour>
+        <ocx:NURBS3D id="ID76">
+          <ocx:CurveLength numericvalue="42000" unit="u2" />
+          <ocx:NURBSproperties degree="1" numCtrlPts="5" numKnots="7" isRational="false" />
+          <ocx:KnotVector value="0 0 20000 21000.000000000004 41000 42000 42000 " />
+          <ocx:ControlPtList>
+            <ocx:ControlPoint coordinates="60000 -1000 0" unit="u2" />
+            <ocx:ControlPoint coordinates="40000 -1000 0" unit="u2" />
+            <ocx:ControlPoint coordinates="40000 -1000 1000.0000000000036" unit="u2" />
+            <ocx:ControlPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+            <ocx:ControlPoint coordinates="60000 -1000 0" unit="u2" />
+          </ocx:ControlPtList>
+        </ocx:NURBS3D>
+      </ocx:OuterContour>
+      <ocx:StiffenedBy>
+        <ocx:Stiffener ocx:GUIDRef="{a3b88cfc-4d5f-430f-b377-5e7c020cd44f}" id="ID77">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983583" unit="u8" />
+            <ocx:CenterOfGravity coordinates="44991.321817652053 -830.41547808920609 500.00000000004496" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID78">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID79">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="45000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="45000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957358231e-17 1 0" />
+            <ocx:FlangeDirection direction="1 -6.1232339957358231e-17 0" />
+            <ocx:Position coordinates="45000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{e8304641-8f78-4dcf-bd9e-6c69901950e6}" id="ID80">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.14241899898358" unit="u8" />
+            <ocx:CenterOfGravity coordinates="45991.321817652053 -830.41547808920609 500.00000000004513" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID81">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID82">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="46000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="46000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957375056e-17 1 0" />
+            <ocx:FlangeDirection direction="1 -6.1232339957375056e-17 0" />
+            <ocx:Position coordinates="46000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{317a65e7-8703-4ee4-ac2d-05f9c28ebd6d}" id="ID83">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983583" unit="u8" />
+            <ocx:CenterOfGravity coordinates="46991.321817652053 -830.41547808920609 500.00000000004496" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID84">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID85">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="47000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="47000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957352586e-17 1 0" />
+            <ocx:FlangeDirection direction="1 -6.1232339957352586e-17 0" />
+            <ocx:Position coordinates="47000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{92fee18d-f979-432c-b80f-233e35e82eae}" id="ID86">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983594" unit="u8" />
+            <ocx:CenterOfGravity coordinates="47991.321817652053 -830.41547808920598 500.00000000004479" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID87">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID88">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="48000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="48000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957349763e-17 1 0" />
+            <ocx:FlangeDirection direction="1 -6.1232339957349763e-17 0" />
+            <ocx:Position coordinates="48000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{ab5cd6fe-831b-49ae-a95c-9c2272c05cc6}" id="ID89">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983612" unit="u8" />
+            <ocx:CenterOfGravity coordinates="48991.321817652046 -830.41547808920598 500.00000000004445" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID90">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID91">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="49000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="49000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957366563e-17 1 0" />
+            <ocx:FlangeDirection direction="1 -6.1232339957366563e-17 0" />
+            <ocx:Position coordinates="49000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{178c6e2e-d606-49b5-acaa-d0006663aa9f}" id="ID92">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983619" unit="u8" />
+            <ocx:CenterOfGravity coordinates="49991.32181765206 -830.41547808920609 500.00000000004428" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID93">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID94">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="50000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="50000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957363728e-17 1 0" />
+            <ocx:FlangeDirection direction="1 -6.1232339957363728e-17 0" />
+            <ocx:Position coordinates="50000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{62a985c9-5dbe-4888-95fc-02f71120a923}" id="ID95">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983629" unit="u8" />
+            <ocx:CenterOfGravity coordinates="50991.321817652053 -830.4154780892062 500.000000000044" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID96">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID97">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="51000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="51000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957360906e-17 1 0" />
+            <ocx:FlangeDirection direction="-1 6.1232339957360906e-17 0" />
+            <ocx:Position coordinates="51000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{89eff44a-d860-429f-affe-ca95993c671a}" id="ID98">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.14241899898364" unit="u8" />
+            <ocx:CenterOfGravity coordinates="51991.321817652039 -830.41547808920609 500.00000000004354" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID99">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID100">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="52000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="52000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957364246e-17 1 0" />
+            <ocx:FlangeDirection direction="-1 6.1232339957364246e-17 0" />
+            <ocx:Position coordinates="52000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{95581ae0-3ef4-44dd-9101-383d616aea4c}" id="ID101">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983647" unit="u8" />
+            <ocx:CenterOfGravity coordinates="52991.321817652046 -830.4154780892062 500.00000000004354" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID102">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID103">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="53000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="53000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957370249e-17 1 0" />
+            <ocx:FlangeDirection direction="-1 6.1232339957370249e-17 0" />
+            <ocx:Position coordinates="53000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{6d4d7281-763d-461b-b368-e6ee06d487f5}" id="ID104">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983654" unit="u8" />
+            <ocx:CenterOfGravity coordinates="53991.321817652039 -830.41547808920609 500.00000000004337" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID105">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID106">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="54000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="54000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957352425e-17 1 0" />
+            <ocx:FlangeDirection direction="-1 6.1232339957352425e-17 0" />
+            <ocx:Position coordinates="54000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{437d7a31-ba59-4b10-892f-ca7b91c282d1}" id="ID107">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983658" unit="u8" />
+            <ocx:CenterOfGravity coordinates="54991.321817652039 -830.41547808920609 500.00000000004314" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID108">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID109">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="55000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="55000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957349603e-17 1 0" />
+            <ocx:FlangeDirection direction="-1 6.1232339957349603e-17 0" />
+            <ocx:Position coordinates="55000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{f09bde91-220d-4bde-a190-7d8b22c50a9b}" id="ID110">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="7.8500000000000325" unit="u8" />
+            <ocx:CenterOfGravity coordinates="50005.000000000007 -1050 500.00000000000512" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID111">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID112">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="50000 -1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="50000 -1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{d1594d41-2c4e-4216-ba1c-7fb43e4bac00}" localRef="ID246" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957369423e-17 -1 0" />
+            <ocx:FlangeDirection direction="1 6.1232339957369423e-17 0" />
+            <ocx:Position coordinates="50000 -1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+      </ocx:StiffenedBy>
+    </ocx:Panel>
+    <ocx:Panel ocx:GUIDRef="{785ab541-1266-4f02-bcfe-1b5db41ade02}" id="ID113" name="MODEL_11_X40000_01" ocx:functionType="UNDEFINED: Miscellaneous" ocx:tightness="NonTight">
+      <ocx:UnboundedGeometry>
+        <ocx:Plane3D id="ID114">
+          <ocx:Origin coordinates="40000 0 0" unit="u2" />
+          <ocx:Normal direction="1 0 0" />
+        </ocx:Plane3D>
+      </ocx:UnboundedGeometry>
+      <ocx:LimitedBy>
+        <ocx:PanelRef ocx:GUIDRef="{b14ebab1-f0b5-4ab1-a88c-d71df548d16c}" localRef="ID147" ocx:refType="ocx:Panel" />
+        <ocx:PanelRef ocx:GUIDRef="{4b2ba24a-c933-45d3-b44b-199195e7c6ce}" localRef="ID53" ocx:refType="ocx:Panel" />
+        <ocx:FreeEdgeCurve3D id="ID115" ocx:GUIDRef="{fbd8af25-508b-4b92-8153-b07256262466}">
+          <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+          <ocx:Line3D id="ID116">
+            <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+            <ocx:StartPoint coordinates="40000 -1000 0" unit="u2" />
+            <ocx:EndPoint coordinates="40000 999.99999999998545 0" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID117" ocx:GUIDRef="{d9419183-30b9-472a-84bc-956782d3c2df}">
+          <ocx:CurveLength numericvalue="1999.9999999999836" unit="u2" />
+          <ocx:Line3D id="ID118">
+            <ocx:CurveLength numericvalue="1999.9999999999836" unit="u2" />
+            <ocx:StartPoint coordinates="40000 999.99999999998363 1000" unit="u2" />
+            <ocx:EndPoint coordinates="40000 -1000 1000" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+      </ocx:LimitedBy>
+      <ocx:ComposedOf>
+        <ocx:Plate id="ID119" ocx:GUIDRef="{c8798e8a-6c8e-4bb1-8e9c-78432872b106}">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="784.99999999999443" unit="u8" />
+            <ocx:CenterOfGravity coordinates="40000.000000000007 -7.3909759521484895e-12 500.00000000000011" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:NetArea numericvalue="1999999.999999986" unit="u2" />
+          <ocx:OuterContour>
+            <ocx:Line3D id="ID120">
+              <ocx:CurveLength numericvalue="1000.0000000000002" unit="u2" />
+              <ocx:StartPoint coordinates="40000 -1000.0000000000005 1000.0000000000002" unit="u2" />
+              <ocx:EndPoint coordinates="40000 -1000 0" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID121">
+              <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+              <ocx:StartPoint coordinates="40000 -1000 0" unit="u2" />
+              <ocx:EndPoint coordinates="40000 999.99999999998545 0" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID122">
+              <ocx:CurveLength numericvalue="1000.0000000000002" unit="u2" />
+              <ocx:StartPoint coordinates="40000 999.99999999998545 0" unit="u2" />
+              <ocx:EndPoint coordinates="40000 999.99999999998545 1000.0000000000002" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID123">
+              <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+              <ocx:StartPoint coordinates="40000 999.99999999998545 1000.0000000000002" unit="u2" />
+              <ocx:EndPoint coordinates="40000 -1000 1000" unit="u2" />
+            </ocx:Line3D>
+          </ocx:OuterContour>
+          <ocx:PlateMaterial ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material">
+            <ocx:Thickness numericvalue="50" unit="u2" />
+          </ocx:PlateMaterial>
+          <ocx:LimitedBy>
+            <ocx:PanelRef ocx:GUIDRef="{b14ebab1-f0b5-4ab1-a88c-d71df548d16c}" localRef="ID147" ocx:refType="ocx:Panel" />
+            <ocx:PanelRef ocx:GUIDRef="{4b2ba24a-c933-45d3-b44b-199195e7c6ce}" localRef="ID53" ocx:refType="ocx:Panel" />
+            <ocx:FreeEdgeCurve3D id="ID124" ocx:GUIDRef="{fbd8af25-508b-4b92-8153-b07256262466}">
+              <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+              <ocx:Line3D id="ID125">
+                <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+                <ocx:StartPoint coordinates="40000 -1000 0" unit="u2" />
+                <ocx:EndPoint coordinates="40000 999.99999999998545 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID126" ocx:GUIDRef="{d9419183-30b9-472a-84bc-956782d3c2df}">
+              <ocx:CurveLength numericvalue="1999.9999999999836" unit="u2" />
+              <ocx:Line3D id="ID127">
+                <ocx:CurveLength numericvalue="1999.9999999999836" unit="u2" />
+                <ocx:StartPoint coordinates="40000 999.99999999998363 1000" unit="u2" />
+                <ocx:EndPoint coordinates="40000 -1000 1000" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+          </ocx:LimitedBy>
+          <ocx:Offset numericvalue="0" unit="u2" />
+        </ocx:Plate>
+      </ocx:ComposedOf>
+      <ocx:OuterContour>
+        <ocx:NURBS3D id="ID128">
+          <ocx:CurveLength numericvalue="5999.9999999999709" unit="u2" />
+          <ocx:NURBSproperties degree="1" numCtrlPts="5" numKnots="7" isRational="false" />
+          <ocx:KnotVector value="0 0 1000.0000000000002 2999.9999999999854 3999.9999999999854 5999.9999999999709 5999.9999999999709 " />
+          <ocx:ControlPtList>
+            <ocx:ControlPoint coordinates="40000 -1000.0000000000005 1000.0000000000002" unit="u2" />
+            <ocx:ControlPoint coordinates="40000 -1000 0" unit="u2" />
+            <ocx:ControlPoint coordinates="40000 999.99999999998545 0" unit="u2" />
+            <ocx:ControlPoint coordinates="40000 999.99999999998545 1000.0000000000002" unit="u2" />
+            <ocx:ControlPoint coordinates="40000 -1000 1000" unit="u2" />
+          </ocx:ControlPtList>
+        </ocx:NURBS3D>
+      </ocx:OuterContour>
+      <ocx:StiffenedBy>
+        <ocx:Stiffener ocx:GUIDRef="{372a8365-19c2-44bb-93d9-230fe6d9763b}" id="ID129">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983903" unit="u8" />
+            <ocx:CenterOfGravity coordinates="40169.584521910794 8.6781823479590869 500.00000000002257" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID130">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID131">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="40000 0 1000" unit="u2" />
+                <ocx:EndPoint coordinates="40000 0 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="1 -6.123233995736766e-17 0" />
+            <ocx:FlangeDirection direction="-6.123233995736766e-17 -1 0" />
+            <ocx:Position coordinates="40000 0 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{338858d1-03cf-4d1c-b326-30eed7151151}" id="ID132">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983903" unit="u8" />
+            <ocx:CenterOfGravity coordinates="40169.584521910794 308.67818234795908 500.00000000002257" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID133">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID134">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="40000 300 1000" unit="u2" />
+                <ocx:EndPoint coordinates="40000 300 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="1 -6.1232339957366083e-17 0" />
+            <ocx:FlangeDirection direction="-6.1232339957366083e-17 -1 0" />
+            <ocx:Position coordinates="40000 300 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{e8395164-c42d-4e08-9b39-b3cc467bff5e}" id="ID135">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983903" unit="u8" />
+            <ocx:CenterOfGravity coordinates="40169.584521910794 608.67818234795914 500.00000000002257" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID136">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID137">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="40000 600 1000" unit="u2" />
+                <ocx:EndPoint coordinates="40000 600 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="1 -6.1232339957364505e-17 0" />
+            <ocx:FlangeDirection direction="-6.1232339957364505e-17 -1 0" />
+            <ocx:Position coordinates="40000 600 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{f9215884-3426-468d-871c-4bbc0adadb67}" id="ID138">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983903" unit="u8" />
+            <ocx:CenterOfGravity coordinates="40169.584521910794 -291.32181765205547 500.00000000002257" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID139">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID140">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="40000 -300 1000" unit="u2" />
+                <ocx:EndPoint coordinates="40000 -300 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="1 -6.1232339957369238e-17 0" />
+            <ocx:FlangeDirection direction="6.1232339957369238e-17 1 0" />
+            <ocx:Position coordinates="40000 -300 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{34c4c61f-3d05-4547-a8b5-43caf65ddbf7}" id="ID141">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983903" unit="u8" />
+            <ocx:CenterOfGravity coordinates="40169.584521910794 -591.32181765204086 500.00000000002257" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID142">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID143">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="40000 -600 1000" unit="u2" />
+                <ocx:EndPoint coordinates="40000 -600 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="1 -6.1232339957370816e-17 0" />
+            <ocx:FlangeDirection direction="6.1232339957370816e-17 1 0" />
+            <ocx:Position coordinates="40000 -600 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{b1f533b7-b81e-4e06-af1a-2a91a2ee4f24}" id="ID144">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="7.850000000000124" unit="u8" />
+            <ocx:CenterOfGravity coordinates="39949.999999999993 95 499.99999999999199" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID145">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID146">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="40000 100 1000" unit="u2" />
+                <ocx:EndPoint coordinates="40000 100 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{d1594d41-2c4e-4216-ba1c-7fb43e4bac00}" localRef="ID246" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="-1 -6.123233995736766e-17 0" />
+            <ocx:FlangeDirection direction="6.123233995736766e-17 -1 0" />
+            <ocx:Position coordinates="40000 100 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+      </ocx:StiffenedBy>
+    </ocx:Panel>
+    <ocx:Panel ocx:GUIDRef="{b14ebab1-f0b5-4ab1-a88c-d71df548d16c}" id="ID147" name="MODEL_11_Y1000_02" ocx:functionType="UNDEFINED: Miscellaneous" ocx:tightness="NonTight">
+      <ocx:UnboundedGeometry>
+        <ocx:Plane3D id="ID148">
+          <ocx:Origin coordinates="0 1000 0" unit="u2" />
+          <ocx:Normal direction="0 1 0" />
+        </ocx:Plane3D>
+      </ocx:UnboundedGeometry>
+      <ocx:LimitedBy>
+        <ocx:FreeEdgeCurve3D id="ID149" ocx:GUIDRef="{d3dd41ed-175d-4f9f-8520-e6599cd95c61}">
+          <ocx:CurveLength numericvalue="20000" unit="u2" />
+          <ocx:Line3D id="ID150">
+            <ocx:CurveLength numericvalue="20000" unit="u2" />
+            <ocx:StartPoint coordinates="60000 1000 0" unit="u2" />
+            <ocx:EndPoint coordinates="40000 1000 0" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID151" ocx:GUIDRef="{d386a047-e672-4b72-b210-15bbb06669a3}">
+          <ocx:CurveLength numericvalue="20000.000000000007" unit="u2" />
+          <ocx:Line3D id="ID152">
+            <ocx:CurveLength numericvalue="20000.000000000007" unit="u2" />
+            <ocx:StartPoint coordinates="39999.999999999993 1000 1000.0000000000036" unit="u2" />
+            <ocx:EndPoint coordinates="60000 1000 1000.0000000000036" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID153" ocx:GUIDRef="{2a3620fb-8ccd-4997-8c67-edb7282636fa}">
+          <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+          <ocx:Line3D id="ID154">
+            <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+            <ocx:StartPoint coordinates="40000 1000 0" unit="u2" />
+            <ocx:EndPoint coordinates="40000 1000 1000.0000000000036" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID155" ocx:GUIDRef="{3eccf246-2bf2-445d-af0c-af6ef85cd714}">
+          <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+          <ocx:Line3D id="ID156">
+            <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+            <ocx:StartPoint coordinates="60000 1000 1000.0000000000036" unit="u2" />
+            <ocx:EndPoint coordinates="60000 1000 0" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+      </ocx:LimitedBy>
+      <ocx:ComposedOf>
+        <ocx:Plate id="ID157" ocx:GUIDRef="{3209ca2d-bc2e-4344-a6df-6d2b8746957f}">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="7850.0000000000282" unit="u8" />
+            <ocx:CenterOfGravity coordinates="50000 1000.0000000000001 500.00000000000188" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:NetArea numericvalue="20000000.000000075" unit="u2" />
+          <ocx:OuterContour>
+            <ocx:Line3D id="ID158">
+              <ocx:CurveLength numericvalue="20000" unit="u2" />
+              <ocx:StartPoint coordinates="60000 1000 0" unit="u2" />
+              <ocx:EndPoint coordinates="40000 1000 0" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID159">
+              <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+              <ocx:StartPoint coordinates="40000 1000 0" unit="u2" />
+              <ocx:EndPoint coordinates="40000 1000 1000.0000000000036" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID160">
+              <ocx:CurveLength numericvalue="20000" unit="u2" />
+              <ocx:StartPoint coordinates="40000 1000 1000.0000000000036" unit="u2" />
+              <ocx:EndPoint coordinates="60000 1000 1000.0000000000036" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID161">
+              <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+              <ocx:StartPoint coordinates="60000 1000 1000.0000000000036" unit="u2" />
+              <ocx:EndPoint coordinates="60000 1000 0" unit="u2" />
+            </ocx:Line3D>
+          </ocx:OuterContour>
+          <ocx:PlateMaterial ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material">
+            <ocx:Thickness numericvalue="50" unit="u2" />
+          </ocx:PlateMaterial>
+          <ocx:LimitedBy>
+            <ocx:FreeEdgeCurve3D id="ID162" ocx:GUIDRef="{d3dd41ed-175d-4f9f-8520-e6599cd95c61}">
+              <ocx:CurveLength numericvalue="20000" unit="u2" />
+              <ocx:Line3D id="ID163">
+                <ocx:CurveLength numericvalue="20000" unit="u2" />
+                <ocx:StartPoint coordinates="60000 1000 0" unit="u2" />
+                <ocx:EndPoint coordinates="40000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID164" ocx:GUIDRef="{d386a047-e672-4b72-b210-15bbb06669a3}">
+              <ocx:CurveLength numericvalue="20000.000000000007" unit="u2" />
+              <ocx:Line3D id="ID165">
+                <ocx:CurveLength numericvalue="20000.000000000007" unit="u2" />
+                <ocx:StartPoint coordinates="39999.999999999993 1000 1000.0000000000036" unit="u2" />
+                <ocx:EndPoint coordinates="60000 1000 1000.0000000000036" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID166" ocx:GUIDRef="{2a3620fb-8ccd-4997-8c67-edb7282636fa}">
+              <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+              <ocx:Line3D id="ID167">
+                <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+                <ocx:StartPoint coordinates="40000 1000 0" unit="u2" />
+                <ocx:EndPoint coordinates="40000 1000 1000.0000000000036" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID168" ocx:GUIDRef="{3eccf246-2bf2-445d-af0c-af6ef85cd714}">
+              <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+              <ocx:Line3D id="ID169">
+                <ocx:CurveLength numericvalue="1000.0000000000036" unit="u2" />
+                <ocx:StartPoint coordinates="60000 1000 1000.0000000000036" unit="u2" />
+                <ocx:EndPoint coordinates="60000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+          </ocx:LimitedBy>
+          <ocx:Offset numericvalue="0" unit="u2" />
+        </ocx:Plate>
+      </ocx:ComposedOf>
+      <ocx:OuterContour>
+        <ocx:NURBS3D id="ID170">
+          <ocx:CurveLength numericvalue="42000" unit="u2" />
+          <ocx:NURBSproperties degree="1" numCtrlPts="5" numKnots="7" isRational="false" />
+          <ocx:KnotVector value="0 0 20000 21000.000000000004 41000 42000 42000 " />
+          <ocx:ControlPtList>
+            <ocx:ControlPoint coordinates="60000 1000 0" unit="u2" />
+            <ocx:ControlPoint coordinates="40000 1000 0" unit="u2" />
+            <ocx:ControlPoint coordinates="40000 1000 1000.0000000000036" unit="u2" />
+            <ocx:ControlPoint coordinates="60000 1000 1000.0000000000036" unit="u2" />
+            <ocx:ControlPoint coordinates="60000 1000 0" unit="u2" />
+          </ocx:ControlPtList>
+        </ocx:NURBS3D>
+      </ocx:OuterContour>
+      <ocx:StiffenedBy>
+        <ocx:Stiffener ocx:GUIDRef="{bf7cad1f-b026-48dd-80be-50057c47ec59}" id="ID171">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983583" unit="u8" />
+            <ocx:CenterOfGravity coordinates="45008.678182347976 830.41547808920609 500.00000000004496" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID172">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID173">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="45000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="45000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957358231e-17 -1 0" />
+            <ocx:FlangeDirection direction="1 6.1232339957358231e-17 0" />
+            <ocx:Position coordinates="45000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{74ee6bd2-8a8c-46e9-8d49-e5676fe8fedd}" id="ID174">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.14241899898358" unit="u8" />
+            <ocx:CenterOfGravity coordinates="46008.678182347976 830.41547808920609 500.00000000004513" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID175">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID176">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="46000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="46000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957375056e-17 -1 0" />
+            <ocx:FlangeDirection direction="1 6.1232339957375056e-17 0" />
+            <ocx:Position coordinates="46000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{5a5a68b9-ac6a-4c84-8b77-941040c130bb}" id="ID177">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983583" unit="u8" />
+            <ocx:CenterOfGravity coordinates="47008.678182347976 830.41547808920609 500.00000000004496" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID178">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID179">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="47000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="47000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957352586e-17 -1 0" />
+            <ocx:FlangeDirection direction="1 6.1232339957352586e-17 0" />
+            <ocx:Position coordinates="47000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{6ab5ef75-cfbe-4de1-afe4-c589c7348507}" id="ID180">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983594" unit="u8" />
+            <ocx:CenterOfGravity coordinates="48008.678182347976 830.41547808920598 500.00000000004479" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID181">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID182">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="48000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="48000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957349763e-17 -1 0" />
+            <ocx:FlangeDirection direction="1 6.1232339957349763e-17 0" />
+            <ocx:Position coordinates="48000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{e9a7780a-23f9-4538-af3b-309982f2d4bc}" id="ID183">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983612" unit="u8" />
+            <ocx:CenterOfGravity coordinates="49008.678182347969 830.41547808920598 500.00000000004445" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID184">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID185">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="49000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="49000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957366563e-17 -1 0" />
+            <ocx:FlangeDirection direction="1 6.1232339957366563e-17 0" />
+            <ocx:Position coordinates="49000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{e455cb8c-9ece-4d42-904d-6c7586b01e5f}" id="ID186">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983619" unit="u8" />
+            <ocx:CenterOfGravity coordinates="50008.678182347983 830.41547808920609 500.00000000004428" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID187">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID188">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="50000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="50000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957363728e-17 -1 0" />
+            <ocx:FlangeDirection direction="1 6.1232339957363728e-17 0" />
+            <ocx:Position coordinates="50000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{c767f045-fde8-415c-8e9d-478a202362b6}" id="ID189">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983629" unit="u8" />
+            <ocx:CenterOfGravity coordinates="51008.678182347976 830.4154780892062 500.000000000044" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID190">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID191">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="51000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="51000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957360906e-17 -1 0" />
+            <ocx:FlangeDirection direction="-1 -6.1232339957360906e-17 0" />
+            <ocx:Position coordinates="51000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{3065e94b-dee0-45b3-a4c7-1e693a49fca3}" id="ID192">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.14241899898364" unit="u8" />
+            <ocx:CenterOfGravity coordinates="52008.678182347961 830.41547808920609 500.00000000004354" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID193">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID194">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="52000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="52000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957364246e-17 -1 0" />
+            <ocx:FlangeDirection direction="-1 -6.1232339957364246e-17 0" />
+            <ocx:Position coordinates="52000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{0a65f878-0589-490e-b975-44a30d4b5085}" id="ID195">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983647" unit="u8" />
+            <ocx:CenterOfGravity coordinates="53008.678182347954 830.4154780892062 500.00000000004354" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID196">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID197">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="53000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="53000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957370249e-17 -1 0" />
+            <ocx:FlangeDirection direction="-1 -6.1232339957370249e-17 0" />
+            <ocx:Position coordinates="53000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{b104be6c-41c6-4863-b128-b34bbcf7781c}" id="ID198">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983654" unit="u8" />
+            <ocx:CenterOfGravity coordinates="54008.678182347954 830.41547808920609 500.00000000004337" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID199">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID200">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="54000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="54000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957352425e-17 -1 0" />
+            <ocx:FlangeDirection direction="-1 -6.1232339957352425e-17 0" />
+            <ocx:Position coordinates="54000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{a29019a7-adfa-427b-b793-3d7f88361d5f}" id="ID201">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998983658" unit="u8" />
+            <ocx:CenterOfGravity coordinates="55008.678182347954 830.41547808920609 500.00000000004314" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID202">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID203">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="55000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="55000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957349603e-17 -1 0" />
+            <ocx:FlangeDirection direction="-1 -6.1232339957349603e-17 0" />
+            <ocx:Position coordinates="55000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{9e73e95f-e1b0-4b53-9d5f-e0686b0d806d}" id="ID204">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="7.8500000000000325" unit="u8" />
+            <ocx:CenterOfGravity coordinates="50005.000000000007 1050 500.00000000000512" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID205">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID206">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="50000 1000 1000" unit="u2" />
+                <ocx:EndPoint coordinates="50000 1000 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{d1594d41-2c4e-4216-ba1c-7fb43e4bac00}" localRef="ID246" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="6.1232339957369423e-17 1 0" />
+            <ocx:FlangeDirection direction="1 -6.1232339957369423e-17 0" />
+            <ocx:Position coordinates="50000 1000 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+      </ocx:StiffenedBy>
+    </ocx:Panel>
+    <ocx:Panel ocx:GUIDRef="{a974c4b8-448f-4476-a71c-d9e7a684edb8}" id="ID207" name="MODEL_11_X60000_01" ocx:functionType="UNDEFINED: Miscellaneous" ocx:tightness="NonTight">
+      <ocx:UnboundedGeometry>
+        <ocx:Plane3D id="ID208">
+          <ocx:Origin coordinates="60000 0 0" unit="u2" />
+          <ocx:Normal direction="1 0 0" />
+        </ocx:Plane3D>
+      </ocx:UnboundedGeometry>
+      <ocx:LimitedBy>
+        <ocx:PanelRef ocx:GUIDRef="{b14ebab1-f0b5-4ab1-a88c-d71df548d16c}" localRef="ID147" ocx:refType="ocx:Panel" />
+        <ocx:PanelRef ocx:GUIDRef="{4b2ba24a-c933-45d3-b44b-199195e7c6ce}" localRef="ID53" ocx:refType="ocx:Panel" />
+        <ocx:FreeEdgeCurve3D id="ID209" ocx:GUIDRef="{50b5437a-ecf2-4baa-84b8-584b75abc270}">
+          <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+          <ocx:Line3D id="ID210">
+            <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+            <ocx:StartPoint coordinates="60000 -1000 3.637978807091713e-12" unit="u2" />
+            <ocx:EndPoint coordinates="60000 999.99999999998545 3.637978807091713e-12" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+        <ocx:FreeEdgeCurve3D id="ID211" ocx:GUIDRef="{b2efc695-33bc-42b5-91fc-6af13db9e071}">
+          <ocx:CurveLength numericvalue="1999.9999999999836" unit="u2" />
+          <ocx:Line3D id="ID212">
+            <ocx:CurveLength numericvalue="1999.9999999999836" unit="u2" />
+            <ocx:StartPoint coordinates="60000 999.99999999998363 1000.0000000000036" unit="u2" />
+            <ocx:EndPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+          </ocx:Line3D>
+        </ocx:FreeEdgeCurve3D>
+      </ocx:LimitedBy>
+      <ocx:ComposedOf>
+        <ocx:Plate id="ID213" ocx:GUIDRef="{5e9948ea-ff8f-4df0-91a7-19207f4f22ed}">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="784.99999999999432" unit="u8" />
+            <ocx:CenterOfGravity coordinates="60000 -7.2419643402100134e-12 500.00000000000375" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:NetArea numericvalue="1999999.9999999856" unit="u2" />
+          <ocx:OuterContour>
+            <ocx:Line3D id="ID214">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:StartPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+              <ocx:EndPoint coordinates="60000 -1000 3.637978807091713e-12" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID215">
+              <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+              <ocx:StartPoint coordinates="60000 -1000 3.637978807091713e-12" unit="u2" />
+              <ocx:EndPoint coordinates="60000 999.99999999998545 3.637978807091713e-12" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID216">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:StartPoint coordinates="60000 999.99999999998545 3.637978807091713e-12" unit="u2" />
+              <ocx:EndPoint coordinates="60000 999.99999999998545 1000.0000000000036" unit="u2" />
+            </ocx:Line3D>
+            <ocx:Line3D id="ID217">
+              <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+              <ocx:StartPoint coordinates="60000 999.99999999998545 1000.0000000000036" unit="u2" />
+              <ocx:EndPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+            </ocx:Line3D>
+          </ocx:OuterContour>
+          <ocx:PlateMaterial ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material">
+            <ocx:Thickness numericvalue="50" unit="u2" />
+          </ocx:PlateMaterial>
+          <ocx:LimitedBy>
+            <ocx:PanelRef ocx:GUIDRef="{b14ebab1-f0b5-4ab1-a88c-d71df548d16c}" localRef="ID147" ocx:refType="ocx:Panel" />
+            <ocx:PanelRef ocx:GUIDRef="{4b2ba24a-c933-45d3-b44b-199195e7c6ce}" localRef="ID53" ocx:refType="ocx:Panel" />
+            <ocx:FreeEdgeCurve3D id="ID218" ocx:GUIDRef="{50b5437a-ecf2-4baa-84b8-584b75abc270}">
+              <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+              <ocx:Line3D id="ID219">
+                <ocx:CurveLength numericvalue="1999.9999999999854" unit="u2" />
+                <ocx:StartPoint coordinates="60000 -1000 3.637978807091713e-12" unit="u2" />
+                <ocx:EndPoint coordinates="60000 999.99999999998545 3.637978807091713e-12" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+            <ocx:FreeEdgeCurve3D id="ID220" ocx:GUIDRef="{b2efc695-33bc-42b5-91fc-6af13db9e071}">
+              <ocx:CurveLength numericvalue="1999.9999999999836" unit="u2" />
+              <ocx:Line3D id="ID221">
+                <ocx:CurveLength numericvalue="1999.9999999999836" unit="u2" />
+                <ocx:StartPoint coordinates="60000 999.99999999998363 1000.0000000000036" unit="u2" />
+                <ocx:EndPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+              </ocx:Line3D>
+            </ocx:FreeEdgeCurve3D>
+          </ocx:LimitedBy>
+          <ocx:Offset numericvalue="0" unit="u2" />
+        </ocx:Plate>
+      </ocx:ComposedOf>
+      <ocx:OuterContour>
+        <ocx:NURBS3D id="ID222">
+          <ocx:CurveLength numericvalue="5999.9999999999709" unit="u2" />
+          <ocx:NURBSproperties degree="1" numCtrlPts="5" numKnots="7" isRational="false" />
+          <ocx:KnotVector value="0 0 1000 2999.9999999999854 3999.9999999999854 5999.9999999999709 5999.9999999999709 " />
+          <ocx:ControlPtList>
+            <ocx:ControlPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+            <ocx:ControlPoint coordinates="60000 -1000 3.637978807091713e-12" unit="u2" />
+            <ocx:ControlPoint coordinates="60000 999.99999999998545 3.637978807091713e-12" unit="u2" />
+            <ocx:ControlPoint coordinates="60000 999.99999999998545 1000.0000000000036" unit="u2" />
+            <ocx:ControlPoint coordinates="60000 -1000 1000.0000000000036" unit="u2" />
+          </ocx:ControlPtList>
+        </ocx:NURBS3D>
+      </ocx:OuterContour>
+      <ocx:StiffenedBy>
+        <ocx:Stiffener ocx:GUIDRef="{6124aa8c-135a-4ed0-9198-6e27079bb245}" id="ID223">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998984226" unit="u8" />
+            <ocx:CenterOfGravity coordinates="59830.415478089199 -8.6781823479591012 500" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID224">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID225">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="60000 0 1000" unit="u2" />
+                <ocx:EndPoint coordinates="60000 0 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="-1 -6.123233995736766e-17 0" />
+            <ocx:FlangeDirection direction="6.123233995736766e-17 -1 0" />
+            <ocx:Position coordinates="60000 0 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{f8f96a50-58c5-40f9-94e3-7201600d69db}" id="ID226">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998984226" unit="u8" />
+            <ocx:CenterOfGravity coordinates="59830.415478089199 291.32181765204092 500" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID227">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID228">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="60000 300 1000" unit="u2" />
+                <ocx:EndPoint coordinates="60000 300 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="-1 -6.123233995736766e-17 0" />
+            <ocx:FlangeDirection direction="6.123233995736766e-17 -1 0" />
+            <ocx:Position coordinates="60000 300 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{240c1d42-042e-49a3-818d-7f4fed8fec7f}" id="ID229">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998984226" unit="u8" />
+            <ocx:CenterOfGravity coordinates="59830.415478089199 591.32181765204086 500" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID230">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID231">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="60000 600 1000" unit="u2" />
+                <ocx:EndPoint coordinates="60000 600 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="-1 -6.123233995736766e-17 0" />
+            <ocx:FlangeDirection direction="6.123233995736766e-17 -1 0" />
+            <ocx:Position coordinates="60000 600 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{5d281f0e-d492-4034-b75c-0eda307b353d}" id="ID232">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998984226" unit="u8" />
+            <ocx:CenterOfGravity coordinates="59830.415478089199 -308.67818234797363 500" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID233">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID234">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="60000 -300 1000" unit="u2" />
+                <ocx:EndPoint coordinates="60000 -300 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="-1 -6.123233995736766e-17 0" />
+            <ocx:FlangeDirection direction="-6.123233995736766e-17 1 0" />
+            <ocx:Position coordinates="60000 -300 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{21aea06a-61ef-46ec-aa24-bcbbfd93433e}" id="ID235">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="20.142418998984226" unit="u8" />
+            <ocx:CenterOfGravity coordinates="59830.415478089199 -608.67818234795914 500" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID236">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID237">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="60000 -600 1000" unit="u2" />
+                <ocx:EndPoint coordinates="60000 -600 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" localRef="ID245" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="-1 -6.123233995736766e-17 0" />
+            <ocx:FlangeDirection direction="-6.123233995736766e-17 1 0" />
+            <ocx:Position coordinates="60000 -600 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+        <ocx:Stiffener ocx:GUIDRef="{7b56ecf0-f4ac-49ee-b4eb-2f6701bd5ee2}" id="ID238">
+          <ocx:PhysicalProperties>
+            <ocx:DryWeight numericvalue="7.8499999999997474" unit="u8" />
+            <ocx:CenterOfGravity coordinates="60050 95 500.00000000001609" unit="u2" />
+          </ocx:PhysicalProperties>
+          <ocx:TraceLine>
+            <ocx:CompositeCurve3D id="ID239">
+              <ocx:CurveLength numericvalue="1000" unit="u2" />
+              <ocx:Line3D id="ID240">
+                <ocx:CurveLength numericvalue="1000" unit="u2" />
+                <ocx:StartPoint coordinates="60000 100 1000" unit="u2" />
+                <ocx:EndPoint coordinates="60000 100 0" unit="u2" />
+              </ocx:Line3D>
+            </ocx:CompositeCurve3D>
+          </ocx:TraceLine>
+          <ocx:MaterialRef ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" localRef="ID243" ocx:refType="ocx:Material" />
+          <ocx:SectionRef ocx:GUIDRef="{d1594d41-2c4e-4216-ba1c-7fb43e4bac00}" localRef="ID246" ocx:refType="ocx:BarSection">
+            <ocx:OffsetU numericvalue="0" unit="u2" />
+            <ocx:OffsetV numericvalue="0" unit="u2" />
+          </ocx:SectionRef>
+          <ocx:Inclination>
+            <ocx:WebDirection direction="1 -6.123233995736766e-17 0" />
+            <ocx:FlangeDirection direction="-6.123233995736766e-17 -1 0" />
+            <ocx:Position coordinates="60000 100 1000" unit="u2" />
+          </ocx:Inclination>
+        </ocx:Stiffener>
+      </ocx:StiffenedBy>
+    </ocx:Panel>
+  </ocx:Vessel>
+  <ocx:ClassCatalogue id="ID241">
+    <ocx:MaterialCatalogue id="ID242">
+      <ocx:Description />
+      <ocx:Material id="ID243" ocx:GUIDRef="{aec55a5d-e9a5-456f-9b6a-15f7e8483d29}" ocx:grade="A" name="GradeA">
+        <ocx:Density numericvalue="7850" unit="u7" />
+        <ocx:YoungsModulus numericvalue="210000" unit="u4" />
+        <ocx:PoissonRatio numericvalue="0.29999999999999999" unit="u6" />
+        <ocx:YieldStress numericvalue="207" unit="u4" />
+        <ocx:UltimateStress numericvalue="331" unit="u4" />
+      </ocx:Material>
+    </ocx:MaterialCatalogue>
+    <ocx:XSectionCatalogue id="ID244" name="Undefined">
+      <ocx:BarSection ocx:GUIDRef="{e1f20dc5-c356-4afb-bd92-fdf2b13e33f8}" id="ID245" name="BulbFlat200X10">
+        <ocx:BulbFlat>
+          <ocx:Height numericvalue="200" unit="u2" />
+          <ocx:WebThickness numericvalue="10" unit="u2" />
+        </ocx:BulbFlat>
+      </ocx:BarSection>
+      <ocx:BarSection ocx:GUIDRef="{d1594d41-2c4e-4216-ba1c-7fb43e4bac00}" id="ID246" name="FlatBar100X10">
+        <ocx:FlatBar>
+          <ocx:Height numericvalue="100" unit="u2" />
+          <ocx:Width numericvalue="10" unit="u2" />
+        </ocx:FlatBar>
+      </ocx:BarSection>
+    </ocx:XSectionCatalogue>
+  </ocx:ClassCatalogue>
+  <unitsml:UnitsML xmlns:unitsml="urn:oasis:names:tc:unitsml:schema:xsd:UnitsMLSchema_lite-0.9.18">
+    <unitsml:UnitSet>
+      <unitsml:Unit xml:id="u1" dimensionURL="ID1">
+        <unitsml:UnitName xml:lang="en-us">meter</unitsml:UnitName>
+        <unitsml:UnitSymbol type="m" />
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u2" dimensionURL="ID2">
+        <unitsml:UnitName xml:lang="en-us">millimeter</unitsml:UnitName>
+        <unitsml:UnitSymbol type="mm" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="meter" prefix="m" powerNumerator="1" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u3" dimensionURL="ID3">
+        <unitsml:UnitName xml:lang="en-us">knot</unitsml:UnitName>
+        <unitsml:UnitSymbol type="kn" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="knot" powerNumerator="1" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u4" dimensionURL="ID4">
+        <unitsml:UnitName xml:lang="en-us">megapascal</unitsml:UnitName>
+        <unitsml:UnitSymbol type="MPa" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="pascal" prefix="M" powerNumerator="1" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u5" dimensionURL="ID5">
+        <unitsml:UnitName xml:lang="en-us">area</unitsml:UnitName>
+        <unitsml:UnitSymbol type="A" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="2" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u6" dimensionURL="ID6">
+        <unitsml:UnitName xml:lang="en-us">nondimensional</unitsml:UnitName>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u7" dimensionURL="ID7">
+        <unitsml:UnitName xml:lang="en-us">kilo gram per cubic meter</unitsml:UnitName>
+        <unitsml:UnitSymbol type="kg/m3" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="gram" prefix="k" powerNumerator="1" />
+          <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="-3" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u8" dimensionURL="ID8">
+        <unitsml:UnitName xml:lang="en-us">kg</unitsml:UnitName>
+        <unitsml:UnitSymbol type="kg" />
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u9" dimensionURL="ID9">
+        <unitsml:UnitName xml:lang="en-us">angle</unitsml:UnitName>
+        <unitsml:UnitSymbol type="rad" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="radian" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+      <unitsml:Unit xml:id="u10" dimensionURL="ID10">
+        <unitsml:UnitName xml:lang="en-us">volume</unitsml:UnitName>
+        <unitsml:UnitSymbol type="m3" />
+        <unitsml:RootUnits>
+          <unitsml:EnumeratedRootUnit unit="meter" powerNumerator="3" />
+        </unitsml:RootUnits>
+      </unitsml:Unit>
+    </unitsml:UnitSet>
+    <unitsml:DimensionSet>
+      <unitsml:Dimension xml:id="ID_F" dimensionless="false">
+        <unitsml:Length symbol="L" powerNumerator="1" />
+        <unitsml:Mass symbol="M" powerNumerator="1" />
+        <unitsml:Time symbol="T" powerNumerator="1" />
+        <unitsml:ElectricCurrent symbol="I" powerNumerator="1" />
+        <unitsml:AmountOfSubstance symbol="N" powerNumerator="1" />
+        <unitsml:LuminousIntensity symbol="J" powerNumerator="1" />
+      </unitsml:Dimension>
+      <unitsml:Dimension xml:id="ID_T" dimensionless="true" />
+    </unitsml:DimensionSet>
+  </unitsml:UnitsML>
+</ocx:ocxXML>

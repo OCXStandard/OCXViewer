@@ -34,7 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-import org.ocx_schema.v310rc3.*;
+import org.ocx_schema.v310.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -246,7 +246,7 @@ public class MaterialsPage extends AbstractDataViewPage implements Page {
         gridPane.add(ultimateStressGroup, 3,row);
 
         // Add listener to the table
-        table.getSelectionModel().selectedItemProperty().addListener((_, oldMaterial, selectedMaterial) -> updateMaterial(oldMaterial, selectedMaterial));
+        table.getSelectionModel().selectedItemProperty().addListener((material, oldMaterial, selectedMaterial) -> updateMaterial(oldMaterial, selectedMaterial));
 
     }
 

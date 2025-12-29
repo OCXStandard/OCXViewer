@@ -34,9 +34,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jvnet.basicjaxb.lang.Bound;
 import org.jvnet.basicjaxb.lang.StringUtils;
-import org.ocx_schema.v310rc3.Point3DT;
-import org.ocx_schema.v310rc3.QuantityT;
-import org.ocx_schema.v310rc3.Vector3DT;
+import org.ocx_schema.v310.Point3DT;
+import org.ocx_schema.v310.QuantityT;
+import org.ocx_schema.v310.Vector3DT;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DecimalFormat;
@@ -247,7 +247,7 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
         var valueField = new TextField();
         valueField.setAlignment(Pos.CENTER_RIGHT);
         var unitField = new TextField();
-        unitField.setPrefWidth(80);
+        unitField.setPrefWidth(120);
         var group = new atlantafx.base.layout.InputGroup(valueField, unitField);
 
         if (quantity == null) {
@@ -259,8 +259,10 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
             valueField.setStyle("-fx-background-color: -color-bg-default;");
 
             var unit="unset";
+            var longUnit = "";
             if ( quantity.getUnit() instanceof  Unit unit1) {
-                unit = unit1.getUnitNames().getFirst().getValue();
+                unit = unit1.getUnitSymbols().getFirst().getType();
+                longUnit = unit1.getUnitNames().getFirst().getValue();
             }
 
             LOG.debug("binding quantity {} {}", quantity.getNumericvalue(), quantity.getUnit());
@@ -275,6 +277,7 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
             }
 
             unitField.setText("[" + unit+ "]");
+            unitField.setTooltip(new Tooltip(longUnit));
 
 
 

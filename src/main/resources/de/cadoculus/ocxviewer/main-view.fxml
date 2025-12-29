@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SeparatorMenuItem?>
+<?import de.cadoculus.ocxviewer.views.LogoPage?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <BorderPane fx:id="mainBorderPane"
             maxHeight="2000" maxWidth="2000"
             minHeight="600" minWidth="800"
             prefHeight="1024.0" prefWidth="1400"
-            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.cadoculus.ocxviewer.MainController">
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.cadoculus.ocxviewer.MainController">
 
 
 
@@ -44,6 +38,10 @@
             </menus>
         </MenuBar>
     </top>
+
+    <center>
+        <LogoPage fx:id="logoPage" />
+    </center>
 
 
 </BorderPane>

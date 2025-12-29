@@ -15,7 +15,7 @@
  */
 package de.cadoculus.ocxviewer.event;
 
-import org.ocx_schema.v310rc3.OcxXMLT;
+import org.ocx_schema.v310.OcxXMLT;
 
 import java.io.File;
 
