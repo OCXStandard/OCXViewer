@@ -30,6 +30,7 @@ module ocxviewer {
     requires atlantafx.base;
     requires javafx.graphics;
     requires org.apache.logging.log4j;
+    requires javafx.controls;
 
     exports de.cadoculus.ocxviewer;
     opens de.cadoculus.ocxviewer;

@@ -21,10 +21,7 @@ import de.cadoculus.ocxviewer.actions.AboutAction;
 import de.cadoculus.ocxviewer.actions.ExitAction;
 import de.cadoculus.ocxviewer.actions.OpenAction;
 import de.cadoculus.ocxviewer.actions.ThreeDAction;
-import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.HotkeyEvent;
-import de.cadoculus.ocxviewer.event.NavigationEvent;
-import de.cadoculus.ocxviewer.event.OpenEvent;
+import de.cadoculus.ocxviewer.event.*;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.views.*;
 import javafx.animation.Interpolator;
@@ -35,6 +32,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.GaussianBlur;
@@ -91,15 +89,21 @@ public class MainController {
         // register for navigation
         DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> initializeViews());
 
-        // and create default pages
-        logoPage.setRepaint(logoPage.getRepaint());
-
 
         // This is initialized here to start collecting log events when the user opens a file
         final LogPage logPage = new LogPage();
         class2page.put(LogPage.class, logPage);
 
         LOG.info("pages {}", class2page.keySet());
+
+
+        DefaultEventBus.getInstance().subscribe(ThemeEvent.class, e -> {
+            var eventType = e.getEventType();
+
+            if (eventType == ThemeEvent.EventType.THEME_CHANGE ) {
+                updateColorInfo(Duration.seconds(1));
+            }
+        });
 
 
     }
@@ -295,31 +299,45 @@ public class MainController {
 
     private void go(boolean dark) {
 
+        String css = "";
         if (dark) {
             Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
-
-            WorkingContext.getInstance().getMainScene().getStylesheets().clear();
-            var css = this.getClass().getResource("dark.css").toExternalForm();
-            WorkingContext.getInstance().getMainScene().getStylesheets().add(css);
-            LOG.debug("css  dark {}", css);
-
+            css = this.getClass().getResource("dark.css").toExternalForm();
         } else {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
-
-
-            WorkingContext.getInstance().getMainScene().getStylesheets().clear();
-            var css = this.getClass().getResource("light.css").toExternalForm();
-            WorkingContext.getInstance().getMainScene().getStylesheets().add(css);
-            LOG.debug("css light {}", css);
-
-
+            css = this.getClass().getResource("light.css").toExternalForm();
         }
 
+        // Todo: do we need this?
+        WorkingContext.getInstance().getMainScene().getStylesheets().clear();
+        WorkingContext.getInstance().getMainScene().getStylesheets().add(css);
         WorkingContext.getInstance().darkModeProperty().set(dark);
+
+        var event = new ThemeEvent(ThemeEvent.EventType.THEME_CHANGE);
+        DefaultEventBus.getInstance().publish(event);
     }
 
     public void open3DView(ActionEvent actionEvent) {
         var hke = new HotkeyEvent(ThreeDAction.KEYS);
         DefaultEventBus.getInstance().publish(hke);
+    }
+
+    // TODO: fail to load arbitrary color from css variables, investigate later
+    private void updateColorInfo(Duration delay) {
+        var t = new Timeline(new KeyFrame(delay));
+        t.setOnFinished(e -> {
+            var colorTest = new Label("nothing to see here");
+            colorTest.setStyle("-fx-text-fill:-color-accent-8;");
+            mainBorderPane.setLeft(colorTest);
+            //LOG.info("-color-accent-8 {}" , colorTest.getTextFill());
+
+            mainBorderPane.setLeft(null);
+            colorTest = new Label("nothing to see here");
+            colorTest.setStyle("-fx-text-fill:-color-base-3;");
+            //LOG.info("-color-accent-8 {}" , colorTest.getTextFill());
+
+           mainBorderPane.setLeft(null);
+        });
+        t.play();
     }
 }

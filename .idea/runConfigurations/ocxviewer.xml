@@ -4,7 +4,7 @@
     <option name="MAIN_CLASS_NAME" value="de.cadoculus.ocxviewer.Main" />
     <module name="ocxviewer" />
     <option name="PROGRAM_PARAMETERS" value="--log data/log4j2.xml" />
-    <option name="VM_PARAMETERS" value="-XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders --enable-native-access=javafx.graphics -Dweglog4j2.debug=true --module-path $PROJECT_DIR$/binaries/javafx-sdk-24/lib:target:target/lib --add-modules javafx.controls,javafx.graphics,javafx.fxml,ocxviewer" />
+    <option name="VM_PARAMETERS" value="--enable-native-access=javafx.graphics -Dweglog4j2.debug=true --module-path $USER_HOME$/javafx-sdk-21.0.9/lib;target;target/lib --add-modules javafx.controls,javafx.graphics,javafx.fxml,ocxviewer" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
