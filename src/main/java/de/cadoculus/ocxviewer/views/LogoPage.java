@@ -15,23 +15,31 @@
  */
 package de.cadoculus.ocxviewer.views;
 
-import de.cadoculus.ocxviewer.Main;
+import de.cadoculus.ocxviewer.MainController;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.WindowEvent;
+import de.cadoculus.ocxviewer.event.ThemeEvent;
+import de.cadoculus.ocxviewer.models.WorkingContext;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Random;
 import java.util.function.Consumer;
 import javafx.scene.text.Text;
 /*
@@ -41,94 +49,145 @@ import javafx.scene.text.Text;
 public class LogoPage extends Region {
     private static final Logger LOG = LogManager.getLogger(LogoPage.class);
     private final Canvas canvas;
-    private Image background = null;
-    private double imgW, imgH;
-    private Consumer<Canvas> repaint ;
+    private double[] widths;
+    private Font thinFont;
+    private Font boldFont;
+    private final Consumer<Canvas> repaint ;
+    private final String[] txts=new String[] {" OCX ", "Viewer ", "Version " , "0.1 " };
+    private double height =36;
+    private final DoubleProperty startX = new SimpleDoubleProperty();
+    private double  dy = 1.1*height;
+    private double y=dy;
+    private final Random random = new Random();
+    private int boldIdx = random.nextInt(0,10);
+    private int numText = 10;
 
     public LogoPage() {
         super();
 
-       // this.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
         canvas = new Canvas();
         getChildren().add(canvas);
-        repaint = c -> drawShapes() ;
+
+        repaint = c -> paint() ;
 
         try {
-            background = new Image(LogoPage.class.getResource("logo.png").toString());
-            imgW = background.getWidth();
-            imgH =background.getHeight();
+            InputStream fontStream = MainController.class.getResourceAsStream("fonts/Doto-Thin.ttf");
+            if (fontStream == null) {
+                LOG.error("Could not create font");
+                thinFont = new Font("Arial", 36);
+            } else {
+                thinFont = Font.loadFont(fontStream, 36);
+                fontStream.close();
+            }
+            fontStream = MainController.class.getResourceAsStream("fonts/Doto-ExtraBold.ttf");
+            if (fontStream == null) {
+                LOG.error("Could not create font");
+                boldFont = Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 36);
+            } else {
+                boldFont = Font.loadFont(fontStream, 36);
+                fontStream.close();
+            }
+
+            widths  = Arrays.stream(txts).mapToDouble( t -> {
+                Text text = new Text(t);
+                text.setFont(thinFont);
+
+                Bounds layoutBounds = text.getLayoutBounds();
+                return layoutBounds.getWidth();
+            }).toArray();
+            double startX = -1*Arrays.stream(widths).sum();
+            double endX = 1;
+
+
+            KeyValue startKeyValue = new KeyValue(this.startX,startX);
+            KeyValue endKeyValue = new KeyValue(this.startX,endX);
+            KeyFrame startFrame = new KeyFrame(Duration.ZERO, startKeyValue);
+            KeyFrame endFrame = new KeyFrame(Duration.seconds(10), endKeyValue);
+            Timeline timeline = new Timeline(startFrame, endFrame);
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+
+            this.startX.addListener((obs, oldVal, newVal) -> {
+                layoutChildren();
+            });
+
         } catch (Exception e) {
-            LOG.error("Could not load logo.png", e);
+            LOG.error("Could not load font", e);
+            thinFont = new Font("Arial", 36);
         }
 
-        /*
-        this.heightProperty().addListener(observable -> layoutChildren());
-        this.widthProperty().addListener(observable -> layoutChildren());
 
-        DefaultEventBus.getInstance().subscribe(WindowEvent.class, new Consumer<WindowEvent>() {
-            @Override
-            public void accept(WindowEvent windowEvent) {
-                LOG.error(windowEvent.toString());
-                layoutChildren();
-            }
-        });
-*/
     }
+
+
 
     @Override
     protected void layoutChildren() {
-        LOG.info("layoutChildren {}x{}", this.getWidth(), this.getHeight());
+
         super.layoutChildren();
         double width = getWidth();
         canvas.setWidth(width);
         double height = getHeight();
         canvas.setHeight(height);
         repaint.accept(canvas);
-        //drawShapes(canvas.getGraphicsContext2D());
     }
 
-    public Consumer<Canvas> getRepaint() {
-        return repaint;
-    }
 
-    public void setRepaint(Consumer<Canvas> repaint) {
-        this.repaint = repaint ;
-    }
-
-    private void drawShapes() {
-
+    private void paint() {
+        double x = startX.doubleValue();
+        y = dy;
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        LOG.info("drawShapes {}x{}", canvas.getWidth(), canvas.getHeight());
+        if (WorkingContext.getInstance().darkModeProperty().get()) {
+            gc.setFill( Color.web("#ECEFF4")); // --color-fg-default from nord-dark
+        } else {
+            gc.setFill( Color.web("#2E3440")); // --color-fg-default from nord-light
+        }
+
+
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        gc.strokeLine(0,0, canvas.getWidth(), canvas.getHeight());
+        int idx = 0;
+        OUTER:while( true) {
+            INNER:while ( true) {
+                var txtIdx = idx/txts.length;
+                if ( txtIdx== boldIdx){
+                    gc.setFont(boldFont);
+                    if (WorkingContext.getInstance().darkModeProperty().get()) {
+                        gc.setFill( Color.web("#5E81AC")); // --color-fg-default from nord-dark -color-accent-5: #5E81AC;
+                    } else {
+                        gc.setFill( Color.web("#5E81AC")); // --color-fg-default from nord-light -color-accent-5: #5E81AC;
+                    }
+                } else {
+                    gc.setFont(thinFont);
+                    if (WorkingContext.getInstance().darkModeProperty().get()) {
+                        gc.setFill( Color.web("#ECEFF4")); // --color-fg-default from nord-dark
+                    } else {
+                        gc.setFill( Color.web("#2E3440")); // --color-fg-default from nord-light
+                    }
+                }
 
-        var txt="OCXViewer";
-        var font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20);
-        Text text = new Text(txt);
-        text.setFont(font);
-        var textWidth = text.getLayoutBounds().getWidth();
-        var textHeight = text.getLayoutBounds().getHeight();
-        var x = 10.0;
-        var y = canvas.getHeight() - textHeight-25;
-        gc.setFont(font );
-        gc.fillText(txt, x, y);
+                var txt = txts[idx % txts.length];
+                var w = widths[idx % txts.length];
+                gc.fillText(txt, x, y);
 
-        if ( background !=null) {
-            var cnvsW = canvas.getWidth();
-            var cnvsH =canvas.getHeight();
+                x+=w;
 
-            var scaleX = Math.min(1, cnvsW/imgW);
-            var scaleY = Math.min(1, cnvsH/imgH);
-            var scale = Math.min(scaleX, scaleY);
-
-            var imgWS = imgW*scale;
-            var imgHS = imgH*scale;
-
-            var ix = canvas.getWidth()-imgWS-10;
-            var iy = canvas.getHeight()-imgHS-25;
-            gc.drawImage(background, ix, iy, imgWS, imgHS);
-        };
+                if ( x> canvas.getWidth()) {
+                    x = -w + (x-canvas.getWidth() );
+                    if ( txtIdx==boldIdx) {
+                        boldIdx = random.nextInt(2,numText-2);
+                    }
+                    break INNER;
+                } else {
+                    idx++;
+                }
+            }
+            y+=dy;
+            if ( y > (canvas.getHeight()+dy)) {
+                numText = idx/txts.length;
+                break OUTER;
+            }
+        }
     }
 }
