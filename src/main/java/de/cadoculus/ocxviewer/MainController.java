@@ -17,10 +17,7 @@ package de.cadoculus.ocxviewer;
 
 import atlantafx.base.theme.CupertinoDark;
 import atlantafx.base.theme.CupertinoLight;
-import de.cadoculus.ocxviewer.actions.AboutAction;
-import de.cadoculus.ocxviewer.actions.ExitAction;
-import de.cadoculus.ocxviewer.actions.OpenAction;
-import de.cadoculus.ocxviewer.actions.ThreeDAction;
+import de.cadoculus.ocxviewer.actions.*;
 import de.cadoculus.ocxviewer.event.*;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.views.*;
@@ -60,7 +57,6 @@ public class MainController {
     @FXML
     public LogoPage logoPage;
 
-
     private boolean viewInitialized = false;
 
     private final HashMap<Class, Page> class2page = new HashMap<>();
@@ -97,13 +93,13 @@ public class MainController {
         LOG.info("pages {}", class2page.keySet());
 
 
-        DefaultEventBus.getInstance().subscribe(ThemeEvent.class, e -> {
-            var eventType = e.getEventType();
-
-            if (eventType == ThemeEvent.EventType.THEME_CHANGE ) {
-                updateColorInfo(Duration.seconds(1));
-            }
-        });
+//        DefaultEventBus.getInstance().subscribe(ThemeEvent.class, e -> {
+//            var eventType = e.getEventType();
+//
+//            if (eventType == ThemeEvent.EventType.THEME_CHANGE ) {
+//                updateColorInfo(Duration.seconds(1));
+//            }
+//        });
 
 
     }
@@ -276,6 +272,11 @@ public class MainController {
 
 
     // The actions from the menu bar, all directed to the event bus
+    public void help(ActionEvent actionEvent) {
+        var hke = new HotkeyEvent(HelpAction.KEYS);
+        DefaultEventBus.getInstance().publish(hke);
+    }
+
     public void about(ActionEvent actionEvent) {
         var hke = new HotkeyEvent(AboutAction.KEYS);
         DefaultEventBus.getInstance().publish(hke);
@@ -288,6 +289,12 @@ public class MainController {
 
     public void open(ActionEvent actionEvent) {
         var hke = new HotkeyEvent(OpenAction.KEYS);
+        DefaultEventBus.getInstance().publish(hke);
+    }
+
+
+    public void open3DView(ActionEvent actionEvent) {
+        var hke = new HotkeyEvent(ThreeDAction.KEYS);
         DefaultEventBus.getInstance().publish(hke);
     }
 
@@ -317,27 +324,26 @@ public class MainController {
         DefaultEventBus.getInstance().publish(event);
     }
 
-    public void open3DView(ActionEvent actionEvent) {
-        var hke = new HotkeyEvent(ThreeDAction.KEYS);
-        DefaultEventBus.getInstance().publish(hke);
-    }
 
-    // TODO: fail to load arbitrary color from css variables, investigate later
-    private void updateColorInfo(Duration delay) {
-        var t = new Timeline(new KeyFrame(delay));
-        t.setOnFinished(e -> {
-            var colorTest = new Label("nothing to see here");
-            colorTest.setStyle("-fx-text-fill:-color-accent-8;");
-            mainBorderPane.setLeft(colorTest);
-            //LOG.info("-color-accent-8 {}" , colorTest.getTextFill());
 
-            mainBorderPane.setLeft(null);
-            colorTest = new Label("nothing to see here");
-            colorTest.setStyle("-fx-text-fill:-color-base-3;");
-            //LOG.info("-color-accent-8 {}" , colorTest.getTextFill());
+//    // TODO: fail to load arbitrary color from css variables, investigate later
+//    private void updateColorInfo(Duration delay) {
+//        var t = new Timeline(new KeyFrame(delay));
+//        t.setOnFinished(e -> {
+//            var colorTest = new Label("nothing to see here");
+//            colorTest.setStyle("-fx-text-fill:-color-accent-8;");
+//            mainBorderPane.setLeft(colorTest);
+//            //LOG.info("-color-accent-8 {}" , colorTest.getTextFill());
+//
+//            mainBorderPane.setLeft(null);
+//            colorTest = new Label("nothing to see here");
+//            colorTest.setStyle("-fx-text-fill:-color-base-3;");
+//            //LOG.info("-color-accent-8 {}" , colorTest.getTextFill());
+//
+//           mainBorderPane.setLeft(null);
+//        });
+//        t.play();
+//    }
 
-           mainBorderPane.setLeft(null);
-        });
-        t.play();
-    }
+
 }

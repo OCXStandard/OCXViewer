@@ -60,3 +60,11 @@
     -fx-border-color: -color-base-7;
 }
 
+#helpBorderPane {
+    -fx-background-color: -color-bg-default;
+    -fx-padding: 5px;
+}
+
+.unitName {
+    -fx-padding: 5px;
+}

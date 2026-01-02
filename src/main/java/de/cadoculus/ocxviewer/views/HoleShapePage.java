@@ -489,11 +489,11 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
             exponent = 2;
         }
         if ( exponent <1 || exponent> 4) {
-            LOG.error("exponent {} out of range [1,4]", exponent);
+            LOG.error("powerNumerator {} out of range [1,4]", exponent);
             return;
         }
 
-        //The exponent of the super ellipse equation (x/Height)**e + (y/Width)**e = 1.
+        //The powerNumerator of the super ellipse equation (x/Height)**e + (y/Width)**e = 1.
         // If e=2.5 the result is a super ellipse while e=2.0 results in a normal ellipse.
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 200) / width;
@@ -585,10 +585,10 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX, centerY-0.25*b, centerX, centerY+0.25*b);
         gc.restore();
 
-        // exponent
+        // powerNumerator
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("exponent %.2f", exponent), 120,120);
+        gc.fillText(String.format("powerNumerator %.2f", exponent), 120,120);
 
         // and the center
         gc.save();

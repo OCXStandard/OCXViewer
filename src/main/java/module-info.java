@@ -31,6 +31,9 @@ module ocxviewer {
     requires javafx.graphics;
     requires org.apache.logging.log4j;
     requires javafx.controls;
+    requires javafx.base;
+
+
 
     exports de.cadoculus.ocxviewer;
     opens de.cadoculus.ocxviewer;

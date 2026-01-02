@@ -30,6 +30,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 import oasis.unitsml.Unit;
+import oasis.unitsml.UnitName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jvnet.basicjaxb.lang.Bound;
@@ -48,6 +49,7 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * The base class for data views
@@ -216,10 +218,29 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
                 valueField.setStyle("-fx-background-color: -color-danger-1;");
             }
         } else {
-
             var unit="unset";
+
             if ( quantity.getUnit() instanceof  Unit unit1) {
-                unit = unit1.getUnitNames().getFirst().getValue();
+
+
+                while(true) {
+
+
+                    if (unit1.getUnitSymbols() != null && unit1.getUnitSymbols().getFirst() != null) {
+                        unit = unit1.getUnitSymbols().getFirst().getType();
+                        break;
+                    }
+                    if (unit1.getUnitNames() != null) {
+                        var unitNameO = unit1.getUnitNames().stream().filter(u ->
+                                "en".equalsIgnoreCase(u.getLang())).findFirst();
+                        if (unitNameO.isPresent()) {
+                            unit = unitNameO.get().getValue();
+                            break;
+                        }
+                    }
+                    unit = unit1.getId();
+                    break;
+                }
             }
 
             try {
