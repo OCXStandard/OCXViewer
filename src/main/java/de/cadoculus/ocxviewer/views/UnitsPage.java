@@ -29,10 +29,7 @@ import javafx.geometry.HPos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import oasis.unitsml.Unit;
 import oasis.unitsml.UnitName;
 import oasis.unitsml.UnitSet;
@@ -54,7 +51,7 @@ public class UnitsPage extends AbstractDataViewPage{
 
     private final TableView<UnitRecord> table;
     private final TextField unitId = new TextField();
-    private final HBox unitNames = new HBox();
+    private final FlowPane unitNames = new FlowPane();
     private final TextField unitSymbols = new TextField();
     private final TextField rootUnits = new TextField();
     private final TextField unitDimensions = new TextField();
@@ -95,6 +92,7 @@ public class UnitsPage extends AbstractDataViewPage{
                 if ( image != null) {
                     label = new Label( name.getValue());
                     label.setGraphic(new ImageView(image));
+                    label.getStyleClass().add("unitName");
                 } else {
                     label = new Label(name.getLang() + " : " + name.getValue());
                 }
@@ -115,8 +113,20 @@ public class UnitsPage extends AbstractDataViewPage{
 
         createTitle("Information about the used unitRecords.");
 
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
+        this.setCenter(scrollPane);
+
         GridPane gridPane = new GridPane();
-        setCenter(gridPane);
+        gridPane.setGridLinesVisible(false);
+        gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 10;");
+
+        scrollPane.setContent(gridPane);
+
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);

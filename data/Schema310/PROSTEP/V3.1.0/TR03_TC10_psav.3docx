@@ -3739,7 +3739,7 @@
         <unitsML:UnitName xml:lang="es">grados</unitsML:UnitName>
         <unitsML:UnitName xml:lang="it">gradi</unitsML:UnitName>
         <unitsML:UnitName xml:lang="nl">graden</unitsML:UnitName>
-        <unitsML:UnitName xml:lang="da">grader</unitsML:UnitName>
+        <unitsML:UnitName xml:lang="dk">grader</unitsML:UnitName>
         <unitsML:UnitName xml:lang="sv">grader</unitsML:UnitName>
         <unitsML:UnitName xml:lang="no">grader</unitsML:UnitName>
         <unitsML:UnitName xml:lang="fi">asteet</unitsML:UnitName>
@@ -3776,7 +3776,7 @@
         <unitsML:UnitName xml:lang="no">millimeter</unitsML:UnitName>
         <unitsML:UnitName xml:lang="fi">millimetri</unitsML:UnitName>
         <unitsML:UnitName xml:lang="pl">milimetry</unitsML:UnitName>
-        <unitsML:UnitName xml:lang="cs">milimetry</unitsML:UnitName>
+        <unitsML:UnitName xml:lang="cz">milimetry</unitsML:UnitName>
         <unitsML:UnitName xml:lang="hu">milliméterek</unitsML:UnitName>
         <unitsML:UnitName xml:lang="ro">milimetri</unitsML:UnitName>
         <unitsML:UnitName xml:lang="tr">milimetreler</unitsML:UnitName>

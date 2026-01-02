@@ -25,6 +25,7 @@
 
     <Loggers>
 
+        <Logger name="de.cadoculus.ocxviewer.models.FlagsEnum" level="debug"/>
 
         <Logger name="de.cadoculus.ocxviewer.views" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.views.HeaderPage" level="info"/>

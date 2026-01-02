@@ -15,9 +15,14 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.actions;
 
+import de.cadoculus.ocxviewer.models.WorkingContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignI;
 
 /**
  * The About action
@@ -30,6 +35,13 @@ public class AboutAction extends  AbstractAction {
     //TODO: implement showing a dialogue with version information
     @Override
     public void run() {
-        System.out.println("About");
+        var infoBtn = new Button("Info", new FontIcon(MaterialDesignI.INBOX));
+            var alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("TODO: add version from POM and GIT");
+            alert.initOwner(WorkingContext.getInstance().getMainScene().getWindow());
+            alert.showAndWait();
+
     }
 }
