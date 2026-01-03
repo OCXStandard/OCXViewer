@@ -74,8 +74,6 @@ public class TolerancesPage extends AbstractDataViewPage {
 
         int row = 0;
 
-
-
         if (WorkingContext.getInstance().getVessel().getAngleTolerance() == null) {
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
@@ -116,16 +114,16 @@ public class TolerancesPage extends AbstractDataViewPage {
         gridPane.add(label, 0, ++row);
 
         var group2 = createAndBind(WorkingContext.getInstance().getVessel().getDistanceTolerance(), true);
-        gridPane.add(group2, 1, row);
+        gridPane.add(group2, 1, row++);
 
 
         // ocx:FreeboardLength
         label = new Label("Angle Tolerance");
         label.setTooltip(new Tooltip("Absolute angular tolerance measure used by the exporting application when defining geometry."));
-        gridPane.add(label, 2, row);
+        gridPane.add(label, 0, row);
 
         group2 = createAndBind(WorkingContext.getInstance().getVessel().getAngleTolerance(), true);
-        gridPane.add(group2, 3, row);
+        gridPane.add(group2, 1, row);
 
 
 

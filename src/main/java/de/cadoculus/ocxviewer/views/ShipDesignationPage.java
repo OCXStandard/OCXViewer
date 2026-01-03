@@ -32,7 +32,7 @@ public class ShipDesignationPage extends AbstractDataViewPage{
 
         var warning = new atlantafx.base.controls.Message(
                 "Warning",
-                "No implemented yet",
+                "Not implemented yet",
                 new FontIcon(MaterialDesignA.ALERT)
         );
         warning.getStyleClass().add(Styles.WARNING);
