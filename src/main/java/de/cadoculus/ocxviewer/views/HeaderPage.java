@@ -74,8 +74,21 @@ public class HeaderPage extends AbstractDataViewPage implements Page {
 
 
         int row = 0;
-        // Newbuilding Society
-        var label = new Label("File Identification");
+
+        var label = new Label("OCX Schema");
+        label.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(label, 0, row++, 2, 1);
+        GridPane.setHalignment(label, HPos.LEFT);
+
+        label = new Label("Schema");
+        label.setTooltip(new Tooltip("The OCX Schema version referenced in the XML header."));
+        gridPane.add(label, 0, row);
+        var textField = new TextField();
+        textField.setText( WorkingContext.getInstance().getTargetNamespace());
+        gridPane.add(textField, 1, row++, 3, 1);
+
+
+        label = new Label("File Identification");
         label.getStyleClass().add(Styles.TITLE_4);
         gridPane.add(label, 0, row++, 2, 1);
         GridPane.setHalignment(label, HPos.LEFT);
@@ -83,7 +96,7 @@ public class HeaderPage extends AbstractDataViewPage implements Page {
         label = new Label("Author");
         label.setTooltip(new Tooltip("Name of the XML instance."));
         gridPane.add(label, 0, row);
-        var textField = new TextField();
+        textField = new TextField();
         bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "author", String.class);
         gridPane.add(textField, 1, row);
 
