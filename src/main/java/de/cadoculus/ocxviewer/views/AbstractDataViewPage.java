@@ -53,6 +53,7 @@ import java.util.Locale;
 
 /**
  * The base class for data views
+ * @author Carsten Zerbst
  */
 abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.ocxviewer.views.Page {
 

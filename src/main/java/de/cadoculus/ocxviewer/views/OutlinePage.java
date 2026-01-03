@@ -45,6 +45,10 @@ import static atlantafx.base.util.BBCodeParser.createFormattedText;
 import static javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED;
 import static javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER;
 
+/**
+ * Abstract base class for pages that include an outline (table of contents).
+ * @author Carsten Zerbst
+ */
 public abstract class OutlinePage extends StackPane implements Page {
 
     protected static final int OUTLINE_WIDTH = 200;

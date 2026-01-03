@@ -26,6 +26,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.ColumnConstraints;
@@ -38,16 +39,18 @@ import org.ocx_schema.v310.CoordinateSystem;
 import org.ocx_schema.v310.SurfaceCollection;
 import org.ocx_schema.v310.SurfaceT;
 
+import java.awt.*;
+
 /**
- * This class displays the reference surfaces contained in the OCX file
+ * This class displays the reference surfaces contained in the OCX file.
+ * @author Carsten Zerbst
  */
 public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page {
     public static final String NAME = "Reference Surfaces";
     private static final Logger LOG = LogManager.getLogger(ReferenceSurfacesPage.class);
 
     private final TableView<SurfaceRecord> table;
-    private final GridPane gridPane;
-    private final Label barLabel = new Label();
+
     private final ObjectProperty<SurfaceRecord> selectedObject = new SimpleObjectProperty<>();
 
     public ReferenceSurfacesPage() {
@@ -55,7 +58,16 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
 
         createTitle("Information about the contained coordinate systems.");
 
-        gridPane = new GridPane();
+
+        ScrollPane scrollPane = new ScrollPane();
+        this.setCenter(scrollPane);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
+        GridPane gridPane = new GridPane();
+        scrollPane.setContent(gridPane);
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.LEFT);
@@ -65,22 +77,11 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
 
         RowConstraints row1 = new RowConstraints();
         row1.setMinHeight(200);
-        row1.setVgrow(Priority.SOMETIMES);
+        row1.setVgrow(Priority.ALWAYS);
 
-        RowConstraints row2 = new RowConstraints();
-        row1.setVgrow(Priority.NEVER);
-
-        RowConstraints row3 = new RowConstraints();
-        row3.setFillHeight(true);
-        row3.setVgrow(Priority.ALWAYS);
-        row3.setMinHeight(300);
-        row3.setVgrow(Priority.ALWAYS);
-
-        gridPane.getRowConstraints().addAll(row1, row2, row3);
+        gridPane.getRowConstraints().addAll(row1);
         //gridPane.setGridLinesVisible(true);
 
-        gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 0;");
-        this.setCenter(gridPane);
 
         //
         // Define the table
@@ -110,12 +111,12 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
 
         table.setMaxWidth(Double.MAX_VALUE);
         table.setMinHeight(150);
-        table.setMaxHeight(200);
+        table.setMaxHeight(600);
         int row = 0;
 
         gridPane.add(table, 0, row++);
-        gridPane.add(barLabel, 0, row++);
 
+        // now fill with content
         final var vessel = WorkingContext.getInstance().getVessel();
         if (vessel == null) {
             LOG.info("no vessel found");
@@ -146,7 +147,7 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
     @Override
     public void afterShow() {
 
-        table.getSelectionModel().selectFirst();
+       // table.getSelectionModel().selectFirst();
     }
 
    

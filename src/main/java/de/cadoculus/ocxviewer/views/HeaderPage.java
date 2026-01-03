@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 
 /**
  * Page to display the header information of the OCX file.
+ * @author Carsten Zerbst
  */
 public class HeaderPage extends AbstractDataViewPage implements Page {
 

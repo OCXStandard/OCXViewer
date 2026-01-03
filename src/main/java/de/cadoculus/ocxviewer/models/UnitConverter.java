@@ -20,6 +20,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.QuantityT;
 
+/**
+ * A utility class for converting units.
+ * @author Carsten Zerbst
+ */
 public class UnitConverter {
     private static final Logger LOG = LogManager.getLogger(UnitConverter.class);
 

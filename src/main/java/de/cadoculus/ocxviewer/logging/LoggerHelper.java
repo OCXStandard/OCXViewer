@@ -29,6 +29,7 @@ import java.io.*;
 /**
  * This class provides an utility method to initialize org.apache.logging.log4j
  * from a file in either properties, json or xml format
+ * @author Carsten Zerbst
  */
 public class LoggerHelper {
     private static final Logger LOG = LogManager.getLogger( LoggerHelper.class );

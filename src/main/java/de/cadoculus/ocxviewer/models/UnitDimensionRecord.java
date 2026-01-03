@@ -25,6 +25,11 @@ import java.util.List;
 
 /**
  * Wrapper record for a unit.
+ * @param dimension the dimension
+ * @param id the id of the dimension
+ * @param dimensionless true if the dimension is dimensionless
+ * @param types the list of dimension types
+ * @author Carsten Zerbst
  */
 public record UnitDimensionRecord(
         oasis.unitsml.Dimension dimension,

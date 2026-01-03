@@ -22,6 +22,7 @@ import java.io.File;
 /**
  * Event that is fired when a new OCX file is opened.
  * OpenAction is responsible for firing this event.
+ * @author Carsten Zerbst
  */
 public class OpenEvent extends  Event{
 

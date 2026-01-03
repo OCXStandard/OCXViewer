@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 
 /**
  * An interface used for pages
+ * @author Carsten Zerbst
  */
 public interface Page {
 

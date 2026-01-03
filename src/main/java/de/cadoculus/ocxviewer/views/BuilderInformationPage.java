@@ -35,6 +35,7 @@ import java.time.Year;
 
 /**
  * Page for the builder information.
+ * @author Carsten Zerbst
  */
 public class BuilderInformationPage extends AbstractDataViewPage{
     public static final String NAME = "Builder Information";

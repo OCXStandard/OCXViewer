@@ -21,6 +21,7 @@ import javafx.scene.input.KeyCombination;
 
 /**
  * The Schematron action
+ * @author Carsten Zerbst
  */
 public class SchematronAction extends  AbstractAction {
 

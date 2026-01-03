@@ -16,6 +16,7 @@
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.models.SectionType;
 import de.cadoculus.ocxviewer.models.UnitConverter;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.beans.property.ObjectProperty;
@@ -54,6 +55,7 @@ import java.util.Locale;
 
 /**
  * This page shows the bar sections from the catalogue.
+ * @author Carsten Zerbst
  */
 public class BarSectionsPage extends AbstractDataViewPage implements Page {
     public static final String NAME = "Bar Sections";

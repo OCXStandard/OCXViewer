@@ -26,6 +26,11 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import java.io.File;
 import java.util.Arrays;
 
+/**
+ * The main entry point for the OCX Viewer application.
+ * It handles command-line arguments, logging configuration, and starts the application.
+ * @author Carsten Zerbst
+ */
 public class Main {
 
     private static final Logger LOG = LogManager.getLogger(Main.class);

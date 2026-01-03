@@ -15,6 +15,14 @@
  */
 package de.cadoculus.ocxviewer.models;
 
+/**
+ * A record representing different dimension types.
+ * @param dimensionType the dimension type object
+ * @param typeName the name of the dimension type
+ * @param powerNumerator the power numerator of the dimension
+ * @param symbol the symbol representing the dimension
+ * @author Carsten Zerbst
+ */
 public record DimensionTypesRecord(
         Object dimensionType,
         String typeName,

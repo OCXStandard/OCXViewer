@@ -36,6 +36,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+/**
+ * A page displaying information about unit dimensions.
+ * @author Carsten Zerbst
+ */
 public class UnitDimensionsPage extends AbstractDataViewPage{
     public static final String NAME = "Unit Dimensions";
     private static final Logger LOG = LogManager.getLogger(UnitDimensionsPage.class);

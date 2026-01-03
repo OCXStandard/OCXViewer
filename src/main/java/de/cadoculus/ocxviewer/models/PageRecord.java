@@ -26,6 +26,7 @@ import java.util.Objects;
  * @param title the title of the page
  * @param graphic the graphic to display
  * @param pageClass the class of the page
+ * @author Carsten Zerbst
  */
 public record PageRecord(String title,
                          Node graphic,

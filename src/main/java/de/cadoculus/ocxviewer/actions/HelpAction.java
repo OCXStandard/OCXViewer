@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 
 /**
  * The Help action
+ * @author Carsten Zerbst
  */
 public class HelpAction extends AbstractAction {
     private static final Logger LOG = LogManager.getLogger(BarSectionsPage.class);

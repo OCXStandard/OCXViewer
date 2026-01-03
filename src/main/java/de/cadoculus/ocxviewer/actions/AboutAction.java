@@ -26,6 +26,7 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignI;
 
 /**
  * The About action
+ * @author Carsten Zerbst
  */
 public class AboutAction extends  AbstractAction {
 

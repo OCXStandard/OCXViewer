@@ -36,7 +36,8 @@ import java.util.stream.Collectors;
  * Dispatches events from the event bus to actions.
  * The dispatcher creates a map of key codes and classes at initialisation time.
  *
- * */
+ * @author Carsten Zerbst
+ */
 public class ActionDispatcher {
     private static final Logger LOG = LogManager.getLogger(ActionDispatcher.class);
     private final Map<KeyCodeCombination, Class<? extends AbstractAction>> key2class = new HashMap<>();

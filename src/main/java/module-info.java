@@ -42,5 +42,6 @@ module ocxviewer {
 
     exports de.cadoculus.ocxviewer.logging to org.apache.logging.log4j.core;
     exports de.cadoculus.ocxviewer.views to javafx.fxml;
+    exports de.cadoculus.ocxviewer.models to javafx.fxml;
 
 }

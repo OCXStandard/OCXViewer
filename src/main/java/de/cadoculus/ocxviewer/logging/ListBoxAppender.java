@@ -29,6 +29,7 @@ import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 
 /**
  * This is a custom Log4j2 appender that appends log events to the ListBox in the LogPage.
+ * @author Carsten Zerbst
  */
 @Plugin(name="ListBoxAppender", category= Core.CATEGORY_NAME, elementType= Appender.ELEMENT_TYPE)
 public class ListBoxAppender extends AbstractAppender {

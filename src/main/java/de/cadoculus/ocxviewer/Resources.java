@@ -21,6 +21,10 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.prefs.Preferences;
 
+/**
+ * Utility class for resource management.
+ * @author Carsten Zerbst
+ */
 public final class Resources {
 
     public static final String MODULE_DIR = "com/prostep/openpdm/ocxviewer/";

@@ -292,9 +292,14 @@ public class MainController {
         DefaultEventBus.getInstance().publish(hke);
     }
 
+    public void schemaCheck(ActionEvent actionEvent) {
 
-    public void open3DView(ActionEvent actionEvent) {
-        var hke = new HotkeyEvent(ThreeDAction.KEYS);
+        var hke = new HotkeyEvent(SchemaCheckAction.KEYS);
+        DefaultEventBus.getInstance().publish(hke);
+    }
+
+    public void schematronCheck(ActionEvent actionEvent) {
+        var hke = new HotkeyEvent(SchematronAction.KEYS);
         DefaultEventBus.getInstance().publish(hke);
     }
 
@@ -323,6 +328,7 @@ public class MainController {
         var event = new ThemeEvent(ThemeEvent.EventType.THEME_CHANGE);
         DefaultEventBus.getInstance().publish(event);
     }
+
 
 
 

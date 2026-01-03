@@ -16,9 +16,10 @@
 
 package de.cadoculus.ocxviewer.event;
 
-
-import de.cadoculus.ocxviewer.views.Page;
-
+/**
+ * Event representing a navigation to a different page.
+ * @author Carsten Zerbst
+ */
 public final class NavigationEvent extends Event {
 
     private final Class page;

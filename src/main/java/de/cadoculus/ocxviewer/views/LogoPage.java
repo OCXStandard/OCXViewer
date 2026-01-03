@@ -45,6 +45,7 @@ import javafx.scene.text.Text;
 /*
  * This class is responsible for displaying the logo of the application directly after startup.
  * It is later discarded in the MainController's {@link MainController#initializeDataView()} method.
+ * @author Carsten Zerbst
  */
 public class LogoPage extends Region {
     private static final Logger LOG = LogManager.getLogger(LogoPage.class);

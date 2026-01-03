@@ -27,7 +27,8 @@
                     <items>
                         <!-- <MenuItem mnemonicParsing="false" text="Schema Check"  /> -->
                         <MenuItem mnemonicParsing="false" onAction="#switchUIMode" text="UI Mode"/>
-                        <MenuItem mnemonicParsing="false" onAction="#open3DView" text="3D View"/>
+                        <MenuItem mnemonicParsing="false" onAction="#schemaCheck" text="XML Schema Check"/>
+                        <MenuItem mnemonicParsing="false" onAction="#schematronCheck" text="Schematron Check"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

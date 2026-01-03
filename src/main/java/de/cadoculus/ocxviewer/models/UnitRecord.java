@@ -25,6 +25,13 @@ import java.util.List;
 
 /**
  * Wrapper record for a unit.
+ * @param unit the unit
+ * @param id    the id of the unit
+ * @param names the list of unit names
+ * @param symbol the unit symbols
+ * @param rootUnits the root units
+ * @param dimension the dimension URL
+ * @author Carsten Zerbst
  */
 public record UnitRecord(
         Unit unit,

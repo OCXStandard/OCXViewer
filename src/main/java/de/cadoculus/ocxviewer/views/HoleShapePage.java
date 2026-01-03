@@ -16,6 +16,7 @@
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.models.HoleShapeType;
 import de.cadoculus.ocxviewer.models.UnitConverter;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.beans.property.ObjectProperty;
@@ -50,6 +51,7 @@ import java.util.Random;
 
 /**
  * This class displays standard hole shapes in a table and a canvas.
+ * @author Carsten Zerbst
  */
 public class HoleShapePage extends AbstractDataViewPage implements Page {
     public static final String NAME = "Hole Shapes";

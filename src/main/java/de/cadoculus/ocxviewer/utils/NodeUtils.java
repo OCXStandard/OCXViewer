@@ -26,6 +26,10 @@ import javafx.scene.layout.AnchorPane;
 
 import java.util.List;
 
+/**
+ * Utility class for JavaFX Node operations.
+ * @author Carsten Zerbst
+ */
 public final class NodeUtils {
 
     public static void toggleVisibility(Node node, boolean on) {

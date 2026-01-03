@@ -26,6 +26,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+/**
+ * Represents a file resource, which can be either internal (within the classpath)
+ * or external (on the filesystem).
+ * @author Carsten Zerbst
+ */
 public final class FileResource {
 
     private final String location;

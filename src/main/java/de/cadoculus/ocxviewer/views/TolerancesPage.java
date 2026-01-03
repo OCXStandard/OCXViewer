@@ -34,6 +34,7 @@ import org.ocx_schema.v310.QuantityT;
 
 /**
  * The PrincipalParticularsPage class is a subclass of AbstractDataViewPage and is used to display the principal particulars of a vessel.
+ * @author Carsten Zerbst
  */
 public class TolerancesPage extends AbstractDataViewPage {
 

@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.cadoculus.ocxviewer.logging;
+package de.cadoculus.ocxviewer.ui;
 
 /**
- * A wrapper for log messages.
- * @param category the log level
- * @param msg the formatted text
- * @param thrown a throwable
+ * Dialogue for schema checking options and results
  * @author Carsten Zerbst
  */
-public record LogRecord(org.apache.logging.log4j.Level category, String msg, Throwable thrown) {
+public class SchemaCheckDialogue {
 }

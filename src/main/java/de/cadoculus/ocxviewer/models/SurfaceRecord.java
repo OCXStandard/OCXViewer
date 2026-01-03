@@ -20,6 +20,12 @@ import org.ocx_schema.v310.SurfaceT;
 
 /**
  * This is a wrapper clase for both Surface and SurfaceCollection
+ * @param surface the surface
+ * @param collection the surface collection
+ * @param isCollection true if the record represents a collection
+ * @param id the id of the surface or collection
+ * @param guid the GUID of the surface or collection
+ * @author Carsten Zerbst
  */
 public record SurfaceRecord(
 

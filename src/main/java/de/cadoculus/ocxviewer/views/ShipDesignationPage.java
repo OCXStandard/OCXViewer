@@ -21,6 +21,10 @@ import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
+/**
+ * A page displaying information about the ship's designation.
+ * @author Carsten Zerbst
+ */
 public class ShipDesignationPage extends AbstractDataViewPage{
     public static final String NAME = "Ship Designation";
     private static final Logger LOG = LogManager.getLogger(ShipDesignationPage.class);

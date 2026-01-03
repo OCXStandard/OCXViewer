@@ -15,10 +15,10 @@
  */
 
 package de.cadoculus.ocxviewer.event;
-
-
-import javafx.scene.Scene;
-
+/**
+ * Event representing a change in the application's theme.
+ * @author Carsten Zerbst
+ */
 public final class ThemeEvent extends Event {
 
     public enum EventType {

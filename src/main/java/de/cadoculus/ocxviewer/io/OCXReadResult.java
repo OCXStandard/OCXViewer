@@ -17,5 +17,9 @@ package de.cadoculus.ocxviewer.io;
 
 import org.ocx_schema.v310.OcxXMLT;
 
+/**
+ * Result of reading an OCX file, containing the original namespace and the parsed OcxXMLT object.
+ * @author Carsten Zerbst
+ */
 public record OCXReadResult(String originalNamespace, OcxXMLT ocx) {
 }

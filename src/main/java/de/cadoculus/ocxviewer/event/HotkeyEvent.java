@@ -17,6 +17,10 @@ package de.cadoculus.ocxviewer.event;
 
 import javafx.scene.input.KeyCodeCombination;
 
+/**
+ * Event representing a hotkey press.
+ * @author Carsten Zerbst
+ */
 public final class HotkeyEvent extends Event {
 
     private final KeyCodeCombination keys;

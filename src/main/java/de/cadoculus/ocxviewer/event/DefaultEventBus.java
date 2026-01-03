@@ -30,6 +30,7 @@ import java.util.function.Consumer;
  *
  * <p>You can use the default event bus instance {@link #getInstance}, which is a singleton,
  * or you can create one or multiple instances of {@link DefaultEventBus}.
+ * @author Carsten Zerbst
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class DefaultEventBus implements EventBus {

@@ -26,6 +26,7 @@ import java.util.prefs.Preferences;
 
 /**
  * Singleton class to store the working context of the application.
+ * @author Carsten Zerbst
  */
 public class WorkingContext {
 

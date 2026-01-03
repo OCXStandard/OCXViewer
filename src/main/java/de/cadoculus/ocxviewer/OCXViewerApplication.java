@@ -41,6 +41,7 @@ import java.io.IOException;
 
 /**
  * The viewer application
+ * @author Carsten Zerbst
  */
 public class OCXViewerApplication extends Application {
 

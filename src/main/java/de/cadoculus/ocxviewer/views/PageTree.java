@@ -42,6 +42,7 @@ import java.util.Objects;
 
 /**
  * A tree view for navigating between pages.
+ * @author Carsten Zerbst
  */
 public final class PageTree extends TreeView<PageRecord> {
     private static final Logger LOG = LogManager.getLogger(PageTree.class);

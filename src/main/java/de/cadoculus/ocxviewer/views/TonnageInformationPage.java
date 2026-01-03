@@ -21,6 +21,10 @@ import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
+/**
+ * A page displaying information about tonnage.
+ * @author Carsten Zerbst
+ */
 public class TonnageInformationPage extends AbstractDataViewPage{
     public static final String NAME = "Tonnage Information";
     private static final Logger LOG = LogManager.getLogger(TonnageInformationPage.class);

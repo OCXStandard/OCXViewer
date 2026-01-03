@@ -44,6 +44,7 @@ import java.util.Map;
 
 /**
  * The UnitsPage displays the units used in the OCX file.
+ * @author Carsten Zerbst
  */
 public class UnitsPage extends AbstractDataViewPage{
     public static final String NAME = "Units";

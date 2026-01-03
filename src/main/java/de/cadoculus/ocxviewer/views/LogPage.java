@@ -36,6 +36,7 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignI;
 
 /**
  * Page that shows the applications internal log messages.
+ * @author Carsten Zerbst
  */
 public class LogPage extends BorderPane implements Page {
 

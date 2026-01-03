@@ -45,6 +45,7 @@ import java.io.StringWriter;
 
 /**
  * Action to open an OCX file.
+ * @author Carsten Zerbst
  */
 public class OpenAction extends AbstractAction {
 

@@ -39,6 +39,10 @@ import org.ocx_schema.v310.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class displays the materials contained in the OCX file
+ * @author Carsten Zerbst
+ */
 public class MaterialsPage extends AbstractDataViewPage implements Page {
     public static final String NAME = "Materials";
     private static final Logger LOG = LogManager.getLogger(MaterialsPage.class);

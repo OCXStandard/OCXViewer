@@ -17,6 +17,14 @@ package de.cadoculus.ocxviewer.event;
 
 import java.util.function.Consumer;
 
+/**
+ * The Event Bus interface.
+ *
+ * <p>An event bus allows subscribers to subscribe to events of a certain type and publishers to publish events to all
+ * subscribers.
+ *
+ * @author Carsten Zerbst
+ */
 public interface EventBus {
 
     /**

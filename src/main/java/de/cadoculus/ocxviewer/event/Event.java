@@ -17,6 +17,12 @@ package de.cadoculus.ocxviewer.event;
 
 import java.util.UUID;
 
+/**
+ * Base class for all events.
+ *
+ * <p>Each event has a unique identifier.
+ * @author Carsten Zerbst
+ */
 public abstract class Event {
 
     protected final UUID id = UUID.randomUUID();

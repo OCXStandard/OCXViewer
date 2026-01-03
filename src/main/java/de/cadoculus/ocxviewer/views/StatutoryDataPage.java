@@ -21,6 +21,10 @@ import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
+/**
+ * A page displaying information about statutory data.
+ * @author Carsten Zerbst
+ */
 public class StatutoryDataPage extends AbstractDataViewPage{
     public static final String NAME = "Statutory Data";
     private static final Logger LOG = LogManager.getLogger(StatutoryDataPage.class);

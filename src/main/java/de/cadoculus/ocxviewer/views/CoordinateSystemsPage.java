@@ -35,6 +35,7 @@ import java.util.ArrayList;
 
 /**
  * This class displays the coordinated system contained in the OCX file
+ * @author Carsten Zerbst
  */
 public class CoordinateSystemsPage extends AbstractDataViewPage implements Page {
     public static final String NAME = "Coordinate Systems";

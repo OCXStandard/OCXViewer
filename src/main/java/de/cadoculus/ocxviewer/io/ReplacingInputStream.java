@@ -24,6 +24,8 @@ import java.util.Queue;
 
 /**
  * This is based on an idea from Simon Lang published on https://stackoverflow.com/questions/41302330/given-inputstream-replace-character-and-produce-outputstream.
+ * It reads from an underlying InputStream and replaces all occurrences of a given byte sequence with another byte sequence.
+ * @author Carsten Zerbst
  */
 class ReplacingInputStream extends FilterInputStream {
 

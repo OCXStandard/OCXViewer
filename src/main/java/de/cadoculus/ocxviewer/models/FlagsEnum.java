@@ -24,6 +24,7 @@ import java.util.Locale;
 
 /**
  * Enum to map a Locale with a flag emoji
+ * @author Carsten Zerbst
  */
 public enum FlagsEnum {
 

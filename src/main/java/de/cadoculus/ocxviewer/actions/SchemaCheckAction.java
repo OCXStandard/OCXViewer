@@ -21,6 +21,7 @@ import javafx.scene.input.KeyCombination;
 
 /**
  * The Schema Check action
+ * @author Carsten Zerbst
  */
 public class SchemaCheckAction extends  AbstractAction {
 
@@ -30,6 +31,8 @@ public class SchemaCheckAction extends  AbstractAction {
     //TODO: implement a dialogue to select the file and version to check, then run the schema checks
     @Override
     public void run() {
+
+
         System.out.println("Schema Check");
     }
 }

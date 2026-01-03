@@ -30,6 +30,7 @@ import java.io.StringWriter;
 
 /**
  * This class provides methods to read and write OCX files.
+ * @author Carsten Zerbst
  */
 public class OCXIO  {
 

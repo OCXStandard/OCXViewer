@@ -13,10 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package de.cadoculus.ocxviewer.views;
+package de.cadoculus.ocxviewer.models;
 
 import org.ocx_schema.v310.*;
 
+/**
+ * Enumeration of different hole shape types in OCX files.
+ * @author Carsten Zerbst
+ */
 public enum HoleShapeType {
     PARAMETRIC_CIRCLE("Parametric Circle"),
     SYMMETRIC_HOLE("Symmetrical Hole"),
