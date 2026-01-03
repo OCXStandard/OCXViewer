@@ -15,6 +15,9 @@
  */
 package de.cadoculus.ocxviewer.views;
 
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.SurfaceRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import jakarta.xml.bind.JAXBElement;
@@ -25,7 +28,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -35,11 +37,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310.CoordinateSystem;
 import org.ocx_schema.v310.SurfaceCollection;
 import org.ocx_schema.v310.SurfaceT;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class displays the reference surfaces contained in the OCX file.
@@ -137,19 +139,28 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
 
         LOG.debug("found #{} surfaces and surface collection", surfaces.size());
 
-        table.getSelectionModel().selectedItemProperty().addListener((surfaceRecord, oldSurfaceRec, newSurfaceRec) -> updateSurface(oldSurfaceRec, newSurfaceRec));
+        table.getSelectionModel().selectedItemProperty().addListener((surfaceRecord, oldSurfaceRec, newSurfaceRec) -> selectedSurface(oldSurfaceRec, newSurfaceRec));
 
     }
 
-    private void updateSurface(SurfaceRecord oldSurfaceRec, SurfaceRecord newSurfaceRec) {
+    private void selectedSurface(SurfaceRecord oldSurfaceRec, SurfaceRecord newSurfaceRec) {
+        LOG.debug("selected surface rec #{}, {}", oldSurfaceRec, newSurfaceRec);
+        if ( oldSurfaceRec != null && oldSurfaceRec.equals(newSurfaceRec) ) {
+            // no change
+            return;
+        }
+
+        var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+        robert.add( new BreadcrumbRecord(newSurfaceRec.id(), SurfacePage.class, null, newSurfaceRec.surface()));
+        var event = new SelectionEvent( robert);
+        DefaultEventBus.getInstance().publish(event);
+
     }
 
     @Override
     public void afterShow() {
 
-       // table.getSelectionModel().selectFirst();
+       // Party !
     }
-
-   
 
 }

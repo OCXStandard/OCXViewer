@@ -35,6 +35,7 @@ package net.jgeom.nurbs.util;
 
 
 
+@SuppressWarnings("removal")
 public class Triangulate {
 	
 	public class ITRIANGLE {

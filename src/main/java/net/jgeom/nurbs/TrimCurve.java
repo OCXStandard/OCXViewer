@@ -33,6 +33,7 @@ import java.util.List;
  * @author sg
  * @version 1.0
  */
+@SuppressWarnings("removal")
 public class TrimCurve {
   public UVCoord2f lines[];
   private List vs;

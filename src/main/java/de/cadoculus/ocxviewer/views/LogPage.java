@@ -18,6 +18,7 @@ package de.cadoculus.ocxviewer.views;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.BBCodeParser;
 import de.cadoculus.ocxviewer.logging.LogRecord;
+import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -34,11 +35,13 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignE;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignF;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignI;
 
+import java.util.List;
+
 /**
  * Page that shows the applications internal log messages.
  * @author Carsten Zerbst
  */
-public class LogPage extends BorderPane implements Page {
+public class LogPage extends AbstractDataViewPage  {
 
     public static final String NAME = "Log Page";
     private static final Logger LOG = LogManager.getLogger(LogPage.class);
@@ -67,7 +70,7 @@ public class LogPage extends BorderPane implements Page {
     }
 
     public LogPage() {
-        super();
+        super(NAME);
         INSTANCE=this;
 
         //this.setBackground(new Background(new BackgroundFill(Color.web("#bcbcbc"), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -175,6 +178,11 @@ public class LogPage extends BorderPane implements Page {
     @Override
     public Pane getView() {
         return this;
+    }
+
+    @Override
+    public List<BreadcrumbRecord> getBreadcrumbs() {
+        return List.of(  new BreadcrumbRecord(getName(), LogPage.class, this, null));
     }
 
     @Override

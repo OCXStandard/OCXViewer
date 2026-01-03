@@ -15,9 +15,11 @@
  */
 package de.cadoculus.ocxviewer.views;
 
+import atlantafx.base.controls.Breadcrumbs;
 import atlantafx.base.layout.InputGroup;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.BBCodeParser;
+import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.*;
 import javafx.geometry.Insets;
@@ -49,13 +51,15 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * The base class for data views
  * @author Carsten Zerbst
  */
-abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.ocxviewer.views.Page {
+public abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.ocxviewer.views.Page {
 
     private static final Logger LOG = LogManager.getLogger(AbstractDataViewPage.class);
     public static double SIN_30 = 0.5;
@@ -92,6 +96,15 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
     }
 
     /**
+     * Get the breadcrumbs for this page. As this is a top level page, only a single breadcrumb is returned in the list
+     * @return the list of breadcrumbs
+     */
+    @Override
+    public List<BreadcrumbRecord> getBreadcrumbs() {
+        return List.of(  new BreadcrumbRecord(getName(), this.getClass(), this, null));
+    }
+
+    /**
      * Create a title for the page
      *
      * @param description the description to display as explanation
@@ -107,6 +120,23 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
         final TextFlow formattedText = BBCodeParser.createFormattedText(description);
         titleBox.getChildren().add(formattedText);
     }
+
+    protected void createTitle(Breadcrumbs crumbs, String title, String description) {
+        var titleBox = new VBox();
+        this.setTop(titleBox);
+
+        var label = new Label(title);
+        label.getStyleClass().add(Styles.TITLE_2);
+        titleBox.setPadding(new Insets(0, 0, 10, 0));
+        titleBox.getChildren().add(label);
+
+        titleBox.getChildren().add(crumbs);
+
+        final TextFlow formattedText = BBCodeParser.createFormattedText(description);
+        titleBox.getChildren().add(formattedText);
+    }
+
+
 
     protected  InputGroup createOrRebind(InputGroup inputGroup,  Point3DT point3DT,  boolean mandatory) {
 
@@ -464,6 +494,14 @@ abstract class AbstractDataViewPage extends BorderPane implements de.cadoculus.o
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof AbstractDataViewPage that)) return false;
+        return Objects.equals(name, that.name);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
+    }
 }
