@@ -17,6 +17,9 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.layout.InputGroup;
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -43,12 +46,11 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
 
     private final TableView<CoordinateSystem> table;
     private final GridPane gridPane;
-    private final Label label = new Label();
     private final ObjectProperty<CoordinateSystem> selectedObject = new SimpleObjectProperty<>();
 
-    private final InputGroup originGroup;
-    private final InputGroup primAxisGroup;
-    private final InputGroup secAxisGroup;
+//    private final InputGroup originGroup;
+//    private final InputGroup primAxisGroup;
+//    private final InputGroup secAxisGroup;
 
     public CoordinateSystemsPage() {
         super(NAME);
@@ -71,7 +73,7 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
         col4.setMaxWidth(600);
 
         gridPane.getColumnConstraints().addAll(col1, col2, col3, col4);
-        gridPane.setGridLinesVisible(true);
+        //gridPane.setGridLinesVisible(true);
 
         gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 0;");
         this.setCenter(gridPane);
@@ -107,58 +109,7 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
         table.setMaxHeight(200);
 
         int row = 0;
-
         gridPane.add(table, 0, row++, 4,1);
-        gridPane.add(label, 0, row++);
-        label.getStyleClass().add(Styles.TITLE_3);
-
-        var label = new Label("Local Cartesian");
-        label.setTooltip(new Tooltip("To specify a Local (Orthogonal) Axis System Origin and two of the local X,Y,Z axis need to be specified. When used to specify a Plane the XY (UV) plane is considered. Optional if the coordinate system is referring to the global coordinate frame (world coordinates)"));
-        label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, ++row);
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setMargin(label, new Insets(20, 0, 10, 0));
-
-        label = new Label("Origin");
-        label.setTooltip(new Tooltip("The origin of a local or global coordinate system."));
-        gridPane.add(label, 0, ++row);
-        originGroup = createOrRebind(null, (Point3DT) null, true);
-        gridPane.add(originGroup, 1,row);
-
-
-        label = new Label("Primary Axis");
-        label.setTooltip(new Tooltip("The unit vector of the local X-axis (U-Axis) given in global Coordinate System."));
-        gridPane.add(label, 0, ++row);
-        primAxisGroup = createOrRebind(null, (Point3DT) null, true);
-        gridPane.add(primAxisGroup, 1, row);
-
-        label = new Label("Secondary Axis");
-        label.setTooltip(new Tooltip("The unit vector of the local Y-axis (V-Axis) given in global Coordinate System."));
-        gridPane.add(label, 2, row);
-        secAxisGroup = createOrRebind(null, (Point3DT) null, true);
-        gridPane.add(secAxisGroup, 3, row);
-
-
-        label = new Label("X References Planes");
-        label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, ++row);
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setMargin(label, new Insets(20, 0, 10, 0));
-
-
-        label = new Label("Y References Planes");
-        label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, ++row);
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setMargin(label, new Insets(20, 0, 10, 0));
-
-
-        label = new Label("Y References Planes");
-        label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, ++row);
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setMargin(label, new Insets(20, 0, 10, 0));
-
 
         final var vessel = WorkingContext.getInstance().getVessel();
         if (vessel == null) {
@@ -174,34 +125,42 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
 
         LOG.debug("found #{} coordinate systems", coordinateSystems.size());
 
-        table.getSelectionModel().selectedItemProperty().addListener((cosys, oldCosys, newCosys) -> updateCoordinateSystem(oldCosys, newCosys));
+        table.getSelectionModel().selectedItemProperty().addListener((cosys, oldCosys, newCosys) -> selectCoordinateSystem(oldCosys, newCosys));
 
     }
 
-    private void updateCoordinateSystem(CoordinateSystem oldCosys, CoordinateSystem newCosys) {
-
-
-        LOG.info("Updating Coordinate System section {}", newCosys);
+    private void selectCoordinateSystem(CoordinateSystem oldCosys, CoordinateSystem newCosys) {
+        LOG.info("selected Coordinate System section {}", newCosys);
         selectedObject.setValue(newCosys);
         if (newCosys == null) {
-            label.setText("No CoordinateSystem selected");
             return;
         }
 
-        label.setText( "Coordinate System " +  newCosys.getId() );
-        LOG.debug(" (" + newCosys.getGUIDRef() + ") + " + new ArrayList(newCosys.getLocalCartesian().getOrigin().getCoordinates()).toString());
+        if ( oldCosys != null && oldCosys.equals(newCosys) ) {
+            // no change
+            return;
+        }
 
+        var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+        robert.add( new BreadcrumbRecord(newCosys.getId(), CoordinateSystemPage.class, null, newCosys));
+        var event = new SelectionEvent( robert);
+        DefaultEventBus.getInstance().publish(event);
 
-        createOrRebind( originGroup, newCosys.getLocalCartesian().getOrigin(), true);
-        createOrRebind( primAxisGroup, newCosys.getLocalCartesian().getPrimaryAxis(), true);
-        createOrRebind(secAxisGroup, newCosys.getLocalCartesian().getSecondaryAxis(), true);
+//        label.setText( "Coordinate System " +  newCosys.getId() );
+//        LOG.debug(" (" + newCosys.getGUIDRef() + ") + " + new ArrayList(newCosys.getLocalCartesian().getOrigin().getCoordinates()).toString());
+//
+//
+//        createOrRebind( originGroup, newCosys.getLocalCartesian().getOrigin(), true);
+//        createOrRebind( primAxisGroup, newCosys.getLocalCartesian().getPrimaryAxis(), true);
+//        createOrRebind(secAxisGroup, newCosys.getLocalCartesian().getSecondaryAxis(), true);
 
     }
 
     @Override
     public void afterShow() {
 
-        table.getSelectionModel().selectFirst();
+        // Party !
+        // table.getSelectionModel().selectFirst();
     }
 
 

@@ -19,6 +19,8 @@ import atlantafx.base.controls.Breadcrumbs;
 import atlantafx.base.layout.InputGroup;
 import atlantafx.base.theme.Styles;
 import atlantafx.base.util.BBCodeParser;
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.*;
@@ -121,7 +123,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         titleBox.getChildren().add(formattedText);
     }
 
-    protected void createTitle(Breadcrumbs crumbs, String title, String description) {
+    protected void createTitle(List<BreadcrumbRecord> breadcrumbRecords, String title, String description) {
         var titleBox = new VBox();
         this.setTop(titleBox);
 
@@ -129,6 +131,25 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         label.getStyleClass().add(Styles.TITLE_2);
         titleBox.setPadding(new Insets(0, 0, 10, 0));
         titleBox.getChildren().add(label);
+
+        BreadcrumbRecord[] crumbsArray = breadcrumbRecords.toArray( BreadcrumbRecord[]::new);
+        Breadcrumbs.BreadCrumbItem<BreadcrumbRecord> root = Breadcrumbs.buildTreeModel(crumbsArray);
+        var crumbs = new Breadcrumbs<>(root);
+        crumbs.setSelectedCrumb(root);
+        crumbs.setOnCrumbAction(event-> {
+            BreadcrumbRecord record = event.getSelectedCrumb().getValue();
+            LOG.debug("Breadcrumb selected: {}", record);
+            var index = breadcrumbRecords.indexOf(record);
+            if (index < 0) {
+                LOG.error("Breadcrumb record {} not found in current path: {}", record, breadcrumbRecords);
+                return;
+            }
+            var subList = breadcrumbRecords.subList(0, index + 1);
+            var newEvent = new SelectionEvent(subList);
+            DefaultEventBus.getInstance().publish(newEvent);
+        });
+
+
 
         titleBox.getChildren().add(crumbs);
 

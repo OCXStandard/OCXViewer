@@ -43,25 +43,9 @@ public class SurfacePage extends AbstractDataViewSubPage<org.ocx_schema.v310.Sur
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
-        BreadcrumbRecord[] crumbsArray = bcs.toArray( BreadcrumbRecord[]::new);
 
-        Breadcrumbs.BreadCrumbItem<BreadcrumbRecord> root = Breadcrumbs.buildTreeModel(crumbsArray);
-        var crumbs = new Breadcrumbs<>(root);
-        crumbs.setSelectedCrumb(root);
-        crumbs.setOnCrumbAction(event-> {
-            BreadcrumbRecord record = event.getSelectedCrumb().getValue();
-            LOG.debug("Breadcrumb selected: {}", record);
-            var index = bcs.indexOf(record);
-            if (index < 0) {
-                LOG.error("Breadcrumb record {} not found in current path: {}", record, bcs);
-                return;
-            }
-            var subList = bcs.subList(0, index + 1);
-            var newEvent = new SelectionEvent(subList);
-            DefaultEventBus.getInstance().publish(newEvent);
-        });
 
-        createTitle( crumbs, getName(), "Information about an OCX Surface");
+        createTitle( bcs, getName(), "Information about an OCX Surface");
 
         var warning = new atlantafx.base.controls.Message(
                 "Warning",

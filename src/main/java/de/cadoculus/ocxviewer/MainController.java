@@ -253,14 +253,16 @@ public class MainController {
         }
     }
 
-
     /**
      * This method is called when a navigation event is received.
      * This opens the main page associated with the event.
      * The current page(path) is discarded and replaced with the new page/path.
      *
      * @param event the navigation event
+     * @deprecated replace by selection event handling
      */
+    //TODO: replace by selection event handling
+    @Deprecated
     private void switchPages(NavigationEvent event) {
 
         LOG.debug("Navigation event: {}", event);
