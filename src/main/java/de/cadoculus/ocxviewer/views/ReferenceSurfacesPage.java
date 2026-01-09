@@ -18,11 +18,9 @@ package de.cadoculus.ocxviewer.views;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
-import de.cadoculus.ocxviewer.models.SurfaceRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.utils.GeomHelper;
 import jakarta.xml.bind.JAXBElement;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -32,15 +30,17 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310.SurfaceCollection;
-import org.ocx_schema.v310.SurfaceT;
+import org.ocx_schema.v310.*;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * This class displays the reference surfaces contained in the OCX file.
@@ -50,15 +50,12 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
     public static final String NAME = "Reference Surfaces";
     private static final Logger LOG = LogManager.getLogger(ReferenceSurfacesPage.class);
 
-    private final TableView<SurfaceRecord> table;
-
-    private final ObjectProperty<SurfaceRecord> selectedObject = new SimpleObjectProperty<>();
+    private final TableView<DescriptionBaseT> table;
 
     public ReferenceSurfacesPage() {
         super(NAME);
 
         createTitle("Information about the contained coordinate systems.");
-
 
         ScrollPane scrollPane = new ScrollPane();
         this.setCenter(scrollPane);
@@ -87,15 +84,15 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
         //
         // Define the table
         //
-        var tableColumn1 = new TableColumn<SurfaceRecord, SurfaceT>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue().surface()));
-        tableColumn1.setCellFactory(new Callback<TableColumn<SurfaceRecord, SurfaceT>, TableCell<SurfaceRecord, SurfaceT>>() {
+        var tableColumn1 = new TableColumn<DescriptionBaseT, DescriptionBaseT>("ID");
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<DescriptionBaseT>( c.getValue()));
+        tableColumn1.setCellFactory(new Callback<TableColumn<DescriptionBaseT,DescriptionBaseT>, TableCell<DescriptionBaseT, DescriptionBaseT>>() {
             @Override
-            public TableCell<SurfaceRecord, SurfaceT> call(TableColumn<SurfaceRecord, SurfaceT> surfaceRecordSurfaceTTableColumn) {
+            public TableCell<DescriptionBaseT, DescriptionBaseT> call(TableColumn<DescriptionBaseT, DescriptionBaseT> surfaceRecordSurfaceTTableColumn) {
 
-                final TableCell<SurfaceRecord, SurfaceT> cell = new TableCell<SurfaceRecord, SurfaceT>() {
+                final TableCell<DescriptionBaseT, DescriptionBaseT> cell = new TableCell<DescriptionBaseT, DescriptionBaseT>() {
                     @Override
-                    public void updateItem(SurfaceT value, boolean empty) {
+                    public void updateItem(DescriptionBaseT value, boolean empty) {
                         super.updateItem(value, empty);
                         if (empty || value == null) {
                             setGraphic(null);
@@ -121,19 +118,19 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
             }
         });
 
-        var tableColumn2 = new TableColumn<SurfaceRecord, String>("GUID");
+        var tableColumn2 = new TableColumn<DescriptionBaseT, String>("GUID");
         tableColumn2.setCellValueFactory(
-                c -> new SimpleStringProperty(c.getValue().guid())
+                c -> new SimpleStringProperty(
+                        c.getValue() instanceof SurfaceT ? ((SurfaceT)c.getValue()).getGUIDRef() : ((SurfaceCollection)c.getValue()).getGUIDRef())
         );
 
-        var tableColumn3 = new TableColumn<SurfaceRecord, Boolean>("Collection");
-        tableColumn3.setCellValueFactory(
-                c -> new SimpleBooleanProperty(c.getValue().isCollection())
-        );
+        var tableColumn3 = new TableColumn<DescriptionBaseT, String>("Type");
+        tableColumn3.setCellValueFactory( cell ->
+                        new SimpleStringProperty(GeomHelper.getGeometryType(cell.getValue())));
 
 
-        ObservableList<SurfaceRecord> surfaces = FXCollections.observableArrayList();
-        table = new TableView<SurfaceRecord>(surfaces);
+        ObservableList<DescriptionBaseT> surfaces = FXCollections.observableArrayList();
+        table = new TableView<DescriptionBaseT>(surfaces);
         table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3);
         table.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
@@ -158,28 +155,35 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
         }
         for (JAXBElement<? extends SurfaceT> jaxbElement: vessel.getReferenceSurfaces().getSurfaces()) {
             if (jaxbElement.getValue() instanceof SurfaceT surface) {
-                surfaces.add(SurfaceRecord.create(surface));
+                surfaces.add(surface);
             }
         }
         for (SurfaceCollection collection: vessel.getReferenceSurfaces().getSurfaceCollections()) {
-                surfaces.add(SurfaceRecord.create(collection));
+                surfaces.add(collection);
         }
 
         LOG.debug("found #{} surfaces and surface collection", surfaces.size());
 
-        //table.getSelectionModel().selectedItemProperty().addListener((surfaceRecord, oldSurfaceRec, newSurfaceRec) -> selectedSurface(oldSurfaceRec, newSurfaceRec));
-
     }
 
-    private void selectedSurface(SurfaceT surfaceT) {
-        LOG.debug("selected surface {}", surfaceT);
-        if ( surfaceT ==null) {
+    private void selectedSurface(DescriptionBaseT selected) {
+        LOG.debug("selected surface {}", selected);
+        if ( selected ==null) {
             // no change
             return;
         }
 
         var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
-        robert.add( new BreadcrumbRecord(surfaceT.getId(), SurfacePage.class, null, surfaceT));
+
+        if ( selected instanceof SurfaceCollection collection) {
+            robert.add( new BreadcrumbRecord(collection.getId(), SurfaceCollectionPage.class, null, collection));
+        } else if ( selected instanceof SurfaceT surface) {
+            robert.add( new BreadcrumbRecord(surface.getId(), SurfacePage.class, null, selected));
+        } else {
+            LOG.warn("unhandled object type,  expect either surfaces or surface collections, got {}", selected);
+            return;
+        }
+
         var event = new SelectionEvent( robert);
         DefaultEventBus.getInstance().publish(event);
     }

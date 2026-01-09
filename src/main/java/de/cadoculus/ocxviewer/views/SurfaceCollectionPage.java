@@ -15,35 +15,27 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.views;
 
-import atlantafx.base.controls.Breadcrumbs;
 import atlantafx.base.theme.Styles;
-import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.EventBus;
-import de.cadoculus.ocxviewer.event.SelectionEvent;
-import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
-import de.cadoculus.ocxviewer.utils.GeomHelper;
-import javafx.scene.control.Button;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-
-import java.util.List;
 
 /**
  * A page displaying information about a Surface.
  * The SurfacePages is not intended to be navigated directly, but rather as a logical child, e.g. from the ReferenceSurfacesPage
  * @author Carsten Zerbst
  */
-public class SurfacePage extends AbstractDataViewSubPage<org.ocx_schema.v310.SurfaceT> {
-    public static final String NAME = "Surface";
-    private static final Logger LOG = LogManager.getLogger(SurfacePage.class);
+public class SurfaceCollectionPage extends AbstractDataViewSubPage<org.ocx_schema.v310.SurfaceCollection> {
+    public static final String NAME = "Surface Collection";
+    private static final Logger LOG = LogManager.getLogger(SurfaceCollectionPage.class);
 
-    public SurfacePage(org.ocx_schema.v310.SurfaceT surface, Page parent) {
-        super(surface, parent, GeomHelper.getGeometryType(surface) + " \u00AB"+surface.getId() + "\u00BB");
+    public SurfaceCollectionPage(org.ocx_schema.v310.SurfaceCollection collection, Page parent) {
+        super(collection, parent, "Surface \u00AB"+collection.getId() + "\u00BB");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
+
 
         createTitle( bcs, getName(), "Information about an OCX Surface");
 
