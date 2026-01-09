@@ -147,10 +147,6 @@ public class MainController {
             LOG.warn("No breadcrumbs in selection event");
             return;
         }
-        if (event.getBreadcrumbs().size() < 1) {
-            LOG.warn("Not enough breadcrumbs in selection event, expect at least 1");
-            return;
-        }
 
         // TODO: check existing path, e.g. panels/panel/stiffener pages and clean up if needed
         LOG.info("compare existing {} with target path {}", pageStack, event.getBreadcrumbs());
@@ -162,7 +158,8 @@ public class MainController {
 
             if (i < pageStack.size()) {
                 var existBC = pageStack.get(i);
-                LOG.info("#{}: compare stack {} vs. target {}", i, existBC, trgtBC);
+                LOG.info("#{}: compare stack {}/{} vs. target {}/{}", i,
+                        existBC.name(), existBC.object(), trgtBC.name(), trgtBC.object());
                 var found = false;
 
                 if (trgtBC.page() != null && trgtBC.page().equals(existBC.page())) {
@@ -170,7 +167,7 @@ public class MainController {
                     if (trgtBC.object() == null) {
                         // no object expected and page matches
                         found = true;
-                    } else if (AbstractDataViewSubPage.class.isAssignableFrom(existBC.getClass()) &&
+                    } else if (AbstractDataViewSubPage.class.isAssignableFrom(existBC.pageClazz()) &&
                             trgtBC.object().equals(((AbstractDataViewSubPage) existBC.page()).getObject())) {
                         // ok, object expected
                         found = true;
@@ -201,13 +198,13 @@ public class MainController {
 
         var parentPage = pageStack.isEmpty() ? null : pageStack.peek().page();
 
-
         // now create new pages if needed
         for (int i = lastMatchingIndex + 1; i < event.getBreadcrumbs().size(); i++) {
             var trgtBC = event.getBreadcrumbs().get(i);
             LOG.info("#{}: target breadcrumb {}", i, trgtBC);
+            LOG.info("    stack {}", pageStack);
 
-            AbstractDataViewPage newPage = null;
+            Page newPage = null;
 
             // Should not happen, but check anyway
             if (trgtBC.page() != null) {
@@ -227,25 +224,29 @@ public class MainController {
                 }
                 // now instantiate the sub page
                 try {
-                    lastPage = (Page) constructor.newInstance(trgtBC.object(), parentPage);
-                    LOG.info("created a new sub page {} for {}", lastPage, trgtBC.object());
+                    newPage = (Page) constructor.newInstance(trgtBC.object(), parentPage);
+                    LOG.info("created a new sub page {} for {}", newPage, trgtBC.object());
                 } catch (Exception exp) {
                     LOG.error("Error creating sub page for trgtBC {}", trgtBC, exp);
                     break;
                 }
-                continue;
-            }
-            if (AbstractDataViewPage.class.isAssignableFrom(trgtBC.pageClazz())) {
+            } else if (AbstractDataViewPage.class.isAssignableFrom(trgtBC.pageClazz())) {
                 // reuse existing page or create a new one
                 var event2 = new NavigationEvent(trgtBC.pageClazz());
                 this.switchPages(event2);
-                lastPage = pageClass2page.get(trgtBC.pageClazz());
-                continue;
+                newPage = pageClass2page.get(trgtBC.pageClazz());
+                LOG.info("switched to a new page {} of type {}", newPage, trgtBC.pageClazz());
+            } else {
+                LOG.error("expect a page class extending AbstractDataViewSubPage for target Breadcrump {}, got {}", trgtBC, trgtBC.pageClazz());
+                break;
             }
-
-            LOG.error("expect a page class extending AbstractDataViewSubPage for target Breadcrump {}, got {}", trgtBC, trgtBC.pageClazz());
-            break;
+            // now update the bookkeeping
+            var resBC =  new BreadcrumbRecord(newPage.getName(), newPage.getClass(), newPage, trgtBC.object());
+            pageStack.push(resBC);
+            lastPage = newPage;
         }
+
+        LOG.info("finished updateing page stack {}", pageStack);
         if (lastPage != null) {
             switchToPage((BorderPane) lastPage);
         } else {

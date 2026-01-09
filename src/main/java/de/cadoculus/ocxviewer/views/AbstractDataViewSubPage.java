@@ -16,49 +16,20 @@
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.controls.Breadcrumbs;
-import atlantafx.base.layout.InputGroup;
-import atlantafx.base.theme.Styles;
-import atlantafx.base.util.BBCodeParser;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.adapter.*;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
-import oasis.unitsml.Unit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jvnet.basicjaxb.lang.Bound;
-import org.jvnet.basicjaxb.lang.StringUtils;
 import org.ocx_schema.v310.IdBaseT;
-import org.ocx_schema.v310.Point3DT;
-import org.ocx_schema.v310.QuantityT;
-import org.ocx_schema.v310.Vector3DT;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.Format;
-import java.text.ParsePosition;
-import java.time.LocalDateTime;
-import java.time.Year;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The base class for sub page data views
  * @author Carsten Zerbst
  */
-public abstract class AbstractDataViewSubPage<T extends IdBaseT> extends AbstractDataViewPage implements SubPage {
+public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.DescriptionBaseT> extends AbstractDataViewPage implements SubPage {
 
     private static final Logger LOG = LogManager.getLogger(AbstractDataViewSubPage.class);
     private final Page parentPage;
@@ -69,9 +40,12 @@ public abstract class AbstractDataViewSubPage<T extends IdBaseT> extends Abstrac
         super(name);
         if ( object == null ) throw new IllegalArgumentException("object is null");
         if ( parentPage == null ) throw new IllegalArgumentException("parentPage is null");
-
         this.object = object;
         this.parentPage = parentPage;
+
+        LOG.info("created a new sub page {} for {}", name, object);
+        LOG.info("   parent {}, breadcrums {}", getParentPage(), getBreadcrumbs());
+
     }
 
     @Override
@@ -83,6 +57,20 @@ public abstract class AbstractDataViewSubPage<T extends IdBaseT> extends Abstrac
         return object;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this.getClass() != o.getClass()) {
+            // Same page class
+            return false;
+        }
+        var other = (AbstractDataViewSubPage<?>) o;
+        return Objects.equals(object, other.object);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), object);
+    }
 
     /**
      * Get the breadcrumbs for this page. As this is a children page, the path is created from the parents path + one for this page

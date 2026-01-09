@@ -24,17 +24,17 @@ import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
+import javafx.util.Callback;
 import oasis.unitsml.Unit;
-import oasis.unitsml.UnitName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jvnet.basicjaxb.lang.Bound;
@@ -54,8 +54,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * The base class for data views
@@ -467,6 +467,51 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
     public void beforeClose() {
 
     }
+
+
+    /**
+     * This method creates a cell factory for a table column that displays hyperlinks.
+     * It uses the Id of the item as the hyperlink text.
+     * When a hyperlink is clicked, the provided selectFunction is called with the corresponding item.
+     * This expects that the table column is of the same type as the table items.
+     * @param selectFunction the function to call with the value when the hyperlink is clicked
+     * @return the cell factory
+     * @param <E> the type of the table items and table column
+     */
+    public static <E extends org.ocx_schema.v310.IdBaseT> Callback<TableColumn<E, E>, TableCell<E,E>> createHyperlinkCellfactory(Consumer<E> selectFunction) {
+
+        return new Callback<TableColumn<E, E>, TableCell<E,E>>() {
+
+            @Override
+            public TableCell<E, E> call(TableColumn<E, E> tableColumn) {
+
+                final TableCell<E, E> cell = new TableCell<E, E>() {
+                    @Override
+                    public void updateItem(E value, boolean empty) {
+                        super.updateItem(value, empty);
+                        if (empty || value == null) {
+                            setGraphic(null);
+                            setText(null);
+                            return;
+                        }
+                        Hyperlink link = new Hyperlink(value.getId());
+                        link.setStyle("-fx-padding: 10px");
+                        link.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                selectFunction.accept(value);
+                            }
+                        });
+                        setGraphic(link);
+                    }
+                };
+                cell.setAlignment(Pos.BOTTOM_LEFT);
+                return cell;
+            }
+        };
+    };
+
+
 
     @SuppressWarnings("rawtypes")
     static class PPStringConverter extends Format {

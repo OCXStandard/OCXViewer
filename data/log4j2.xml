@@ -6,7 +6,7 @@
 
     <Appenders>
         <Appender type="Console" name="STDOUT">
-            <Layout type="PatternLayout" pattern="%L %-1p %c{1}  - %m%n"/>
+            <Layout type="PatternLayout" pattern="%-1p %c{1}:%L   - %m%n"/>
         </Appender>
 
         <Appender type="File" name="File" fileName="${filename}">

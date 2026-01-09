@@ -86,37 +86,7 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
         //
         var tableColumn1 = new TableColumn<DescriptionBaseT, DescriptionBaseT>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<DescriptionBaseT>( c.getValue()));
-        tableColumn1.setCellFactory(new Callback<TableColumn<DescriptionBaseT,DescriptionBaseT>, TableCell<DescriptionBaseT, DescriptionBaseT>>() {
-            @Override
-            public TableCell<DescriptionBaseT, DescriptionBaseT> call(TableColumn<DescriptionBaseT, DescriptionBaseT> surfaceRecordSurfaceTTableColumn) {
-
-                final TableCell<DescriptionBaseT, DescriptionBaseT> cell = new TableCell<DescriptionBaseT, DescriptionBaseT>() {
-                    @Override
-                    public void updateItem(DescriptionBaseT value, boolean empty) {
-                        super.updateItem(value, empty);
-                        if (empty || value == null) {
-                            setGraphic(null);
-                            setText(null);
-                            return;
-                        }
-                        Hyperlink link = new Hyperlink(value.getId());
-                        link.setStyle("-fx-padding: 10px");
-                        link.setOnAction(new EventHandler<ActionEvent>() {
-                                             @Override
-                                             public void handle(ActionEvent event) {
-                                                 LOG.error("selected surface link: {}", value);
-                                                 selectedSurface(value);
-
-
-                                             }
-                                         });
-                     setGraphic(link);
-                    }
-                };
-                cell.setAlignment(Pos.BOTTOM_LEFT);
-                return cell;
-            }
-        });
+        tableColumn1.setCellFactory( createHyperlinkCellfactory(this::selectedSurface));
 
         var tableColumn2 = new TableColumn<DescriptionBaseT, String>("GUID");
         tableColumn2.setCellValueFactory(

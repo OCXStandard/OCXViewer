@@ -104,7 +104,7 @@ public final class PageTree extends TreeView<PageRecord> {
         var hullGroup = Item.group("Hull Structure", new FontIcon(MaterialDesignG.GRID_LARGE));
         root.getChildren().add(hullGroup);
         hullGroup.setExpanded(true);
-        hullGroup.getChildren().add( Item.group("Panel",new FontIcon(MaterialDesignB.BORDER_NONE)));
+        hullGroup.getChildren().add( Item.page(PanelsPage.NAME,new FontIcon(MaterialDesignB.BORDER_NONE),PanelsPage.class));
         hullGroup.getChildren().add( Item.group("Plate",new FontIcon(MaterialDesignB.BORDER_ALL_VARIANT)));
         hullGroup.getChildren().add( Item.group("Stiffener",new FontIcon(MaterialDesignB.BORDER_HORIZONTAL)));
         hullGroup.getChildren().add( Item.group("Bracket",new FontIcon(MaterialDesignN.NETWORK_STRENGTH_OUTLINE)));
