@@ -28,7 +28,7 @@ import org.ocx_schema.v310.IdBaseT;
  * @param object the associated object, may be null
  * @author Carsten Zerbst
  */
-public record BreadcrumbRecord(String name, Class<? extends Page> pageClazz, Page page, org.ocx_schema.v310.IdBaseT object) {
+public record BreadcrumbRecord(String name, Class<? extends Page> pageClazz, Page page, IdBaseT object) {
 
     @Override
     public String toString() {
