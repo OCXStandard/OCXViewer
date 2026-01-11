@@ -15,6 +15,7 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.actions;
 
+import de.cadoculus.ocxviewer.BuildVersion;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -40,7 +41,13 @@ public class AboutAction extends  AbstractAction {
             var alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
-            alert.setContentText("TODO: add version from POM and GIT");
+
+            var sb = new StringBuilder("OCX Viewer\n");
+            sb.append("Version ").append(BuildVersion.getMvnVersion()).append("\n");
+            sb.append("Build ").append(BuildVersion.getBuiltTimestamp()).append("\n");
+            sb.append("GIT Commit ").append(BuildVersion.getGitCommitID()).append("\n");
+            sb.append("GIT Branch ").append(BuildVersion.getGitBranch()).append("\n");
+            alert.setContentText(sb.toString());
             alert.initOwner(WorkingContext.getInstance().getMainScene().getWindow());
             alert.showAndWait();
 

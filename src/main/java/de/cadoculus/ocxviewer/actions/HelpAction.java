@@ -20,6 +20,7 @@ import de.cadoculus.ocxviewer.MainController;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.views.BarSectionsPage;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -61,10 +62,11 @@ public class HelpAction extends AbstractAction {
             helpText = "Failed to load help text: " + exp.getMessage();
         }
 
-        var box = BBCodeParser.createLayout(helpText);
+
+        ScrollPane srollPane = new ScrollPane(BBCodeParser.createLayout(helpText));
         var border = new BorderPane();
         border.setId("helpBorderPane");
-        border.setCenter(box);
+        border.setCenter(srollPane);
 
         Scene secondScene = new Scene(border, 600, 400);
         Stage newWindow = new Stage();

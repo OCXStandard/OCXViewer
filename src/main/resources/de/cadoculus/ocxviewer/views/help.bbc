@@ -5,13 +5,22 @@ More information on the format is found at the
  [url=https://3docx.org/en]OCX Consortium[/url].
 
 [heading=2]Getting Started[/heading]
-
+To open an OCX file, select [b]File -> Open OCX File...[/b] from the menu bar or click the [b]Open OCX File[/b] button in the toolbar.
+After loading the file, the content is displayed in the tree view on the left side of the application window.
 
 [heading=2]UI[/heading]
 
 [heading=2]Actions[/heading]
 
+[heading=3]Schema Check[/heading]
+To be implemented. Shall run a schema validation on an OCX file and display errors and warnings.
+
+[heading=3]Schematron Check[/heading]
+To be implemented. Shall run a schematron rule file on an OCX file and display errors and warnings.
+
+
 [heading=2]OCX Version Support[/heading]
+This application tries to load OCX files according schema version 3.1.0. Other versions might be partially supported, but no guarantee is given that files of other versions are loaded correctly.
 
 [heading=2]Licenses[/heading]
 
@@ -21,11 +30,12 @@ All licenses allow free use, modification, and distribution of the software for 
 [ul]
 [li][b]OCX Viewer Source Code:[/b] Most of the source code of OCX Viewer is licensed under [url=https://www.apache.org/licenses/LICENSE-2.0]Apache License 2.0[/url].[/li]
 [li][b]OCX Viewer Source Code (Event Handling)[/b] The event handling code is copied from the [url=https://github.com/mkpaz/atlantafx]AtlantaFX demo application[/url] licensed under [url=https://opensource.org/licenses/MIT]MIT License[/url].[/li]
-[li][b]NURBS Code[/b] The code used to evaluate NURBS curves and surfaces is copied from [url=https://sourceforge.net/projects/jgeom/]JGeom[/url] licensed under [url=https://www.gnu.org/licenses/lgpl-3.0.txt]LGPL v.3.0[/url].[/li]
+[li][b]NURBS Code[/b] The code used to evaluate NURBS curves and surfaces is copied from [url=https://sourceforge.net/projects/jgeom]JGeom[/url] licensed under [url=https://www.gnu.org/licenses/lgpl-3.0.txt]LGPL v.3.0[/url] .[/li]
 [li][b]Apache Commonons[/b] The commons-beanutils, commons-cli, commons-collection, commons-io, commons-lang, and log4j libraries are licensed under the [url=https://www.apache.org/licenses/LICENSE-2.0]Apache License 2.0[/url].[/li]
 [li][b]AtlantaFX[/b] The AtlantaFX libraries is licensed under [url=https://opensource.org/licenses/MIT]MIT License[/url].[/li]
 [li][b]Ikonli[/b] The [url=https://github.com/kordamp/ikonli]Ikonli[/url] library is published under [url=https://www.apache.org/licenses/LICENSE-2.0]Apache License 2.0[/url].[/li].
 [li][b]Java/JavaFX[/b] Both Java and JavaFX are are published under [url=https://openjdk.org/legal/gplv2+ce.html]GNU General Public License, version 2, with the Classpath Exception[/url].[/li].
+
 [/ul]
 
 

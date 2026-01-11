@@ -1,12 +1,12 @@
 <Configuration status="WARN" strict="true" name="XMLConfigTest" packages="org.apache.logging.log4j.test">
 
     <Properties>
-        <Property name="filename">test-out/log.txt</Property>
+        <Property name="filename">log.txt</Property>
     </Properties>
 
     <Appenders>
         <Appender type="Console" name="STDOUT">
-            <Layout type="PatternLayout" pattern="%-1p %c{1}:%L   - %m%n"/>
+            <Layout type="PatternLayout" pattern="%-1p %c{1}:%L - %m%n"/>
         </Appender>
 
         <Appender type="File" name="File" fileName="${filename}">
@@ -15,6 +15,9 @@
             </Layout>
         </Appender>
 
+        <!-- this is a project specifc appender that logs to a ListBox in the GUI
+        The filtering is applied in the appender itself
+        -->
         <Appender type="ListBoxAppender" name="ListBoxAppender" >
             <Layout type="PatternLayout">
                 <Pattern>%c{1.} :  %m%n</Pattern>
@@ -27,7 +30,6 @@
 
         <Logger name="de.cadoculus.ocxviewer.models.FlagsEnum" level="debug"/>
 
-        <Logger name="de.cadoculus.ocxviewer.views" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.views.HeaderPage" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.logging.LoggerHelper" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.MainController" level="debug"/>
@@ -38,6 +40,7 @@
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>
+            <!-- do not remove the following appender, otherwise the listbox in the UI becomes empty -->
             <AppenderRef ref="ListBoxAppender"/>
         </Root>
     </Loggers>

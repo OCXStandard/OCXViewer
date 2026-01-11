@@ -15,13 +15,10 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer;
 
-import de.cadoculus.ocxviewer.logging.ListBoxAppender;
 import de.cadoculus.ocxviewer.logging.LoggerHelper;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.layout.PatternLayout;
 
 import java.io.File;
 import java.util.Arrays;
@@ -37,13 +34,17 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // This is the loading time. We need to optimize this with Java 25
+        // by reusing the information from previous runs.
+        /*
         var currentTimeMillis = System.currentTimeMillis();
         var processStartTime = ProcessHandle.current().info().startInstant().get();
-        System.out.println("start delay" + (currentTimeMillis - processStartTime.toEpochMilli()) + " [ms]");
+        System.out.println("start delay " + (currentTimeMillis - processStartTime.toEpochMilli()) + " [ms]");
+         */
+        printIntro();
 
         System.setProperty("log4j.debug", "false");
         Options options = new Options();
-
         options.addOption(new Option("h", "help", false, "display help"));
         options.addOption(Option.builder("log").longOpt("log").hasArg().desc("url for log4j2.xml file").build());
 
@@ -88,6 +89,41 @@ public class Main {
         System.exit(0);
     }
 
+    private static void printIntro() {
+
+        var logo= """
+                  ___   _____  __ __   ___                   \s
+                 / _ \\ / __\\ \\/ / \\ \\ / (_)_____ __ _____ _ _\s
+                | (_) | (__ >  <   \\ V /| / -_) V  V / -_) '_|
+                 \\___/ \\___/_/\\_\\   \\_/ |_\\___|\\_/\\_/\\___|_| """;
+
+        System.out.println(logo);
+        System.out.println("                       Version " + BuildVersion.getMvnVersion() );
+        System.out.println("\nbuild " + BuildVersion.getBuiltTimestamp()  + " from GIT commit " + BuildVersion.getGitCommitID()+ ", branch " + BuildVersion.getGitBranch() );
+
+        // Todo: enhance when other contribute
+        var apache = """
+                
+                Copyright 2025 Carsten Zerbst et. al. 
+                
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+                
+                    http://www.apache.org/licenses/LICENSE-2.0
+                
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+                
+                """;
+        System.out.println(apache);
+
+
+
+    }
 
 
 //    static Configuration loadProperties(File tmplFileIn) {

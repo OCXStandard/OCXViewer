@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCodeCombination;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jvnet.basicjaxb.xml.bind.model.MContained;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -73,11 +74,13 @@ public class ActionDispatcher {
             if (key2class.containsKey(key)) {
                 LOG.error("found duplicated KeyCodeCombination {} on {} and {}",
                         key, key2class.get(key), clazz);
-            }
-            key2class.put(key, clazz);
+            } else {
+                key2class.put(key, clazz);
+                // and register some hotkeys
+                scene.getAccelerators().put(key, () -> DefaultEventBus.getInstance().publish(new HotkeyEvent(key)));
 
-            // and register some hotkeys
-            scene.getAccelerators().put(key, () -> DefaultEventBus.getInstance().publish( new HotkeyEvent(key)));
+                LOG.debug(key.toString() + " " + key2class.get(key));
+            }
 
         } catch (Throwable exp) {
             LOG.error("failed to collect key codes for actions", exp);
