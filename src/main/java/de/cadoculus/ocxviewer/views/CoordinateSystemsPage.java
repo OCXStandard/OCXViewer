@@ -44,20 +44,12 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
     public static final String NAME = "Coordinate Systems";
     private static final Logger LOG = LogManager.getLogger(CoordinateSystemsPage.class);
 
-    private final TableView<CoordinateSystem> table;
-    private final GridPane gridPane;
-    private final ObjectProperty<CoordinateSystem> selectedObject = new SimpleObjectProperty<>();
-
-//    private final InputGroup originGroup;
-//    private final InputGroup primAxisGroup;
-//    private final InputGroup secAxisGroup;
-
     public CoordinateSystemsPage() {
         super(NAME);
 
         createTitle("Information about the contained coordinate systems.");
 
-        gridPane = new GridPane();
+        GridPane gridPane = new GridPane();
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);
@@ -81,10 +73,9 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
         //
         // Define the table
         //
-        var tableColumn1 = new TableColumn<CoordinateSystem, String>("ID");
-        tableColumn1.setCellValueFactory(
-                c -> new SimpleStringProperty(c.getValue().getId())
-        );
+        var tableColumn1 = new TableColumn<CoordinateSystem, CoordinateSystem>("ID");
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
+        tableColumn1.setCellFactory( createHyperlinkCellfactory( this::selectCoordinateSystem));
 
         var tableColumn2 = new TableColumn<CoordinateSystem, String>("GUID");
         tableColumn2.setCellValueFactory(
@@ -96,9 +87,8 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
                 c -> new SimpleBooleanProperty(c.getValue().isIsGlobal())
         );
 
-
         ObservableList<CoordinateSystem> coordinateSystems = FXCollections.observableArrayList();
-        table = new TableView<CoordinateSystem>(coordinateSystems);
+        TableView<CoordinateSystem> table = new TableView<>(coordinateSystems);
         table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3);
         table.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
@@ -120,24 +110,14 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
             LOG.info("no CoordinateSystems found in OCX file");
             return;
         }
-
         coordinateSystems.addAll( vessel.getCoordinateSystems());
-
         LOG.debug("found #{} coordinate systems", coordinateSystems.size());
-
-        table.getSelectionModel().selectedItemProperty().addListener((cosys, oldCosys, newCosys) -> selectCoordinateSystem(oldCosys, newCosys));
 
     }
 
-    private void selectCoordinateSystem(CoordinateSystem oldCosys, CoordinateSystem newCosys) {
+    private void selectCoordinateSystem( CoordinateSystem newCosys) {
         LOG.info("selected Coordinate System section {}", newCosys);
-        selectedObject.setValue(newCosys);
         if (newCosys == null) {
-            return;
-        }
-
-        if ( oldCosys != null && oldCosys.equals(newCosys) ) {
-            // no change
             return;
         }
 
@@ -146,21 +126,11 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
         var event = new SelectionEvent( robert);
         DefaultEventBus.getInstance().publish(event);
 
-//        label.setText( "Coordinate System " +  newCosys.getId() );
-//        LOG.debug(" (" + newCosys.getGUIDRef() + ") + " + new ArrayList(newCosys.getLocalCartesian().getOrigin().getCoordinates()).toString());
-//
-//
-//        createOrRebind( originGroup, newCosys.getLocalCartesian().getOrigin(), true);
-//        createOrRebind( primAxisGroup, newCosys.getLocalCartesian().getPrimaryAxis(), true);
-//        createOrRebind(secAxisGroup, newCosys.getLocalCartesian().getSecondaryAxis(), true);
-
     }
 
     @Override
     public void afterShow() {
-
         // Party !
-        // table.getSelectionModel().selectFirst();
     }
 
 

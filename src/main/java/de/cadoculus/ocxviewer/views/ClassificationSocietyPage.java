@@ -57,8 +57,8 @@ public class ClassificationSocietyPage extends AbstractDataViewPage {
         scrollPane.setFitToWidth(true);
 
         GridPane gridPane = new GridPane();
-
         scrollPane.setContent(gridPane);
+
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);
         ColumnConstraints col2 = new ColumnConstraints();

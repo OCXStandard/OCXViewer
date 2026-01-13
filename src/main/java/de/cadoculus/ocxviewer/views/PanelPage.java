@@ -20,6 +20,7 @@ import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
+import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -60,7 +61,15 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         createTitle(bcs, getName(), "Information about an OCX Panel");
 
+        ScrollPane scrollPane = new ScrollPane();
+        this.setCenter(scrollPane);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
         GridPane gridPane = new GridPane();
+        scrollPane.setContent(gridPane);
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);
@@ -79,22 +88,73 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         //gridPane.setGridLinesVisible(true);
 
         gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 0;");
-        setCenter(gridPane);
 
 
-        var warning = new atlantafx.base.controls.Message(
-                "Warning",
-                "Not implemented yet",
-                new FontIcon(MaterialDesignA.ALERT)
-        );
-        warning.getStyleClass().add(Styles.WARNING);
-
+        // name="T11-FR1-PS" ocx:GUIDRef="59664e8c-f100-4ea2-b275-e9eac9f25fdc" ocx:functionType="TRANSVERSAL" ocx:tightness="NonTight">
         int row = 0;
-        gridPane.add(warning, 0, row++, 4, 1);
 
+        var label = new Label("Basic Information");
+        label.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(label, 0, row++);
+        GridPane.setHalignment(label, HPos.LEFT);
+
+        label = new Label("Name");
+        label.setTooltip(new Tooltip("The name of the panel"));
+        gridPane.add(label, 0, row);
+        var textField = new TextField();
+        gridPane.add(textField, 1, row);
+        bindToBean(textField.textProperty(), panel, "name", String.class);
+
+
+        label = new Label("GUID");
+        label.setTooltip(new Tooltip("The panel's GUID"));
+        gridPane.add(label, 2, row);
+        textField = new TextField();
+        gridPane.add(textField, 3, row++);
+        bindToBean(textField.textProperty(), panel, "GUIDRef", String.class);
+
+
+        // todo: use combobox to restrict entry
+        label = new Label("Function Type");
+        label.setTooltip(new Tooltip("The panel's function type"));
+        gridPane.add(label, 0, row);
+        textField = new TextField();
+        gridPane.add(textField, 1, row);
+        bindToBean(textField.textProperty(), panel, "functionType", String.class);
+
+        label = new Label("Tightness");
+        label.setTooltip(new Tooltip("The panel's tightness"));
+        gridPane.add(label, 2, row);
+        textField = new TextField();
+        gridPane.add(textField, 3, row++);
+        bindToBean(textField.textProperty(), panel, "tightness", String.class);
+
+        label = new Label("Description");
+        label.setTooltip(new Tooltip("The panel's description"));
+        gridPane.add(label, 0, row);
+        textField = new TextField();
+        bindToBean(textField.textProperty(), panel, "description", String.class);
+        gridPane.add(textField, 1, row++, 3, 1);
+
+
+        label = new Label("Panel Topology and Geometry");
+        label.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(label, 0, row++);
+        GridPane.setHalignment(label, HPos.LEFT);
+
+        var link = new Hyperlink("View Topology and Geometry...");
+        link.setTooltip(new Tooltip("Goto Topology and Geometry page"));
+        gridPane.add(link, 0, row++);
+        link.setOnAction( e -> {
+            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            robert.add( new BreadcrumbRecord("Topology and Geometry", PanelTopologyAndGeometryPage.class, null, getObject()));
+
+            var event = new SelectionEvent( robert);
+            DefaultEventBus.getInstance().publish(event);
+        });
 
         // The parts makeing up the panel
-        var label = new Label("Panel Parts");
+        label = new Label("Panel Parts");
         label.getStyleClass().add(Styles.TITLE_4);
         gridPane.add(label, 0, ++row);
         GridPane.setHalignment(label, HPos.LEFT);

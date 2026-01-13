@@ -188,10 +188,11 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
                 c -> new SimpleBooleanProperty(c.getValue().isDisplayGrid())
         );
 
-        var tableColumn5 = new TableColumn<org.ocx_schema.v310.RefPlaneT, Object>("Location");
+        var tableColumn5 = new TableColumn<org.ocx_schema.v310.RefPlaneT, QuantityT>("Location");
         tableColumn5.setCellValueFactory(
                 c -> new SimpleObjectProperty<>(c.getValue().getReferenceLocation())
         );
+        tableColumn5.setCellFactory( createQuantityCellfactory( ));
 
         var tableX = new TableView<>(refplanes);
         tableX.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3, tableColumn4, tableColumn5);
