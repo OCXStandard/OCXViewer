@@ -81,13 +81,21 @@ public class OCXIO  {
                             oasis.unitsml.ObjectFactory.class,
                             org.ocx_schema.v310.ObjectFactory.class});
             var jaxUnmarshaller = jaxbContext.createUnmarshaller();
+            var jaxListener = new OCXIOUnmarshallerListener();
+            jaxUnmarshaller.setListener( jaxListener);
 
             final Object unmarshal = jaxUnmarshaller.unmarshal(rep);
             LOG.info("loaded {} from {}", unmarshal, file.getAbsolutePath());
 
+
+
             if ( unmarshal instanceof JAXBElement jaxbElement && jaxbElement.getValue() instanceof OcxXMLT ocxXMLT) {
 
                 LOG.info("loaded {} {} ", jaxbElement.getName(), ocxXMLT);
+
+                // now resolve the references
+                new OCXIOReferenceResolver(ocxXMLT, jaxListener).resolve();
+
 
                 return new OCXReadResult(usedNamespace, ocxXMLT);
             }

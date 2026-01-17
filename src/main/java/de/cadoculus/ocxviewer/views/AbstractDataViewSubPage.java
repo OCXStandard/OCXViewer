@@ -29,7 +29,7 @@ import java.util.Objects;
  * The base class for sub page data views
  * @author Carsten Zerbst
  */
-public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.DescriptionBaseT> extends AbstractDataViewPage implements SubPage {
+public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.IdBaseT> extends AbstractDataViewPage implements SubPage {
 
     private static final Logger LOG = LogManager.getLogger(AbstractDataViewSubPage.class);
     private final Page parentPage;

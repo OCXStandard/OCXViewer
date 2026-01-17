@@ -35,9 +35,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
-import org.ocx_schema.v310.CoordinateSystem;
-
-import java.lang.ref.Reference;
 import java.util.Objects;
 
 /**
@@ -113,7 +110,7 @@ public final class PageTree extends TreeView<PageRecord> {
         var catalogueGroup = Item.group("Catalogue", new FontIcon(MaterialDesignP.PACKAGE_VARIANT));
         root.getChildren().add(catalogueGroup);
         catalogueGroup.setExpanded(false);
-        catalogueGroup.getChildren().add( Item.page("Materials",new FontIcon(MaterialDesignB.BLUR), MaterialsPage.class));
+        catalogueGroup.getChildren().add( Item.page("Materials",new FontIcon(MaterialDesignB.BLUR), MaterialCataloguePage.class));
         catalogueGroup.getChildren().add( Item.page("Holes",new FontIcon(MaterialDesignS.STRETCH_TO_PAGE_OUTLINE), HoleShapePage.class));
         catalogueGroup.getChildren().add( Item.page("Bar Sections",new FontIcon(MaterialDesignS.SHAPE_PLUS), BarSectionsPage.class));
 

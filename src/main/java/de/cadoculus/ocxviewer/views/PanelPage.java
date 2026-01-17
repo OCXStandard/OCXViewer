@@ -95,7 +95,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         var label = new Label("Basic Information");
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++);
+        gridPane.add(label, 0, row++,3,1);
         GridPane.setHalignment(label, HPos.LEFT);
 
         label = new Label("Name");
@@ -139,7 +139,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         label = new Label("Panel Topology and Geometry");
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++);
+        gridPane.add(label, 0, row++,3,1);
         GridPane.setHalignment(label, HPos.LEFT);
 
         var link = new Hyperlink("View Topology and Geometry...");
