@@ -908,8 +908,10 @@
               </ocx:Line3D>
             </ocx:CompositeCurve3D>
           </ocx:TraceLine>
-          <ocx:MaterialRef localRef="MaterialA" ocx:GUIDRef="2ac4692d-fb2d-492e-ae9e-2b33a746f060" ocx:refType="ocx:Material" />
-          <ocx:SectionRef localRef="HP200x10" ocx:GUIDRef="042ffea7-6607-4ffe-b67d-c8b950a32936" ocx:refType="ocx:BarSection">
+            <!-- modified to use only the local ref  ocx:GUIDRef="2ac4692d-fb2d-492e-ae9e-2b33a746f060" -->
+          <ocx:MaterialRef localRef="MaterialA"  ocx:refType="ocx:Material" />
+            <!-- modified to use only the guid ref  localRef="HP200x10" -->
+          <ocx:SectionRef ocx:GUIDRef="042ffea7-6607-4ffe-b67d-c8b950a32936" ocx:refType="ocx:BarSection">
             <ocx:OffsetU numericvalue="0" unit="u_milliMetres" />
             <ocx:OffsetV numericvalue="0" unit="u_milliMetres" />
           </ocx:SectionRef>

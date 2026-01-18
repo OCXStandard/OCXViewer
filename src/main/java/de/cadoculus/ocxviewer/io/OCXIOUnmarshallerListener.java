@@ -18,6 +18,7 @@ package de.cadoculus.ocxviewer.io;
 import jakarta.xml.bind.Unmarshaller.Listener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ocx_schema.v310.CatalogueRefT;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,19 +33,21 @@ import java.util.Set;
 class OCXIOUnmarshallerListener extends Listener {
     private static final Logger LOG = LogManager.getLogger(OCXIOUnmarshallerListener.class);
 
-    private final Set<CatalogueRefTImpl> catalogueRefs = new HashSet<>();
+    private final Set<CatalogueRefT> catalogueRefs = new HashSet<>();
 
     @Override
     public void afterUnmarshal(java.lang.Object target, java.lang.Object parent) {
 
-        LOG.debug("afterUnmarshal: target class: {}, parent class: {}", target.getClass(), parent != null ? parent.getClass() : "null");
+
         if ( target instanceof CatalogueRefTImpl refT ) {
+
+            LOG.debug("afterUnmarshal: target class: {}, parent class: {}", target.getClass(), parent != null ? parent.getClass() : "null");
             // we have a reference, we need to resolve it
             catalogueRefs.add(refT);
         }
     }
 
-    public Set<CatalogueRefTImpl> getCatalogueRefs() {
+    public Set<CatalogueRefT> getCatalogueRefs() {
         return catalogueRefs;
     }
 }

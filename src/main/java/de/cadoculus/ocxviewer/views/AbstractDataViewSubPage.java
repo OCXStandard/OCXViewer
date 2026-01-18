@@ -33,7 +33,7 @@ public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.IdBa
 
     private static final Logger LOG = LogManager.getLogger(AbstractDataViewSubPage.class);
     private final Page parentPage;
-    private final T object;
+    protected final T object;
 
 
     protected AbstractDataViewSubPage( T object , Page parentPage, String name) {

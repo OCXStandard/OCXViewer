@@ -2,6 +2,7 @@ package de.cadoculus.ocxviewer.io;
 
 import jakarta.xml.bind.annotation.XmlTransient;
 import org.ocx_schema.v310.CatalogueRefT;
+import org.ocx_schema.v310.IdBaseT;
 import org.ocx_schema.v310.NamedEntityT;
 
 /**
@@ -12,13 +13,13 @@ import org.ocx_schema.v310.NamedEntityT;
 public class CatalogueRefTImpl extends CatalogueRefT {
 
     @XmlTransient
-    private NamedEntityT referenced;
+    private IdBaseT referenced;
 
-    public NamedEntityT getReferenced() {
+    public IdBaseT getReferenced() {
         return referenced;
     }
 
-     void setReferenced(NamedEntityT referenced) {
+ public void setReferenced(IdBaseT referenced) {
         this.referenced = referenced;
     }
 }

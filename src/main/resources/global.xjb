@@ -19,6 +19,9 @@
         <jaxb:schemaBindings>
             <jaxb:package name="org.ocx_schema.v310"/>
         </jaxb:schemaBindings>
+        <jaxb:bindings node="//xs:complexType[@name='CatalogueRef_T']">
+             <jaxb:class implClass="de.cadoculus.ocxviewer.io.CatalogueRefTImpl" />
+        </jaxb:bindings>
     </jaxb:bindings>
 
     <jaxb:bindings schemaLocation="xsds/unitsmlSchema_lite-0.9.18.xsd" >

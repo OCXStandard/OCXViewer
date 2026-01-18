@@ -350,13 +350,14 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
         TextField valueField = null;
         TextField unitField = null;
-        InputGroup group;
+
 
         if (inputGroup == null) {
             valueField = new TextField();
             valueField.setAlignment(Pos.CENTER_RIGHT);
             unitField = new TextField();
             unitField.setPrefWidth(80);
+            inputGroup = new atlantafx.base.layout.InputGroup(valueField, unitField);
         } else {
             valueField = (TextField) inputGroup.getChildren().get(0);
             unitField = (TextField) inputGroup.getChildren().get(1);

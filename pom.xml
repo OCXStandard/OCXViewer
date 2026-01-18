@@ -128,12 +128,7 @@
         <!--            <artifactId>cssfx</artifactId>-->
         <!--            <version>11.5.1</version>-->
         <!--        </dependency>-->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.jvnet.jaxb2_commons/jaxb2-basics-jaxb-xjc -->
         <dependency>
@@ -143,6 +138,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -297,6 +298,7 @@
                 <configuration>
                     <!--  allow to use unnamed modules -->
                     <useModulePath>false</useModulePath>
+                    <workingDirectory>${java.io.tmpdir}</workingDirectory>
                 </configuration>
             </plugin>
             <plugin>

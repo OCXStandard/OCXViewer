@@ -26,11 +26,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
@@ -38,10 +36,12 @@ import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
-import org.ocx_schema.v310.*;
+import org.ocx_schema.v310.ClassCatalogue;
+import org.ocx_schema.v310.Material;
+import org.ocx_schema.v310.MaterialCatalogue;
+import org.ocx_schema.v310.OcxXMLT;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class displays the materials contained in the OCX file
@@ -53,7 +53,6 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
     private static final Logger LOG = LogManager.getLogger(MaterialCataloguePage.class);
 
 
-    private final TableView<Material> table;
     private final ObservableList<Material> materials = FXCollections.observableArrayList();
     private final FilteredList<Material> filteredMaterials = new FilteredList<>(materials, p -> true);
 
@@ -61,28 +60,6 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
         super(NAME);
 
         createTitle("Display the content of the material catalogue.");
-
-        GridPane gridPane = new GridPane();
-
-        ColumnConstraints col1 = new ColumnConstraints();
-        col1.setHalignment(HPos.RIGHT);
-        ColumnConstraints col2 = new ColumnConstraints();
-        col2.setHalignment(HPos.LEFT);
-        col2.setHgrow(Priority.ALWAYS);
-        col2.setMaxWidth(500);
-        ColumnConstraints col3 = new ColumnConstraints();
-        col3.setHalignment(HPos.RIGHT);
-        ColumnConstraints col4 = new ColumnConstraints();
-        col4.setHalignment(HPos.LEFT);
-        col4.setHgrow(Priority.ALWAYS);
-        col4.setMaxWidth(600);
-        gridPane.getColumnConstraints().addAll(col1, col2, col3, col4);
-
-
-        //gridPane.setGridLinesVisible(true);
-
-        gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 0;");
-        this.setCenter(gridPane);
 
         //
         // Define the table
@@ -116,7 +93,7 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
 
         // the columns
         var tableColumn1 = new TableColumn<Material, Material>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<Material>( c.getValue()));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>( c.getValue()));
         tableColumn1.setCellFactory( createHyperlinkCellfactory( this::selectedMaterial));
 
         var tableColumn2 = new TableColumn<Material, String>("GUID");
@@ -134,7 +111,7 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
         );
 
         // the table itself
-        table = new TableView<>(filteredMaterials);
+        TableView<Material> table = new TableView<>(filteredMaterials);
         table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3, tableColumn4);
         table.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
@@ -142,7 +119,6 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
 
         table.setMaxWidth(Double.MAX_VALUE);
         table.setMinHeight(150);
-        table.setMaxHeight(200);
 
         final OcxXMLT ocx = WorkingContext.getInstance().getOcx();
 
@@ -203,23 +179,6 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
 
     }
 
-    private void filterMaterial(String newValue) {
-        filteredMaterials.setPredicate( material -> {
-            if (newValue == null || newValue.isEmpty()) {
-                return true;
-            }
-            String lowerCaseFilter = newValue.toLowerCase();
-
-            if (material.getName() != null && material.getName().toLowerCase().contains(lowerCaseFilter)) {
-                return true; // Filter matches name
-            }
-            else if (material.getId() != null && material.getId().toLowerCase().contains(lowerCaseFilter)) {
-                return true; // Filter matches id
-            }
-            return false; // Does not match
-        });
-    }
-
     private void selectedMaterial(Material selected) {
         LOG.debug("selected material {}", selected);
         if ( selected ==null) {
@@ -227,7 +186,7 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
             return;
         }
 
-        var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+        var robert = new ArrayList<>(getBreadcrumbs());
         robert.add( new BreadcrumbRecord(selected.getId(), MaterialPage.class, null, selected));
 
         var event = new SelectionEvent( robert);

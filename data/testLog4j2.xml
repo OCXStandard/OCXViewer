@@ -15,14 +15,6 @@
             </Layout>
         </Appender>
 
-        <!-- this is a project specifc appender that logs to a ListBox in the GUI
-        The filtering is applied in the appender itself
-        -->
-        <Appender type="ListBoxAppender" name="ListBoxAppender" >
-            <Layout type="PatternLayout">
-                <Pattern>%c{1.} :  %m%n</Pattern>
-            </Layout>
-        </Appender>
 
     </Appenders>
 
@@ -41,8 +33,8 @@
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>
-            <!-- do not remove the following appender, otherwise the listbox in the UI becomes empty -->
-            <AppenderRef ref="ListBoxAppender"/>
+
+
         </Root>
     </Loggers>
 

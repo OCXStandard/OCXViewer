@@ -39,9 +39,12 @@ module ocxviewer {
     opens de.cadoculus.ocxviewer;
     opens oasis.unitsml;
     opens org.ocx_schema.v310;
+    opens de.cadoculus.ocxviewer.io;
 
     exports de.cadoculus.ocxviewer.logging to org.apache.logging.log4j.core;
     exports de.cadoculus.ocxviewer.views to javafx.fxml;
     exports de.cadoculus.ocxviewer.models to javafx.fxml;
+    exports de.cadoculus.ocxviewer.io to org.glassfish.jaxb.runtime;
+
 
 }
