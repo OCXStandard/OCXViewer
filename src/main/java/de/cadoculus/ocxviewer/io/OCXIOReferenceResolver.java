@@ -15,11 +15,15 @@
  */
 package de.cadoculus.ocxviewer.io;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.*;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,22 +32,72 @@ import java.util.HashMap;
  * Currently only supports MaterialRefT, PlateMaterialRefT, SectionRefT and HoleRefT,
  * to be extended for other references as well.
  *
+ * The progress of the resolution can be monitored using a PropertyChangeListener and is NOT reported
+ * in the JavaFX Application Thread.
+ *
  * @author Carsten Zerbst
  */
 class OCXIOReferenceResolver {
     private static final Logger LOG = LogManager.getLogger(OCXIOReferenceResolver.class);
 
+    // assume 10% of the time for setup ...
+    private static final int CATALOGUE_SETUP = 10;
+    // and 90% for the catalogue resolution. This will change, as soon as reference surfaces etc. are taken into account.
+    private static final int CATALOGUE_RESLV = 90;
+
     private final OCXIOUnmarshallerListener listener;
     private final OcxXMLT ocx;
+    private int progress;
+    private final PropertyChangeSupport propChange;
 
 
-    // TODO: switch for strict or lenient behaviour
     public OCXIOReferenceResolver(OcxXMLT ocxXMLT, OCXIOUnmarshallerListener jaxListener) {
         this.ocx = ocxXMLT;
         this.listener = jaxListener;
+        propChange = new PropertyChangeSupport(this);
     }
 
+    /**
+     * Add a PropertyChangeListener to the listener list.
+     */
+    public void addPropertyChangeListener( PropertyChangeListener lis ) {
+        propChange.addPropertyChangeListener( lis );
+    }
+
+    /**
+     * Remove a PropertyChangeListener from the listener list.
+     */
+    public void removePropertyChangeListener( PropertyChangeListener lis ) {
+        propChange.removePropertyChangeListener( lis );
+    }
+
+    /**
+     * Returns the current progress value between 0 and 100.
+     */
+    public int getProgress() {
+        return progress;
+    }
+
+    /**
+     * Updates the progress value every 5%. Expects values between 0 and 100.
+     */
+    private void updateProgress(int np) {
+
+        if ( np != progress ) {
+            int ov = progress;
+            progress = np;
+
+            if ( ( progress % 5 ) == 0 ) {
+                propChange.firePropertyChange( ProgressInputStream.PROGRESS, ov, progress );
+            }
+        }
+    }
+
+
+
     public void resolve() {
+
+        this.updateProgress(0);
 
         LOG.debug("start resolving #{} catalogue references", listener.getCatalogueRefs().size());
         if (ocx.getClassCatalogue() == null) {
@@ -60,7 +114,6 @@ class OCXIOReferenceResolver {
         final var guid2entry = new HashMap<String, IdBaseT>();
 
         // prepare lookup maps if needed
-
         final MaterialCatalogue materialCatalogue = ocx.getClassCatalogue().getMaterialCatalogue();
         if (containsMaterialRefs) {
             if (materialCatalogue == null) {
@@ -129,12 +182,17 @@ class OCXIOReferenceResolver {
             }
         }
 
-        int delta = Math.max(1, (int) Math.floor(catalogueRefs.size() / 10.0));
+        updateProgress(CATALOGUE_SETUP);
+
+
+        int reportIntervall = Math.max(1, (int) Math.floor(catalogueRefs.size() / 10.0));
 
         for (int i = 0; i < catalogueRefs.size(); i++) {
             var catalogueRef = catalogueRefs.get(i);
-            if (i % delta == 0) {
+            if (i % reportIntervall == 0) {
                 LOG.debug("resolving catalogue references: {}/{}", i, catalogueRefs.size());
+                var rsolvProg = CATALOGUE_SETUP + CATALOGUE_RESLV * ((double) i / (double) catalogueRefs.size());
+                updateProgress( (int) rsolvProg);
             }
             IdBaseT referenced = null;
             var object = catalogueRef.getLocalRef();
@@ -157,6 +215,8 @@ class OCXIOReferenceResolver {
 
             ((CatalogueRefTImpl)catalogueRef).setReferenced( referenced);
         }
+
+        updateProgress(100);
 
     }
 

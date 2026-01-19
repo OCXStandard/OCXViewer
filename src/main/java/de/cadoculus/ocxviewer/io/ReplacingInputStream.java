@@ -25,6 +25,10 @@ import java.util.Queue;
 /**
  * This is based on an idea from Simon Lang published on https://stackoverflow.com/questions/41302330/given-inputstream-replace-character-and-produce-outputstream.
  * It reads from an underlying InputStream and replaces all occurrences of a given byte sequence with another byte sequence.
+ * THis is used to replace non-standard namespace declarations in OCX XML files on-the-fly during parsing, so we could use standard JAXB parsing
+ * even for OCX files from a different namespace.
+ *
+ * This will not use for OCX 2.7.8 files, as they have big differences in the XML structure e.g. for all coordinates.
  * @author Carsten Zerbst
  */
 class ReplacingInputStream extends FilterInputStream {

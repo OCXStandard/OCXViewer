@@ -16,29 +16,29 @@
 package de.cadoculus.ocxviewer.actions;
 
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.EventBus;
 import de.cadoculus.ocxviewer.event.NavigationEvent;
 import de.cadoculus.ocxviewer.event.OpenEvent;
 import de.cadoculus.ocxviewer.io.OCXIO;
-import de.cadoculus.ocxviewer.io.OCXReadResult;
+import de.cadoculus.ocxviewer.io.OCXParser;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.ui.ProgressBarWithText;
 import de.cadoculus.ocxviewer.views.LogPage;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.OcxXMLT;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -97,17 +97,40 @@ public class OpenAction extends AbstractAction {
         LOG.info("Selected file: {}", file);
         final File selectedFile = file;
 
+        //
+        // Prepare a dialog to show progress
+        //
+        var dialogue = new Dialog<Void>();
+        dialogue.setResizable(true);
+        var owner = dialogue.getDialogPane().getScene().getWindow();
+        Stage stage = (Stage) owner;
+        stage.setMinWidth(300);
+        stage.setMinHeight(150);
+
+        dialogue.setTitle("Parsing " + selectedFile.getName());
+        dialogue.setHeaderText("");
+        final var prgressBar = new ProgressBarWithText();
+        dialogue.getDialogPane().setContent(prgressBar);
+
+        dialogue.initModality(Modality.APPLICATION_MODAL);
+
+        dialogue.getDialogPane().getButtonTypes().add( ButtonType.CLOSE);
+        Node loginButton = dialogue.getDialogPane().lookupButton(ButtonType.CLOSE);
+        loginButton.setDisable(true);
+
+        // binding the progress must happen in the JavaFX thread, that's why the parser is created here
+        final var parser = new OCXParser( selectedFile);
+        prgressBar.progressProperty().bind( parser.progressProperty());
+        dialogue.getDialogPane().headerTextProperty().bind( parser.statusProperty());
+
+        dialogue.show();
+
+        // Now we can start a new thread to read the file
         new Thread(() -> {
 
             try {
-                var pcl = new PropertyChangeListener() {
 
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        LOG.info("pcl " + evt);
-                    }
-                };
-                final OCXReadResult result = OCXIO.read(selectedFile,pcl);
+                var result  = parser.parse();
                 OcxXMLT ocx = result.ocx();
                 WorkingContext.getInstance().setOCXFile(selectedFile);
                 WorkingContext.getInstance().setTargetNamespace(result.originalNamespace());
@@ -129,6 +152,12 @@ public class OpenAction extends AbstractAction {
 
             } catch (Throwable exception) {
                 handleException(exception);
+            } finally {
+                Platform.runLater(() -> {
+                    // it is necessary to first hide the dialog, otherwise on some platforms
+                    // it remains visible even after close is called.
+                    dialogue.hide();
+                    dialogue.close();});
             }
 
         }).start();

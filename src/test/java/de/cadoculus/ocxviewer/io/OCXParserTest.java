@@ -1,6 +1,8 @@
 package de.cadoculus.ocxviewer.io;
 
 import de.cadoculus.ocxviewer.logging.LoggerHelper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,16 +18,15 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OCXIOTest {
+class OCXParserTest {
 
-    private static final Logger LOG = LogManager.getLogger(OCXIOTest.class);
+    private static final Logger LOG = LogManager.getLogger(OCXParserTest.class);
 
     @BeforeAll
     static void setUp() {
 
         File f = new File("data/testLog4j2.xml");
         LoggerHelper.initLogging(f);
-
 
     }
 
@@ -34,7 +35,16 @@ class OCXIOTest {
         LOG.error("run in {}", new File(".").getAbsolutePath());
         var file = new File("data/Schema310/PROSTEP/V3.1.0/TR03_TC10_psav.3docx");
 
-        var result = OCXIO.read(file);
+        var parser = new OCXParser(file);
+
+        parser.progressProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                LOG.info("total progress: {}%", String.format("%.2f", t1.doubleValue() * 100.0));
+            }
+        });
+
+        var result =parser.parse();
         assertNotNull(result);
 
         var vessel = (Vessel) result.ocx().getForm().getValue();

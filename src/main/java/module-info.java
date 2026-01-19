@@ -32,7 +32,7 @@ module ocxviewer {
     requires org.apache.logging.log4j;
     requires javafx.controls;
     requires javafx.base;
-
+    requires java.xml;
 
 
     exports de.cadoculus.ocxviewer;
