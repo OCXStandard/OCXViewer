@@ -51,7 +51,7 @@ public final class PageTree extends TreeView<PageRecord> {
 
         getSelectionModel().selectedItemProperty().addListener((obs, old, val) -> {
 
-            LOG.info("Selected item: {}", val);
+            LOG.debug("Selected item: {}", val);
 
             DefaultEventBus.getInstance().publish( new NavigationEvent(val.getValue().pageClass()));
 

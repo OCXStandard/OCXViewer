@@ -34,11 +34,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
+import javafx.util.Pair;
 import oasis.unitsml.Unit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jvnet.basicjaxb.lang.Bound;
 import org.jvnet.basicjaxb.lang.StringUtils;
+import org.ocx_schema.v310.IdBaseT;
 import org.ocx_schema.v310.Point3DT;
 import org.ocx_schema.v310.QuantityT;
 import org.ocx_schema.v310.Vector3DT;
@@ -105,23 +107,38 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
      * @param <E>            the type of the table items and table column
      * @return the cell factory
      */
-    public static <E extends org.ocx_schema.v310.IdBaseT> Callback<TableColumn<E, E>, TableCell<E, E>> createHyperlinkCellfactory(Consumer<E> selectFunction) {
+    public static <E extends org.ocx_schema.v310.IdBaseT, F  >
+        Callback<TableColumn<E, F>, TableCell<E, F>> createHyperlinkCellfactory(Consumer<F> selectFunction) {
 
-        return new Callback<TableColumn<E, E>, TableCell<E, E>>() {
+        return new Callback<TableColumn<E, F>, TableCell<E, F> > () {
 
             @Override
-            public TableCell<E, E> call(TableColumn<E, E> tableColumn) {
+            public TableCell<E, F> call(TableColumn<E, F> tableColumn) {
 
-                final TableCell<E, E> cell = new TableCell<E, E>() {
+                final TableCell<E, F> cell = new TableCell<E, F>() {
+
+
                     @Override
-                    public void updateItem(E value, boolean empty) {
+                    public void updateItem(F value, boolean empty) {
                         super.updateItem(value, empty);
                         if (empty || value == null) {
                             setGraphic(null);
                             setText(null);
                             return;
                         }
-                        Hyperlink link = new Hyperlink(value.getId());
+                        var label = "unset";
+                        if  ( value instanceof IdBaseT idBaseT ) {
+                            label = idBaseT.getId();
+                        } else if ( value instanceof Pair pair ) {
+                            if ( pair.getValue() instanceof IdBaseT idBaseT) {
+                                label = idBaseT.getId();
+                            } else {
+                                label = pair.getValue().toString();
+                            }
+                        } else if ( value != null) {
+                            label = value.toString();
+                        }
+                        Hyperlink link = new Hyperlink(label);
                         link.setStyle("-fx-padding: 10px");
                         link.setOnAction(new EventHandler<ActionEvent>() {
                             @Override

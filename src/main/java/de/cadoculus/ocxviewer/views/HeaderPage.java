@@ -115,7 +115,7 @@ public class HeaderPage extends AbstractDataViewPage implements Page {
         gridPane.add(label, 2, row);
         textField = new TextField();
 
-        LOG.info("timestamp {}", WorkingContext.getInstance().getOcx().getHeader().getTimeStamp());
+        LOG.debug("timestamp {}", WorkingContext.getInstance().getOcx().getHeader().getTimeStamp());
 
         bindToBean(textField.textProperty(), WorkingContext.getInstance().getOcx().getHeader(), "timeStamp", LocalDateTime.class);
         gridPane.add(textField, 3, row++);

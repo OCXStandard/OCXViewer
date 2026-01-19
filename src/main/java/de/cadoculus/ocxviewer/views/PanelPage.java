@@ -33,12 +33,15 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
+import org.ocx_schema.v310.Material;
 import org.ocx_schema.v310.PillarT;
+import org.ocx_schema.v310.Plate;
 
 import java.util.ArrayList;
 
@@ -732,9 +735,28 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
         // TODO: better material representation
-        var tableColumn4 = new TableColumn<org.ocx_schema.v310.Plate, String>("Material");
-        tableColumn4.setCellValueFactory(cell ->
-                new SimpleStringProperty(cell.getValue().getPlateMaterial().getLocalRef().toString()));
+        var tableColumn4 = new TableColumn<Plate, Pair<Plate,Material>>("Material");
+        tableColumn4.setCellValueFactory(
+                cell -> new SimpleObjectProperty< Pair<Plate,Material> >(
+                        new Pair<>( cell.getValue(), (Material) cell.getValue().getPlateMaterial().getReferenced()))
+        );
+        tableColumn4.setCellFactory(createHyperlinkCellfactory( selected -> {
+            LOG.debug("selected material pair {}", selected);
+            if ( selected ==null) {
+                // no change
+                return;
+            }
+            var plate = selected.getKey();
+            var material = selected.getValue();
+
+            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            robert.add( new BreadcrumbRecord(plate.getId(), PlatePage.class, null, plate));
+            robert.add( new BreadcrumbRecord(material.getId(), MaterialPage.class, null, material));
+
+            var event = new SelectionEvent( robert);
+            DefaultEventBus.getInstance().publish(event);
+
+        }));
 
         // TOD: add thickness unit
 

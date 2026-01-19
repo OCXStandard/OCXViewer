@@ -22,8 +22,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,6 +34,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 
 /**
@@ -53,7 +52,7 @@ public class OCXParser {
     private final DoubleProperty progress= new SimpleDoubleProperty(0.0);
     private  final StringProperty status  = new SimpleStringProperty("");
     private boolean ran = false;
-    private boolean withoutUI =  Window.getWindows().isEmpty();
+    private final boolean withoutUI =  Window.getWindows().isEmpty();
 
     /**
      * Creates a new OCXParser for the given OCX file.
@@ -113,8 +112,19 @@ public class OCXParser {
             throw new IllegalArgumentException("failed to read namespace", exp);
         }
 
-        URI usedNamespaceURL = URI.create(usedNamespace);
-        LOG.info("file {} uses namespace {}, formatted {}", file.getName(), usedNamespace, usedNamespaceURL.toURL());
+        try {
+
+            URI usedNamespaceURL = URI.create(usedNamespace.replaceAll("(?<=[^:\\s])(\\/+\\/)", "/"));
+            LOG.info("file {} uses namespace {}, formatted {}", file.getName(), usedNamespace, usedNamespaceURL.toURL());
+
+            if ( ! usedNamespaceURL.toURL().toExternalForm().startsWith("https://3docx.org/fileadmin/ocx_schema/V3")) {
+                throw new IllegalArgumentException("Given file uses namesspace '" + usedNamespaceURL.toURL().toExternalForm() + "', expect the namespace to start with 'https://3docx.org/fileadmin/ocx_schema/V3'");
+            }
+
+        } catch (MalformedURLException e) {
+            LOG.warn("used namespace {} is not a valid URL", usedNamespace);
+            throw new IllegalArgumentException("Given file uses an invalid namesspace '" + usedNamespace + "', ist not a valid URL.");
+        }
 
         OcxXMLT ocxXMLT = null;
 
@@ -136,14 +146,14 @@ public class OCXParser {
             jaxUnmarshaller.setListener(jaxListener);
 
             final Object unmarshal = jaxUnmarshaller.unmarshal(rep);
-            LOG.info("loaded {} from {}", unmarshal, file.getAbsolutePath());
+            LOG.debug("loaded {} from {}", unmarshal, file.getAbsolutePath());
 
             if (!(unmarshal instanceof JAXBElement jaxbElement && jaxbElement.getValue() instanceof OcxXMLT ocxXMLTp)) {
 
                 LOG.error("failed to loaded OCX file, got unexpected type {}", unmarshal.getClass());
                 throw new IOException("unexpected type " + unmarshal.getClass());
             }
-            LOG.info("loaded {} {} ", jaxbElement.getName(), ocxXMLT);
+            LOG.debug("loaded {} {} ", jaxbElement.getName(), ocxXMLT);
             ocxXMLT = ocxXMLTp;
 
 
@@ -206,10 +216,10 @@ public class OCXParser {
     void updateProgress( DoubleProperty progress, double newValue) {
 
         if ( withoutUI ) {
-            LOG.info("update progress to {}", newValue);
+            //LOG.info("update progress to {}", newValue);
             progress.set(newValue);
         } else {
-            LOG.info("update UI progress to {}", newValue);
+            //LOG.info("update UI progress to {}", newValue);
             Platform.runLater(new Runnable() {
 
                 @Override
@@ -254,11 +264,11 @@ public class OCXParser {
         @Override
         public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes) {
             if (namespace == null) {
-                LOG.info("startElement {}", qName);
+
                 int idx = qName.indexOf(':');
                 var prefix = idx > 0 ? qName.substring(0, idx) : "";
                 var local = idx > 0 ? qName.substring(idx + 1) : qName;
-                LOG.info("prefix {} local {}", prefix, local);
+                LOG.debug("prefix {} local {}", prefix, local);
 
                 for (int i = 0; i < attributes.getLength(); i++) {
                     var attrQName = attributes.getQName(i);
@@ -266,7 +276,7 @@ public class OCXParser {
                     var attrPrefix = attrIdx > 0 ? attrQName.substring(0, attrIdx) : "";
                     var attrLocal = attrIdx > 0 ? attrQName.substring(attrIdx + 1) : attrQName;
 
-                    LOG.info("    attr {}|{}={}", attrPrefix, attrLocal, attributes.getValue(i));
+                    LOG.debug("    attr {}|{}={}", attrPrefix, attrLocal, attributes.getValue(i));
 
                     if (prefix.equals(attrLocal)) {
                         namespace = attributes.getValue(i);

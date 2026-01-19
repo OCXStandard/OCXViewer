@@ -194,7 +194,7 @@ public class PlatePage extends AbstractDataViewSubPage<Plate> {
         gridPane.add(label, 0, row);
 
         if ( plate.getPlateMaterial().getReferenced() != null) {
-            var link = new Hyperlink("Material  «\\" + plate.getPlateMaterial().getReferenced().getId() + "»");
+            var link = new Hyperlink("Material  «" + plate.getPlateMaterial().getReferenced().getId() + "»");
             link.setTooltip(new Tooltip("Goto Material"));
             gridPane.add(link, 1, row++);
             link.setOnAction(e -> {

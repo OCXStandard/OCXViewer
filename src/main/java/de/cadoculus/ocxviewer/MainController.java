@@ -79,17 +79,12 @@ public class MainController {
     @FXML
     public void initialize() throws IOException {
 
-        LOG.warn("initialize");
-
         // register for navigation
         DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> initializeViews());
 
         // This is initialized here to start collecting log events when the user opens a file
         final LogPage logPage = new LogPage();
         pageClass2page.put(LogPage.class, logPage);
-
-        LOG.info("pages {}", pageClass2page.keySet());
-
 
     }
 
@@ -196,10 +191,11 @@ public class MainController {
         }
         LOG.info("remaining page stack {}", pageStack);
 
-        var parentPage = pageStack.isEmpty() ? null : pageStack.peek().page();
+
 
         // now create new pages if needed
         for (int i = lastMatchingIndex + 1; i < event.getBreadcrumbs().size(); i++) {
+            var parentPage = pageStack.isEmpty() ? null : pageStack.peek().page();
             var trgtBC = event.getBreadcrumbs().get(i);
             LOG.info("#{}: target breadcrumb {}", i, trgtBC);
             LOG.info("    stack {}", pageStack);
@@ -300,7 +296,7 @@ public class MainController {
         // clean up a path off sub-pages
         while (!pageStack.isEmpty()) {
             final BreadcrumbRecord popped = pageStack.pop();
-            LOG.info("pop existing trgtBC {}", popped);
+            LOG.debug("pop existing trgtBC {}", popped);
         }
         pageStack.push(newPage.getBreadcrumbs().getFirst());
 

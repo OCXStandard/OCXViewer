@@ -34,7 +34,6 @@ import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.OcxXMLT;
@@ -135,16 +134,18 @@ public class OpenAction extends AbstractAction {
                 WorkingContext.getInstance().setOCXFile(selectedFile);
                 WorkingContext.getInstance().setTargetNamespace(result.originalNamespace());
                 WorkingContext.getInstance().setOcx(ocx);
-                LOG.info("header {}", OCXIO.serialize(ocx.getHeader()));
 
-                Runtime rt = Runtime.getRuntime();
-                long total = rt.totalMemory();
-                long free = rt.freeMemory();
-                long max = rt.maxMemory();
-                long used = total -free;
+                if ( LOG.isDebugEnabled()) {
+                    Runtime rt = Runtime.getRuntime();
+                    long total = rt.totalMemory();
+                    long free = rt.freeMemory();
+                    long max = rt.maxMemory();
+                    long used = total - free;
 
-                LOG.info("Memory: total {} free {} used {} max {}",
-                        total, free, used, max);
+                    LOG.debug("Memory: total {} free {} used {} max {}",
+                            total, free, used, max);
+                }
+
                 Platform.runLater(() -> {
                     OpenEvent openEvent = new OpenEvent(ocx, selectedFile);
                     DefaultEventBus.getInstance().publish(openEvent);

@@ -30,7 +30,6 @@ import javafx.scene.layout.StackPane;
  */
 public class ProgressBarWithText extends StackPane  {
 
-    private final ProgressBar progressBar;
     private final Label labeledProgressIndicator;
     private final DoubleProperty progress = new SimpleDoubleProperty();
     private final String formatString = "%.0f %%";
@@ -39,7 +38,7 @@ public class ProgressBarWithText extends StackPane  {
      * Creates a new ProgressBarWithText instance.
      */
     public ProgressBarWithText() {
-        this.progressBar = new ProgressBar(0);
+        ProgressBar progressBar = new ProgressBar(0);
         progressBar.getStyleClass().add(Styles.LARGE);
         this.labeledProgressIndicator = new Label();
         this.getChildren().addAll(progressBar, labeledProgressIndicator);
