@@ -17,16 +17,23 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.utils.DesktopApi;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.awt.*;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
 /**
@@ -57,7 +64,40 @@ public class HeaderPage extends AbstractDataViewPage implements Page {
 
         int row = 0;
 
-        var label = new Label("OCX Schema");
+
+        var  label = new Label("File Information");
+        label.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(label, 0, row++, 2, 1);
+        GridPane.setHalignment(label, HPos.LEFT);
+
+        label = new Label("File Name");
+        gridPane.add(label, 0, row);
+
+        var hbox = new HBox();
+        gridPane.add(hbox, 1, row++, 3, 1);
+
+        var textField = new TextField();
+        textField.setText( WorkingContext.getInstance().getOCXFile().getName());
+        hbox.getChildren().add(textField);
+        HBox.setHgrow(textField, Priority.ALWAYS);
+
+        var openButton =new Button("");
+        hbox.getChildren().add(openButton);
+        openButton.setGraphic( new FontIcon("mdi2f-folder-open"));
+        openButton.setTooltip( new Tooltip("Open folder containing the OCX File"));
+        openButton.setOnAction( actionEvent -> {
+            var path = WorkingContext.getInstance().getOCXFile().getParentFile();
+                    DesktopApi.open(path);
+         });
+
+        label = new Label("File Size ");
+        gridPane.add(label, 0, row);
+        textField = new TextField();
+        gridPane.add(textField, 1, row++);
+        textField.setText( readableFileSize(WorkingContext.getInstance().getOCXFile().length()));
+
+
+        label = new Label("OCX Schema");
         label.getStyleClass().add(Styles.TITLE_4);
         gridPane.add(label, 0, row++, 2, 1);
         GridPane.setHalignment(label, HPos.LEFT);
@@ -65,7 +105,7 @@ public class HeaderPage extends AbstractDataViewPage implements Page {
         label = new Label("Schema");
         label.setTooltip(new Tooltip("The OCX Schema version referenced in the XML header."));
         gridPane.add(label, 0, row);
-        var textField = new TextField();
+        textField = new TextField();
         textField.setText( WorkingContext.getInstance().getTargetNamespace());
         gridPane.add(textField, 1, row++, 3, 1);
 
@@ -137,6 +177,12 @@ public class HeaderPage extends AbstractDataViewPage implements Page {
 
 
     }
-
+    // See https://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
+    public static String readableFileSize(long size) {
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB", "PB", "EB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
 
 }

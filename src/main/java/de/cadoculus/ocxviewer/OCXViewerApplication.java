@@ -74,6 +74,8 @@ public class OCXViewerApplication extends Application {
         stage.setScene(scene);
 
 
+
+
         // ... and the window events
         scene.widthProperty().addListener(new ChangeListener<Number>() {
             @Override

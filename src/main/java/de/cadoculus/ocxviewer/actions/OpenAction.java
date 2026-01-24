@@ -146,6 +146,8 @@ public class OpenAction extends AbstractAction {
                 }
 
                 Platform.runLater(() -> {
+                    var mainStage = (Stage)  WorkingContext.getInstance().getMainScene().getWindow();
+                    mainStage.setTitle("OCX Viewer - " + selectedFile.getName());
                     OpenEvent openEvent = new OpenEvent(ocx, selectedFile);
                     DefaultEventBus.getInstance().publish(openEvent);
                 });
