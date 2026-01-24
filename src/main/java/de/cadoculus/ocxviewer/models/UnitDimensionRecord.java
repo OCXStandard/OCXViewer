@@ -15,12 +15,6 @@
  */
 package de.cadoculus.ocxviewer.models;
 
-import oasis.unitsml.EnumeratedRootUnit;
-import oasis.unitsml.Unit;
-import oasis.unitsml.UnitName;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Iterator;
 import java.util.List;
 
 /**

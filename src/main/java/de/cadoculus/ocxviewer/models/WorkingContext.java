@@ -15,11 +15,12 @@
  */
 package de.cadoculus.ocxviewer.models;
 
+import de.cadoculus.ocxviewer.OCXViewerApplication;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import org.ocx_schema.v310.*;
-import de.cadoculus.ocxviewer.OCXViewerApplication;
 import javafx.scene.Scene;
+import org.ocx_schema.v310.OcxXMLT;
+import org.ocx_schema.v310.Vessel;
 
 import java.io.File;
 import java.util.prefs.Preferences;

@@ -32,7 +32,7 @@ public class EndcutPage extends AbstractDataViewSubPage<EndCutT> {
     private static final Logger LOG = LogManager.getLogger(EndcutPage.class);
 
     public EndcutPage(EndCutT endCutT, Page parent) {
-        super(endCutT, parent, "Endcut \u00AB"+endCutT.getId() + "\u00BB");
+        super(endCutT, parent, "Endcut «"+endCutT.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

@@ -15,33 +15,20 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.views;
 
-import atlantafx.base.controls.Breadcrumbs;
 import atlantafx.base.theme.Styles;
-import atlantafx.base.util.IntegerStringConverter;
-import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.EventBus;
-import de.cadoculus.ocxviewer.event.SelectionEvent;
-import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
-import de.cadoculus.ocxviewer.models.SurfaceControlPointRecord;
 import de.cadoculus.ocxviewer.utils.GeomHelper;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.ocx_schema.v310.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A page displaying information about a Surface.
@@ -49,13 +36,13 @@ import java.util.List;
  *
  * @author Carsten Zerbst
  */
-public class SurfacePage extends AbstractDataViewSubPage<org.ocx_schema.v310.SurfaceT> {
+public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
     public static final String NAME = "Surface";
     private static final Logger LOG = LogManager.getLogger(SurfacePage.class);
     private final GridPane gridPane;
 
-    public SurfacePage(org.ocx_schema.v310.SurfaceT surface, Page parent) {
-        super(surface, parent, GeomHelper.getGeometryType(surface) + " \u00AB" + surface.getId() + "\u00BB");
+    public SurfacePage(SurfaceT surface, Page parent) {
+        super(surface, parent, GeomHelper.getGeometryType(surface) + " «" + surface.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
@@ -66,29 +53,25 @@ public class SurfacePage extends AbstractDataViewSubPage<org.ocx_schema.v310.Sur
         setCenter(gridPane);
 
 
-        if (surface instanceof NURBSSurfaceT nurbsSurface) {
-            init(nurbsSurface);
-        } else if (surface instanceof Cylinder3DT cylinder) {
-            init(cylinder);
-        } else if (surface instanceof Cone3DT nurbsSurface) {
-            init(nurbsSurface);
-        } else if (surface instanceof Sphere3DT sphere) {
-            init(sphere);
-        } else if (surface instanceof ExtrudedSurfaceT nurbsSurface) {
-            init(nurbsSurface);
-        } else if (surface instanceof Plane3DT plane) {
-            init(plane);
-        } else {
+        switch (surface) {
+            case NURBSSurfaceT nurbsSurface -> init(nurbsSurface);
+            case Cylinder3DT cylinder -> init(cylinder);
+            case Cone3DT nurbsSurface -> init(nurbsSurface);
+            case Sphere3DT sphere -> init(sphere);
+            case ExtrudedSurfaceT nurbsSurface -> init(nurbsSurface);
+            case Plane3DT plane -> init(plane);
+            default -> {
+                LOG.warn("found unsupported Surface type: {}", surface.getClass().getName());
 
+                var warning = new atlantafx.base.controls.Message(
+                        "Warning",
+                        "Not implemented yet",
+                        new FontIcon(MaterialDesignA.ALERT)
+                );
+                warning.getStyleClass().add(Styles.WARNING);
 
-            var warning = new atlantafx.base.controls.Message(
-                    "Warning",
-                    "Not implemented yet",
-                    new FontIcon(MaterialDesignA.ALERT)
-            );
-            warning.getStyleClass().add(Styles.WARNING);
-
-            setCenter(warning);
+                setCenter(warning);
+            }
         }
 
     }
@@ -344,20 +327,22 @@ public class SurfacePage extends AbstractDataViewSubPage<org.ocx_schema.v310.Sur
         gridPane.add(text, 3, row++);
 
         label = new Label("Rational U");
-        label.setTooltip(new Tooltip("The default is non-rational basis functions (isRational=false).\n" +
-                "Rational refers to the underlying mathematical representation.\n" +
-                "This property allows NURBS to represent exact conics (such as parabolic curves, circles, and ellipses)\n" +
-                "in addition to free-form curves. To define conical curve types set isRational=true."));
+        label.setTooltip(new Tooltip("""
+                The default is non-rational basis functions (isRational=false).
+                Rational refers to the underlying mathematical representation.
+                This property allows NURBS to represent exact conics (such as parabolic curves, circles, and ellipses)
+                in addition to free-form curves. To define conical curve types set isRational=true."""));
         gridPane.add(label, 0, row);
         var cb  = new CheckBox();
         cb.setSelected( uProps.isIsRational());
         gridPane.add(cb, 1, row);
 
         label = new Label("Curve Form V");
-        label.setTooltip(new Tooltip("The default is non-rational basis functions (isRational=false).\n" +
-                "Rational refers to the underlying mathematical representation.\n" +
-                "This property allows NURBS to represent exact conics (such as parabolic curves, circles, and ellipses)\n" +
-                "in addition to free-form curves. To define conical curve types set isRational=true."));
+        label.setTooltip(new Tooltip("""
+                The default is non-rational basis functions (isRational=false).
+                Rational refers to the underlying mathematical representation.
+                This property allows NURBS to represent exact conics (such as parabolic curves, circles, and ellipses)
+                in addition to free-form curves. To define conical curve types set isRational=true."""));
         gridPane.add(label, 2, row);
         cb =         new CheckBox();
         cb.setSelected( vProps.isIsRational());

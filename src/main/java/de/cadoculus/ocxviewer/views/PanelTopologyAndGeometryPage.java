@@ -31,7 +31,7 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
     private static final Logger LOG = LogManager.getLogger(PanelTopologyAndGeometryPage.class);
 
     public PanelTopologyAndGeometryPage(org.ocx_schema.v310.Panel panel, Page parent) {
-        super(panel, parent, "Topology and Geometry of \u00AB"+panel.getId() + "\u00BB");
+        super(panel, parent, "Topology and Geometry of «"+panel.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

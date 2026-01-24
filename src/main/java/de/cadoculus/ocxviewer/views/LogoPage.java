@@ -16,8 +16,6 @@
 package de.cadoculus.ocxviewer.views;
 
 import de.cadoculus.ocxviewer.MainController;
-import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -27,12 +25,12 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +39,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Consumer;
-import javafx.scene.text.Text;
 /*
  * This class is responsible for displaying the logo of the application directly after startup.
  * It is later discarded in the MainController's {@link MainController#initializeDataView()} method.

@@ -31,7 +31,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
     private static final Logger LOG = LogManager.getLogger(BracketPage.class);
 
     public BracketPage(org.ocx_schema.v310.Bracket bracket, Page parent) {
-        super(bracket, parent, "Bracket \u00AB"+bracket.getId() + "\u00BB");
+        super(bracket, parent, "Bracket «"+bracket.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

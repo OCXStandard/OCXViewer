@@ -31,7 +31,7 @@ public class PillarPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Pill
     private static final Logger LOG = LogManager.getLogger(PillarPage.class);
 
     public PillarPage(org.ocx_schema.v310.PillarT pillar, Page parent) {
-        super(pillar, parent, "Stiffener \u00AB"+pillar.getId() + "\u00BB");
+        super(pillar, parent, "Stiffener «"+pillar.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

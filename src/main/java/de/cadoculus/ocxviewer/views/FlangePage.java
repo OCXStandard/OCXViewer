@@ -31,7 +31,7 @@ public class FlangePage extends AbstractDataViewSubPage<org.ocx_schema.v310.Stif
     private static final Logger LOG = LogManager.getLogger(FlangePage.class);
 
     public FlangePage(org.ocx_schema.v310.Stiffener stiffener, Page parent) {
-        super(stiffener, parent, "Stiffener \u00AB"+stiffener.getId() + "\u00BB");
+        super(stiffener, parent, "Stiffener «"+stiffener.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

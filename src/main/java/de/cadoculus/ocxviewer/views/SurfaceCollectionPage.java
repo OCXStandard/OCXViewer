@@ -15,7 +15,6 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.views;
 
-import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
@@ -25,18 +24,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.ocx_schema.v310.DescriptionBaseT;
 import org.ocx_schema.v310.SurfaceCollection;
 import org.ocx_schema.v310.SurfaceT;
@@ -54,7 +47,7 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<org.ocx_schem
     private final TableView<DescriptionBaseT> table;
 
     public SurfaceCollectionPage(org.ocx_schema.v310.SurfaceCollection collection, Page parent) {
-        super(collection, parent, "Surface Collection \u00AB"+collection.getId() + "\u00BB");
+        super(collection, parent, "Surface Collection «"+collection.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

@@ -20,7 +20,6 @@ import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
-import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -29,7 +28,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -37,7 +35,6 @@ import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
 import org.ocx_schema.v310.Material;
 import org.ocx_schema.v310.PillarT;
@@ -57,7 +54,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
     public PanelPage(org.ocx_schema.v310.Panel panel, Page parent) {
-        super(panel, parent, "Panel \u00AB" + panel.getId() + "\u00BB");
+        super(panel, parent, "Panel «" + panel.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

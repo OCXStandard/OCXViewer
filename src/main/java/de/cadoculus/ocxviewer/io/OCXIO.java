@@ -15,13 +15,13 @@
  */
 package de.cadoculus.ocxviewer.io;
 
-import jakarta.xml.bind.*;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.OcxXMLT;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.namespace.QName;
 import javax.xml.parsers.SAXParserFactory;
 import java.beans.PropertyChangeListener;
 import java.io.FileInputStream;

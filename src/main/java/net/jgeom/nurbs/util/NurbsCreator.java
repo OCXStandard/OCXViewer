@@ -19,23 +19,11 @@
  */
 package net.jgeom.nurbs.util;
 
-import net.jgeom.nurbs.BasicNurbsCurve;
-import net.jgeom.nurbs.BasicNurbsSurface;
-import net.jgeom.nurbs.ControlNet;
-import net.jgeom.nurbs.ControlPoint4f;
-import net.jgeom.nurbs.KnotVector;
-import net.jgeom.nurbs.NurbsCurve;
-import net.jgeom.nurbs.NurbsSurface;
+import net.jgeom.nurbs.*;
 import net.jgeom.util.Axis3D;
 import net.jgeom.util.Origin3D;
 
-import javax.vecmath.GMatrix;
-import javax.vecmath.GVector;
-import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
-import javax.vecmath.SingularMatrixException;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
+import javax.vecmath.*;
 
 
 /**

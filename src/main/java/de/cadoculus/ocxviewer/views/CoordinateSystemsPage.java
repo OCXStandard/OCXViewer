@@ -15,24 +15,21 @@
  */
 package de.cadoculus.ocxviewer.views;
 
-import atlantafx.base.layout.InputGroup;
-import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310.*;
+import org.ocx_schema.v310.CoordinateSystem;
 
 import java.util.ArrayList;
 

@@ -17,11 +17,6 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.layout.InputGroup;
 import atlantafx.base.theme.Styles;
-import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.SelectionEvent;
-import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
-import de.cadoculus.ocxviewer.models.WorkingContext;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,18 +25,12 @@ import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-import org.ocx_schema.v310.*;
-
-import java.util.ArrayList;
+import org.ocx_schema.v310.QuantityT;
 
 /**
  * This class displays the coordinated system contained in the OCX file
@@ -59,7 +48,7 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
 
 
     public CoordinateSystemPage(org.ocx_schema.v310.CoordinateSystem coosys, Page parent) {
-        super(coosys, parent, "Coordinate System \u00AB"+coosys.getId() + "\u00BB");
+        super(coosys, parent, "Coordinate System «"+coosys.getId() + "»");
 
         final var bcs = getBreadcrumbs();
 

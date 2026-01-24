@@ -16,16 +16,17 @@
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
-import org.ocx_schema.v310.*;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
+import org.ocx_schema.v310.ClassificationData;
+import org.ocx_schema.v310.PrincipalParticulars;
 
 /**
  * The PrincipalParticularsPage class is a subclass of AbstractDataViewPage and is used to display the principal particulars of a vessel.

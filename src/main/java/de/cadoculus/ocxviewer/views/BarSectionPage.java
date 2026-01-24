@@ -79,7 +79,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
 
     public BarSectionPage(BarSection barSection, Page parent) {
-        super(barSection, parent, "BarSection \u00AB" + barSection.getId() + "\u00BB");
+        super(barSection, parent, "BarSection «" + barSection.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

@@ -17,12 +17,8 @@ package de.cadoculus.ocxviewer;
 
 import atlantafx.base.theme.CupertinoDark;
 import atlantafx.base.theme.CupertinoLight;
-import de.cadoculus.ocxviewer.actions.AboutAction;
 import de.cadoculus.ocxviewer.actions.ActionDispatcher;
-import de.cadoculus.ocxviewer.actions.ExitAction;
-import de.cadoculus.ocxviewer.actions.OpenAction;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.HotkeyEvent;
 import de.cadoculus.ocxviewer.event.WindowEvent;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.views.LogoPage;

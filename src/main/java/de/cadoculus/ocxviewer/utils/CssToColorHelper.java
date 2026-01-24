@@ -15,20 +15,19 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.WritableValue;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleableProperty;
+import javafx.css.converter.ColorConverter;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 
-import javafx.css.converter.ColorConverter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * See https://stackoverflow.com/questions/32625212/convert-color-from-css-to-javafx-color-object

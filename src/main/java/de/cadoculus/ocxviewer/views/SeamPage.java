@@ -31,7 +31,7 @@ public class SeamPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Seam> 
     private static final Logger LOG = LogManager.getLogger(SeamPage.class);
 
     public SeamPage(org.ocx_schema.v310.Seam seam, Page parent) {
-        super(seam, parent, "Seam \u00AB"+seam.getId() + "\u00BB");
+        super(seam, parent, "Seam «"+seam.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

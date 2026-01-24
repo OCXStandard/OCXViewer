@@ -19,14 +19,9 @@ import atlantafx.base.theme.Styles;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-import org.ocx_schema.v310.Material;
 
 import java.util.List;
 
@@ -41,7 +36,7 @@ public class MaterialPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Ma
     private static final Logger LOG = LogManager.getLogger(MaterialPage.class);
 
     public MaterialPage(org.ocx_schema.v310.Material material, Page parent) {
-        super(material, parent, "Material \u00AB" + material.getId() + "\u00BB");
+        super(material, parent, "Material «" + material.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();

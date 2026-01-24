@@ -16,8 +16,8 @@ limitations under the License.
 package de.cadoculus.ocxviewer.io;
 
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
+
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**

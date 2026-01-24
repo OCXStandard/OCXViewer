@@ -18,7 +18,6 @@ package de.cadoculus.ocxviewer.actions;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.NavigationEvent;
 import de.cadoculus.ocxviewer.event.OpenEvent;
-import de.cadoculus.ocxviewer.io.OCXIO;
 import de.cadoculus.ocxviewer.io.OCXParser;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.ui.ProgressBarWithText;

@@ -15,14 +15,12 @@
  */
 package de.cadoculus.ocxviewer.actions;
 
-import de.cadoculus.ocxviewer.Main;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.HotkeyEvent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCodeCombination;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jvnet.basicjaxb.xml.bind.model.MContained;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -31,7 +29,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Dispatches events from the event bus to actions.

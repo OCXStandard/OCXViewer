@@ -19,7 +19,6 @@ import atlantafx.base.controls.Breadcrumbs;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ocx_schema.v310.IdBaseT;
 
 import java.util.ArrayList;
 import java.util.List;

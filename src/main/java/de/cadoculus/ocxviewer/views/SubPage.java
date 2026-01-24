@@ -15,8 +15,6 @@
  */
 package de.cadoculus.ocxviewer.views;
 
-import javafx.scene.Parent;
-
 /**
  * An interface used for sub-pages. Eg. for the SurfacePage as sub-page of the ReferenceSurfacesPage.
  * @author Carsten Zerbst

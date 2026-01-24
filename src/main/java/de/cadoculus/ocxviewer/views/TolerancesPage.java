@@ -22,14 +22,9 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-import org.ocx_schema.v310.ClassificationData;
-import org.ocx_schema.v310.PrincipalParticulars;
-import org.ocx_schema.v310.Quantity;
 import org.ocx_schema.v310.QuantityT;
 
 /**
