@@ -59,7 +59,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private static final Logger LOG = LogManager.getLogger(BarSectionPage.class);
     private static ImagePattern barPattern;
 
-    private final GridPane gridPane = new GridPane();
+    private final GridPane gridPane;
     private final GridPane dimensionGrid = new GridPane();
     private final Canvas canvas = new Canvas();
     private final TabPane dimeAndSketchTab;
@@ -86,22 +86,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         createTitle(bcs, getName(), "Information about a BarSection.");
 
-        ColumnConstraints col1 = new ColumnConstraints();
-        col1.setHalignment(HPos.RIGHT);
-        ColumnConstraints col2 = new ColumnConstraints();
-        col2.setHalignment(HPos.LEFT);
-        col2.setHgrow(Priority.ALWAYS);
-        col2.setMaxWidth(600);
-        ColumnConstraints col3 = new ColumnConstraints();
-        col3.setHalignment(HPos.RIGHT);
-        ColumnConstraints col4 = new ColumnConstraints();
-        col4.setHalignment(HPos.LEFT);
-        col4.setHgrow(Priority.ALWAYS);
-        col4.setMaxWidth(600);
-
+        gridPane = createDefaultGrid();
         setCenter(gridPane);
-        gridPane.getColumnConstraints().addAll(col1, col2, col3, col4);
-        gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 10;");
 
         int row = 0;
 

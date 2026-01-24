@@ -158,11 +158,6 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
         DefaultEventBus.getInstance().publish(event);
     }
 
-    @Override
-    public void afterShow() {
-
-       // Party !
-    }
 
 
 

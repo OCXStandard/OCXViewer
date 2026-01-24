@@ -26,12 +26,11 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
 import javafx.util.Pair;
@@ -275,6 +274,32 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
         final TextFlow formattedText = BBCodeParser.createFormattedText(description);
         titleBox.getChildren().add(formattedText);
+    }
+
+    /**
+     * Create the default form gird containing 4 columns
+     * @return a grid pane
+     */
+    protected GridPane createDefaultGrid() {
+        GridPane gridPane = new GridPane();
+
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setHalignment(HPos.RIGHT);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setHalignment(HPos.LEFT);
+        col2.setHgrow(Priority.ALWAYS);
+        col2.setMaxWidth(600);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setHalignment(HPos.RIGHT);
+        ColumnConstraints col4 = new ColumnConstraints();
+        col4.setHalignment(HPos.LEFT);
+        col4.setHgrow(Priority.ALWAYS);
+        col4.setMaxWidth(600);
+
+        gridPane.getColumnConstraints().addAll(col1, col2, col3, col4);
+        gridPane.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 10;");
+
+        return gridPane;
     }
 
     protected InputGroup createOrRebind(InputGroup inputGroup, Point3DT point3DT, boolean mandatory) {

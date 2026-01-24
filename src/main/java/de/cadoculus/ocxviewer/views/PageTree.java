@@ -76,9 +76,7 @@ public final class PageTree extends TreeView<PageRecord> {
         fileGroup.getChildren().add( Item.page(ClassificationSocietyPage.NAME,new FontIcon(MaterialDesignA.ANCHOR), ClassificationSocietyPage.class));
         fileGroup.getChildren().add( Item.page(PrincipalParticularsPage.NAME,new FontIcon(MaterialDesignA.ARROW_LEFT_RIGHT), PrincipalParticularsPage.class));
         fileGroup.getChildren().add( Item.page(BuilderInformationPage.NAME,new FontIcon(MaterialDesignG.GANTRY_CRANE), BuilderInformationPage.class));
-        fileGroup.getChildren().add( Item.page(TonnageInformationPage.NAME,new FontIcon(MaterialDesignC.CUBE_OUTLINE), TonnageInformationPage.class));
-        fileGroup.getChildren().add( Item.page(StatutoryDataPage.NAME,new FontIcon(MaterialDesignF.FLAG_OUTLINE), StatutoryDataPage.class));
-        fileGroup.getChildren().add( Item.page(ShipDesignationPage.NAME,new FontIcon(MaterialDesignS.SCRIPT_TEXT_OUTLINE), ShipDesignationPage.class));
+        fileGroup.getChildren().add( Item.page(VesselDataPage.NAME,new FontIcon(MaterialDesignS.SCRIPT_TEXT_OUTLINE), VesselDataPage.class));
 
         // Reference Surfaces and Grid
         var geomGroup = Item.group("Geometry", new FontIcon(MaterialDesignS.SHIP_WHEEL));
@@ -102,10 +100,10 @@ public final class PageTree extends TreeView<PageRecord> {
         root.getChildren().add(hullGroup);
         hullGroup.setExpanded(true);
         hullGroup.getChildren().add( Item.page(PanelsPage.NAME,new FontIcon(MaterialDesignB.BORDER_NONE),PanelsPage.class));
-        hullGroup.getChildren().add( Item.group("Plate",new FontIcon(MaterialDesignB.BORDER_ALL_VARIANT)));
-        hullGroup.getChildren().add( Item.group("Stiffener",new FontIcon(MaterialDesignB.BORDER_HORIZONTAL)));
-        hullGroup.getChildren().add( Item.group("Bracket",new FontIcon(MaterialDesignN.NETWORK_STRENGTH_OUTLINE)));
-        hullGroup.getChildren().add( Item.group("Member",new FontIcon(MaterialDesignB.BORDER_LEFT_VARIANT)));
+        hullGroup.getChildren().add( Item.group("Plates",new FontIcon(MaterialDesignB.BORDER_ALL_VARIANT)));
+        hullGroup.getChildren().add( Item.group("Stiffeners",new FontIcon(MaterialDesignB.BORDER_HORIZONTAL)));
+        hullGroup.getChildren().add( Item.group("Brackets",new FontIcon(MaterialDesignN.NETWORK_STRENGTH_OUTLINE)));
+        hullGroup.getChildren().add( Item.group("Members",new FontIcon(MaterialDesignB.BORDER_LEFT_VARIANT)));
 
         var catalogueGroup = Item.group("Catalogue", new FontIcon(MaterialDesignP.PACKAGE_VARIANT));
         root.getChildren().add(catalogueGroup);
