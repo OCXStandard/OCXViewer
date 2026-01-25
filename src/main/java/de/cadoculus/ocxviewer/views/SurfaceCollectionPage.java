@@ -38,7 +38,6 @@ import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
 import org.ocx_schema.v310.DescriptionBaseT;
-import org.ocx_schema.v310.Panel;
 import org.ocx_schema.v310.SurfaceCollection;
 import org.ocx_schema.v310.SurfaceT;
 
@@ -131,8 +130,7 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
 
         var tableColumn2 = new TableColumn<DescriptionBaseT, String>("Name");
         tableColumn2.setCellValueFactory(
-                c -> new SimpleStringProperty(
-                        c.getValue() instanceof SurfaceT ? c.getValue().getName() : c.getValue().getName()));
+                c -> new SimpleStringProperty(  c.getValue().getName() ));
 
         var tableColumn3 = new TableColumn<DescriptionBaseT, String>("GUID");
         tableColumn3.setCellValueFactory(
@@ -162,7 +160,7 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
             gridPane.getRowConstraints().add(new RowConstraints());
         }
         var tableRow = new RowConstraints();
-        tableRow.setVgrow(Priority.ALWAYS);;
+        tableRow.setVgrow(Priority.ALWAYS);
         gridPane.getRowConstraints().add( tableRow);
 
 

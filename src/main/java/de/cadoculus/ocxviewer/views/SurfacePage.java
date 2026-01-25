@@ -417,7 +417,7 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         label.setTooltip( new Tooltip("""
                 The knot-vector is a list of size m=+n-1 knots where p is the polynomial basis degree
                 and n is the number of control points.
-                The knot vector consists of a non-decreasing sequence of values. 
+                The knot vector consists of a non-decreasing sequence of values.
                 Knot multiplicities can be included. 
                 A knot multiplicity means that a knot value can be repeated up to p+1 times.
                 """));
