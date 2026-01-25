@@ -16,15 +16,17 @@ limitations under the License.
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.models.ControlPointRecord;
 import de.cadoculus.ocxviewer.utils.GeomHelper;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import oasis.unitsml.Unit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -418,7 +420,7 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
                 The knot-vector is a list of size m=+n-1 knots where p is the polynomial basis degree
                 and n is the number of control points.
                 The knot vector consists of a non-decreasing sequence of values.
-                Knot multiplicities can be included. 
+                Knot multiplicities can be included.
                 A knot multiplicity means that a knot value can be repeated up to p+1 times.
                 """));
         gridPane.add(label, 0, row);
@@ -444,45 +446,65 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         //knot.setWrapText(true);
         gridPane.add(knot, 3, row++);
 
+        var tabPane = new TabPane();
+        gridPane.add(tabPane, 0, row++, 4,1);
+
+        // ensure the last row gets all available space
+        for ( int r =0; r< GridPane.getRowIndex(tabPane); r++) {
+            gridPane.getRowConstraints().add(new RowConstraints());
+        }
+        var tableRow = new RowConstraints();
+        tableRow.setVgrow(Priority.ALWAYS);
+        gridPane.getRowConstraints().add( tableRow);
+
+
 
         // The control points table
-        label = new Label("Control Points");
-        label.setTooltip(new Tooltip("Properties of the basis function in U direction."));
-        label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++,2,1);
-        GridPane.setHalignment(label, HPos.LEFT);
-        GridPane.setMargin(label, new Insets(20, 0, 10, 0));
+        var ctrlPtsTab = new Tab("Control Points");
+        ctrlPtsTab.setClosable(false);
+        tabPane.getTabs().add(ctrlPtsTab);
+        ctrlPtsTab.setTooltip(new Tooltip("The control points defining the surface's geometry."));
 
 
-        var tableColumn1 = new TableColumn<ControlPoint, Number>("X");
-        tableColumn1.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().getCoordinates().getFirst()));
+        var tableColumnIdx = new TableColumn<ControlPointRecord, String>("Index");
+        tableColumnIdx.setCellValueFactory(c -> new SimpleStringProperty(
+                Long.toString(  c.getValue().index())));
+        tableColumnIdx.setStyle( "-fx-alignment: CENTER-RIGHT;");
 
-        var tableColumn2 = new TableColumn<ControlPoint, Number>("Y");
-        tableColumn2.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().getCoordinates().get(1)));
+        var tableColumnRC = new TableColumn<ControlPointRecord, String>("Row/Column");
+        tableColumnRC.setCellValueFactory(c -> new SimpleStringProperty(
+                c.getValue().row() + ":" + c.getValue().colum()));
 
-        var tableColumn3 = new TableColumn<ControlPoint, Number>("Z");
-        tableColumn3.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().getCoordinates().getLast()));
 
-        var tableColumn4 = new TableColumn<ControlPoint, String>("Unit");
-        tableColumn4.setCellValueFactory(c -> {
-            if ( c.getValue().getUnit() instanceof Unit unit) {
+        var tableColumnX = new TableColumn<ControlPointRecord, Number>("X");
+        tableColumnX.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().controlPoint().getCoordinates().getFirst()));
+
+        var tableColumnY = new TableColumn<ControlPointRecord, Number>("Y");
+        tableColumnY.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().controlPoint().getCoordinates().get(1)));
+
+        var tableColumnZ = new TableColumn<ControlPointRecord, Number>("Z");
+        tableColumnZ.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().controlPoint().getCoordinates().getLast()));
+
+        var tableColumnUnit = new TableColumn<ControlPointRecord, String>("Unit");
+        tableColumnUnit.setCellValueFactory(c -> {
+            if ( c.getValue().controlPoint().getUnit() instanceof Unit unit) {
                 return new SimpleStringProperty( unit.getId());
-            } else if ( c.getValue().getUnit() != null) {
-                return new SimpleStringProperty("failed to resolve '" + c.getValue().getUnit().toString() + "'");
+            } else if ( c.getValue().controlPoint().getUnit() != null) {
+                return new SimpleStringProperty("failed to resolve '" + c.getValue().controlPoint().getUnit().toString() + "'");
             } else {
                 return new SimpleStringProperty("!!unit reference missing!!");
             }
 
         });
 
-        var tableColumn5 = new TableColumn<ControlPoint, Number>("Weight");
-        tableColumn5.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().getWeight()));
+        var tableColumnWeight = new TableColumn<ControlPointRecord, Number>("Weight");
+        tableColumnWeight.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().controlPoint().getWeight()));
 
-
-        ObservableList<ControlPoint> ctrlPoints = FXCollections.observableArrayList();
+        ObservableList<ControlPointRecord> ctrlPoints = FXCollections.observableArrayList();
         var table = new TableView<>(ctrlPoints);
-        gridPane.add(table, 0, row, 4,5);
-        table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3, tableColumn4, tableColumn5);
+        ctrlPtsTab.setContent(table);
+
+        table.getColumns().setAll(tableColumnIdx, tableColumnRC, tableColumnX, tableColumnY, tableColumnZ, tableColumnUnit, tableColumnWeight);
         table.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
         );
@@ -491,9 +513,20 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         table.setMinHeight(150);
         table.setMaxHeight(1600);
 
+
+
+        // now fill the control points
+        final long numCtrlPtsU = nurbsSurface.getUNURBSproperties().getNumCtrlPts();
+        int ctrlPtIdx=0;
         for (ControlPtList controlPtList : nurbsSurface.getControlPtLists()) {
-            ctrlPoints.addAll(controlPtList.getControlPoints());
+            for (ControlPoint controlPoint : controlPtList.getControlPoints()) {
+                final long rowNum = ctrlPtIdx / numCtrlPtsU;
+                final long colNum = ctrlPtIdx % numCtrlPtsU;
+                ctrlPoints.add( new ControlPointRecord( ctrlPtIdx, rowNum, colNum, controlPoint));
+                ctrlPtIdx++;
+            }
         }
+
 
     }
 

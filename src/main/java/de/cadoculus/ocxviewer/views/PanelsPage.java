@@ -119,9 +119,6 @@ public class PanelsPage extends AbstractDataViewPage implements Page {
         table.setMaxHeight(1500);
         int row = 0;
 
-
-
-
         LOG.debug("found #{} panels ", panels.size());
 
     }

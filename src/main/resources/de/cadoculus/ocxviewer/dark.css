@@ -39,6 +39,10 @@
 .tree-cell:sub-tree-item {
     -fx-padding: 0.25em ;
 }
+.tab .tab-label {
+    -fx-font-size: 1.25em;
+    -fx-font-weight: normal;
+}
 
 
 #mainBorderPane {

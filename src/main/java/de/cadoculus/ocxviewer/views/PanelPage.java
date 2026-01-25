@@ -127,7 +127,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         link.setTooltip(new Tooltip("Goto Topology and Geometry page"));
         gridPane.add(link, 0, row++);
         link.setOnAction( e -> {
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            var robert = new ArrayList<>(getBreadcrumbs());
             robert.add( new BreadcrumbRecord("Topology and Geometry", PanelTopologyAndGeometryPage.class, null, getObject()));
 
             var event = new SelectionEvent( robert);
@@ -202,14 +202,14 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.PillarT, org.ocx_schema.v310.PillarT>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<PillarT>(c.getValue()));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
             if ( selected ==null) {
                 // no change
                 return;
             }
 
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            var robert = new ArrayList<>(getBreadcrumbs());
             robert.add( new BreadcrumbRecord(selected.getId(), PillarPage.class, null, selected));
 
             var event = new SelectionEvent( robert);
@@ -231,7 +231,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
 
-        var table = new TableView<org.ocx_schema.v310.PillarT>(filteredEntities);
+        var table = new TableView<>(filteredEntities);
         vbox.getChildren().add(table);
         VBox.setVgrow(table, Priority.ALWAYS);
 
@@ -298,14 +298,14 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.Bracket, org.ocx_schema.v310.Bracket>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<org.ocx_schema.v310.Bracket>(c.getValue()));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
             if ( selected ==null) {
                 // no change
                 return;
             }
 
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            var robert = new ArrayList<>(getBreadcrumbs());
             robert.add( new BreadcrumbRecord(selected.getId(), BracketPage.class, null, selected));
 
             var event = new SelectionEvent( robert);
@@ -327,7 +327,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
 
-        var table = new TableView<org.ocx_schema.v310.Bracket>(filteredEntities);
+        var table = new TableView<>(filteredEntities);
         vbox.getChildren().add(table);
         VBox.setVgrow(table, Priority.ALWAYS);
 
@@ -360,7 +360,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         if (getObject().getSplitBy() != null && getObject().getSplitBy().getSeams()!= null) {
             entities.addAll(getObject().getSplitBy().getSeams());
         } else {
-            LOG.warn("Panel {} ({})has no getSplitBy element or no Seams", getObject().getId(), getObject().getGUIDRef());
+            LOG.info("Panel {} ({}) has no getSplitBy element or no Seams", getObject().getId(), getObject().getGUIDRef());
         }
 
         //
@@ -394,14 +394,14 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.Seam, org.ocx_schema.v310.Seam>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<org.ocx_schema.v310.Seam>(c.getValue()));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
             if ( selected ==null) {
                 // no change
                 return;
             }
 
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            var robert = new ArrayList<>(getBreadcrumbs());
             robert.add( new BreadcrumbRecord(selected.getId(), SeamPage.class, null, selected));
 
             var event = new SelectionEvent( robert);
@@ -417,7 +417,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
 
-        var table = new TableView<org.ocx_schema.v310.Seam>(filteredEntities);
+        var table = new TableView<>(filteredEntities);
         vbox.getChildren().add(table);
         VBox.setVgrow(table, Priority.ALWAYS);
 
@@ -451,7 +451,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         if (getObject().getStiffenedBy() != null && getObject().getStiffenedBy().getEdgeReinforcements()!= null) {
             stiffeners.addAll(getObject().getStiffenedBy().getEdgeReinforcements());
         } else {
-            LOG.warn("Panel {} ({})has no getStiffenedBy element or no EdgeReinforcements", getObject().getId(), getObject().getGUIDRef());
+            LOG.info("Panel {} ({}) has no getStiffenedBy element or no EdgeReinforcements", getObject().getId(), getObject().getGUIDRef());
         }
 
         //
@@ -485,14 +485,14 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.EdgeReinforcement, org.ocx_schema.v310.EdgeReinforcement>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<org.ocx_schema.v310.EdgeReinforcement>(c.getValue()));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
             if ( selected ==null) {
                 // no change
                 return;
             }
 
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            var robert = new ArrayList<>(getBreadcrumbs());
             robert.add( new BreadcrumbRecord(selected.getId(), FlangePage.class, null, selected));
 
             var event = new SelectionEvent( robert);
@@ -521,7 +521,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
                 new SimpleStringProperty(cell.getValue().getFunctionType()));
 
 
-        var table = new TableView<org.ocx_schema.v310.EdgeReinforcement>(filteredStiffeners);
+        var table = new TableView<>(filteredStiffeners);
         vbox.getChildren().add(table);
         VBox.setVgrow(table, Priority.ALWAYS);
 
@@ -554,7 +554,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         if (getObject().getStiffenedBy() != null && getObject().getStiffenedBy().getStiffeners()!= null) {
             stiffeners.addAll(getObject().getStiffenedBy().getStiffeners());
         } else {
-            LOG.warn("Panel {} ({})has no getStiffenedBy element or no stiffeners", getObject().getId(), getObject().getGUIDRef());
+            LOG.info("Panel {} ({}) has no getStiffenedBy element or no stiffeners", getObject().getId(), getObject().getGUIDRef());
         }
 
         //
@@ -588,14 +588,14 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.Stiffener, org.ocx_schema.v310.Stiffener>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<org.ocx_schema.v310.Stiffener>(c.getValue()));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
             if ( selected ==null) {
                 // no change
                 return;
             }
 
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            var robert = new ArrayList<>(getBreadcrumbs());
             robert.add( new BreadcrumbRecord(selected.getId(), StiffenerPage.class, null, selected));
 
             var event = new SelectionEvent( robert);
@@ -624,7 +624,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
                 new SimpleStringProperty(cell.getValue().getFunctionType()));
 
 
-        var table = new TableView<org.ocx_schema.v310.Stiffener>(filteredStiffeners);
+        var table = new TableView<>(filteredStiffeners);
         vbox.getChildren().add(table);
         VBox.setVgrow(table, Priority.ALWAYS);
 
@@ -687,7 +687,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.Plate, org.ocx_schema.v310.Plate>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<org.ocx_schema.v310.Plate>(c.getValue()));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
             LOG.debug("selected plate {}", selected);
             if ( selected ==null) {
@@ -695,7 +695,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
                 return;
             }
 
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            var robert = new ArrayList<>(getBreadcrumbs());
             robert.add( new BreadcrumbRecord(selected.getId(), PlatePage.class, null, selected));
 
             var event = new SelectionEvent( robert);
@@ -715,7 +715,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         // TODO: better material representation
         var tableColumn4 = new TableColumn<Plate, Pair<Plate,Material>>("Material");
         tableColumn4.setCellValueFactory(
-                cell -> new SimpleObjectProperty< Pair<Plate,Material> >(
+                cell -> new SimpleObjectProperty< >(
                         new Pair<>( cell.getValue(), (Material) cell.getValue().getPlateMaterial().getReferenced()))
         );
         tableColumn4.setCellFactory(createHyperlinkCellfactory( selected -> {
@@ -727,7 +727,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
             var plate = selected.getKey();
             var material = selected.getValue();
 
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+            var robert = new ArrayList<>(getBreadcrumbs());
             robert.add( new BreadcrumbRecord(plate.getId(), PlatePage.class, null, plate));
             robert.add( new BreadcrumbRecord(material.getId(), MaterialPage.class, null, material));
 
@@ -744,7 +744,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
                 new SimpleStringProperty(cell.getValue().getFunctionType()));
 
 
-        var table = new TableView<org.ocx_schema.v310.Plate>(filteredPlates);
+        var table = new TableView<>(filteredPlates);
         vbox.getChildren().add(table);
         VBox.setVgrow(table, Priority.ALWAYS);
 

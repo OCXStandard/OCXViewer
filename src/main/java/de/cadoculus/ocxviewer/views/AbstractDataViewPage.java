@@ -96,6 +96,32 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     }
 
+    public static class PointTableCell<E, F extends Point3DT> extends TableCell<E,F> {
+        @Override
+        public void updateItem(F point3DT,boolean empty) {
+            super.updateItem(point3DT, empty);
+            if (point3DT == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                var text =
+                        "(" +
+                                DEC4.format(point3DT.getCoordinates().get(0)) + ", " +
+                                DEC4.format(point3DT.getCoordinates().get(1)) + ", " +
+                                DEC4.format(point3DT.getCoordinates().get(2)) + ")";
+
+                if (point3DT.getUnit() instanceof Unit unit1) {
+                    text += " [" + unit1.getUnitNames().getFirst().getValue() + "]";
+                    ;
+                }
+
+                setText(text);
+            }
+        }
+
+    }
+
+
     /**
      * This method creates a cell factory for a table column that displays hyperlinks.
      * It uses the Id of the item as the hyperlink text.
@@ -106,7 +132,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
      * @param <E>            the type of the table items and table column
      * @return the cell factory
      */
-    public static <E extends org.ocx_schema.v310.IdBaseT, F  >
+    public static <E , F  >
         Callback<TableColumn<E, F>, TableCell<E, F>> createHyperlinkCellfactory(Consumer<F> selectFunction) {
 
         return new Callback<TableColumn<E, F>, TableCell<E, F> > () {
@@ -125,6 +151,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
                             setText(null);
                             return;
                         }
+
                         var label = "unset";
                         if  ( value instanceof IdBaseT idBaseT ) {
                             label = idBaseT.getId();
