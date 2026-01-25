@@ -17,17 +17,20 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.utils.GeomHelper;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import oasis.unitsml.Unit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignB;
 import org.ocx_schema.v310.*;
 
 /**
@@ -50,8 +53,15 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
 
         createTitle(bcs, getName(), "Information about an OCX " +GeomHelper.getGeometryType(surface));
 
+        ScrollPane scrollPane = new ScrollPane();
+        this.setCenter(scrollPane);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
         gridPane = createDefaultGrid();
-        setCenter(gridPane);
+        scrollPane.setContent(  gridPane);
 
         var titelLabel = new Label("Identification");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
@@ -270,9 +280,36 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
 
     }
 
+    /**
+     * Create the page for a NURBSSurface
+     * @param nurbsSurface the surface cast as a {@link NURBSSurfaceT}
+     */
     private void init(NURBSSurfaceT nurbsSurface) {
 
+        try {
+            GeomHelper.checkNURBS( nurbsSurface);
+        } catch (IllegalArgumentException exp) {
+            var warning = new atlantafx.base.controls.Message(
+                    "Error",
+                    exp.getMessage(),
+                    new FontIcon(MaterialDesignB.BOMB)
+            );
+            warning.getStyleClass().add(Styles.WARNING);
 
+            var warningIcon = new FontIcon(MaterialDesignA.ALERT);
+            warningIcon.getStyleClass().add(Styles.WARNING);
+
+            gridPane.add(warning, 0, row++, 4, 1);
+        }
+
+
+        if ( nurbsSurface.getUNURBSproperties() == null) {
+            nurbsSurface.setUNURBSproperties( new NURBSPropertiesT() );
+        }
+
+        if ( nurbsSurface.getVNURBSproperties() == null) {
+            nurbsSurface.setVNURBSproperties( new NURBSPropertiesT() );
+        }
 
         var  label = new Label("NURBS Properties U");
         label.setTooltip(new Tooltip("Properties of the basis function in U direction."));
@@ -287,31 +324,6 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         gridPane.add(label, 2, row++,2,1);
         GridPane.setHalignment(label, HPos.LEFT);
         GridPane.setMargin(label, new Insets(20, 0, 10, 0));
-
-
-        if ( nurbsSurface.getUNURBSproperties() == null) {
-            var warning = new atlantafx.base.controls.Message(
-                    "Warning",
-                    "No U NurbsProperties found!",
-                    new FontIcon(MaterialDesignA.ALERT)
-            );
-            warning.getStyleClass().add(Styles.WARNING);
-            gridPane.add(label, 0, row++, 4, 1);
-
-            nurbsSurface.setUNURBSproperties( new NURBSPropertiesT() );
-        }
-
-        if ( nurbsSurface.getVNURBSproperties() == null) {
-            var warning = new atlantafx.base.controls.Message(
-                    "Warning",
-                    "No V NurbsProperties found!",
-                    new FontIcon(MaterialDesignA.ALERT)
-            );
-            warning.getStyleClass().add(Styles.WARNING);
-            gridPane.add(label, 0, row++, 4, 1);
-
-            nurbsSurface.setVNURBSproperties( new NURBSPropertiesT() );
-        }
 
         var uProps = nurbsSurface.getUNURBSproperties();
         var vProps = nurbsSurface.getVNURBSproperties();
@@ -387,6 +399,101 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         cb.setSelected( vProps.isIsRational());
         gridPane.add(cb, 3, row++);
 
+
+        label = new Label("Rational");
+        label.setTooltip(new Tooltip("""
+                The default is non-rational basis functions (isRational=false).
+                Rational refers to the underlying mathematical representation.
+                This property allows NURBS to represent exact conics (such as parabolic curves, circles, and ellipses)
+                in addition to free-form curves. To define conical curve types set isRational=true."""));
+        gridPane.add(label, 2, row);
+        cb =         new CheckBox();
+        cb.setSelected( vProps.isIsRational());
+        gridPane.add(cb, 3, row++);
+
+
+        // Knotvectors
+        label = new Label("Knotvector");
+        label.setTooltip( new Tooltip("""
+                The knot-vector is a list of size m=+n-1 knots where p is the polynomial basis degree
+                and n is the number of control points.
+                The knot vector consists of a non-decreasing sequence of values. 
+                Knot multiplicities can be included. 
+                A knot multiplicity means that a knot value can be repeated up to p+1 times.
+                """));
+        gridPane.add(label, 0, row);
+        final  StringBuilder sb = new StringBuilder();
+        nurbsSurface.getUknotVector().getValues().forEach(d -> {
+            sb.append( d.toString()).append(" ");
+        });
+
+        var knot = new TextField(sb.toString());
+        //knot.setWrapText(true);
+        gridPane.add(knot, 1, row);
+
+        // the Duplicator class from fxd is gone :-(
+        var label2 = new Label(label.getText());
+        label2.setTooltip( new Tooltip( label.getTooltip().getText()));
+        gridPane.add(label2, 2, row);
+        final var sb2 = new StringBuilder();
+        nurbsSurface.getVknotVector().getValues().forEach(d -> {
+            sb2.append( d.toString()).append(" ");
+        });
+
+        knot = new TextField(sb2.toString());
+        //knot.setWrapText(true);
+        gridPane.add(knot, 3, row++);
+
+
+        // The control points table
+        label = new Label("Control Points");
+        label.setTooltip(new Tooltip("Properties of the basis function in U direction."));
+        label.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(label, 0, row++,2,1);
+        GridPane.setHalignment(label, HPos.LEFT);
+        GridPane.setMargin(label, new Insets(20, 0, 10, 0));
+
+
+        var tableColumn1 = new TableColumn<ControlPoint, Number>("X");
+        tableColumn1.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().getCoordinates().getFirst()));
+
+        var tableColumn2 = new TableColumn<ControlPoint, Number>("Y");
+        tableColumn2.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().getCoordinates().get(1)));
+
+        var tableColumn3 = new TableColumn<ControlPoint, Number>("Z");
+        tableColumn3.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().getCoordinates().getLast()));
+
+        var tableColumn4 = new TableColumn<ControlPoint, String>("Unit");
+        tableColumn4.setCellValueFactory(c -> {
+            if ( c.getValue().getUnit() instanceof Unit unit) {
+                return new SimpleStringProperty( unit.getId());
+            } else if ( c.getValue().getUnit() != null) {
+                return new SimpleStringProperty("failed to resolve '" + c.getValue().getUnit().toString() + "'");
+            } else {
+                return new SimpleStringProperty("!!unit reference missing!!");
+            }
+
+        });
+
+        var tableColumn5 = new TableColumn<ControlPoint, Number>("Weight");
+        tableColumn5.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().getWeight()));
+
+
+        ObservableList<ControlPoint> ctrlPoints = FXCollections.observableArrayList();
+        var table = new TableView<>(ctrlPoints);
+        gridPane.add(table, 0, row, 4,5);
+        table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3, tableColumn4, tableColumn5);
+        table.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
+        );
+
+        table.setMaxWidth(Double.MAX_VALUE);
+        table.setMinHeight(150);
+        table.setMaxHeight(1600);
+
+        for (ControlPtList controlPtList : nurbsSurface.getControlPtLists()) {
+            ctrlPoints.addAll(controlPtList.getControlPoints());
+        }
 
     }
 

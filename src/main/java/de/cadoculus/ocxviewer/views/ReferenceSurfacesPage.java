@@ -88,20 +88,24 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<DescriptionBaseT>( c.getValue()));
         tableColumn1.setCellFactory( createHyperlinkCellfactory(this::selectedSurface));
 
-        var tableColumn2 = new TableColumn<DescriptionBaseT, String>("GUID");
+        var tableColumn2 = new TableColumn<DescriptionBaseT, String>("Name");
         tableColumn2.setCellValueFactory(
+                c -> new SimpleStringProperty(
+                        c.getValue() instanceof SurfaceT ? ((SurfaceT)c.getValue()).getName() : ((SurfaceCollection)c.getValue()).getName()));
+
+        var tableColumn3 = new TableColumn<DescriptionBaseT, String>("GUID");
+        tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(
                         c.getValue() instanceof SurfaceT ? ((SurfaceT)c.getValue()).getGUIDRef() : ((SurfaceCollection)c.getValue()).getGUIDRef())
         );
 
-        var tableColumn3 = new TableColumn<DescriptionBaseT, String>("Type");
-        tableColumn3.setCellValueFactory( cell ->
+        var tableColumn4 = new TableColumn<DescriptionBaseT, String>("Type");
+        tableColumn4.setCellValueFactory( cell ->
                         new SimpleStringProperty(GeomHelper.getGeometryType(cell.getValue())));
-
 
         ObservableList<DescriptionBaseT> surfaces = FXCollections.observableArrayList();
         table = new TableView<DescriptionBaseT>(surfaces);
-        table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3);
+        table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3, tableColumn4);
         table.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
         );
@@ -112,6 +116,15 @@ public class ReferenceSurfacesPage extends AbstractDataViewPage implements Page 
         int row = 0;
 
         gridPane.add(table, 0, row++);
+
+        // ensure the last row gets all available space
+        for ( int r =0; r< GridPane.getRowIndex(table); r++) {
+            gridPane.getRowConstraints().add(new RowConstraints());
+        }
+        var tableRow = new RowConstraints();
+        tableRow.setVgrow(Priority.ALWAYS);;
+        gridPane.getRowConstraints().add( tableRow);
+
 
         // now fill with content
         final var vessel = WorkingContext.getInstance().getVessel();

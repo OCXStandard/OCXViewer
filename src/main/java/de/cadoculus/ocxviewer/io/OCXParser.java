@@ -96,6 +96,7 @@ public class OCXParser {
         // first we need to check the namespace used in the file
         //
         updateProgress(status, "Detecting OCX namespace...");
+        updateProgress(progress, 0.0);
 
         String usedNamespace = null;
         final var handler = new OCXPFindNamespaceHandler();
