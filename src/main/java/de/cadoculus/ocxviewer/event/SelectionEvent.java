@@ -22,8 +22,9 @@ import java.util.List;
 
 /**
  * Event representing a navigation to a different page with the full ancestry used for breadcrumbs.
- *
+ * <p>
  * TODO: Check if this could replace the NavigationEvent.
+ *
  * @author Carsten Zerbst
  */
 public final class SelectionEvent extends Event {
@@ -46,7 +47,7 @@ public final class SelectionEvent extends Event {
     @Override
     public String toString() {
         return "SelectionEvent{"
-            + "breadcrumbs=" + breadcrumbs
-          + "} " + super.toString();
+                + "breadcrumbs=" + breadcrumbs
+                + "} " + super.toString();
     }
 }

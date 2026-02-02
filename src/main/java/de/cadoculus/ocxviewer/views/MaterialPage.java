@@ -58,7 +58,7 @@ public class MaterialPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Ma
 
         var titelLabel = new Label("Identification");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(titelLabel, 0, row++,4,1);
+        gridPane.add(titelLabel, 0, row++, 4, 1);
         GridPane.setHalignment(titelLabel, HPos.LEFT);
         GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
@@ -90,7 +90,7 @@ public class MaterialPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Ma
 
         titelLabel = new Label("Strength");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(titelLabel, 0, row++,4,1);
+        gridPane.add(titelLabel, 0, row++, 4, 1);
         GridPane.setHalignment(titelLabel, HPos.LEFT);
         GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
@@ -136,7 +136,7 @@ public class MaterialPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Ma
 
         titelLabel = new Label("Miscellaneous");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(titelLabel, 0, row++,4,1);
+        gridPane.add(titelLabel, 0, row++, 4, 1);
         GridPane.setHalignment(titelLabel, HPos.LEFT);
         GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 

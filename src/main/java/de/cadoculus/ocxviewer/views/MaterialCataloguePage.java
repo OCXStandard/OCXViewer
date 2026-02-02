@@ -93,8 +93,8 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
 
         // the columns
         var tableColumn1 = new TableColumn<Material, Material>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>( c.getValue()));
-        tableColumn1.setCellFactory( createHyperlinkCellfactory( this::selectedMaterial));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(this::selectedMaterial));
 
         var tableColumn2 = new TableColumn<Material, String>("GUID");
         tableColumn2.setCellValueFactory(
@@ -103,7 +103,7 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
 
         var tableColumn3 = new TableColumn<Material, String>("Name");
         tableColumn3.setCellValueFactory(
-                c -> new SimpleStringProperty(  c.getValue().getName()));
+                c -> new SimpleStringProperty(c.getValue().getName()));
 
         var tableColumn4 = new TableColumn<Material, String>("Grade");
         tableColumn4.setCellValueFactory(
@@ -176,20 +176,19 @@ public class MaterialCataloguePage extends AbstractDataViewPage implements Page 
         VBox.setVgrow(table, Priority.ALWAYS);
 
 
-
     }
 
     private void selectedMaterial(Material selected) {
         LOG.debug("selected material {}", selected);
-        if ( selected ==null) {
+        if (selected == null) {
             // no change
             return;
         }
 
         var robert = new ArrayList<>(getBreadcrumbs());
-        robert.add( new BreadcrumbRecord(selected.getId(), MaterialPage.class, null, selected));
+        robert.add(new BreadcrumbRecord(selected.getId(), MaterialPage.class, null, selected));
 
-        var event = new SelectionEvent( robert);
+        var event = new SelectionEvent(robert);
         DefaultEventBus.getInstance().publish(event);
     }
 

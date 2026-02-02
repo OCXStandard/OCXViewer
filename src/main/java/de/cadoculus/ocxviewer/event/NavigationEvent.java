@@ -18,6 +18,7 @@ package de.cadoculus.ocxviewer.event;
 
 /**
  * Event representing a navigation to a different page.
+ *
  * @author Carsten Zerbst
  */
 public final class NavigationEvent extends Event {
@@ -35,7 +36,7 @@ public final class NavigationEvent extends Event {
     @Override
     public String toString() {
         return "NavEvent{"
-            + "page=" + page
-            + "} " + super.toString();
+                + "page=" + page
+                + "} " + super.toString();
     }
 }

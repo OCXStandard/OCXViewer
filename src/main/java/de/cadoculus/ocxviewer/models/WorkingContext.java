@@ -27,6 +27,7 @@ import java.util.prefs.Preferences;
 
 /**
  * Singleton class to store the working context of the application.
+ *
  * @author Carsten Zerbst
  */
 public class WorkingContext {
@@ -43,6 +44,7 @@ public class WorkingContext {
 
     /**
      * Get the singleton instance of the working context.
+     *
      * @return the singleton instance of the working context.
      */
     public synchronized static WorkingContext getInstance() {
@@ -58,31 +60,36 @@ public class WorkingContext {
 
     /**
      * Get the OCX file that is currently open.
+     *
      * @return the OCX file that is currently open.
      */
     public File getOCXFile() {
         return ocxFile;
     }
+
     /**
      * Set the OCX file that is currently open. As a side effect, the last open directory is stored in the preferences.
+     *
      * @param ocxFile the OCX file that is currently open.
      */
     public void setOCXFile(File ocxFile) {
         this.ocxFile = ocxFile;
-        var previous = ocxFile.getParent() != null?
+        var previous = ocxFile.getParent() != null ?
                 ocxFile.getParentFile().getAbsolutePath() :
                 new File(".").getAbsolutePath();
 
         preferences.put("lastOpenDir", previous);
     }
+
     /**
      * Get the last open directory.
+     *
      * @return the last open directory.
      */
     public String getLastOpenDir() {
         var previous = preferences.get("lastOpenDir", System.getProperty("user.home"));
 
-        if ( ! new File( previous).isDirectory()) {
+        if (!new File(previous).isDirectory()) {
             previous = System.getProperty("user.home");
         }
 
@@ -91,19 +98,22 @@ public class WorkingContext {
 
     /**
      * Get the OCX object that is currently open.
+     *
      * @return the OCX object that is currently open.
      */
     public OcxXMLT getOcx() {
         return ocx;
     }
+
     /**
      * Set the OCX object that is currently open.
+     *
      * @param ocx the OCX object that is currently open.
      */
     public void setOcx(OcxXMLT ocx) {
         this.ocx = ocx;
 
-        if ( ocx.getForm().getValue() instanceof Vessel) {
+        if (ocx.getForm().getValue() instanceof Vessel) {
             vessel = (Vessel) ocx.getForm().getValue();
         }
     }
@@ -124,9 +134,13 @@ public class WorkingContext {
         this.mainScene = mainScene;
     }
 
-    public void setTargetNamespace(String s) {this.targetNamespace=s;}
-    public String getTargetNamespace() {return targetNamespace;}
+    public void setTargetNamespace(String s) {
+        this.targetNamespace = s;
+    }
 
+    public String getTargetNamespace() {
+        return targetNamespace;
+    }
 
 
 }

@@ -28,7 +28,7 @@ import javafx.scene.layout.StackPane;
  *
  * @author Carsten Zerbst
  */
-public class ProgressBarWithText extends StackPane  {
+public class ProgressBarWithText extends StackPane {
 
     private final Label labeledProgressIndicator;
     private final DoubleProperty progress = new SimpleDoubleProperty();
@@ -53,6 +53,7 @@ public class ProgressBarWithText extends StackPane  {
     /**
      * Returns the progress property.
      * The given value must be between 0.0 and 1.0.
+     *
      * @return the progress property
      */
     public DoubleProperty progressProperty() {

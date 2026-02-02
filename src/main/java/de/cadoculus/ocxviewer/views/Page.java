@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * An interface used for pages
+ *
  * @author Carsten Zerbst
  */
 public interface Page {
@@ -31,17 +32,21 @@ public interface Page {
 
     /**
      * Returns the name of the page.
+     *
      * @return the name of the page
      */
     String getName();
+
     /**
      * Returns the view of the page.
+     *
      * @return the view of the page
      */
     Parent getView();
 
     /**
      * Returns the breadcrumbs for the page.
+     *
      * @return the breadcrumbs for the page
      */
     public List<BreadcrumbRecord> getBreadcrumbs();
@@ -49,22 +54,22 @@ public interface Page {
     /**
      * Called before the page is shown.
      */
-     void beforeShow();
+    void beforeShow();
 
     /**
      * Called after the page is shown.
      */
-     void afterShow();
+    void afterShow();
 
     /**
      * Called before the page is hidden.
      */
-     void beforeHide();
+    void beforeHide();
 
     /**
      * Called after the page is hidden.
      */
-     void afterHide();
+    void afterHide();
 
     /**
      * Called before the page is closed.

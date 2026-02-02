@@ -20,8 +20,9 @@ import org.ocx_schema.v310.ControlPoint;
 
 /**
  * A record representing a control point and the index/row/column in the curve or surface it belongs to.
+ *
  * @author Carsten Zerbst
  */
-public record ControlPointRecord(long index, long row, long colum, ControlPoint  controlPoint) {
+public record ControlPointRecord(long index, long row, long colum, ControlPoint controlPoint) {
 
 }

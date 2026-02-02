@@ -32,8 +32,9 @@ class OCXParserTest {
 
     @Test
     void testReferences() throws IOException {
-        LOG.error("run in {}", new File(".").getAbsolutePath());
+
         var file = new File("data/Schema310/PROSTEP/V3.1.0/TR03_TC10_psav.3docx");
+        LOG.info("load {}", file.getAbsolutePath());
 
         var parser = new OCXParser(file);
 
@@ -45,7 +46,11 @@ class OCXParserTest {
         });
 
         var result =parser.parse();
+
+        LOG.info("parsed {}", file.getAbsolutePath());
         assertNotNull(result);
+
+
 
         var vessel = (Vessel) result.ocx().getForm().getValue();
         final Panel panel = vessel.getPanels().stream().filter(test -> "panel_25170".equals(test.getId())).findFirst().get();
@@ -63,7 +68,9 @@ class OCXParserTest {
 
 
         final Stiffener stiffener = panel.getStiffenedBy().getStiffeners().getFirst();
+        LOG.info("check stiffener {} ({})", stiffener.getId(), stiffener.getGUIDRef());
         assertNotNull(stiffener, "found stiffener");
+
         assertNotNull(stiffener.getMaterialRef(), "has stiffener material");
         LOG.info(" found stiffener material reference: {} {},  ref type '{}'", stiffener.getMaterialRef().getReferenced(),
                 stiffener.getMaterialRef().getLocalRef(),
@@ -71,10 +78,13 @@ class OCXParserTest {
         assertNotNull(stiffener.getMaterialRef().getReferenced(), "stiffener material is resolved");
 
         assertNotNull(stiffener.getSectionRef(), "has stiffener section");
-        LOG.info(" found stiffener section reference: {} {},  ref type '{}'", stiffener.getSectionRef().getReferenced(),
+        LOG.info(" found stiffener section reference: {} --> {}, localRef {}, guidRef '{}', ref type '{}'",
+                OCXIO.serialize( stiffener.getSectionRef()),
+                stiffener.getSectionRef().getReferenced(),
                 stiffener.getSectionRef().getLocalRef(),
+                stiffener.getSectionRef().getGUIDRef(),
                 stiffener.getSectionRef().getRefType());
-        assertNotNull(stiffener.getSectionRef().getReferenced(), "stiffener section is resolved");
+        assertNotNull(stiffener.getSectionRef().getReferenced(), "stiffener section is resolved" + OCXIO.serialize(stiffener.getSectionRef()));
 
 
     }

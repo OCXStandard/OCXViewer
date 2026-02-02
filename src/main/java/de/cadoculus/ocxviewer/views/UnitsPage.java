@@ -47,9 +47,10 @@ import java.util.Map;
 
 /**
  * The UnitsPage displays the units used in the OCX file.
+ *
  * @author Carsten Zerbst
  */
-public class UnitsPage extends AbstractDataViewPage{
+public class UnitsPage extends AbstractDataViewPage {
     public static final String NAME = "Units";
     private static final Logger LOG = LogManager.getLogger(UnitsPage.class);
 
@@ -93,8 +94,8 @@ public class UnitsPage extends AbstractDataViewPage{
                 }
 
                 Label label = null;
-                if ( image != null) {
-                    label = new Label( name.getValue());
+                if (image != null) {
+                    label = new Label(name.getValue());
                     label.setGraphic(new ImageView(image));
                     label.getStyleClass().add("unitName");
                 } else {
@@ -109,7 +110,6 @@ public class UnitsPage extends AbstractDataViewPage{
 
         }
     };
-
 
 
     public UnitsPage() {
@@ -173,7 +173,7 @@ public class UnitsPage extends AbstractDataViewPage{
                         StringBuilder sb = new StringBuilder();
                         for (UnitName name : names) {
                             sb.append(name.getLang()).append(":").append(name.getValue()).append(";");
-                            if ( sb.length() > 40) {
+                            if (sb.length() > 40) {
                                 sb.append(" ...");
                                 break;
                             }
@@ -214,8 +214,8 @@ public class UnitsPage extends AbstractDataViewPage{
         table.setMinHeight(300);
 
         int row = 0;
-        gridPane.add(table, 0, row, 4,3);
-        row+=3;
+        gridPane.add(table, 0, row, 4, 3);
+        row += 3;
 
         // The detail view for one Unit
         var label = new Label("Unit Details");
@@ -242,7 +242,7 @@ public class UnitsPage extends AbstractDataViewPage{
         gridPane.add(unitSymbols, 1, row++, 3, 1);
 
         label = new Label("Root Units");
-        label.setTooltip(new Tooltip("The unit's root units. Container for defining derived units in terms of their root units. This allows a precise definition of a wide range of units. The goal is to improve interoperability among applications and databases which use derived units based on commonly encountered root units.</xsd:documentation" ));
+        label.setTooltip(new Tooltip("The unit's root units. Container for defining derived units in terms of their root units. This allows a precise definition of a wide range of units. The goal is to improve interoperability among applications and databases which use derived units based on commonly encountered root units.</xsd:documentation"));
         gridPane.add(label, 0, row);
         gridPane.add(rootUnits, 1, row++, 3, 1);
 

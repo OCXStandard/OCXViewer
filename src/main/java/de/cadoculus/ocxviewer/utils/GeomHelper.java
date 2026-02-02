@@ -16,10 +16,15 @@
 package de.cadoculus.ocxviewer.utils;
 
 
+import de.cadoculus.ocxviewer.models.MainPlane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.ControlPtList;
 import org.ocx_schema.v310.NURBSSurfaceT;
+import org.ocx_schema.v310.Point3DT;
+
+import javax.vecmath.Point2d;
+import javax.vecmath.Point3d;
 
 /**
  * A helper class for geometric entities
@@ -120,9 +125,9 @@ public class GeomHelper {
         }
 
         // total
-        if ( nurbsSurface.getControlPtLists()== null ||  nurbsSurface.getControlPtLists().isEmpty()) {
+        if (nurbsSurface.getControlPtLists() == null || nurbsSurface.getControlPtLists().isEmpty()) {
             throw new IllegalArgumentException("Missing control points list");
-        } else if ( nurbsSurface.getControlPtLists().size()==1) {
+        } else if (nurbsSurface.getControlPtLists().size() == 1) {
 
             final ControlPtList ptList = nurbsSurface.getControlPtLists().getFirst();
 
@@ -136,16 +141,16 @@ public class GeomHelper {
             LOG.warn("found #{} controlpoint lists in {} ({}), is this intended?", nurbsSurface.getControlPtLists().size(),
                     nurbsSurface.getId(), nurbsSurface.getGUIDRef());
 
-            if ( nurbsSurface.getControlPtLists().size()!= nurbsSurface.getUNURBSproperties().getNumCtrlPts()) {
+            if (nurbsSurface.getControlPtLists().size() != nurbsSurface.getUNURBSproperties().getNumCtrlPts()) {
                 throw new IllegalArgumentException(String.format("Found #%d control points, expect to match U numCtrlPts=%d",
                         nurbsSurface.getControlPtLists().size(), nurbsSurface.getUNURBSproperties().getNumCtrlPts()));
             }
             // now look at the individual list
-            for( int i = 0; i <  nurbsSurface.getControlPtLists().size(); i++) {
+            for (int i = 0; i < nurbsSurface.getControlPtLists().size(); i++) {
                 final ControlPtList ptList = nurbsSurface.getControlPtLists().get(i);
-                if ( ptList.getControlPoints().size() != nurbsSurface.getVNURBSproperties().getNumCtrlPts()) {
+                if (ptList.getControlPoints().size() != nurbsSurface.getVNURBSproperties().getNumCtrlPts()) {
                     throw new IllegalArgumentException(String.format("Found wrong number of control points in sublist #%d, expect size to match V numCtrlPts=%d , found %d",
-                            i, nurbsSurface.getVNURBSproperties().getNumCtrlPts(),  ptList.getControlPoints().size()));
+                            i, nurbsSurface.getVNURBSproperties().getNumCtrlPts(), ptList.getControlPoints().size()));
                 }
             }
         }
@@ -153,26 +158,60 @@ public class GeomHelper {
         // increasing knots
         var ks = nurbsSurface.getUknotVector().getValues();
         var last = ks.getFirst();
-        for ( int i = 1; i < ks.size();i++) {
+        for (int i = 1; i < ks.size(); i++) {
             var mult = ks.get(i);
-            if ( mult-last <0) {
+            if (mult - last < 0) {
                 throw new IllegalArgumentException(String.format("Found decreasing values in U knot vector at #%d=%f and #%d=%f",
-                        i-1, last, i, mult));
+                        i - 1, last, i, mult));
 
             }
             last = mult;
         }
         ks = nurbsSurface.getVknotVector().getValues();
         last = ks.getFirst();
-        for ( int i = 1; i < ks.size();i++) {
+        for (int i = 1; i < ks.size(); i++) {
             var mult = ks.get(i);
-            if ( mult-last <0) {
+            if (mult - last < 0) {
                 throw new IllegalArgumentException(String.format("Found decreasing values in V knot vector at #%d=%f and #%d=%f",
-                        i-1, last, i, mult));
+                        i - 1, last, i, mult));
             }
             last = mult;
         }
 
 
+    }
+
+    /**
+     * Add a point to the set, projected to the main plane. Add only if not already present using the given tolerance.
+     *
+     * @param point3d the point to add
+     * @param mainPlane the main plane to project to
+     * @param tolerance the tolerance to check for existing points
+     * @param pointSet the set to add the point to
+     */
+    public static Point2d addPoint(Point3d point3d, MainPlane mainPlane, double tolerance, java.util.Set<Point2d> pointSet) {
+        // projected point to main plane
+
+        Point2d projected = null;
+        switch (mainPlane) {
+            case XPLANE -> projected = new Point2d(point3d.y, point3d.z);
+            case YPLANE -> projected = new Point2d(point3d.x, point3d.z);
+            case ZPLANE -> projected = new Point2d(point3d.x, point3d.y);
+            case UNDEFINED ->  throw new IllegalArgumentException("got undefined main plane");
+        }
+
+        // check if already present
+        Point2d found = null;
+        for (var pt : pointSet) {
+            if (pt.distance(projected) <= tolerance) {
+                found = pt;
+                break;
+            }
+        }
+        if (found == null) {
+            pointSet.add(projected);
+            found=projected;
+        }
+        return found;
     }
 }

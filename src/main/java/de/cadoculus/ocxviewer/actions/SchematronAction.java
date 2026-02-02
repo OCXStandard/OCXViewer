@@ -21,12 +21,13 @@ import javafx.scene.input.KeyCombination;
 
 /**
  * The Schematron action
+ *
  * @author Carsten Zerbst
  */
-public class SchematronAction extends  AbstractAction {
+public class SchematronAction extends AbstractAction {
 
-    public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.R,  KeyCombination.CONTROL_DOWN);
-    public final static  String NAME = "Schematron Check";
+    public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
+    public final static String NAME = "Schematron Check";
 
     //TODO: implement a dialogue to select the file
     // and rules to check, then run Schematron

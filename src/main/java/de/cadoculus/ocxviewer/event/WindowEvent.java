@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 
 /**
  * Event representing a change in the application window, such as resizing.
+ *
  * @author Carsten Zerbst
  */
 public final class WindowEvent extends Event {
@@ -37,7 +38,7 @@ public final class WindowEvent extends Event {
     @Override
     public String toString() {
         return "WindowEvent{"
-            + "scene=" + scene.getWidth() + "x" + scene.getHeight()
-            + "} " + super.toString();
+                + "scene=" + scene.getWidth() + "x" + scene.getHeight()
+                + "} " + super.toString();
     }
 }

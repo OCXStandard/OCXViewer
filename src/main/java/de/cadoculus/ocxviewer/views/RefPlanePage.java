@@ -74,8 +74,8 @@ public class RefPlanePage extends AbstractDataViewSubPage<RefPlaneT> {
 
         label = new Label("Display");
         gridPane.add(label, 0, row);
-        var cb  = new CheckBox();
-        cb.setSelected( refPlaneT.isDisplayGrid());
+        var cb = new CheckBox();
+        cb.setSelected(refPlaneT.isDisplayGrid());
         gridPane.add(cb, 1, row++);
 
         label = new Label("Location");

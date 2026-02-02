@@ -43,6 +43,7 @@ import java.io.StringWriter;
 
 /**
  * Action to open an OCX file.
+ *
  * @author Carsten Zerbst
  */
 public class OpenAction extends AbstractAction {
@@ -112,14 +113,14 @@ public class OpenAction extends AbstractAction {
 
         dialogue.initModality(Modality.APPLICATION_MODAL);
 
-        dialogue.getDialogPane().getButtonTypes().add( ButtonType.CLOSE);
+        dialogue.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         Node loginButton = dialogue.getDialogPane().lookupButton(ButtonType.CLOSE);
         loginButton.setDisable(true);
 
         // binding the progress must happen in the JavaFX thread, that's why the parser is created here
-        final var parser = new OCXParser( selectedFile);
-        prgressBar.progressProperty().bind( parser.progressProperty());
-        dialogue.getDialogPane().headerTextProperty().bind( parser.statusProperty());
+        final var parser = new OCXParser(selectedFile);
+        prgressBar.progressProperty().bind(parser.progressProperty());
+        dialogue.getDialogPane().headerTextProperty().bind(parser.statusProperty());
 
         dialogue.show();
 
@@ -128,13 +129,13 @@ public class OpenAction extends AbstractAction {
 
             try {
 
-                var result  = parser.parse();
+                var result = parser.parse();
                 OcxXMLT ocx = result.ocx();
                 WorkingContext.getInstance().setOCXFile(selectedFile);
                 WorkingContext.getInstance().setTargetNamespace(result.originalNamespace());
                 WorkingContext.getInstance().setOcx(ocx);
 
-                if ( LOG.isDebugEnabled()) {
+                if (LOG.isDebugEnabled()) {
                     Runtime rt = Runtime.getRuntime();
                     long total = rt.totalMemory();
                     long free = rt.freeMemory();
@@ -146,10 +147,10 @@ public class OpenAction extends AbstractAction {
                 }
 
                 Platform.runLater(() -> {
-                    var mainStage = (Stage)  WorkingContext.getInstance().getMainScene().getWindow();
+                    var mainStage = (Stage) WorkingContext.getInstance().getMainScene().getWindow();
                     mainStage.setTitle("OCX Viewer - " + selectedFile.getName());
-                    OpenEvent openEvent = new OpenEvent(ocx, selectedFile);
-                    DefaultEventBus.getInstance().publish(openEvent);
+
+                    DefaultEventBus.getInstance().publish(new OpenEvent(ocx, selectedFile));
                 });
 
             } catch (Throwable exception) {
@@ -159,7 +160,8 @@ public class OpenAction extends AbstractAction {
                     // it is necessary to first hide the dialog, otherwise on some platforms
                     // it remains visible even after close is called.
                     dialogue.hide();
-                    dialogue.close();});
+                    dialogue.close();
+                });
             }
 
         }).start();

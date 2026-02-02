@@ -40,10 +40,15 @@ import java.util.Objects;
 
 /**
  * A tree view for navigating between pages.
+ *
  * @author Carsten Zerbst
  */
 public final class PageTree extends TreeView<PageRecord> {
     private static final Logger LOG = LogManager.getLogger(PageTree.class);
+
+    private final static String BASE_DATA_GROUP = "Base Data";
+    private final static String HEADER_PAGE = "Header";
+
 
     public PageTree() {
         super();
@@ -54,7 +59,7 @@ public final class PageTree extends TreeView<PageRecord> {
 
             LOG.debug("Selected item: {}", val);
 
-            DefaultEventBus.getInstance().publish( new NavigationEvent(val.getValue().pageClass()));
+            DefaultEventBus.getInstance().publish(new NavigationEvent(val.getValue().pageClass()));
 
         });
 
@@ -69,23 +74,24 @@ public final class PageTree extends TreeView<PageRecord> {
         var root = Item.root();
 
         // ClassificationData, BuilderInformation, TonnageData , StatutoryData    ShipDesignation
-        var fileGroup = Item.group("Base Data", new FontIcon(MaterialDesignF.FERRY));
+        var fileGroup = Item.group(PageTree.BASE_DATA_GROUP, new FontIcon(MaterialDesignF.FERRY));
         root.getChildren().add(fileGroup);
         fileGroup.setExpanded(true);
 
-        fileGroup.getChildren().add( Item.page("Header",new FontIcon(MaterialDesignI.INFORMATION_OUTLINE), HeaderPage.class));
-        fileGroup.getChildren().add( Item.page(ClassificationSocietyPage.NAME,new FontIcon(MaterialDesignA.ANCHOR), ClassificationSocietyPage.class));
-        fileGroup.getChildren().add( Item.page(PrincipalParticularsPage.NAME,new FontIcon(MaterialDesignA.ARROW_LEFT_RIGHT), PrincipalParticularsPage.class));
-        fileGroup.getChildren().add( Item.page(BuilderInformationPage.NAME,new FontIcon(MaterialDesignG.GANTRY_CRANE), BuilderInformationPage.class));
-        fileGroup.getChildren().add( Item.page(VesselDataPage.NAME,new FontIcon(MaterialDesignS.SCRIPT_TEXT_OUTLINE), VesselDataPage.class));
+        var headerItem = Item.page("Header", new FontIcon(MaterialDesignI.INFORMATION_OUTLINE), HeaderPage.class);
+        fileGroup.getChildren().add(headerItem);
+        fileGroup.getChildren().add(Item.page(ClassificationSocietyPage.NAME, new FontIcon(MaterialDesignA.ANCHOR), ClassificationSocietyPage.class));
+        fileGroup.getChildren().add(Item.page(PrincipalParticularsPage.NAME, new FontIcon(MaterialDesignA.ARROW_LEFT_RIGHT), PrincipalParticularsPage.class));
+        fileGroup.getChildren().add(Item.page(BuilderInformationPage.NAME, new FontIcon(MaterialDesignG.GANTRY_CRANE), BuilderInformationPage.class));
+        fileGroup.getChildren().add(Item.page(VesselDataPage.NAME, new FontIcon(MaterialDesignS.SCRIPT_TEXT_OUTLINE), VesselDataPage.class));
 
         // Reference Surfaces and Grid
         var geomGroup = Item.group("Geometry", new FontIcon(MaterialDesignS.SHIP_WHEEL));
         root.getChildren().add(geomGroup);
         geomGroup.setExpanded(false);
-        geomGroup.getChildren().add( Item.page("Tolerances",new FontIcon(MaterialDesignT.TILDE), TolerancesPage.class));
-        geomGroup.getChildren().add( Item.page("Coordinate Systems",new FontIcon(MaterialDesignA.AXIS_ARROW), CoordinateSystemsPage.class));
-        geomGroup.getChildren().add( Item.page("Reference Surfaces",new FontIcon(MaterialDesignL.LAYERS_TRIPLE_OUTLINE), ReferenceSurfacesPage.class));
+        geomGroup.getChildren().add(Item.page("Tolerances", new FontIcon(MaterialDesignT.TILDE), TolerancesPage.class));
+        geomGroup.getChildren().add(Item.page("Coordinate Systems", new FontIcon(MaterialDesignA.AXIS_ARROW), CoordinateSystemsPage.class));
+        geomGroup.getChildren().add(Item.page("Reference Surfaces", new FontIcon(MaterialDesignL.LAYERS_TRIPLE_OUTLINE), ReferenceSurfacesPage.class));
 
 
         // DesignView
@@ -100,27 +106,28 @@ public final class PageTree extends TreeView<PageRecord> {
         var hullGroup = Item.group("Hull Structure", new FontIcon(MaterialDesignG.GRID_LARGE));
         root.getChildren().add(hullGroup);
         hullGroup.setExpanded(true);
-        hullGroup.getChildren().add( Item.page(PanelsPage.NAME,new FontIcon(MaterialDesignB.BORDER_NONE),PanelsPage.class));
-        hullGroup.getChildren().add( Item.group("Plates",new FontIcon(MaterialDesignB.BORDER_ALL_VARIANT)));
-        hullGroup.getChildren().add( Item.group("Stiffeners",new FontIcon(MaterialDesignB.BORDER_HORIZONTAL)));
-        hullGroup.getChildren().add( Item.group("Brackets",new FontIcon(MaterialDesignN.NETWORK_STRENGTH_OUTLINE)));
-        hullGroup.getChildren().add( Item.group("Members",new FontIcon(MaterialDesignB.BORDER_LEFT_VARIANT)));
+        hullGroup.getChildren().add(Item.page(PanelsPage.NAME, new FontIcon(MaterialDesignB.BORDER_NONE), PanelsPage.class));
+        hullGroup.getChildren().add(Item.page(PlatesPage.NAME, new FontIcon(MaterialDesignB.BORDER_NONE), PlatesPage.class));
+        hullGroup.getChildren().add(Item.page(StiffenersPage.NAME, new FontIcon(MaterialDesignB.BORDER_NONE), StiffenersPage.class));
+        hullGroup.getChildren().add(Item.page(BracketsPage.NAME, new FontIcon(MaterialDesignB.BORDER_NONE), BracketsPage.class));
+
+        //hullGroup.getChildren().add( Item.group("Members",new FontIcon(MaterialDesignB.BORDER_LEFT_VARIANT)));
 
         var catalogueGroup = Item.group("Catalogue", new FontIcon(MaterialDesignP.PACKAGE_VARIANT));
         root.getChildren().add(catalogueGroup);
         catalogueGroup.setExpanded(false);
-        catalogueGroup.getChildren().add( Item.page("Materials",new FontIcon(MaterialDesignB.BLUR), MaterialCataloguePage.class));
-        catalogueGroup.getChildren().add( Item.page("Holes",new FontIcon(MaterialDesignS.STRETCH_TO_PAGE_OUTLINE), HoleShapePage.class));
-        catalogueGroup.getChildren().add( Item.page("Bar Sections",new FontIcon(MaterialDesignS.SHAPE_PLUS), BarSectionsPage.class));
+        catalogueGroup.getChildren().add(Item.page("Materials", new FontIcon(MaterialDesignB.BLUR), MaterialCataloguePage.class));
+        catalogueGroup.getChildren().add(Item.page("Holes", new FontIcon(MaterialDesignS.STRETCH_TO_PAGE_OUTLINE), HoleShapePage.class));
+        catalogueGroup.getChildren().add(Item.page("Bar Sections", new FontIcon(MaterialDesignS.SHAPE_PLUS), BarSectionsPage.class));
 
         var unitsGroup = Item.group("Units", new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM));
         root.getChildren().add(unitsGroup);
         unitsGroup.setExpanded(false);
-        unitsGroup.getChildren().add( Item.page("Units",new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM), UnitsPage.class));
-        unitsGroup.getChildren().add( Item.page("Dimensions",new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM), UnitDimensionsPage.class));
+        unitsGroup.getChildren().add(Item.page("Units", new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM), UnitsPage.class));
+        unitsGroup.getChildren().add(Item.page("Dimensions", new FontIcon(MaterialDesignW.WEIGHT_KILOGRAM), UnitDimensionsPage.class));
 
         var internalGroup = Item.group("Internal", new FontIcon(MaterialDesignE.EYE_OUTLINE));
-        internalGroup.getChildren().add( Item.page(LogPage.NAME,new FontIcon(MaterialDesignC.COMMENT_TEXT_OUTLINE), LogPage.class));
+        internalGroup.getChildren().add(Item.page(LogPage.NAME, new FontIcon(MaterialDesignC.COMMENT_TEXT_OUTLINE), LogPage.class));
         root.getChildren().add(internalGroup);
         internalGroup.setExpanded(true);
 
@@ -128,7 +135,7 @@ public final class PageTree extends TreeView<PageRecord> {
         rootProperty().setValue(root);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////
 
     public static final class NavTreeCell extends TreeCell<PageRecord> {
 
@@ -152,7 +159,7 @@ public final class PageTree extends TreeView<PageRecord> {
             root = new HBox();
             root.setAlignment(Pos.CENTER_LEFT);
             root.getChildren().setAll(titleLabel, new Spacer(), arrowIcon //, tagLabel
-                     );
+            );
             root.setCursor(Cursor.HAND);
             root.getStyleClass().add("container");
             root.setMaxWidth(450);
@@ -205,7 +212,7 @@ public final class PageTree extends TreeView<PageRecord> {
             return record.isGroup();
         }
 
-        public  Class<? extends Page> pageClass() {
+        public Class<? extends Page> pageClass() {
             return record.pageClass();
         }
 
@@ -218,8 +225,8 @@ public final class PageTree extends TreeView<PageRecord> {
         }
 
         public static Item page(String title,
-                                 Node graphic,
-                                 Class<? extends Page> pageClass) {
+                                Node graphic,
+                                Class<? extends Page> pageClass) {
             Objects.requireNonNull(pageClass, "pageClass");
             return new Item(new PageRecord(title, graphic, pageClass));
         }

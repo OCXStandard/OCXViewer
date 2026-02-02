@@ -25,10 +25,11 @@ import java.util.List;
 
 /**
  * Wrapper record for a unit.
- * @param unit the unit
- * @param id    the id of the unit
- * @param names the list of unit names
- * @param symbol the unit symbols
+ *
+ * @param unit      the unit
+ * @param id        the id of the unit
+ * @param names     the list of unit names
+ * @param symbol    the unit symbols
  * @param rootUnits the root units
  * @param dimension the dimension URL
  * @author Carsten Zerbst
@@ -40,7 +41,7 @@ public record UnitRecord(
         String symbol,
         String rootUnits,
         String dimension
-        ) {
+) {
 
     //private static final Logger LOG = LogManager.getLogger(UnitRecord.class);
 
@@ -63,15 +64,15 @@ public record UnitRecord(
 //            }
 //        }
         StringBuilder rootUnits = new StringBuilder();
-        if ( unit.getRootUnits() !=null) {
-            for(Iterator<EnumeratedRootUnit> rootUnitIt = unit.getRootUnits().getEnumeratedRootUnits().iterator();rootUnitIt.hasNext();) {
+        if (unit.getRootUnits() != null) {
+            for (Iterator<EnumeratedRootUnit> rootUnitIt = unit.getRootUnits().getEnumeratedRootUnits().iterator(); rootUnitIt.hasNext(); ) {
                 EnumeratedRootUnit rootUnit = rootUnitIt.next();
 
-                if ( StringUtils.isNoneEmpty(rootUnit.getPrefix())) {
-                    rootUnits.append( rootUnit.getPrefix()).append(" ");
+                if (StringUtils.isNoneEmpty(rootUnit.getPrefix())) {
+                    rootUnits.append(rootUnit.getPrefix()).append(" ");
                 }
                 rootUnits.append(rootUnit.getUnit());
-                switch ( rootUnit.getPowerNumerator()) {
+                switch (rootUnit.getPowerNumerator()) {
                     case 1:
                         rootUnits.append(" ");
                         break;
@@ -105,7 +106,7 @@ public record UnitRecord(
         }
 
         StringBuilder symbols = new StringBuilder();
-        if ( unit.getUnitSymbols() !=null) {
+        if (unit.getUnitSymbols() != null) {
             unit.getUnitSymbols().forEach((symbol) -> symbols.append(symbol.getType()).append(", "));
         }
 

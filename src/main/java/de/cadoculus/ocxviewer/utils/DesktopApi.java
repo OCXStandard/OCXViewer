@@ -20,7 +20,7 @@ import de.cadoculus.ocxviewer.views.CoordinateSystemPage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -213,7 +213,7 @@ public class DesktopApi {
     }
 
     private static void logErr(String msg, Throwable t) {
-        LOG.debug(msg,t);
+        LOG.debug(msg, t);
     }
 
     private static void logErr(String msg) {

@@ -42,23 +42,23 @@ public enum LimitedByType {
 
     public static LimitedByType getType(Object limit) {
 
-        if (limit instanceof FreeEdgeCurve3D ) {
+        if (limit instanceof FreeEdgeCurve3D) {
             return LimitedByType.FREE_EDGE_CURVE;
-        } else if (limit instanceof CellBoundary ) {
+        } else if (limit instanceof CellBoundary) {
             return LimitedByType.CELL_BOUNDARY;
-        } else if (limit instanceof EdgeCurveRefT ) {
+        } else if (limit instanceof EdgeCurveRefT) {
             return LimitedByType.EDGE_CURVE_REF;
-        } else if (limit instanceof GridRefT ) {
+        } else if (limit instanceof GridRefT) {
             return LimitedByType.GRID_REF;
-        } else if (limit instanceof PanelRefT ) {
+        } else if (limit instanceof PanelRefT) {
             return LimitedByType.PANEL_REF;
-        } else if (limit instanceof SeamRefT ) {
+        } else if (limit instanceof SeamRefT) {
             return LimitedByType.SEAM_REF;
-        } else if (limit instanceof StiffenerRefT ) {
+        } else if (limit instanceof StiffenerRefT) {
             return LimitedByType.STIFFENER_REF;
-        } else if (limit instanceof SurfaceRefT ) {
+        } else if (limit instanceof SurfaceRefT) {
             return LimitedByType.SURFACE_REF;
-        } else if (limit instanceof SurfaceT ) {
+        } else if (limit instanceof SurfaceT) {
             return LimitedByType.SURFACE;
         }
 

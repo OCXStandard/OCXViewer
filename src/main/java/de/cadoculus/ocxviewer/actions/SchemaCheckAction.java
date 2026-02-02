@@ -21,12 +21,13 @@ import javafx.scene.input.KeyCombination;
 
 /**
  * The Schema Check action
+ *
  * @author Carsten Zerbst
  */
-public class SchemaCheckAction extends  AbstractAction {
+public class SchemaCheckAction extends AbstractAction {
 
     public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN);
-    public final static  String NAME = "Schema Check";
+    public final static String NAME = "Schema Check";
 
     //TODO: implement a dialogue to select the file and version to check, then run the schema checks
     @Override

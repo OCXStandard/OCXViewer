@@ -17,6 +17,7 @@ package de.cadoculus.ocxviewer.ui;
 
 /**
  * Dialogue for schema checking options and results
+ *
  * @author Carsten Zerbst
  */
 public class SchemaCheckDialogue {

@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 
 /**
  * The Help action
+ *
  * @author Carsten Zerbst
  */
 public class HelpAction extends AbstractAction {

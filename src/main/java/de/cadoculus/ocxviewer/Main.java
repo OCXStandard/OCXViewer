@@ -26,6 +26,7 @@ import java.util.Arrays;
 /**
  * The main entry point for the OCX Viewer application.
  * It handles command-line arguments, logging configuration, and starts the application.
+ *
  * @author Carsten Zerbst
  */
 public class Main {
@@ -59,7 +60,7 @@ public class Main {
         } catch (org.apache.commons.cli.ParseException exp) {
 
             LOG.error("failed to handle options: {} ", exp.getMessage());
-            LOG.error("    given options {} ",Arrays.toString(args));
+            LOG.error("    given options {} ", Arrays.toString(args));
 
             // oops, something went wrong
             HelpFormatter formatter = new HelpFormatter();
@@ -91,15 +92,15 @@ public class Main {
 
     private static void printIntro() {
 
-        var logo= """
+        var logo = """
                   ___   _____  __ __   ___                   \s
                  / _ \\ / __\\ \\/ / \\ \\ / (_)_____ __ _____ _ _\s
                 | (_) | (__ >  <   \\ V /| / -_) V  V / -_) '_|
                  \\___/ \\___/_/\\_\\   \\_/ |_\\___|\\_/\\_/\\___|_| """;
 
         System.out.println(logo);
-        System.out.println("                       Version " + BuildVersion.getMvnVersion() );
-        System.out.println("\nbuild " + BuildVersion.getBuiltTimestamp()  + " from GIT commit " + BuildVersion.getGitCommitID()+ ", branch " + BuildVersion.getGitBranch() );
+        System.out.println("                       Version " + BuildVersion.getMvnVersion());
+        System.out.println("\nbuild " + BuildVersion.getBuiltTimestamp() + " from GIT commit " + BuildVersion.getGitCommitID() + ", branch " + BuildVersion.getGitBranch());
 
         // Todo: enhance when other contribute
         var apache = """
@@ -120,7 +121,6 @@ public class Main {
                 
                 """;
         System.out.println(apache);
-
 
 
     }

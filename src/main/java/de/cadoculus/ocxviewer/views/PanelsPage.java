@@ -41,6 +41,7 @@ import java.util.ArrayList;
 
 /**
  * This class displays the panels contained in the OCX file.
+ *
  * @author Carsten Zerbst
  */
 public class PanelsPage extends AbstractDataViewPage implements Page {
@@ -77,31 +78,31 @@ public class PanelsPage extends AbstractDataViewPage implements Page {
         var filterText = new CustomTextField();
         filterText.setLeft(new FontIcon(MaterialDesignT.TABLE_SEARCH));
         filterText.setPrefWidth(100);
-        filterText.setPadding(new Insets(10,0,10,0));
+        filterText.setPadding(new Insets(10, 0, 10, 0));
         filterText.setPromptText("search Panel by name");
         vbox.getChildren().add(filterText);
 
         filterText.textProperty().addListener((observable, oldValue, newValue) -> filterPanel(newValue));
 
-        var tableColumn1 = new TableColumn<Panel,Panel>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<Panel>( c.getValue()));
-        tableColumn1.setCellFactory( createHyperlinkCellfactory( this::selectedPanel));
+        var tableColumn1 = new TableColumn<Panel, Panel>("ID");
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<Panel>(c.getValue()));
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(this::selectedPanel));
 
         var tableColumn2 = new TableColumn<Panel, String>("GUID");
         tableColumn2.setCellValueFactory(
-                c -> new SimpleStringProperty(  c.getValue().getGUIDRef()));
+                c -> new SimpleStringProperty(c.getValue().getGUIDRef()));
 
         var tableColumn3 = new TableColumn<Panel, String>("Name");
         tableColumn3.setCellValueFactory(
-                c -> new SimpleStringProperty(  c.getValue().getName()));
+                c -> new SimpleStringProperty(c.getValue().getName()));
 
 
         var tableColumn4 = new TableColumn<Panel, String>("Function");
-        tableColumn4.setCellValueFactory( cell ->
-                        new SimpleStringProperty(cell.getValue().getFunctionType()));
+        tableColumn4.setCellValueFactory(cell ->
+                new SimpleStringProperty(cell.getValue().getFunctionType()));
 
         var tableColumn5 = new TableColumn<Panel, String>("Tightness");
-        tableColumn5.setCellValueFactory( cell ->
+        tableColumn5.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getTightness()));
 
 
@@ -124,7 +125,7 @@ public class PanelsPage extends AbstractDataViewPage implements Page {
     }
 
     private void filterPanel(String newValue) {
-        filteredPanels.setPredicate( panel -> {
+        filteredPanels.setPredicate(panel -> {
             if (newValue == null || newValue.isEmpty()) {
                 return true;
             }
@@ -132,8 +133,7 @@ public class PanelsPage extends AbstractDataViewPage implements Page {
 
             if (panel.getName() != null && panel.getName().toLowerCase().contains(lowerCaseFilter)) {
                 return true; // Filter matches name
-            }
-            else if (panel.getId() != null && panel.getId().toLowerCase().contains(lowerCaseFilter)) {
+            } else if (panel.getId() != null && panel.getId().toLowerCase().contains(lowerCaseFilter)) {
                 return true; // Filter matches id
             }
             return false; // Does not match
@@ -142,24 +142,23 @@ public class PanelsPage extends AbstractDataViewPage implements Page {
 
     private void selectedPanel(Panel selected) {
         LOG.debug("selected panel {}", selected);
-        if ( selected ==null) {
+        if (selected == null) {
             // no change
             return;
         }
 
         var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
-        robert.add( new BreadcrumbRecord(selected.getId(), PanelPage.class, null, selected));
+        robert.add(new BreadcrumbRecord(selected.getId(), PanelPage.class, null, selected));
 
-        var event = new SelectionEvent( robert);
+        var event = new SelectionEvent(robert);
         DefaultEventBus.getInstance().publish(event);
     }
 
     @Override
     public void afterShow() {
 
-       // Party !
+        // Party !
     }
-
 
 
 }

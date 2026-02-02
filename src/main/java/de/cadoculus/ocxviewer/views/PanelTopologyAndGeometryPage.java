@@ -18,9 +18,8 @@ package de.cadoculus.ocxviewer.views;
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
-import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
-import de.cadoculus.ocxviewer.models.LimitedByRecord;
-import de.cadoculus.ocxviewer.models.LimitedByType;
+import de.cadoculus.ocxviewer.models.*;
+import de.cadoculus.ocxviewer.utils.GeomHelper;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import jakarta.xml.bind.JAXBElement;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,6 +28,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
@@ -38,7 +39,11 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignB;
 import org.ocx_schema.v310.*;
 
+import javax.vecmath.Point2d;
+import javax.vecmath.Point3d;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * A page displaying information about the topology and geometry of a panel.
@@ -49,6 +54,8 @@ import java.util.ArrayList;
 public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel> {
     public static final String NAME = "Panel Topology and Geometry";
     private static final Logger LOG = LogManager.getLogger(PanelTopologyAndGeometryPage.class);
+    private final ObservableList<LimitedByRecord> limits = FXCollections.observableArrayList();
+
 
     public PanelTopologyAndGeometryPage(org.ocx_schema.v310.Panel panel, Page parent) {
         super(panel, parent, "Topology and Geometry of Panel «" + panel.getId() + "»");
@@ -57,13 +64,104 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
         final var bcs = getBreadcrumbs();
         createTitle(bcs, getName(), "The topology and geometry of a panel.");
 
+        collectLimits();
+
         var tabPanel = new TabPane();
         setCenter(tabPanel);
 
         tabPanel.getTabs().add(createLimitsTab());
+        tabPanel.getTabs().add(createLimitsViewTab());
         tabPanel.getTabs().add(createBoundaryTab());
         tabPanel.getTabs().add(createSurfaceTab());
 
+    }
+
+    private void collectLimits() {
+        if (getObject().getLimitedBy() == null) {
+            LOG.info("panel {} ({}) has no limits",
+                    getObject().getId(), getObject().getGUIDRef());
+            getObject().setLimitedBy(new LimitedBy());
+            return;
+        }
+
+        int index = 0;
+        for (Object limit : getObject().getLimitedBy().getFreeEdgeCurve3DsAndBoundedReves()) {
+
+            if (limit instanceof JAXBElement jaxbElement) {
+                limit = jaxbElement.getValue();
+            }
+            var type = LimitedByType.getType(limit);
+
+            LOG.info("limit #{}, type {}", index, type);
+
+            // Some default values
+            var startPoint = new Point3DT();
+            startPoint.setUnit(UnitHelper.getMilliMeterUnit());
+
+            var endPoint = new Point3DT();
+            endPoint.setUnit(UnitHelper.getMilliMeterUnit());
+
+            var offset = new QuantityT();
+            offset.setNumericvalue(0.0);
+            offset.setUnit(UnitHelper.getMilliMeterUnit());
+
+
+            if (limit instanceof FreeEdgeCurve3D freeEdgeCurve3D) {
+                final FreeEdgeCurve3D edgeCurve3D = (FreeEdgeCurve3D) limit;
+                limits.add(new LimitedByRecord(index++, type, edgeCurve3D.getId(),
+                        (edgeCurve3D).getGUIDRef(), startPoint, endPoint, offset, limit));
+
+            } else if (limit instanceof BoundedRefT boundedRefT) {
+                if (boundedRefT.getContourBounds() != null) {
+                    if (boundedRefT.getContourBounds().getContourStart() != null) {
+                        startPoint = boundedRefT.getContourBounds().getContourStart();
+                    } else {
+                        LOG.warn("limit #{} of panel {} ({}) of type {} has no ContourStart",
+                                index, getObject().getId(), getObject().getGUIDRef(), type);
+                    }
+
+                    if (boundedRefT.getContourBounds().getContourEnd() != null) {
+                        endPoint = boundedRefT.getContourBounds().getContourEnd();
+                    } else {
+                        LOG.warn("limit #{} of panel {} ({}) of type {} has no ContourEnd",
+                                index, getObject().getId(), getObject().getGUIDRef(), type);
+                    }
+
+                } else {
+                    LOG.warn("limit #{} of panel {} ({}) of type {} has no contour bounds",
+                            index, getObject().getId(), getObject().getGUIDRef(), type);
+                }
+
+                if (limit instanceof CellBoundary cellBoundary) {
+
+                    limits.add(new LimitedByRecord(index++, type, cellBoundary.getLocalRef(),
+                            "", startPoint, endPoint, offset, limit));
+                } else if (limit instanceof EdgeCurveRefT edgeCurveRefT) {
+                    limits.add(new LimitedByRecord(index++, type, edgeCurveRefT.getLocalRef(),
+                            edgeCurveRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
+                } else if (limit instanceof GridRefT gridRefT) {
+                    limits.add(new LimitedByRecord(index++, type, gridRefT.getLocalRef(),
+                            gridRefT.getGUIDRef(), startPoint, endPoint,
+                            gridRefT.getOffset() != null ? gridRefT.getOffset() : offset,
+                            limit));
+                } else if (limit instanceof PanelRefT panelRefT) {
+                    limits.add(new LimitedByRecord(index++, type, panelRefT.getLocalRef(),
+                            panelRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
+
+                } else if (limit instanceof SeamRefT seamRefT) {
+                    limits.add(new LimitedByRecord(index++, type, seamRefT.getLocalRef(),
+                            seamRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
+                } else if (limit instanceof StiffenerRefT stiffenerRefT) {
+                    limits.add(new LimitedByRecord(index++, type, stiffenerRefT.getLocalRef(),
+                            stiffenerRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
+                } else if (limit instanceof SurfaceRefT surfaceRefT) {
+                    limits.add(new LimitedByRecord(index++, type, surfaceRefT.getLocalRef(),
+                            surfaceRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
+                }
+            } else {
+                LOG.warn("unhandled object for limit, got {}", type);
+            }
+        } // end limits loop
     }
 
     private Tab createSurfaceTab() {
@@ -238,6 +336,90 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
         return tab;
     }
 
+    private Tab createLimitsViewTab() {
+        var tab = new Tab("Limits View");
+        tab.setClosable(false);
+
+        var warning = new atlantafx.base.controls.Message(
+                "Warning",
+                "Not implemented yet",
+                new FontIcon(MaterialDesignA.ALERT)
+        );
+        warning.getStyleClass().add(Styles.WARNING);
+        tab.setContent(warning);
+
+        var point3s = new ArrayList<Point3d>();
+        double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE, minZ = Double.MAX_VALUE,
+                maxX = Double.MIN_VALUE, maxY = Double.MIN_VALUE, maxZ = Double.MIN_VALUE;
+        for (LimitedByRecord limitRecord : limits) {
+
+            var p = UnitConverter.toDefaultUnit(limitRecord.startPoint());
+            point3s.add( p);
+
+            minX = Math.min(minX, p.x);
+            minY = Math.min(minY, p.y);
+            minZ = Math.min(minZ, p.z);
+
+            maxX = Math.max(maxX, p.x);
+            maxY = Math.max(maxY, p.y);
+            maxZ = Math.max(maxZ, p.z);
+
+            p = UnitConverter.toDefaultUnit(limitRecord.endPoint());
+            point3s.add( p);
+
+            minX = Math.min(minX, p.x);
+            minY = Math.min(minY, p.y);
+            minZ = Math.min(minZ, p.z);
+
+            maxX = Math.max(maxX, p.x);
+            maxY = Math.max(maxY, p.y);
+            maxZ = Math.max(maxZ, p.z);
+        }
+
+        var bbox = new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+        LOG.info("calculated limits bounding box: {}", bbox);
+        LOG.info("  w {}, h {}, d {}", bbox.getWidth(), bbox.getHeight(), bbox.getDepth());
+
+
+        var mainPlane = MainPlane.UNDEFINED;
+        if (bbox.getWidth() < bbox.getHeight() && bbox.getWidth() < bbox.getDepth()) {
+            LOG.info("  smallest dimension is width, look from fore");
+            mainPlane = MainPlane.XPLANE;
+        } else if (bbox.getHeight() < bbox.getWidth() && bbox.getHeight() < bbox.getDepth()) {
+            LOG.info("  smallest dimension is height, look from top");
+            mainPlane = MainPlane.ZPLANE;
+        } else {
+            LOG.info("  smallest dimension is depth, look from starboard");
+            mainPlane = MainPlane.YPLANE;
+        }
+
+        var points = new HashSet<Point2d>();
+        final QuantityT distanceTolerance = WorkingContext.getInstance().getVessel().getDistanceTolerance();
+        double distance = 1.0;
+        if (distanceTolerance == null) {
+            LOG.warn("no distance tolerance defined in vessel, using 1 mm");
+        } else {
+            distance = UnitConverter.toDefaultUnit(distanceTolerance);
+        }
+        LOG.info("using distance tolerance of {} mm", distance);
+
+
+        var threeD2twoT = new HashMap<Point3d, Point2d>();
+
+        for (Point3d p : point3s) {
+            var p2d = GeomHelper.addPoint(p, mainPlane, distance, points);
+            threeD2twoT.put(p, p2d);
+        }
+
+        LOG.info("mapped #{} 3D points to #{} 2D points", point3s.size(), points.size());
+        LOG.info("points: {}", points);
+        LOG.info("map 3d/2d: {}", threeD2twoT);
+
+
+        return tab;
+    }
+
+
     private Tab createLimitsTab() {
         var tab = new Tab("Limits");
         tab.setClosable(false);
@@ -246,9 +428,7 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
         tab.setContent(vbox);
 
 
-        if (getObject().getLimitedBy() == null) {
-            LOG.info("panel {} ({}) has no limits",
-                    getObject().getId(), getObject().getGUIDRef());
+        if (limits.isEmpty()) {
 
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
@@ -258,10 +438,8 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
             warning.getStyleClass().add(Styles.WARNING);
 
             vbox.getChildren().add(warning);
-            getObject().setLimitedBy(new LimitedBy());
         }
 
-        ObservableList<LimitedByRecord> limits = FXCollections.observableArrayList();
 
         var tableColumnIdx = new TableColumn<LimitedByRecord, String>("Index");
         tableColumnIdx.setCellValueFactory(c -> new SimpleStringProperty(
@@ -346,84 +524,6 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
         table.setMaxHeight(1500);
 
         // now populate the table
-        int index = 0;
-        for (Object limit : getObject().getLimitedBy().getFreeEdgeCurve3DsAndBoundedReves()) {
-
-            if (limit instanceof JAXBElement jaxbElement) {
-                limit = jaxbElement.getValue();
-            }
-            var type = LimitedByType.getType(limit);
-
-            LOG.info("limit #{}, type {}", index, type);
-
-            // Some default values
-            var startPoint = new Point3DT();
-            startPoint.setUnit(UnitHelper.getMilliMeterUnit());
-
-            var endPoint = new Point3DT();
-            endPoint.setUnit(UnitHelper.getMilliMeterUnit());
-
-            var offset = new QuantityT();
-            offset.setNumericvalue(0.0);
-            offset.setUnit(UnitHelper.getMilliMeterUnit());
-
-
-            if (limit instanceof FreeEdgeCurve3D freeEdgeCurve3D) {
-                final FreeEdgeCurve3D edgeCurve3D = (FreeEdgeCurve3D) limit;
-                limits.add(new LimitedByRecord(index++, type, edgeCurve3D.getId(),
-                        (edgeCurve3D).getGUIDRef(), startPoint, endPoint, offset, limit));
-
-            } else if (limit instanceof BoundedRefT boundedRefT) {
-                if (boundedRefT.getContourBounds() != null) {
-                    if (boundedRefT.getContourBounds().getContourStart() != null) {
-                        startPoint = boundedRefT.getContourBounds().getContourStart();
-                    } else {
-                        LOG.warn("limit #{} of panel {} ({}) of type {} has no ContourStart",
-                                index, getObject().getId(), getObject().getGUIDRef(), type);
-                    }
-
-                    if (boundedRefT.getContourBounds().getContourEnd() != null) {
-                        endPoint = boundedRefT.getContourBounds().getContourEnd();
-                    } else {
-                        LOG.warn("limit #{} of panel {} ({}) of type {} has no ContourEnd",
-                                index, getObject().getId(), getObject().getGUIDRef(), type);
-                    }
-
-                } else {
-                    LOG.warn("limit #{} of panel {} ({}) of type {} has no contour bounds",
-                            index, getObject().getId(), getObject().getGUIDRef(), type);
-                }
-
-                if (limit instanceof CellBoundary cellBoundary) {
-
-                    limits.add(new LimitedByRecord(index++, type, cellBoundary.getLocalRef(),
-                            "", startPoint, endPoint, offset, limit));
-                } else if (limit instanceof EdgeCurveRefT edgeCurveRefT) {
-                    limits.add(new LimitedByRecord(index++, type, edgeCurveRefT.getLocalRef(),
-                            edgeCurveRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
-                } else if (limit instanceof GridRefT gridRefT) {
-                    limits.add(new LimitedByRecord(index++, type, gridRefT.getLocalRef(),
-                            gridRefT.getGUIDRef(), startPoint, endPoint,
-                            gridRefT.getOffset() != null ? gridRefT.getOffset() : offset,
-                            limit));
-                } else if (limit instanceof PanelRefT panelRefT) {
-                    limits.add(new LimitedByRecord(index++, type, panelRefT.getLocalRef(),
-                            panelRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
-
-                } else if (limit instanceof SeamRefT seamRefT) {
-                    limits.add(new LimitedByRecord(index++, type, seamRefT.getLocalRef(),
-                            seamRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
-                } else if (limit instanceof StiffenerRefT stiffenerRefT) {
-                    limits.add(new LimitedByRecord(index++, type, stiffenerRefT.getLocalRef(),
-                            stiffenerRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
-                } else if (limit instanceof SurfaceRefT surfaceRefT) {
-                    limits.add(new LimitedByRecord(index++, type, surfaceRefT.getLocalRef(),
-                            surfaceRefT.getGUIDRef(), startPoint, endPoint, offset, limit));
-                }
-            } else {
-                LOG.warn("unhandled object for limit, got {}", type);
-            }
-        } // end limits loop
 
 
         return tab;

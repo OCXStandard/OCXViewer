@@ -48,15 +48,15 @@ public class BuildVersion {
      */
     public static String getBuiltTimestamp() {
 
-        if ( buildTimestamp == null ) {
+        if (buildTimestamp == null) {
             loadBuild();
         }
 
-        if ( ( buildTimestamp == null ) || ( buildTimestamp.trim().length() < 10 ) ) {
+        if ((buildTimestamp == null) || (buildTimestamp.trim().length() < 10)) {
             return "";
         }
 
-        return buildTimestamp.substring( 0, 10 );
+        return buildTimestamp.substring(0, 10);
     }
 
     /**
@@ -65,23 +65,25 @@ public class BuildVersion {
      */
     public static String getMvnVersion() {
 
-        if ( buildTimestamp == null ) {
+        if (buildTimestamp == null) {
             loadBuild();
         }
 
         return mvnVersion;
     }
+
     public static String getGitBranch() {
 
-        if ( gitBranch == null ) {
+        if (gitBranch == null) {
             loadBuild();
         }
 
         return gitBranch;
     }
+
     public static String getGitCommitID() {
 
-        if ( gitCommitID == null ) {
+        if (gitCommitID == null) {
             loadBuild();
         }
 
@@ -97,27 +99,26 @@ public class BuildVersion {
 
         try {
             Properties props = new Properties();
-            props.load( BuildVersion.class.getResourceAsStream( PROPS_FILE ) );
+            props.load(BuildVersion.class.getResourceAsStream(PROPS_FILE));
 
-            buildTimestamp = props.getProperty( "timestamp" );
-            mvnVersion = props.getProperty( "project.version" );
+            buildTimestamp = props.getProperty("timestamp");
+            mvnVersion = props.getProperty("project.version");
 
-        } catch ( Exception exp ) {
-            System.err.println( "failed to load build.properties" );
-            System.err.println( "reason " + exp);
+        } catch (Exception exp) {
+            System.err.println("failed to load build.properties");
+            System.err.println("reason " + exp);
             buildTimestamp = "UNKNOWN";
             mvnVersion = "UNKNOWN";
         }
-        try{
+        try {
             Properties props = new Properties();
-            props.load( BuildVersion.class.getResourceAsStream( PROPS2_FILE ) );
-            gitBranch = props.getProperty( "git.branch" );
-            gitCommitID = props.getProperty( "git.commit.id" );
-            
-        }
-        catch(Exception exp){
-            System.err.println( "failed to load git.properties" );
-            System.err.println( "reason " + exp);
+            props.load(BuildVersion.class.getResourceAsStream(PROPS2_FILE));
+            gitBranch = props.getProperty("git.branch");
+            gitCommitID = props.getProperty("git.commit.id");
+
+        } catch (Exception exp) {
+            System.err.println("failed to load git.properties");
+            System.err.println("reason " + exp);
             gitBranch = "UNKNOWN";
             gitCommitID = "UNKNOWN";
         }

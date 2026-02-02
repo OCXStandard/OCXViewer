@@ -24,6 +24,7 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 /**
  * A page displaying information about a Stiffener.
  * The StiffnerPage is not intended to be navigated directly, but rather as a logical child.
+ *
  * @author Carsten Zerbst
  */
 public class FlangePage extends AbstractDataViewSubPage<org.ocx_schema.v310.Stiffener> {
@@ -31,12 +32,12 @@ public class FlangePage extends AbstractDataViewSubPage<org.ocx_schema.v310.Stif
     private static final Logger LOG = LogManager.getLogger(FlangePage.class);
 
     public FlangePage(org.ocx_schema.v310.Stiffener stiffener, Page parent) {
-        super(stiffener, parent, "Stiffener «"+stiffener.getId() + "»");
+        super(stiffener, parent, "Stiffener «" + stiffener.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
 
-        createTitle( bcs, getName(), "Information about an OCX Stiffener");
+        createTitle(bcs, getName(), "Information about an OCX Stiffener");
 
         var warning = new atlantafx.base.controls.Message(
                 "Warning",

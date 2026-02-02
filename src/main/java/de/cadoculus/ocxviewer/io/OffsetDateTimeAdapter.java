@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Adapter to convert between String and OffsetDateTime for XML marshalling/unmarshalling.
  * Uses ISO_OFFSET_DATE_TIME format for the conversion.
+ *
  * @author Carsten Zerbst
  */
 public class OffsetDateTimeAdapter extends XmlAdapter<String, OffsetDateTime> {

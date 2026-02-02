@@ -27,29 +27,30 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignI;
 
 /**
  * The About action
+ *
  * @author Carsten Zerbst
  */
-public class AboutAction extends  AbstractAction {
+public class AboutAction extends AbstractAction {
 
     public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.I, KeyCombination.CONTROL_DOWN);
-    public final static  String NAME = "About";
+    public final static String NAME = "About";
 
     //TODO: implement showing a dialogue with version information
     @Override
     public void run() {
         var infoBtn = new Button("Info", new FontIcon(MaterialDesignI.INBOX));
-            var alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText(null);
+        var alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
 
-            var sb = new StringBuilder("OCX Viewer\n");
-            sb.append("Version ").append(BuildVersion.getMvnVersion()).append("\n");
-            sb.append("Build ").append(BuildVersion.getBuiltTimestamp()).append("\n");
-            sb.append("GIT Commit ").append(BuildVersion.getGitCommitID()).append("\n");
-            sb.append("GIT Branch ").append(BuildVersion.getGitBranch()).append("\n");
-            alert.setContentText(sb.toString());
-            alert.initOwner(WorkingContext.getInstance().getMainScene().getWindow());
-            alert.showAndWait();
+        var sb = new StringBuilder("OCX Viewer\n");
+        sb.append("Version ").append(BuildVersion.getMvnVersion()).append("\n");
+        sb.append("Build ").append(BuildVersion.getBuiltTimestamp()).append("\n");
+        sb.append("GIT Commit ").append(BuildVersion.getGitCommitID()).append("\n");
+        sb.append("GIT Branch ").append(BuildVersion.getGitBranch()).append("\n");
+        alert.setContentText(sb.toString());
+        alert.initOwner(WorkingContext.getInstance().getMainScene().getWindow());
+        alert.showAndWait();
 
     }
 }

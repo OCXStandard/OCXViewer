@@ -1,8 +1,9 @@
 /* SPDX-License-Identifier: MIT */
 package de.cadoculus.ocxviewer.event;
+
 /**
  * Event representing a change in the application's theme.
- *  This code is copied from atlantafx.sampler implemented by mkpaz. It is licensed under the MIT License.
+ * This code is copied from atlantafx.sampler implemented by mkpaz. It is licensed under the MIT License.
  */
 public final class ThemeEvent extends Event {
 

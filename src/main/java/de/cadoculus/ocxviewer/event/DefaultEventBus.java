@@ -1,6 +1,9 @@
 /* SPDX-License-Identifier: MIT */
 package de.cadoculus.ocxviewer.event;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -16,11 +19,13 @@ import java.util.function.Consumer;
  *
  * <p>You can use the default event bus instance {@link #getInstance}, which is a singleton,
  * or you can create one or multiple instances of {@link DefaultEventBus}.
- *
+ * <p>
  * This code is copied from atlantafx.sampler implemented by mkpaz. It is licensed under the MIT License.
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class DefaultEventBus implements EventBus {
+
+    private static final Logger LOG = LogManager.getLogger(DefaultEventBus.class);
 
     public DefaultEventBus() {
     }
@@ -58,9 +63,9 @@ public final class DefaultEventBus implements EventBus {
         Objects.requireNonNull(subscriber);
 
         subscribers.keySet().stream()
-            .filter(eventType::isAssignableFrom)
-            .map(subscribers::get)
-            .forEach(eventSubscribers -> eventSubscribers.remove(subscriber));
+                .filter(eventType::isAssignableFrom)
+                .map(subscribers::get)
+                .forEach(eventSubscribers -> eventSubscribers.remove(subscriber));
     }
 
     @Override
@@ -69,9 +74,12 @@ public final class DefaultEventBus implements EventBus {
 
         Class<?> eventType = event.getClass();
         subscribers.keySet().stream()
-            .filter(type -> type.isAssignableFrom(eventType))
-            .flatMap(type -> subscribers.get(type).stream())
-            .forEach(subscriber -> publish(event, subscriber));
+                .filter(type -> type.isAssignableFrom(eventType))
+                .flatMap(type -> subscribers.get(type).stream())
+                .forEach(subscriber -> {
+                    //LOG.warn("Publishing event {} to subscriber {}", event.getClass().getSimpleName(), subscriber.getClass().getSimpleName());
+                    publish(event, subscriber);
+                });
     }
 
     private <E extends Event> void publish(E event, Consumer<E> subscriber) {
@@ -82,7 +90,7 @@ public final class DefaultEventBus implements EventBus {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////
 
     private static class InstanceHolder {
 

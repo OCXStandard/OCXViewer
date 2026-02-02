@@ -46,21 +46,22 @@ import java.util.ArrayList;
 /**
  * A page displaying information about a Surface.
  * The SurfacePages is not intended to be navigated directly, but rather as a logical child, e.g. from the ReferenceSurfacesPage
+ *
  * @author Carsten Zerbst
  */
 public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollection> {
     public static final String NAME = "Surface Collection";
     private static final Logger LOG = LogManager.getLogger(SurfaceCollectionPage.class);
 
-    private final  ObservableList<DescriptionBaseT> surfaces = FXCollections.observableArrayList();
+    private final ObservableList<DescriptionBaseT> surfaces = FXCollections.observableArrayList();
     private final FilteredList<DescriptionBaseT> filteredSurfaces = new FilteredList<>(surfaces, p -> true);
 
     public SurfaceCollectionPage(SurfaceCollection collection, Page parent) {
-        super(collection, parent, "Surface Collection «"+collection.getId() + "»");
+        super(collection, parent, "Surface Collection «" + collection.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
-        createTitle( bcs, getName(), "Information about an OCX Surface Collection.");
+        createTitle(bcs, getName(), "Information about an OCX Surface Collection.");
 
 
         ScrollPane scrollPane = new ScrollPane();
@@ -71,7 +72,7 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
         scrollPane.setFitToWidth(true);
 
         GridPane gridPane = createDefaultGrid();
-        scrollPane.setContent(  gridPane);
+        scrollPane.setContent(gridPane);
 
         int row = 0;
 
@@ -117,29 +118,29 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
         var filterText = new CustomTextField();
         filterText.setLeft(new FontIcon(MaterialDesignT.TABLE_SEARCH));
         filterText.setPrefWidth(100);
-        filterText.setPadding(new Insets(10,0,10,0));
+        filterText.setPadding(new Insets(10, 0, 10, 0));
         filterText.setPromptText("search surfaces by name or type");
-        gridPane.add(filterText, 0,row++,4,1);
+        gridPane.add(filterText, 0, row++, 4, 1);
 
         filterText.textProperty().addListener((observable, oldValue, newValue) -> filterSurfaces(newValue));
 
 
         var tableColumn1 = new TableColumn<DescriptionBaseT, DescriptionBaseT>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>( c.getValue()));
-        tableColumn1.setCellFactory( createHyperlinkCellfactory(this::selectedSurface));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(this::selectedSurface));
 
         var tableColumn2 = new TableColumn<DescriptionBaseT, String>("Name");
         tableColumn2.setCellValueFactory(
-                c -> new SimpleStringProperty(  c.getValue().getName() ));
+                c -> new SimpleStringProperty(c.getValue().getName()));
 
         var tableColumn3 = new TableColumn<DescriptionBaseT, String>("GUID");
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(
-                        c.getValue() instanceof SurfaceT ? ((SurfaceT)c.getValue()).getGUIDRef() : ((SurfaceCollection)c.getValue()).getGUIDRef())
+                        c.getValue() instanceof SurfaceT ? ((SurfaceT) c.getValue()).getGUIDRef() : ((SurfaceCollection) c.getValue()).getGUIDRef())
         );
 
         var tableColumn4 = new TableColumn<DescriptionBaseT, String>("Type");
-        tableColumn4.setCellValueFactory( cell ->
+        tableColumn4.setCellValueFactory(cell ->
                 new SimpleStringProperty(GeomHelper.getGeometryType(cell.getValue())));
 
 
@@ -153,19 +154,19 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
         table.setMinHeight(150);
         table.setMaxHeight(600);
 
-        gridPane.add( table, 0,row, 4, 1);
+        gridPane.add(table, 0, row, 4, 1);
 
         // ensure the last row gets all available space
-        for ( int r =0; r< GridPane.getRowIndex(table); r++) {
+        for (int r = 0; r < GridPane.getRowIndex(table); r++) {
             gridPane.getRowConstraints().add(new RowConstraints());
         }
         var tableRow = new RowConstraints();
         tableRow.setVgrow(Priority.ALWAYS);
-        gridPane.getRowConstraints().add( tableRow);
+        gridPane.getRowConstraints().add(tableRow);
 
 
         // now populate the table
-        for (JAXBElement<? extends SurfaceT> jaxbElement: getObject().getSurfaces()) {
+        for (JAXBElement<? extends SurfaceT> jaxbElement : getObject().getSurfaces()) {
             if (jaxbElement.getValue() instanceof SurfaceT surface) {
                 surfaces.add(surface);
             }
@@ -173,7 +174,7 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
     }
 
     private void filterSurfaces(String newValue) {
-        filteredSurfaces.setPredicate( srf -> {
+        filteredSurfaces.setPredicate(srf -> {
             if (newValue == null || newValue.isEmpty()) {
                 return true;
             }
@@ -181,11 +182,9 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
 
             if (srf.getName() != null && srf.getName().toLowerCase().contains(lowerCaseFilter)) {
                 return true; // Filter matches name
-            }
-            else if (srf.getId() != null && srf.getId().toLowerCase().contains(lowerCaseFilter)) {
+            } else if (srf.getId() != null && srf.getId().toLowerCase().contains(lowerCaseFilter)) {
                 return true; // Filter matches id
-            }
-            else if ( GeomHelper.getGeometryType( srf).toLowerCase().contains(lowerCaseFilter)) {
+            } else if (GeomHelper.getGeometryType(srf).toLowerCase().contains(lowerCaseFilter)) {
                 return true;
             }
             return false; // Does not match
@@ -195,26 +194,25 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
 
     private void selectedSurface(DescriptionBaseT selected) {
         LOG.debug("selected surface {}", selected);
-        if ( selected ==null) {
+        if (selected == null) {
             // no change
             return;
         }
 
         var robert = new ArrayList<>(getBreadcrumbs());
 
-        if ( selected instanceof SurfaceCollection collection) {
-            robert.add( new BreadcrumbRecord(collection.getId(), SurfaceCollectionPage.class, null, collection));
-        } else if ( selected instanceof SurfaceT surface) {
-            robert.add( new BreadcrumbRecord(surface.getId(), SurfacePage.class, null, selected));
+        if (selected instanceof SurfaceCollection collection) {
+            robert.add(new BreadcrumbRecord(collection.getId(), SurfaceCollectionPage.class, null, collection));
+        } else if (selected instanceof SurfaceT surface) {
+            robert.add(new BreadcrumbRecord(surface.getId(), SurfacePage.class, null, selected));
         } else {
             LOG.warn("unhandled object type,  expect either surfaces or surface collections, got {}", selected);
             return;
         }
 
-        var event = new SelectionEvent( robert);
+        var event = new SelectionEvent(robert);
         DefaultEventBus.getInstance().publish(event);
     }
-
 
 
 }

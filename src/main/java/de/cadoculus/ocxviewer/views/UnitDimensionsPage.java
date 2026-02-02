@@ -35,9 +35,10 @@ import java.util.List;
 
 /**
  * A page displaying information about unit dimensions.
+ *
  * @author Carsten Zerbst
  */
-public class UnitDimensionsPage extends AbstractDataViewPage{
+public class UnitDimensionsPage extends AbstractDataViewPage {
     public static final String NAME = "Unit Dimensions";
     private static final Logger LOG = LogManager.getLogger(UnitDimensionsPage.class);
     private final TableView<UnitDimensionRecord> table;
@@ -121,7 +122,6 @@ public class UnitDimensionsPage extends AbstractDataViewPage{
         });
 
 
-
         ObservableList<UnitDimensionRecord> unitDimensionRecords = FXCollections.observableArrayList();
         table = new TableView<>(unitDimensionRecords);
         table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3);
@@ -133,8 +133,8 @@ public class UnitDimensionsPage extends AbstractDataViewPage{
         table.setMinHeight(300);
 
         int row = 0;
-        gridPane.add(table, 0, row, 4,3);
-        row+=3;
+        gridPane.add(table, 0, row, 4, 3);
+        row += 3;
 
 
         final org.ocx_schema.v310.OcxXMLT ocx = WorkingContext.getInstance().getOcx();

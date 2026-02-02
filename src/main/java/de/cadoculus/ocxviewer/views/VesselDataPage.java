@@ -94,7 +94,7 @@ public class VesselDataPage extends AbstractDataViewPage {
         label.setTooltip(new Tooltip("The name of the ship assigned by the owner."));
         gridPane.add(label, 0, row);
         var textField = new TextField();
-        gridPane.add(textField, 1, row++,3,1);
+        gridPane.add(textField, 1, row++, 3, 1);
         bindToBean(textField.textProperty(), designation, "shipName", String.class);
 
         // callSign
@@ -103,7 +103,7 @@ public class VesselDataPage extends AbstractDataViewPage {
         gridPane.add(label, 0, row);
 
         textField = new TextField();
-        gridPane.add(textField, 1, row++,3,1);
+        gridPane.add(textField, 1, row++, 3, 1);
         bindToBean(textField.textProperty(), designation, "callSign", String.class);
 
         // numberIMO
@@ -118,7 +118,7 @@ public class VesselDataPage extends AbstractDataViewPage {
         gridPane.add(label, 0, row);
 
         textField = new TextField();
-        gridPane.add(textField, 1, row++,3,1);
+        gridPane.add(textField, 1, row++, 3, 1);
         bindToBean(textField.textProperty(), designation, "numberIMO", String.class);
 
 
@@ -128,7 +128,7 @@ public class VesselDataPage extends AbstractDataViewPage {
         gridPane.add(label, 0, row);
 
         textField = new TextField();
-        gridPane.add(textField, 1, row++,3,1);
+        gridPane.add(textField, 1, row++, 3, 1);
         bindToBean(textField.textProperty(), designation, "shipType", String.class);
 
 
@@ -168,7 +168,7 @@ public class VesselDataPage extends AbstractDataViewPage {
         label.setTooltip(new Tooltip("Type definition of vessel data related to the flag state."));
         gridPane.add(label, 0, row);
         textField = new TextField();
-        gridPane.add(textField, 1, row++,3,1);
+        gridPane.add(textField, 1, row++, 3, 1);
         bindToBean(textField.textProperty(), statutoryData, "portRegistration", String.class);
 
         // Flag Stage
@@ -177,7 +177,7 @@ public class VesselDataPage extends AbstractDataViewPage {
         gridPane.add(label, 0, row);
 
         textField = new TextField();
-        gridPane.add(textField, 1, row++,3,1);
+        gridPane.add(textField, 1, row++, 3, 1);
         bindToBean(textField.textProperty(), statutoryData, "flagState", String.class);
 
 
@@ -222,10 +222,9 @@ public class VesselDataPage extends AbstractDataViewPage {
         // DeadWeight
         label = new Label("Dead Weight");
         label.setTooltip(new Tooltip("The weight of the passengers, crew, cargo, stores, ballast, fresh water, fuel oil, and other consumables being carried by a ship (see ISO 10303-215, section 4.2.74)."));
-                gridPane.add(label, 0, row);
+        gridPane.add(label, 0, row);
         group = createAndBind(tonnageData.getDeadWeight(), false);
         gridPane.add(group, 1, row++);
-
 
 
     }

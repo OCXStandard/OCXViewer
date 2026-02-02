@@ -19,6 +19,7 @@ import org.ocx_schema.v310.*;
 
 /**
  * Enumeration of different hole shape types in OCX files.
+ *
  * @author Carsten Zerbst
  */
 public enum HoleShapeType {

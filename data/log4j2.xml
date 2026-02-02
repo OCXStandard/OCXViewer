@@ -34,9 +34,11 @@
         <Logger name="de.cadoculus.ocxviewer.logging.LoggerHelper" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.MainController" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.actions.ActionDispatcher" level="debug"/>
+
         <Logger name="de.cadoculus.ocxviewer.io.OCXIO" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.io.OCXParser" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.io.NamespaceReplacingInputStream" level="debug"/>
-        <Logger name="de.cadoculus.ocxviewer.io.OCXIOUnmarshallerListener" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.io.OCXIOReferenceResolver" level="debug"/>
 
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>

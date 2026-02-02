@@ -35,6 +35,7 @@ import java.util.ArrayList;
 
 /**
  * This class displays the coordinated system contained in the OCX file
+ *
  * @author Carsten Zerbst
  */
 public class CoordinateSystemsPage extends AbstractDataViewPage implements Page {
@@ -54,7 +55,7 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
         //
         var tableColumn1 = new TableColumn<CoordinateSystem, CoordinateSystem>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
-        tableColumn1.setCellFactory( createHyperlinkCellfactory( this::selectCoordinateSystem));
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(this::selectCoordinateSystem));
 
         var tableColumn2 = new TableColumn<CoordinateSystem, String>("GUID");
         tableColumn2.setCellValueFactory(
@@ -78,7 +79,7 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
         table.setMaxHeight(200);
 
         int row = 0;
-        gridPane.add(table, 0, row++, 4,1);
+        gridPane.add(table, 0, row++, 4, 1);
 
         final var vessel = WorkingContext.getInstance().getVessel();
         if (vessel == null) {
@@ -89,20 +90,20 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
             LOG.info("no CoordinateSystems found in OCX file");
             return;
         }
-        coordinateSystems.addAll( vessel.getCoordinateSystems());
+        coordinateSystems.addAll(vessel.getCoordinateSystems());
         LOG.debug("found #{} coordinate systems", coordinateSystems.size());
 
     }
 
-    private void selectCoordinateSystem( CoordinateSystem newCosys) {
+    private void selectCoordinateSystem(CoordinateSystem newCosys) {
         LOG.info("selected Coordinate System section {}", newCosys);
         if (newCosys == null) {
             return;
         }
 
         var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
-        robert.add( new BreadcrumbRecord(newCosys.getId(), CoordinateSystemPage.class, null, newCosys));
-        var event = new SelectionEvent( robert);
+        robert.add(new BreadcrumbRecord(newCosys.getId(), CoordinateSystemPage.class, null, newCosys));
+        var event = new SelectionEvent(robert);
         DefaultEventBus.getInstance().publish(event);
 
     }
@@ -111,7 +112,6 @@ public class CoordinateSystemsPage extends AbstractDataViewPage implements Page 
     public void afterShow() {
         // Party !
     }
-
 
 
 }

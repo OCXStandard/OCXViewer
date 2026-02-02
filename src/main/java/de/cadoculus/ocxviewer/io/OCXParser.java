@@ -46,13 +46,13 @@ import java.net.URI;
 public class OCXParser {
 
     public static final String TARGET_NAMESPACE = "https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd";
-    private static final double PARSE_PROG_SCALING= 0.9;
+    private static final double PARSE_PROG_SCALING = 0.9;
     private static final Logger LOG = LogManager.getLogger(OCXParser.class);
     private final File file;
-    private final DoubleProperty progress= new SimpleDoubleProperty(0.0);
-    private  final StringProperty status  = new SimpleStringProperty("");
+    private final DoubleProperty progress = new SimpleDoubleProperty(0.0);
+    private final StringProperty status = new SimpleStringProperty("");
     private boolean ran = false;
-    private final boolean withoutUI =  Window.getWindows().isEmpty();
+    private final boolean withoutUI = Window.getWindows().isEmpty();
 
     /**
      * Creates a new OCXParser for the given OCX file.
@@ -88,7 +88,7 @@ public class OCXParser {
                 int parsePercent = (int) evt.getNewValue();
                 double scaledProgress = parsePercent / 100.0 * PARSE_PROG_SCALING;
                 // The parser is run on any thread, but the progress property must be updated in the display event thread
-              updateProgress( progress, scaledProgress);
+                updateProgress(progress, scaledProgress);
             }
         };
 
@@ -118,7 +118,7 @@ public class OCXParser {
             URI usedNamespaceURL = URI.create(usedNamespace.replaceAll("(?<=[^:\\s])(\\/+\\/)", "/"));
             LOG.info("file {} uses namespace {}, formatted {}", file.getName(), usedNamespace, usedNamespaceURL.toURL());
 
-            if ( ! usedNamespaceURL.toURL().toExternalForm().startsWith("https://3docx.org/fileadmin/ocx_schema/V3")) {
+            if (!usedNamespaceURL.toURL().toExternalForm().startsWith("https://3docx.org/fileadmin/ocx_schema/V3")) {
                 throw new IllegalArgumentException("Given file uses namesspace '" + usedNamespaceURL.toURL().toExternalForm() + "', expect the namespace to start with 'https://3docx.org/fileadmin/ocx_schema/V3'");
             }
 
@@ -147,16 +147,15 @@ public class OCXParser {
             jaxUnmarshaller.setListener(jaxListener);
 
             final Object unmarshal = jaxUnmarshaller.unmarshal(rep);
-            LOG.debug("loaded {} from {}", unmarshal, file.getAbsolutePath());
+            LOG.debug("toplevel element {} from {}", unmarshal, file.getAbsolutePath());
 
             if (!(unmarshal instanceof JAXBElement jaxbElement && jaxbElement.getValue() instanceof OcxXMLT ocxXMLTp)) {
 
                 LOG.error("failed to loaded OCX file, got unexpected type {}", unmarshal.getClass());
                 throw new IOException("unexpected type " + unmarshal.getClass());
             }
-            LOG.debug("loaded {} {} ", jaxbElement.getName(), ocxXMLT);
+            LOG.debug("toplevel element <{}> {} ", jaxbElement.getName(), ocxXMLT);
             ocxXMLT = ocxXMLTp;
-
 
         } catch (Exception e) {
             LOG.error("failed to read OCX from {}", file.getAbsolutePath(), e);
@@ -166,6 +165,9 @@ public class OCXParser {
         //
         // finally resolve the references which are not defined using xsd:ID/xsd:IDREF
         //
+        LOG.info("collected #{} references to resolve from #{} objects", jaxListener.getReferences().size(), jaxListener.getIdBaseTs().size());
+
+
         final OCXIOReferenceResolver referenceResolver = new OCXIOReferenceResolver(ocxXMLT, jaxListener);
         referenceResolver.addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -173,7 +175,7 @@ public class OCXParser {
             public void propertyChange(PropertyChangeEvent event) {
                 // The ReferenceResolver reports progress in the range 0 ... 100 as int
                 int rawProgress = (int) event.getNewValue();
-                double scaledProgress =PARSE_PROG_SCALING + ( rawProgress * 0.01 * (1-PARSE_PROG_SCALING));
+                double scaledProgress = PARSE_PROG_SCALING + (rawProgress * 0.01 * (1 - PARSE_PROG_SCALING));
                 updateProgress(progress, scaledProgress);
             }
         });
@@ -214,9 +216,9 @@ public class OCXParser {
      * @param progress the progress property to update
      * @param newValue the new value to set
      */
-    void updateProgress( DoubleProperty progress, double newValue) {
+    void updateProgress(DoubleProperty progress, double newValue) {
 
-        if ( withoutUI ) {
+        if (withoutUI) {
             //LOG.info("update progress to {}", newValue);
             progress.set(newValue);
         } else {
@@ -237,9 +239,9 @@ public class OCXParser {
      * @param progress the progress property to update
      * @param newValue the new value to set
      */
-    void updateProgress( StringProperty progress, String newValue) {
+    void updateProgress(StringProperty progress, String newValue) {
 
-        if ( withoutUI ) {
+        if (withoutUI) {
             progress.set(newValue);
         } else {
             Platform.runLater(new Runnable() {
@@ -250,10 +252,6 @@ public class OCXParser {
             });
         }
     }
-
-
-
-
 
     private static class OCXPFindNamespaceHandler extends DefaultHandler {
         private String namespace = null;

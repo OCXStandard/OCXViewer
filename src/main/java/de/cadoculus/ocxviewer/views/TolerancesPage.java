@@ -29,6 +29,7 @@ import org.ocx_schema.v310.QuantityT;
 
 /**
  * The PrincipalParticularsPage class is a subclass of AbstractDataViewPage and is used to display the principal particulars of a vessel.
+ *
  * @author Carsten Zerbst
  */
 public class TolerancesPage extends AbstractDataViewPage {
@@ -64,7 +65,7 @@ public class TolerancesPage extends AbstractDataViewPage {
             warningIcon.getStyleClass().add(Styles.WARNING);
             gridPane.add(warning, 0, ++row, 4, 1);
 
-            WorkingContext.getInstance().getVessel().setAngleTolerance( new QuantityT());
+            WorkingContext.getInstance().getVessel().setAngleTolerance(new QuantityT());
         }
 
         if (WorkingContext.getInstance().getVessel().getDistanceTolerance() == null) {
@@ -105,10 +106,7 @@ public class TolerancesPage extends AbstractDataViewPage {
         gridPane.add(group2, 1, row);
 
 
-
     }
-
-
 
 
 }

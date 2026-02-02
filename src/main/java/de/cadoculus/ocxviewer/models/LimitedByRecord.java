@@ -21,7 +21,9 @@ import org.ocx_schema.v310.QuantityT;
 
 /**
  * A record representing a limit of a panel, including its index, type, and the limitedBy description.
+ *
  * @author Carsten Zerbst
  */
-public record LimitedByRecord(int index, LimitedByType type, Object localRef, String GUIDRef,  Point3DT startPoint, Point3DT endPoint, QuantityT offset, Object limit) {
+public record LimitedByRecord(int index, LimitedByType type, Object localRef, String GUIDRef, Point3DT startPoint,
+                              Point3DT endPoint, QuantityT offset, Object limit) {
 }

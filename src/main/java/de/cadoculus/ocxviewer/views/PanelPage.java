@@ -37,7 +37,6 @@ import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
 import org.ocx_schema.v310.Material;
-import org.ocx_schema.v310.PillarT;
 import org.ocx_schema.v310.Plate;
 
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         var label = new Label("Basic Information");
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++,3,1);
+        gridPane.add(label, 0, row++, 3, 1);
         GridPane.setHalignment(label, HPos.LEFT);
 
         label = new Label("Name");
@@ -120,17 +119,17 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         label = new Label("Panel Topology and Geometry");
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++,3,1);
+        gridPane.add(label, 0, row++, 3, 1);
         GridPane.setHalignment(label, HPos.LEFT);
 
         var link = new Hyperlink("View Topology and Geometry...");
         link.setTooltip(new Tooltip("Goto Topology and Geometry page"));
         gridPane.add(link, 0, row++);
-        link.setOnAction( e -> {
+        link.setOnAction(e -> {
             var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add( new BreadcrumbRecord("Topology and Geometry", PanelTopologyAndGeometryPage.class, null, getObject()));
+            robert.add(new BreadcrumbRecord("Topology and Geometry", PanelTopologyAndGeometryPage.class, null, getObject()));
 
-            var event = new SelectionEvent( robert);
+            var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
         });
 
@@ -148,7 +147,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         var tabFlanges = createFlangesTab();
         var tabSeams = createSeamsTab();
 
-        var gridTab = new TabPane(tabPlates,tabBrackets, tabPillars, tabStiffeners, tabFlanges, tabSeams);
+        var gridTab = new TabPane(tabPlates, tabBrackets, tabPillars, tabStiffeners, tabFlanges, tabSeams);
         gridTab.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         gridTab.setMinWidth(450);
 
@@ -165,7 +164,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         final ObservableList<org.ocx_schema.v310.PillarT> entities = FXCollections.observableArrayList();
         final FilteredList<org.ocx_schema.v310.PillarT> filteredEntities = new FilteredList<>(entities, p -> true);
 
-        if (getObject().getComposedOf() != null && getObject().getComposedOf().getPillars()!= null) {
+        if (getObject().getComposedOf() != null && getObject().getComposedOf().getPillars() != null) {
             entities.addAll(getObject().getComposedOf().getPillars());
         } else {
             LOG.warn("Panel {} ({})has no ComposedOf element or no Pillar", getObject().getId(), getObject().getGUIDRef());
@@ -192,8 +191,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
                 if (pillar.getName() != null && pillar.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches name
-                }
-                else if (pillar.getId() != null && pillar.getId().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (pillar.getId() != null && pillar.getId().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches id
                 }
                 return false; // Does not match
@@ -203,16 +201,16 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.PillarT, org.ocx_schema.v310.PillarT>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
-        tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
-            if ( selected ==null) {
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
+            if (selected == null) {
                 // no change
                 return;
             }
 
             var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add( new BreadcrumbRecord(selected.getId(), PillarPage.class, null, selected));
+            robert.add(new BreadcrumbRecord(selected.getId(), PillarPage.class, null, selected));
 
-            var event = new SelectionEvent( robert);
+            var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
         }));
 
@@ -228,7 +226,6 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         var tableColumn4 = new TableColumn<org.ocx_schema.v310.PillarT, String>("Material");
         tableColumn4.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getMaterialRef().toString()));
-
 
 
         var table = new TableView<>(filteredEntities);
@@ -261,7 +258,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         final ObservableList<org.ocx_schema.v310.Bracket> entities = FXCollections.observableArrayList();
         final FilteredList<org.ocx_schema.v310.Bracket> filteredEntities = new FilteredList<>(entities, p -> true);
 
-        if (getObject().getComposedOf() != null && getObject().getComposedOf().getBrackets()!= null) {
+        if (getObject().getComposedOf() != null && getObject().getComposedOf().getBrackets() != null) {
             entities.addAll(getObject().getComposedOf().getBrackets());
         } else {
             LOG.warn("Panel {} ({})has no ComposedOf element or no Brackets", getObject().getId(), getObject().getGUIDRef());
@@ -288,8 +285,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
                 if (bracket.getName() != null && bracket.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches name
-                }
-                else if (bracket.getId() != null && bracket.getId().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (bracket.getId() != null && bracket.getId().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches id
                 }
                 return false; // Does not match
@@ -299,16 +295,16 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.Bracket, org.ocx_schema.v310.Bracket>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
-        tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
-            if ( selected ==null) {
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
+            if (selected == null) {
                 // no change
                 return;
             }
 
             var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add( new BreadcrumbRecord(selected.getId(), BracketPage.class, null, selected));
+            robert.add(new BreadcrumbRecord(selected.getId(), BracketPage.class, null, selected));
 
-            var event = new SelectionEvent( robert);
+            var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
         }));
 
@@ -324,7 +320,6 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         var tableColumn4 = new TableColumn<org.ocx_schema.v310.Bracket, String>("Material");
         tableColumn4.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getPlateMaterial().getLocalRef().toString()));
-
 
 
         var table = new TableView<>(filteredEntities);
@@ -357,7 +352,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         final ObservableList<org.ocx_schema.v310.Seam> entities = FXCollections.observableArrayList();
         final FilteredList<org.ocx_schema.v310.Seam> filteredEntities = new FilteredList<>(entities, p -> true);
 
-        if (getObject().getSplitBy() != null && getObject().getSplitBy().getSeams()!= null) {
+        if (getObject().getSplitBy() != null && getObject().getSplitBy().getSeams() != null) {
             entities.addAll(getObject().getSplitBy().getSeams());
         } else {
             LOG.info("Panel {} ({}) has no getSplitBy element or no Seams", getObject().getId(), getObject().getGUIDRef());
@@ -384,8 +379,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
                 if (stiffener.getName() != null && stiffener.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches name
-                }
-                else if (stiffener.getId() != null && stiffener.getId().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (stiffener.getId() != null && stiffener.getId().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches id
                 }
                 return false; // Does not match
@@ -395,16 +389,16 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.Seam, org.ocx_schema.v310.Seam>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
-        tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
-            if ( selected ==null) {
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
+            if (selected == null) {
                 // no change
                 return;
             }
 
             var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add( new BreadcrumbRecord(selected.getId(), SeamPage.class, null, selected));
+            robert.add(new BreadcrumbRecord(selected.getId(), SeamPage.class, null, selected));
 
-            var event = new SelectionEvent( robert);
+            var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
         }));
 
@@ -448,7 +442,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         final ObservableList<org.ocx_schema.v310.EdgeReinforcement> stiffeners = FXCollections.observableArrayList();
         final FilteredList<org.ocx_schema.v310.EdgeReinforcement> filteredStiffeners = new FilteredList<>(stiffeners, p -> true);
 
-        if (getObject().getStiffenedBy() != null && getObject().getStiffenedBy().getEdgeReinforcements()!= null) {
+        if (getObject().getStiffenedBy() != null && getObject().getStiffenedBy().getEdgeReinforcements() != null) {
             stiffeners.addAll(getObject().getStiffenedBy().getEdgeReinforcements());
         } else {
             LOG.info("Panel {} ({}) has no getStiffenedBy element or no EdgeReinforcements", getObject().getId(), getObject().getGUIDRef());
@@ -475,8 +469,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
                 if (stiffener.getName() != null && stiffener.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches name
-                }
-                else if (stiffener.getId() != null && stiffener.getId().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (stiffener.getId() != null && stiffener.getId().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches id
                 }
                 return false; // Does not match
@@ -486,16 +479,16 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.EdgeReinforcement, org.ocx_schema.v310.EdgeReinforcement>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
-        tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
-            if ( selected ==null) {
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
+            if (selected == null) {
                 // no change
                 return;
             }
 
             var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add( new BreadcrumbRecord(selected.getId(), FlangePage.class, null, selected));
+            robert.add(new BreadcrumbRecord(selected.getId(), FlangePage.class, null, selected));
 
-            var event = new SelectionEvent( robert);
+            var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
         }));
 
@@ -512,7 +505,6 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         var tableColumn4 = new TableColumn<org.ocx_schema.v310.EdgeReinforcement, String>("Material");
         tableColumn4.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getMaterialRef().toString()));
-
 
 
         // TODO: better quantity representation
@@ -551,7 +543,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         final ObservableList<org.ocx_schema.v310.Stiffener> stiffeners = FXCollections.observableArrayList();
         final FilteredList<org.ocx_schema.v310.Stiffener> filteredStiffeners = new FilteredList<>(stiffeners, p -> true);
 
-        if (getObject().getStiffenedBy() != null && getObject().getStiffenedBy().getStiffeners()!= null) {
+        if (getObject().getStiffenedBy() != null && getObject().getStiffenedBy().getStiffeners() != null) {
             stiffeners.addAll(getObject().getStiffenedBy().getStiffeners());
         } else {
             LOG.info("Panel {} ({}) has no getStiffenedBy element or no stiffeners", getObject().getId(), getObject().getGUIDRef());
@@ -578,8 +570,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
                 if (stiffener.getName() != null && stiffener.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches name
-                }
-                else if (stiffener.getId() != null && stiffener.getId().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (stiffener.getId() != null && stiffener.getId().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches id
                 }
                 return false; // Does not match
@@ -589,16 +580,16 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.Stiffener, org.ocx_schema.v310.Stiffener>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
-        tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
-            if ( selected ==null) {
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
+            if (selected == null) {
                 // no change
                 return;
             }
 
             var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add( new BreadcrumbRecord(selected.getId(), StiffenerPage.class, null, selected));
+            robert.add(new BreadcrumbRecord(selected.getId(), StiffenerPage.class, null, selected));
 
-            var event = new SelectionEvent( robert);
+            var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
         }));
 
@@ -615,7 +606,6 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         var tableColumn4 = new TableColumn<org.ocx_schema.v310.Stiffener, String>("Material");
         tableColumn4.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getMaterialRef().toString()));
-
 
 
         // TODO: better quantity representation
@@ -677,8 +667,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
                 if (plate.getName() != null && plate.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches name
-                }
-                else if (plate.getId() != null && plate.getId().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (plate.getId() != null && plate.getId().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches id
                 }
                 return false; // Does not match
@@ -688,17 +677,17 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.Plate, org.ocx_schema.v310.Plate>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
-        tableColumn1.setCellFactory(createHyperlinkCellfactory( selected -> {
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
             LOG.debug("selected plate {}", selected);
-            if ( selected ==null) {
+            if (selected == null) {
                 // no change
                 return;
             }
 
             var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add( new BreadcrumbRecord(selected.getId(), PlatePage.class, null, selected));
+            robert.add(new BreadcrumbRecord(selected.getId(), PlatePage.class, null, selected));
 
-            var event = new SelectionEvent( robert);
+            var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
 
         }));
@@ -713,14 +702,14 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
 
         // TODO: better material representation
-        var tableColumn4 = new TableColumn<Plate, Pair<Plate,Material>>("Material");
+        var tableColumn4 = new TableColumn<Plate, Pair<Plate, Material>>("Material");
         tableColumn4.setCellValueFactory(
-                cell -> new SimpleObjectProperty< >(
-                        new Pair<>( cell.getValue(), (Material) cell.getValue().getPlateMaterial().getReferenced()))
+                cell -> new SimpleObjectProperty<>(
+                        new Pair<>(cell.getValue(), (Material) cell.getValue().getPlateMaterial().getReferenced()))
         );
-        tableColumn4.setCellFactory(createHyperlinkCellfactory( selected -> {
+        tableColumn4.setCellFactory(createHyperlinkCellfactory(selected -> {
             LOG.debug("selected material pair {}", selected);
-            if ( selected ==null) {
+            if (selected == null) {
                 // no change
                 return;
             }
@@ -728,10 +717,10 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
             var material = selected.getValue();
 
             var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add( new BreadcrumbRecord(plate.getId(), PlatePage.class, null, plate));
-            robert.add( new BreadcrumbRecord(material.getId(), MaterialPage.class, null, material));
+            robert.add(new BreadcrumbRecord(plate.getId(), PlatePage.class, null, plate));
+            robert.add(new BreadcrumbRecord(material.getId(), MaterialPage.class, null, material));
 
-            var event = new SelectionEvent( robert);
+            var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
 
         }));

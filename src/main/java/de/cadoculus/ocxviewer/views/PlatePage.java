@@ -95,7 +95,7 @@ public class PlatePage extends AbstractDataViewSubPage<Plate> {
         //
         // physical properties
         //
-        if ( plate.getPhysicalProperties() ==null) {
+        if (plate.getPhysicalProperties() == null) {
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
                     "Not Physical Properties found in Plate",
@@ -170,12 +170,11 @@ public class PlatePage extends AbstractDataViewSubPage<Plate> {
         gridPane.add(group1, 3, row++);
 
 
-
         label = new Label("Material Quality");
         label.setTooltip(new Tooltip("The plate's material"));
         gridPane.add(label, 0, row);
 
-        if ( plate.getPlateMaterial().getReferenced() != null) {
+        if (plate.getPlateMaterial().getReferenced() != null) {
             var link = new Hyperlink("Material  «" + plate.getPlateMaterial().getReferenced().getId() + "»");
             link.setTooltip(new Tooltip("Goto Material"));
             gridPane.add(link, 1, row++);
@@ -186,11 +185,11 @@ public class PlatePage extends AbstractDataViewSubPage<Plate> {
                 var event = new SelectionEvent(robert);
                 DefaultEventBus.getInstance().publish(event);
             });
-        } else if ( plate.getPlateMaterial().getLocalRef() instanceof  String ) {
+        } else if (plate.getPlateMaterial().getLocalRef() instanceof String) {
             var naLabel = new Label("failed to resolve local ref " + plate.getPlateMaterial().getLocalRef() + " to Material.");
             naLabel.getStyleClass().add(Styles.WARNING);
             gridPane.add(naLabel, 1, row++);
-        } else if (StringUtils.isNoneEmpty(plate.getPlateMaterial().getGUIDRef( )) ) {
+        } else if (StringUtils.isNoneEmpty(plate.getPlateMaterial().getGUIDRef())) {
             var naLabel = new Label("failed to resolve GUIDRef " + plate.getPlateMaterial().getGUIDRef() + " to Material.");
             naLabel.getStyleClass().add(Styles.WARNING);
             gridPane.add(naLabel, 1, row++);
@@ -199,9 +198,6 @@ public class PlatePage extends AbstractDataViewSubPage<Plate> {
             naLabel.getStyleClass().add(Styles.WARNING);
             gridPane.add(naLabel, 1, row++);
         }
-
-
-
 
 
     }

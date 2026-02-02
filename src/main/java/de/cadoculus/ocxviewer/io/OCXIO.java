@@ -30,26 +30,28 @@ import java.io.StringWriter;
 
 /**
  * This class provides methods to read and write OCX files.
+ *
  * @author Carsten Zerbst
  */
-public class OCXIO  {
+public class OCXIO {
 
     private static final Logger LOG = LogManager.getLogger(OCXIO.class);
 
     /**
      * Reads an OCX file from the given file.
-     * @param file the file to read the OCX file from.de.cadoculus.ocxviewer.
+     *
+     * @param file     the file to read the OCX file from.de.cadoculus.ocxviewer.
      * @param listener an optional PropertyChangeListener
      * @return the OCXReadResult
-     * @throws IOException when io failed
+     * @throws IOException              when io failed
      * @throws IllegalArgumentException if the given file does not exist
      */
-    public static OCXReadResult read(java.io.File file, PropertyChangeListener ... listener) throws IOException {
+    public static OCXReadResult read(java.io.File file, PropertyChangeListener... listener) throws IOException {
 
-        if ( ! file.exists()) {
+        if (!file.exists()) {
             throw new IllegalArgumentException("File does not exist: " + file.getAbsolutePath());
         }
-        PropertyChangeListener pcl = listener !=null && listener.length > 0 ? listener[0] : null;
+        PropertyChangeListener pcl = listener != null && listener.length > 0 ? listener[0] : null;
 
         // first we need to check the namespace used in the file
         final String targetNamespace = "https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd";
@@ -74,22 +76,21 @@ public class OCXIO  {
 //                    .createContext(new Class[]{
 //                                oasis.unitsml.ObjectFactory.class,
 //                            org.ocx_schema.v310rc3.ObjectFactory.class}, null);
-            if ( pcl !=null) {
+            if (pcl != null) {
                 fis.addPropertyChangeListener(pcl);
             }
-            var jaxbContext =  JAXBContext.newInstance( new Class[] {
-                            oasis.unitsml.ObjectFactory.class,
-                            org.ocx_schema.v310.ObjectFactory.class});
+            var jaxbContext = JAXBContext.newInstance(new Class[]{
+                    oasis.unitsml.ObjectFactory.class,
+                    org.ocx_schema.v310.ObjectFactory.class});
             var jaxUnmarshaller = jaxbContext.createUnmarshaller();
             var jaxListener = new OCXIOUnmarshallerListener();
-            jaxUnmarshaller.setListener( jaxListener);
+            jaxUnmarshaller.setListener(jaxListener);
 
             final Object unmarshal = jaxUnmarshaller.unmarshal(rep);
             LOG.info("loaded {} from {}", unmarshal, file.getAbsolutePath());
 
 
-
-            if ( unmarshal instanceof JAXBElement jaxbElement && jaxbElement.getValue() instanceof OcxXMLT ocxXMLT) {
+            if (unmarshal instanceof JAXBElement jaxbElement && jaxbElement.getValue() instanceof OcxXMLT ocxXMLT) {
 
                 LOG.info("loaded {} {} ", jaxbElement.getName(), ocxXMLT);
 
@@ -111,7 +112,7 @@ public class OCXIO  {
     }
 
     public static String serialize(Object obj) {
-        if ( obj == null) {
+        if (obj == null) {
             return "/NULL";
         }
         try {
@@ -134,13 +135,14 @@ public class OCXIO  {
 
     /**
      * Writes the given OCX to the given file.
-     * @param ocx the OCX to write
+     *
+     * @param ocx  the OCX to write
      * @param file the file to write the OCX to
-     * @throws IOException when io failed
+     * @throws IOException              when io failed
      * @throws IllegalArgumentException if the given file does not exist
      */
-    public static void write(OcxXMLT ocx, java.io.File file ) throws IOException {
-        if ( !file.canWrite()) {
+    public static void write(OcxXMLT ocx, java.io.File file) throws IOException {
+        if (!file.canWrite()) {
             throw new IllegalArgumentException("File is write protected: " + file.getAbsolutePath());
         }
         try {
@@ -171,15 +173,15 @@ public class OCXIO  {
             if (namespace == null) {
                 LOG.info("startElement {}", qName);
                 int idx = qName.indexOf(':');
-                var prefix  = idx > 0 ? qName.substring(0, idx) : "";
-                var local = idx > 0 ? qName.substring(idx+1) : qName;
+                var prefix = idx > 0 ? qName.substring(0, idx) : "";
+                var local = idx > 0 ? qName.substring(idx + 1) : qName;
                 LOG.info("prefix {} local {}", prefix, local);
 
                 for (int i = 0; i < attributes.getLength(); i++) {
                     var attrQName = attributes.getQName(i);
                     int attrIdx = attrQName.indexOf(':');
-                    var attrPrefix  = attrIdx > 0 ? attrQName.substring(0, attrIdx) : "";
-                    var attrLocal = attrIdx > 0 ? attrQName.substring(attrIdx+1) : attrQName;
+                    var attrPrefix = attrIdx > 0 ? attrQName.substring(0, attrIdx) : "";
+                    var attrLocal = attrIdx > 0 ? attrQName.substring(attrIdx + 1) : attrQName;
 
                     LOG.info("    attr {}|{}={}", attrPrefix, attrLocal, attributes.getValue(i));
 

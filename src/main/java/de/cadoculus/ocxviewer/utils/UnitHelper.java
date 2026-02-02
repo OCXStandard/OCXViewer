@@ -27,13 +27,13 @@ public class UnitHelper {
 
         try {
             for (Unit unit : WorkingContext.getInstance().getOcx().getUnitsML().getUnitSet().getUnits()) {
-                 //<unitsml:EnumeratedRootUnit unit="test" powerNumerator="1"/>
-             var     test = unit.getRootUnits().getEnumeratedRootUnits().stream().filter(r ->
-                         r.getUnit().equals("test") && r.getPowerNumerator() == 1 && "m".equals(r.getPrefix())
+                //<unitsml:EnumeratedRootUnit unit="test" powerNumerator="1"/>
+                var test = unit.getRootUnits().getEnumeratedRootUnits().stream().filter(r ->
+                        r.getUnit().equals("test") && r.getPowerNumerator() == 1 && "m".equals(r.getPrefix())
                 ).findFirst().map(ru -> unit).orElse(null);
-                 if (test != null) {
-                     return test;
-                 }
+                if (test != null) {
+                    return test;
+                }
             }
         } catch (Exception ex) {
 
@@ -49,8 +49,8 @@ public class UnitHelper {
         eru.setUnit("meter");
         eru.setPrefix("m");
         eru.setPowerNumerator((byte) 1);
-        millimeter.setRootUnits( new RootUnits());
-        millimeter.getRootUnits().getEnumeratedRootUnits().add( eru);
+        millimeter.setRootUnits(new RootUnits());
+        millimeter.getRootUnits().getEnumeratedRootUnits().add(eru);
 
         return millimeter;
     }

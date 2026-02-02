@@ -33,6 +33,7 @@ import java.util.Arrays;
 
 /**
  * Page for the Classification Society information
+ *
  * @author Carsten Zerbst
  */
 public class ClassificationSocietyPage extends AbstractDataViewPage {

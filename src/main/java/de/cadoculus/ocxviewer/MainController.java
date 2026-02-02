@@ -192,7 +192,6 @@ public class MainController {
         LOG.info("remaining page stack {}", pageStack);
 
 
-
         // now create new pages if needed
         for (int i = lastMatchingIndex + 1; i < event.getBreadcrumbs().size(); i++) {
             var parentPage = pageStack.isEmpty() ? null : pageStack.peek().page();
@@ -237,7 +236,7 @@ public class MainController {
                 break;
             }
             // now update the bookkeeping
-            var resBC =  new BreadcrumbRecord(newPage.getName(), newPage.getClass(), newPage, trgtBC.object());
+            var resBC = new BreadcrumbRecord(newPage.getName(), newPage.getClass(), newPage, trgtBC.object());
             pageStack.push(resBC);
             lastPage = newPage;
         }
@@ -300,7 +299,7 @@ public class MainController {
         }
         pageStack.push(newPage.getBreadcrumbs().getFirst());
 
-        switchToPage( (BorderPane) paneToAdd);
+        switchToPage((BorderPane) paneToAdd);
     }
 
 

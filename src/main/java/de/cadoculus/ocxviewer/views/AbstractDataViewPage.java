@@ -96,9 +96,9 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     }
 
-    public static class PointTableCell<E, F extends Point3DT> extends TableCell<E,F> {
+    public static class PointTableCell<E, F extends Point3DT> extends TableCell<E, F> {
         @Override
-        public void updateItem(F point3DT,boolean empty) {
+        public void updateItem(F point3DT, boolean empty) {
             super.updateItem(point3DT, empty);
             if (point3DT == null) {
                 setText(null);
@@ -132,10 +132,10 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
      * @param <E>            the type of the table items and table column
      * @return the cell factory
      */
-    public static <E , F  >
-        Callback<TableColumn<E, F>, TableCell<E, F>> createHyperlinkCellfactory(Consumer<F> selectFunction) {
+    public static <E, F>
+    Callback<TableColumn<E, F>, TableCell<E, F>> createHyperlinkCellfactory(Consumer<F> selectFunction) {
 
-        return new Callback<TableColumn<E, F>, TableCell<E, F> > () {
+        return new Callback<TableColumn<E, F>, TableCell<E, F>>() {
 
             @Override
             public TableCell<E, F> call(TableColumn<E, F> tableColumn) {
@@ -153,15 +153,15 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
                         }
 
                         var label = "unset";
-                        if  ( value instanceof IdBaseT idBaseT ) {
+                        if (value instanceof IdBaseT idBaseT) {
                             label = idBaseT.getId();
-                        } else if ( value instanceof Pair pair ) {
-                            if ( pair.getValue() instanceof IdBaseT idBaseT) {
+                        } else if (value instanceof Pair pair) {
+                            if (pair.getValue() instanceof IdBaseT idBaseT) {
                                 label = idBaseT.getId();
                             } else {
                                 label = pair.getValue().toString();
                             }
-                        } else if ( value != null) {
+                        } else if (value != null) {
                             label = value.toString();
                         }
                         Hyperlink link = new Hyperlink(label);
@@ -305,6 +305,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     /**
      * Create the default form gird containing 4 columns
+     *
      * @return a grid pane
      */
     protected GridPane createDefaultGrid() {

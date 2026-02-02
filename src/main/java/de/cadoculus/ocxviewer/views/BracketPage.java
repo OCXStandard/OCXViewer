@@ -24,6 +24,7 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 /**
  * A page displaying information about a Bracket.
  * The BracketPage is not intended to be navigated directly, but rather as a logical child.
+ *
  * @author Carsten Zerbst
  */
 public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bracket> {
@@ -31,12 +32,12 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
     private static final Logger LOG = LogManager.getLogger(BracketPage.class);
 
     public BracketPage(org.ocx_schema.v310.Bracket bracket, Page parent) {
-        super(bracket, parent, "Bracket «"+bracket.getId() + "»");
+        super(bracket, parent, "Bracket «" + bracket.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
 
-        createTitle( bcs, getName(), "Information about an OCX Bracket");
+        createTitle(bcs, getName(), "Information about an OCX Bracket");
 
         var warning = new atlantafx.base.controls.Message(
                 "Warning",

@@ -5,7 +5,7 @@ import javafx.scene.input.KeyCodeCombination;
 
 /**
  * Event representing a hotkey press.
- *
+ * <p>
  * This code is copied from atlantafx.sampler implemented by mkpaz. It is licensed under the MIT License.
  */
 public final class HotkeyEvent extends Event {
@@ -23,7 +23,7 @@ public final class HotkeyEvent extends Event {
     @Override
     public String toString() {
         return "HotkeyEvent{"
-            + "keys=" + keys
-            + "} " + super.toString();
+                + "keys=" + keys
+                + "} " + super.toString();
     }
 }

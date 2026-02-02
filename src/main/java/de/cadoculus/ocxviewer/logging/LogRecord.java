@@ -17,9 +17,10 @@ package de.cadoculus.ocxviewer.logging;
 
 /**
  * A wrapper for log messages.
+ *
  * @param category the log level
- * @param msg the formatted text
- * @param thrown a throwable
+ * @param msg      the formatted text
+ * @param thrown   a throwable
  * @author Carsten Zerbst
  */
 public record LogRecord(org.apache.logging.log4j.Level category, String msg, Throwable thrown) {

@@ -34,44 +34,43 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
-import org.ocx_schema.v310.Plate;
+import org.ocx_schema.v310.Stiffener;
 
 import java.util.ArrayList;
 
 
 /**
- * This class displays the plates directly contained in the OCX file's Vessel.
+ * This class displays the stiffener directly contained in the OCX file's Vessel.
  *
  * @author Carsten Zerbst
  */
-public class PlatesPage extends AbstractDataViewPage implements Page {
-    public static final String NAME = "Plates";
-    private static final Logger LOG = LogManager.getLogger(PlatesPage.class);
+public class StiffenersPage extends AbstractDataViewPage implements Page {
+    public static final String NAME = "Stiffeners";
+    private static final Logger LOG = LogManager.getLogger(StiffenersPage.class);
 
-    private final ObservableList<Plate> plates = FXCollections.observableArrayList();
-    private final FilteredList<Plate> filteredPlates = new FilteredList<>(plates, p -> true);
+    private final ObservableList<Stiffener> stiffeners = FXCollections.observableArrayList();
+    private final FilteredList<Stiffener> filteredStiffeners = new FilteredList<>(stiffeners, p -> true);
 
-    public PlatesPage() {
+    public StiffenersPage() {
         super(NAME);
 
         // the content
         final var vessel = WorkingContext.getInstance().getVessel();
         if (vessel == null) {
             LOG.info("no vessel found");
-        } else if (vessel.getPlates() == null) {
+        } else if (vessel.getStiffeners() == null) {
             LOG.info("no Plates found in OCX file's vessel");
         } else {
-            plates.addAll(vessel.getPlates());
+            stiffeners.addAll(vessel.getStiffeners());
         }
 
-        createTitle("An overview on the #" + plates.size() + " contained directly in the Vessel.");
+        createTitle("An overview on the #" + stiffeners.size() + " stiffeners contained directly in the Vessel.");
 
         //
         // Define the table
         //
         var vbox = new VBox();
         setCenter(vbox);
-
 
         //
         // Define the table
@@ -81,20 +80,20 @@ public class PlatesPage extends AbstractDataViewPage implements Page {
         filterText.setLeft(new FontIcon(MaterialDesignT.TABLE_SEARCH));
         filterText.setPrefWidth(100);
         filterText.setPadding(new Insets(10, 0, 10, 0));
-        filterText.setPromptText("search Plate by name");
+        filterText.setPromptText("search Stiffener by name");
         vbox.getChildren().add(filterText);
 
         filterText.textProperty().addListener((observable, oldValue, newValue) ->
         {
-            filteredPlates.setPredicate(plate -> {
+            filteredStiffeners.setPredicate(stiffener -> {
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
                 String lowerCaseFilter = newValue.toLowerCase();
 
-                if (plate.getName() != null && plate.getName().toLowerCase().contains(lowerCaseFilter)) {
+                if (stiffener.getName() != null && stiffener.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches name
-                } else if (plate.getId() != null && plate.getId().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (stiffener.getId() != null && stiffener.getId().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches id
                 }
                 return false; // Does not match
@@ -102,46 +101,46 @@ public class PlatesPage extends AbstractDataViewPage implements Page {
         });
 
 
-        var tableColumn1 = new TableColumn<org.ocx_schema.v310.Plate, org.ocx_schema.v310.Plate>("ID");
+        var tableColumn1 = new TableColumn<Stiffener, Stiffener>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
-            LOG.debug("selected plate {}", selected);
+            LOG.debug("selected stiffener {}", selected);
             if (selected == null) {
                 // no change
                 return;
             }
 
-            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
-            robert.add(new BreadcrumbRecord(selected.getId(), PlatePage.class, null, selected));
+            var robert = new ArrayList<>(getBreadcrumbs());
+            robert.add(new BreadcrumbRecord(selected.getId(), StiffenerPage.class, null, selected));
 
             var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
 
         }));
 
-        var tableColumn2 = new TableColumn<org.ocx_schema.v310.Plate, String>("GUID");
+        var tableColumn2 = new TableColumn<Stiffener, String>("GUID");
         tableColumn2.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getGUIDRef()));
 
-        var tableColumn3 = new TableColumn<org.ocx_schema.v310.Plate, String>("Name");
+        var tableColumn3 = new TableColumn<Stiffener, String>("Name");
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
 
         // TODO: better material representation
-        var tableColumn4 = new TableColumn<org.ocx_schema.v310.Plate, String>("Material");
+        var tableColumn4 = new TableColumn<Stiffener, String>("Material");
         tableColumn4.setCellValueFactory(cell ->
-                new SimpleStringProperty(cell.getValue().getPlateMaterial().getLocalRef().toString()));
+                new SimpleStringProperty(cell.getValue().getMaterialRef().getLocalRef().toString()));
 
         // TOD: add thickness unit
 
         // TODO: better quantity representation
-        var tableColumn5 = new TableColumn<org.ocx_schema.v310.Plate, String>("Function");
+        var tableColumn5 = new TableColumn<Stiffener, String>("Function");
         tableColumn5.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getFunctionType()));
 
 
-        TableView<Plate> table = new TableView<>(filteredPlates);
+        TableView<Stiffener> table = new TableView<>(filteredStiffeners);
         vbox.getChildren().add(table);
         VBox.setVgrow(table, Priority.ALWAYS);
 

@@ -41,6 +41,7 @@ import java.util.ArrayList;
 
 /**
  * This page shows the bar sections from the catalogue.
+ *
  * @author Carsten Zerbst
  */
 public class BarSectionsPage extends AbstractDataViewPage implements Page {
@@ -87,8 +88,8 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
         });
 
         var tableColumn1 = new TableColumn<BarSection, BarSection>("ID");
-        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>( c.getValue()));
-        tableColumn1.setCellFactory( createHyperlinkCellfactory( this::selectedBarSection));
+        tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
+        tableColumn1.setCellFactory(createHyperlinkCellfactory(this::selectedBarSection));
 
         var tableColumn2 = new TableColumn<BarSection, String>("GUID");
         tableColumn2.setCellValueFactory(
@@ -125,7 +126,7 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
             return;
         }
 
-        if ( ocx.getClassCatalogue().getXSectionCatalogue().getBarSections()!= null) {
+        if (ocx.getClassCatalogue().getXSectionCatalogue().getBarSections() != null) {
             barSections.addAll(ocx.getClassCatalogue().getXSectionCatalogue().getBarSections());
         }
 
@@ -135,19 +136,20 @@ public class BarSectionsPage extends AbstractDataViewPage implements Page {
 
     /**
      * Called when a BarSection hyperlink has been selected in the table.
+     *
      * @param selected The selected BarSection
      */
     private void selectedBarSection(BarSection selected) {
         LOG.debug("selected BarSection {}", selected);
-        if ( selected ==null) {
+        if (selected == null) {
             // no change
             return;
         }
 
         var robert = new ArrayList<>(getBreadcrumbs());
-        robert.add( new BreadcrumbRecord(selected.getId(), BarSectionPage.class, null, selected));
+        robert.add(new BreadcrumbRecord(selected.getId(), BarSectionPage.class, null, selected));
 
-        var event = new SelectionEvent( robert);
+        var event = new SelectionEvent(robert);
         DefaultEventBus.getInstance().publish(event);
     }
 

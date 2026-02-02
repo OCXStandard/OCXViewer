@@ -18,7 +18,8 @@ package de.cadoculus.ocxviewer.views;
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.models.ControlPointRecord;
 import de.cadoculus.ocxviewer.utils.GeomHelper;
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -53,7 +54,7 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         // now we can build the page
         final var bcs = getBreadcrumbs();
 
-        createTitle(bcs, getName(), "Information about an OCX " +GeomHelper.getGeometryType(surface));
+        createTitle(bcs, getName(), "Information about an OCX " + GeomHelper.getGeometryType(surface));
 
         ScrollPane scrollPane = new ScrollPane();
         this.setCenter(scrollPane);
@@ -63,7 +64,7 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         scrollPane.setFitToWidth(true);
 
         gridPane = createDefaultGrid();
-        scrollPane.setContent(  gridPane);
+        scrollPane.setContent(gridPane);
 
         var titelLabel = new Label("Identification");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
@@ -141,7 +142,7 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         gridPane.add(group, 3, row, 3, 1);
 
 
-        if (plane.getLimitedBy() != null ) {
+        if (plane.getLimitedBy() != null) {
             label = new Label("The plane is limited by a curve");
             label.setTooltip(new Tooltip(""));
             gridPane.add(label, 0, ++row, 3, 1);
@@ -164,7 +165,7 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         label.getStyleClass().add(Styles.WARNING);
         gridPane.add(label, 1, row++, 3, 1);
 
-        if ( extrudedSurface.getSweep()  != null && extrudedSurface.getSweepCurve() != null) {
+        if (extrudedSurface.getSweep() != null && extrudedSurface.getSweepCurve() != null) {
 
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
@@ -175,7 +176,7 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
             gridPane.add(label, 0, row++, 4, 1);
         }
 
-        if ( extrudedSurface.getSweep() != null ) {
+        if (extrudedSurface.getSweep() != null) {
 
             label = new Label("Definition of the sweep extent  by a direction and sweep  length.");
             gridPane.add(label, 0, row++, 4, 1);
@@ -251,9 +252,8 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         label = new Label("Tip Radius");
         label.setTooltip(new Tooltip("Cone tip radius (default = 0)."));
         gridPane.add(label, 0, row);
-        group = createOrRebind(null, cone.getTipRadius(),false);
+        group = createOrRebind(null, cone.getTipRadius(), false);
         gridPane.add(group, 1, row++);
-
 
 
     }
@@ -284,12 +284,13 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
 
     /**
      * Create the page for a NURBSSurface
+     *
      * @param nurbsSurface the surface cast as a {@link NURBSSurfaceT}
      */
     private void init(NURBSSurfaceT nurbsSurface) {
 
         try {
-            GeomHelper.checkNURBS( nurbsSurface);
+            GeomHelper.checkNURBS(nurbsSurface);
         } catch (IllegalArgumentException exp) {
             var warning = new atlantafx.base.controls.Message(
                     "Error",
@@ -305,25 +306,25 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         }
 
 
-        if ( nurbsSurface.getUNURBSproperties() == null) {
-            nurbsSurface.setUNURBSproperties( new NURBSPropertiesT() );
+        if (nurbsSurface.getUNURBSproperties() == null) {
+            nurbsSurface.setUNURBSproperties(new NURBSPropertiesT());
         }
 
-        if ( nurbsSurface.getVNURBSproperties() == null) {
-            nurbsSurface.setVNURBSproperties( new NURBSPropertiesT() );
+        if (nurbsSurface.getVNURBSproperties() == null) {
+            nurbsSurface.setVNURBSproperties(new NURBSPropertiesT());
         }
 
-        var  label = new Label("NURBS Properties U");
+        var label = new Label("NURBS Properties U");
         label.setTooltip(new Tooltip("Properties of the basis function in U direction."));
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row,2,1);
+        gridPane.add(label, 0, row, 2, 1);
         GridPane.setHalignment(label, HPos.LEFT);
         GridPane.setMargin(label, new Insets(20, 0, 10, 0));
 
         label = new Label("NURBS Properties V");
         label.setTooltip(new Tooltip("Properties of the basis function in V direction."));
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 2, row++,2,1);
+        gridPane.add(label, 2, row++, 2, 1);
         GridPane.setHalignment(label, HPos.LEFT);
         GridPane.setMargin(label, new Insets(20, 0, 10, 0));
 
@@ -333,50 +334,50 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         label = new Label("Degree");
         label.setTooltip(new Tooltip("The degree of the NURBS surface in U direction."));
         gridPane.add(label, 0, row);
-        var text  = new TextField(Integer.toString(uProps.getDegree()));
+        var text = new TextField(Integer.toString(uProps.getDegree()));
         gridPane.add(text, 1, row);
 
         label = new Label("Degree");
         label.setTooltip(new Tooltip("The degree of the NURBS surface in V direction."));
         gridPane.add(label, 2, row);
-        text  = new TextField(Integer.toString(vProps.getDegree()));
+        text = new TextField(Integer.toString(vProps.getDegree()));
         gridPane.add(text, 3, row++);
 
         label = new Label("Number of Control Points");
         label.setTooltip(new Tooltip("Number of control points in the curve direction or the surface grid U-direction."));
         gridPane.add(label, 0, row);
-        text  = new TextField(Long.toString(uProps.getNumCtrlPts()));
+        text = new TextField(Long.toString(uProps.getNumCtrlPts()));
         gridPane.add(text, 1, row);
 
         label = new Label("Number of Control Points");
         label.setTooltip(new Tooltip("Number of control points in the curve direction or the surface grid V-direction."));
         gridPane.add(label, 2, row);
-        text  = new TextField(Long.toString(vProps.getNumCtrlPts()));
+        text = new TextField(Long.toString(vProps.getNumCtrlPts()));
         gridPane.add(text, 3, row++);
 
 
         label = new Label("Number Knots");
         label.setTooltip(new Tooltip("umKnots: m=(p+n-1) numbers, where p is the polynomial basis degree and n is the number of control points."));
         gridPane.add(label, 0, row);
-        text  = new TextField(Long.toString(uProps.getNumKnots()));
+        text = new TextField(Long.toString(uProps.getNumKnots()));
         gridPane.add(text, 1, row);
 
         label = new Label("Number Knots");
         label.setTooltip(new Tooltip("numKnots: m=(p+n-1) numbers, where p is the polynomial basis degree and n is the number of control points."));
         gridPane.add(label, 2, row);
-        text  = new TextField(Long.toString(vProps.getNumKnots()));
+        text = new TextField(Long.toString(vProps.getNumKnots()));
         gridPane.add(text, 3, row++);
 
         label = new Label("Curve Form");
         label.setTooltip(new Tooltip("The NURBS curve form (Open, Closed, or Periodic)."));
         gridPane.add(label, 0, row);
-        text  = new TextField(uProps.getForm().toString());
+        text = new TextField(uProps.getForm().toString());
         gridPane.add(text, 1, row);
 
         label = new Label("Curve Form");
         label.setTooltip(new Tooltip("The NURBS curve form (Open, Closed, or Periodic)."));
         gridPane.add(label, 2, row);
-        text  = new TextField(uProps.getForm().toString());
+        text = new TextField(uProps.getForm().toString());
         gridPane.add(text, 3, row++);
 
         label = new Label("Rational");
@@ -386,8 +387,8 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
                 This property allows NURBS to represent exact conics (such as parabolic curves, circles, and ellipses)
                 in addition to free-form curves. To define conical curve types set isRational=true."""));
         gridPane.add(label, 0, row);
-        var cb  = new CheckBox();
-        cb.setSelected( uProps.isIsRational());
+        var cb = new CheckBox();
+        cb.setSelected(uProps.isIsRational());
         gridPane.add(cb, 1, row);
 
         label = new Label("Rational");
@@ -397,26 +398,14 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
                 This property allows NURBS to represent exact conics (such as parabolic curves, circles, and ellipses)
                 in addition to free-form curves. To define conical curve types set isRational=true."""));
         gridPane.add(label, 2, row);
-        cb =         new CheckBox();
-        cb.setSelected( vProps.isIsRational());
-        gridPane.add(cb, 3, row++);
-
-
-        label = new Label("Rational");
-        label.setTooltip(new Tooltip("""
-                The default is non-rational basis functions (isRational=false).
-                Rational refers to the underlying mathematical representation.
-                This property allows NURBS to represent exact conics (such as parabolic curves, circles, and ellipses)
-                in addition to free-form curves. To define conical curve types set isRational=true."""));
-        gridPane.add(label, 2, row);
-        cb =         new CheckBox();
-        cb.setSelected( vProps.isIsRational());
+        cb = new CheckBox();
+        cb.setSelected(vProps.isIsRational());
         gridPane.add(cb, 3, row++);
 
 
         // Knotvectors
         label = new Label("Knotvector");
-        label.setTooltip( new Tooltip("""
+        label.setTooltip(new Tooltip("""
                 The knot-vector is a list of size m=+n-1 knots where p is the polynomial basis degree
                 and n is the number of control points.
                 The knot vector consists of a non-decreasing sequence of values.
@@ -424,9 +413,9 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
                 A knot multiplicity means that a knot value can be repeated up to p+1 times.
                 """));
         gridPane.add(label, 0, row);
-        final  StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         nurbsSurface.getUknotVector().getValues().forEach(d -> {
-            sb.append( d.toString()).append(" ");
+            sb.append(d.toString()).append(" ");
         });
 
         var knot = new TextField(sb.toString());
@@ -435,11 +424,11 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
 
         // the Duplicator class from fxd is gone :-(
         var label2 = new Label(label.getText());
-        label2.setTooltip( new Tooltip( label.getTooltip().getText()));
+        label2.setTooltip(new Tooltip(label.getTooltip().getText()));
         gridPane.add(label2, 2, row);
         final var sb2 = new StringBuilder();
         nurbsSurface.getVknotVector().getValues().forEach(d -> {
-            sb2.append( d.toString()).append(" ");
+            sb2.append(d.toString()).append(" ");
         });
 
         knot = new TextField(sb2.toString());
@@ -447,16 +436,15 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         gridPane.add(knot, 3, row++);
 
         var tabPane = new TabPane();
-        gridPane.add(tabPane, 0, row++, 4,1);
+        gridPane.add(tabPane, 0, row++, 4, 1);
 
         // ensure the last row gets all available space
-        for ( int r =0; r< GridPane.getRowIndex(tabPane); r++) {
+        for (int r = 0; r < GridPane.getRowIndex(tabPane); r++) {
             gridPane.getRowConstraints().add(new RowConstraints());
         }
         var tableRow = new RowConstraints();
         tableRow.setVgrow(Priority.ALWAYS);
-        gridPane.getRowConstraints().add( tableRow);
-
+        gridPane.getRowConstraints().add(tableRow);
 
 
         // The control points table
@@ -468,8 +456,8 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
 
         var tableColumnIdx = new TableColumn<ControlPointRecord, String>("Index");
         tableColumnIdx.setCellValueFactory(c -> new SimpleStringProperty(
-                Long.toString(  c.getValue().index())));
-        tableColumnIdx.setStyle( "-fx-alignment: CENTER-RIGHT;");
+                Long.toString(c.getValue().index())));
+        tableColumnIdx.setStyle("-fx-alignment: CENTER-RIGHT;");
 
         var tableColumnRC = new TableColumn<ControlPointRecord, String>("Row/Column");
         tableColumnRC.setCellValueFactory(c -> new SimpleStringProperty(
@@ -477,19 +465,19 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
 
 
         var tableColumnX = new TableColumn<ControlPointRecord, Number>("X");
-        tableColumnX.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().controlPoint().getCoordinates().getFirst()));
+        tableColumnX.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().controlPoint().getCoordinates().getFirst()));
 
         var tableColumnY = new TableColumn<ControlPointRecord, Number>("Y");
-        tableColumnY.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().controlPoint().getCoordinates().get(1)));
+        tableColumnY.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().controlPoint().getCoordinates().get(1)));
 
         var tableColumnZ = new TableColumn<ControlPointRecord, Number>("Z");
-        tableColumnZ.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().controlPoint().getCoordinates().getLast()));
+        tableColumnZ.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().controlPoint().getCoordinates().getLast()));
 
         var tableColumnUnit = new TableColumn<ControlPointRecord, String>("Unit");
         tableColumnUnit.setCellValueFactory(c -> {
-            if ( c.getValue().controlPoint().getUnit() instanceof Unit unit) {
-                return new SimpleStringProperty( unit.getId());
-            } else if ( c.getValue().controlPoint().getUnit() != null) {
+            if (c.getValue().controlPoint().getUnit() instanceof Unit unit) {
+                return new SimpleStringProperty(unit.getId());
+            } else if (c.getValue().controlPoint().getUnit() != null) {
                 return new SimpleStringProperty("failed to resolve '" + c.getValue().controlPoint().getUnit().toString() + "'");
             } else {
                 return new SimpleStringProperty("!!unit reference missing!!");
@@ -498,7 +486,7 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         });
 
         var tableColumnWeight = new TableColumn<ControlPointRecord, Number>("Weight");
-        tableColumnWeight.setCellValueFactory(c -> new SimpleDoubleProperty( c.getValue().controlPoint().getWeight()));
+        tableColumnWeight.setCellValueFactory(c -> new SimpleDoubleProperty(c.getValue().controlPoint().getWeight()));
 
         ObservableList<ControlPointRecord> ctrlPoints = FXCollections.observableArrayList();
         var table = new TableView<>(ctrlPoints);
@@ -514,15 +502,14 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
         table.setMaxHeight(1600);
 
 
-
         // now fill the control points
         final long numCtrlPtsU = nurbsSurface.getUNURBSproperties().getNumCtrlPts();
-        int ctrlPtIdx=0;
+        int ctrlPtIdx = 0;
         for (ControlPtList controlPtList : nurbsSurface.getControlPtLists()) {
             for (ControlPoint controlPoint : controlPtList.getControlPoints()) {
                 final long rowNum = ctrlPtIdx / numCtrlPtsU;
                 final long colNum = ctrlPtIdx % numCtrlPtsU;
-                ctrlPoints.add( new ControlPointRecord( ctrlPtIdx, rowNum, colNum, controlPoint));
+                ctrlPoints.add(new ControlPointRecord(ctrlPtIdx, rowNum, colNum, controlPoint));
                 ctrlPtIdx++;
             }
         }

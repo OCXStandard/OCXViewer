@@ -23,6 +23,7 @@ import java.util.prefs.Preferences;
 
 /**
  * Utility class for resource management.
+ *
  * @author Carsten Zerbst
  */
 public final class Resources {
@@ -32,8 +33,8 @@ public final class Resources {
     public static InputStream getResourceAsStream(String resource) {
         String path = resolve(resource);
         return Objects.requireNonNull(
-            Main.class.getResourceAsStream(resolve(path)),
-            "Resource not found: " + path
+                Main.class.getResourceAsStream(resolve(path)),
+                "Resource not found: " + path
         );
     }
 

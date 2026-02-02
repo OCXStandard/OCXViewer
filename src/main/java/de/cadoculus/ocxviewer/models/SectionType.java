@@ -19,6 +19,7 @@ import org.ocx_schema.v310.BarSection;
 
 /**
  * Enumeration of different section types.
+ *
  * @author Carsten Zerbst
  */
 public enum SectionType {

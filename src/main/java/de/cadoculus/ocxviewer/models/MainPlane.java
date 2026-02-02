@@ -15,24 +15,11 @@
  */
 package de.cadoculus.ocxviewer.models;
 
-
-import de.cadoculus.ocxviewer.views.Page;
-import org.ocx_schema.v310.IdBaseT;
-
 /**
- * A record representing a breadcrumb entry, containing information whether it is a page or an object,
- * the page class, and the associated object.
+ * Enumeration of main planes in 3D space.
  *
- * @param pageClazz the target class of the page, may be null
- * @param name      the display name of the breadcrumb
- * @param page      the page instance, may be null
- * @param object    the associated object, may be null
  * @author Carsten Zerbst
  */
-public record BreadcrumbRecord(String name, Class<? extends Page> pageClazz, Page page, IdBaseT object) {
-
-    @Override
-    public String toString() {
-        return name;
-    }
+public enum MainPlane {
+    UNDEFINED, XPLANE, YPLANE, ZPLANE
 }

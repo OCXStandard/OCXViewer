@@ -31,15 +31,16 @@ import java.util.List;
 
 /**
  * See https://stackoverflow.com/questions/32625212/convert-color-from-css-to-javafx-color-object
+ *
  * @author Carsten Zerbst
  */
-public class CssToColorHelper extends Parent{
+public class CssToColorHelper extends Parent {
     public static final Color DEFAULT_NAMED_COLOR = null;
 
     private ObjectProperty<Color> namedColor;
 
     public ObjectProperty<Color> namedColorProperty() {
-        if(namedColor == null) {
+        if (namedColor == null) {
             namedColor = new StyleableObjectProperty<Color>(DEFAULT_NAMED_COLOR) {
 
                 @Override
@@ -93,6 +94,7 @@ public class CssToColorHelper extends Parent{
                 };
 
         private static final List<CssMetaData<? extends Styleable, ?>> STYLEABLES;
+
         static {
             final List<CssMetaData<? extends Styleable, ?>> styleables =
                     new ArrayList<>(Parent.getClassCssMetaData());

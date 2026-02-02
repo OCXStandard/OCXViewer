@@ -30,6 +30,7 @@ import org.ocx_schema.v310.PrincipalParticulars;
 
 /**
  * The PrincipalParticularsPage class is a subclass of AbstractDataViewPage and is used to display the principal particulars of a vessel.
+ *
  * @author Carsten Zerbst
  */
 public class PrincipalParticularsPage extends AbstractDataViewPage {
@@ -277,8 +278,6 @@ public class PrincipalParticularsPage extends AbstractDataViewPage {
         gridPane.add(group2, 3, row);
 
     }
-
-
 
 
 }

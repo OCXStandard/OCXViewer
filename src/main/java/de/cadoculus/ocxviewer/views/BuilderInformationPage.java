@@ -32,9 +32,10 @@ import java.time.Year;
 
 /**
  * Page for the builder information.
+ *
  * @author Carsten Zerbst
  */
-public class BuilderInformationPage extends AbstractDataViewPage{
+public class BuilderInformationPage extends AbstractDataViewPage {
     public static final String NAME = "Builder Information";
     private static final Logger LOG = LogManager.getLogger(BuilderInformationPage.class);
 
@@ -53,13 +54,14 @@ public class BuilderInformationPage extends AbstractDataViewPage{
         scrollPane.setFitToWidth(true);
 
         GridPane gridPane = createDefaultGrid();
+        scrollPane.setContent(gridPane);
 
         int row = 0;
 
 
         var builderInformation = WorkingContext.getInstance().getVessel().getBuilderInformation();
 
-        if ( builderInformation==null) {
+        if (builderInformation == null) {
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
                     "No BuilderInformation found in Vessel/BuilderInformation !",
@@ -74,7 +76,7 @@ public class BuilderInformationPage extends AbstractDataViewPage{
 
             builderInformation = new BuilderInformation();
 
-            WorkingContext.getInstance().getVessel().setBuilderInformation( builderInformation);
+            WorkingContext.getInstance().getVessel().setBuilderInformation(builderInformation);
         }
 
         var label = new Label("Yard");
@@ -111,7 +113,6 @@ public class BuilderInformationPage extends AbstractDataViewPage{
         textField = new TextField();
         gridPane.add(textField, 3, row);
         bindToBean(textField.textProperty(), builderInformation, "yearOfBuild", Year.class);
-
 
 
     }

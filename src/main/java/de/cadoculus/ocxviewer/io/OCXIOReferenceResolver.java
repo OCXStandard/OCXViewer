@@ -22,14 +22,15 @@ import org.ocx_schema.v310.*;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A class to resolve references after unmarshalling using the parsed XML and the listener data.
  * Currently only supports MaterialRefT, PlateMaterialRefT, SectionRefT and HoleRefT,
  * to be extended for other references as well.
- *
+ * <p>
  * The progress of the resolution can be monitored using a PropertyChangeListener and is NOT reported
  * in the JavaFX Application Thread.
  *
@@ -45,8 +46,8 @@ class OCXIOReferenceResolver {
 
     private final OCXIOUnmarshallerListener listener;
     private final OcxXMLT ocx;
-    private int progress;
     private final PropertyChangeSupport propChange;
+    private int progress;
 
 
     public OCXIOReferenceResolver(OcxXMLT ocxXMLT, OCXIOUnmarshallerListener jaxListener) {
@@ -58,15 +59,15 @@ class OCXIOReferenceResolver {
     /**
      * Add a PropertyChangeListener to the listener list.
      */
-    public void addPropertyChangeListener( PropertyChangeListener lis ) {
-        propChange.addPropertyChangeListener( lis );
+    public void addPropertyChangeListener(PropertyChangeListener lis) {
+        propChange.addPropertyChangeListener(lis);
     }
 
     /**
      * Remove a PropertyChangeListener from the listener list.
      */
-    public void removePropertyChangeListener( PropertyChangeListener lis ) {
-        propChange.removePropertyChangeListener( lis );
+    public void removePropertyChangeListener(PropertyChangeListener lis) {
+        propChange.removePropertyChangeListener(lis);
     }
 
     /**
@@ -81,138 +82,129 @@ class OCXIOReferenceResolver {
      */
     private void updateProgress(int np) {
 
-        if ( np != progress ) {
+        if (np != progress) {
             int ov = progress;
             progress = np;
 
-            if ( ( progress % 5 ) == 0 ) {
-                propChange.firePropertyChange( ProgressInputStream.PROGRESS, ov, progress );
+            if ((progress % 5) == 0) {
+                propChange.firePropertyChange(ProgressInputStream.PROGRESS, ov, progress);
             }
         }
     }
 
 
-
     public void resolve() {
 
-        this.updateProgress(0);
+        updateProgress(0);
 
-        LOG.debug("start resolving #{} catalogue references", listener.getCatalogueRefs().size());
-        if (ocx.getClassCatalogue() == null) {
-            LOG.warn("no ClassCatalogue found, cannot resolve catalogue references");
-            return;
-        }
+        final Set<IdBaseT> idBaseTs = listener.getIdBaseTs();
+        final Set<ReferenceBaseTImpl> references = listener.getReferences();
 
-        final var catalogueRefs = new ArrayList<>(listener.getCatalogueRefs());
-        final boolean containsMaterialRefs = catalogueRefs.stream().anyMatch(catalogueRefT -> catalogueRefT instanceof MaterialRefT || catalogueRefT instanceof PlateMaterialRefT);
-        final boolean containsSectionRefs = catalogueRefs.stream().anyMatch(catalogueRefT -> catalogueRefT instanceof SectionRefT);
-        final boolean containsHoleRefs = catalogueRefs.stream().anyMatch(catalogueRefT -> catalogueRefT instanceof HoleRefT);
+        LOG.info("start resolving #{} references from #{} idBasees",
+                references.size(),
+                idBaseTs.size());
 
-        // prepare a map of GUIDRef to catalogue entries
-        final var guid2entry = new HashMap<String, IdBaseT>();
+        final Map<String, IdBaseT> idMap = new HashMap<String, IdBaseT>();
+        final Map<String, IdBaseT> guidMap = new HashMap<String, IdBaseT>();
 
-        // prepare lookup maps if needed
-        final MaterialCatalogue materialCatalogue = ocx.getClassCatalogue().getMaterialCatalogue();
-        if (containsMaterialRefs) {
-            if (materialCatalogue == null) {
-                LOG.warn("no MaterialCatalogue found, cannot resolve material references");
-            } else if (materialCatalogue.getMaterials() == null || materialCatalogue.getMaterials().isEmpty()) {
-                LOG.warn("no Materials contained in the MaterialCatalogue, cannot resolve material references");
+
+        idBaseTs.forEach(idT -> {
+            if (StringUtils.isNotEmpty(idT.getId())) {
+                idMap.put(idT.getId(), idT);
             } else {
-                materialCatalogue.getMaterials().forEach(material -> {
-                    if (material.getGUIDRef() != null) {
-                        // Paranoia mode: check for duplicate GUIDRefs
-                        if ( guid2entry.containsKey(material.getGUIDRef())) {
-                            var previous = guid2entry.get(material.getGUIDRef());
-                            LOG.warn("duplicate GUIDRefs '{}' found in the catalogue, previously found {} id={}, now {} id={}",
-                                    material.getGUIDRef(),
-                                    previous.getClass().getSimpleName(), previous.getId(),
-                                    material.getClass().getSimpleName(), material.getId());
-                        } else {
-                            guid2entry.put(material.getGUIDRef(), material);
-                        }
-                    }
-                });
+                LOG.warn("No ID found in idBase " + OCXIO.serialize(idT));
             }
-        }
 
-        final XSectionCatalogue xSectionCatalogue = ocx.getClassCatalogue().getXSectionCatalogue();
-        if (containsSectionRefs) {
-            if (xSectionCatalogue == null) {
-                LOG.warn("no XSectionCatalogue found, cannot resolve bar section references");
-            } else if (xSectionCatalogue.getBarSections() == null || xSectionCatalogue.getBarSections().isEmpty()) {
-                LOG.warn("no BarSections found in XSectionCatalogue, cannot resolve material references");
-            } else {
-                xSectionCatalogue.getBarSections().forEach(barSection -> {
-                    if (barSection.getGUIDRef() != null) {
-                        if ( guid2entry.containsKey(barSection.getGUIDRef())) {
-                            var previous = guid2entry.get(barSection.getGUIDRef());
-                            LOG.warn("duplicate GUIDRefs '{}' found in the catalogue, previously found {} id={}, now {} id={}",
-                                    barSection.getGUIDRef(),
-                                    previous.getClass().getSimpleName(), previous.getId(),
-                                    barSection.getClass().getSimpleName(), barSection.getId());
-                        } else {
-                            guid2entry.put(barSection.getGUIDRef(), barSection);
-                        }
-                    }
-                });
+            if (idT instanceof EntityBaseT entityBaseT) {
+                if (StringUtils.isNotEmpty(entityBaseT.getGUIDRef())) {
+                    guidMap.put(entityBaseT.getGUIDRef(), idT);
+                } else {
+                    LOG.warn("No GUIDRef found in EntityBaseT " + OCXIO.serialize(entityBaseT));
+                }
+            } else if (idT instanceof Material material) {
+                if (StringUtils.isNotEmpty(material.getGUIDRef())) {
+                    guidMap.put(material.getGUIDRef(), idT);
+                } else {
+                    LOG.warn("No GUIDRef found in Material " + OCXIO.serialize(material));
+                }
+            } else if (idT instanceof BarSection barSection) {
+                if (StringUtils.isNotEmpty(barSection.getGUIDRef())) {
+                    guidMap.put(barSection.getGUIDRef(), idT);
+                } else {
+                    LOG.warn("No GUIDRef found in BarSection " + OCXIO.serialize(barSection));
+                }
+            } else if (idT instanceof Hole2D hole2D) {
+                if (StringUtils.isNotEmpty(hole2D.getGUIDRef())) {
+                    guidMap.put(hole2D.getGUIDRef(), idT);
+                } else {
+                    LOG.warn("No GUIDRef found in Hole2D " + OCXIO.serialize(hole2D));
+                }
             }
-        }
+        });
 
-        final HoleShapeCatalogue holeShapeCatalogue = ocx.getClassCatalogue().getHoleShapeCatalogue();
-        if (containsHoleRefs) {
-            if (holeShapeCatalogue == null) {
-                LOG.warn("no HoleShapeCatalogue found, cannot resolve hole shape references");
-            } else if (holeShapeCatalogue.getHole2Ds() == null || holeShapeCatalogue.getHole2Ds().isEmpty()) {
-                LOG.warn("no HoleShapeCatalogue found in HoleShapeCatalogue, cannot resolve hole shape references");
-            } else {
-                holeShapeCatalogue.getHole2Ds().forEach(hole2D -> {
-                    if ( guid2entry.containsKey(hole2D.getGUIDRef())) {
-                        var previous = guid2entry.get(hole2D.getGUIDRef());
-                        LOG.warn("duplicate GUIDRefs '{}' found in the catalogue, previously found {} id={}, now {} id={}",
-                                hole2D.getGUIDRef(),
-                                previous.getClass().getSimpleName(), previous.getId(),
-                                hole2D.getClass().getSimpleName(), hole2D.getId());
-                    } else {
-                        guid2entry.put(hole2D.getGUIDRef(), hole2D);
-                    }
-                });
-            }
-        }
+        LOG.debug("prepared #{} ids and #{} GUIDs from #{} idBaseTs",
+                idMap.size(), guidMap.size(), idBaseTs.size());
+
+        LOG.debug("ids {}", idMap.keySet());
+        LOG.debug("guids {}", guidMap.keySet());
 
         updateProgress(CATALOGUE_SETUP);
 
+        int counter = 0;
+        final int total = references.size();
 
-        int reportIntervall = Math.max(1, (int) Math.floor(catalogueRefs.size() / 10.0));
+        for (ReferenceBaseTImpl refBaseT : references) {
+            counter++;
+            int prog = CATALOGUE_SETUP + (int) (((double) counter / (double) total) * CATALOGUE_RESLV);
+            updateProgress(prog);
+            LOG.info("handle object #{} / #{} ({}%}: reference of type {} with localRef='{}'",
+                    counter, total, prog,
+                    refBaseT.getClass().getSimpleName(),
+                    refBaseT.getLocalRef()
+            );
 
-        for (int i = 0; i < catalogueRefs.size(); i++) {
-            var catalogueRef = catalogueRefs.get(i);
-            if (i % reportIntervall == 0) {
-                LOG.debug("resolving catalogue references: {}/{}", i, catalogueRefs.size());
-                var rsolvProg = CATALOGUE_SETUP + CATALOGUE_RESLV * ((double) i / (double) catalogueRefs.size());
-                updateProgress( (int) rsolvProg);
+
+            // TODO: cross check id vs. GUIDRef
+            // TODO: check of the right type was resolved
+            if (refBaseT.getLocalRef() instanceof IdBaseT idBaseT) {
+                // this was already resolved by JAXB
+                var refId = idBaseT.getId();
+                LOG.info("resolved reference by Id '{}'=={}", refId, idBaseT);
+                refBaseT.setReferenced(idBaseT);
+                continue;
             }
-            IdBaseT referenced = null;
-            var object = catalogueRef.getLocalRef();
-            String refId = object instanceof String ? (String) object : null;
-            String guid = catalogueRef.getGUIDRef();
-            LOG.debug("resolving catalogue reference of type {} with localRef '{}' and GUIDRef '{}'",
-                    catalogueRef.getClass().getSimpleName(), refId, guid);
 
-            if ( PlateMaterialRefT.class.isAssignableFrom(catalogueRef.getClass()) ) {
-                referenced = resolveReference(catalogueRef, Material.class, guid2entry);
-            } else if ( MaterialRefT.class.isAssignableFrom(catalogueRef.getClass()) ) {
-                referenced = resolveReference(catalogueRef, Material.class, guid2entry);
-            } else if ( SectionRefT.class.isAssignableFrom(catalogueRef.getClass()) ) {
-                referenced = resolveReference(catalogueRef, BarSection.class,  guid2entry);
-            } else if ( HoleRefT.class.isAssignableFrom(catalogueRef.getClass()) ) {
-                referenced = resolveReference(catalogueRef, Hole2D.class,  guid2entry);
+            // This is messy, the sub-classes of ReferenceBaseT containing a GUIDRef have no common super-class :-(
+            String refGUIDRef = null;
+            if (refBaseT instanceof CatalogueRefT catalogueRefT) {
+                refGUIDRef = catalogueRefT.getGUIDRef();
+            } else if (refBaseT instanceof StructureRefT structureRefT) {
+                refGUIDRef = structureRefT.getGUIDRef();
+            } else if (refBaseT instanceof VesselRefT vesselRefT) {
+                refGUIDRef = vesselRefT.getGUIDRef();
             } else {
-                LOG.warn("found unsupported catalogue reference type: {}", catalogueRef.getClass());
+                LOG.warn("find a {} refernece with unresolved localRef='{}', cannot get GUIDRef, unsupported type",
+                        refBaseT.getClass().getSimpleName(),
+                        refBaseT.getLocalRef());
+                continue;
             }
 
-            ((CatalogueRefTImpl)catalogueRef).setReferenced( referenced);
-        }
+            if (StringUtils.isEmpty(refGUIDRef)) {
+                LOG.warn("no GUIDRef found in reference {}", OCXIO.serialize(refBaseT));
+                continue;
+            }
+
+            var referencedObject = guidMap.get(refGUIDRef);
+            if (referencedObject == null) {
+                LOG.info("failed to resolve reference by GUIDRef '{}'=={}", refGUIDRef, referencedObject);
+            } else {
+                LOG.info("resolved reference by GUIDRef '{}'=={}", refGUIDRef, referencedObject);
+                refBaseT.setReferenced(referencedObject);
+            }
+
+
+        } // end loop
+
 
         updateProgress(100);
 
@@ -223,7 +215,7 @@ class OCXIOReferenceResolver {
         IdBaseT referenced = null;
         if (catalogueRef.getLocalRef() instanceof String localRefStr) {
             refId = localRefStr;
-        } else if (catalogueRef.getLocalRef() instanceof  IdBaseT) {
+        } else if (catalogueRef.getLocalRef() instanceof IdBaseT) {
             referenced = ((IdBaseT) catalogueRef.getLocalRef());
             refId = referenced.getId();
         }
@@ -264,7 +256,7 @@ class OCXIOReferenceResolver {
             }
         }
 
-        if ( LOG.isTraceEnabled()) {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("resolved catalogue reference of type {} with localRef='{}', GUIDRef='{}' to a {}, id='{}', GUIDRef='{}'",
                     catalogueRef.getClass().getSimpleName(), refId, referenceGUIDRef,
                     referenced != null ? (referenced.getClass().getSimpleName()) : "/NULL",

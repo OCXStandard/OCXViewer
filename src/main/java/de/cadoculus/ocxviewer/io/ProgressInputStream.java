@@ -42,20 +42,20 @@ public class ProgressInputStream extends FilterInputStream {
     /**
      * Creates a new instance of ProgressInputStream
      */
-    public ProgressInputStream(final File file ) throws FileNotFoundException {
+    public ProgressInputStream(final File file) throws FileNotFoundException {
 
-        super( new FileInputStream( file ) );
+        super(new FileInputStream(file));
         this.file = file;
         this.size = file.length();
         this.pos = 0;
-        this.propChange = new PropertyChangeSupport( this );
+        this.propChange = new PropertyChangeSupport(this);
     }
 
     /**
      * Add a PropertyChangeListener to the listener list.
      */
-    public void addPropertyChangeListener( PropertyChangeListener lis ) {
-        propChange.addPropertyChangeListener( lis );
+    public void addPropertyChangeListener(PropertyChangeListener lis) {
+        propChange.addPropertyChangeListener(lis);
     }
 
     /**
@@ -71,8 +71,8 @@ public class ProgressInputStream extends FilterInputStream {
     /**
      * Overrides read, increments position;
      */
-    public int read( byte[] b ) throws IOException {
-        int retval = super.read( b );
+    public int read(byte[] b) throws IOException {
+        int retval = super.read(b);
         pos += retval;
         updateProgress();
 
@@ -83,8 +83,8 @@ public class ProgressInputStream extends FilterInputStream {
     /**
      * Overrides read, increments position;
      */
-    public int read( byte[] b, int off, int len ) throws IOException {
-        int retval = super.read( b, off, len );
+    public int read(byte[] b, int off, int len) throws IOException {
+        int retval = super.read(b, off, len);
         pos += retval;
         updateProgress();
 
@@ -95,8 +95,8 @@ public class ProgressInputStream extends FilterInputStream {
     /**
      * Remove a PropertyChangeListener from the listener list.
      */
-    public void removePropertyChangeListener( PropertyChangeListener lis ) {
-        propChange.removePropertyChangeListener( lis );
+    public void removePropertyChangeListener(PropertyChangeListener lis) {
+        propChange.removePropertyChangeListener(lis);
     }
 
     public int getProgress() {
@@ -107,15 +107,15 @@ public class ProgressInputStream extends FilterInputStream {
      * Calculates the progress value
      */
     private void updateProgress() {
-        int np = (int) Math.floor( 100.0 * pos / (float) size );
+        int np = (int) Math.floor(100.0 * pos / (float) size);
 
-        if ( np != progress ) {
+        if (np != progress) {
             int ov = progress;
             progress = np;
 
-            if ( ( progress % 5 ) == 0 ) {
-                propChange.firePropertyChange( PROGRESS, ov, progress );
-                LOG.debug( "read " + progress + "%" );
+            if ((progress % 5) == 0) {
+                propChange.firePropertyChange(PROGRESS, ov, progress);
+                LOG.debug("read " + progress + "%");
             }
         }
 

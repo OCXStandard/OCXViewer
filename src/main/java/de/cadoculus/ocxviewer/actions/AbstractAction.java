@@ -8,6 +8,7 @@ package de.cadoculus.ocxviewer.actions;
  *     public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.I, KeyCombination.CONTROL_DOWN);
  *     public final static  String NAME = "About";
  * </pre>
+ *
  * @author Carsten Zerbst
  */
 public abstract class AbstractAction {
@@ -15,5 +16,5 @@ public abstract class AbstractAction {
     /**
      * The action code to runs
      */
-    public abstract  void run();
+    public abstract void run();
 }

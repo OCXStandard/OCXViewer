@@ -25,6 +25,7 @@ import org.ocx_schema.v310.EndCutT;
 /**
  * A page displaying information about an Endcut.
  * The EndcutPage is not intended to be navigated directly, but rather as a logical child.
+ *
  * @author Carsten Zerbst
  */
 public class EndcutPage extends AbstractDataViewSubPage<EndCutT> {
@@ -32,12 +33,12 @@ public class EndcutPage extends AbstractDataViewSubPage<EndCutT> {
     private static final Logger LOG = LogManager.getLogger(EndcutPage.class);
 
     public EndcutPage(EndCutT endCutT, Page parent) {
-        super(endCutT, parent, "Endcut «"+endCutT.getId() + "»");
+        super(endCutT, parent, "Endcut «" + endCutT.getId() + "»");
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
 
-        createTitle( bcs, getName(), "Information about an OCX Endcut");
+        createTitle(bcs, getName(), "Information about an OCX Endcut");
 
         var warning = new atlantafx.base.controls.Message(
                 "Warning",

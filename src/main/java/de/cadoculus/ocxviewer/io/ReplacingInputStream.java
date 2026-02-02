@@ -27,8 +27,9 @@ import java.util.Queue;
  * It reads from an underlying InputStream and replaces all occurrences of a given byte sequence with another byte sequence.
  * THis is used to replace non-standard namespace declarations in OCX XML files on-the-fly during parsing, so we could use standard JAXB parsing
  * even for OCX files from a different namespace.
- *
+ * <p>
  * This will not use for OCX 2.7.8 files, as they have big differences in the XML structure e.g. for all coordinates.
+ *
  * @author Carsten Zerbst
  */
 class ReplacingInputStream extends FilterInputStream {
@@ -114,16 +115,16 @@ class ReplacingInputStream extends FilterInputStream {
         if (c == -1) {
             return -1;
         }
-        b[off] = (byte)c;
+        b[off] = (byte) c;
 
         int i = 1;
         try {
-            for (; i < len ; i++) {
+            for (; i < len; i++) {
                 c = read();
                 if (c == -1) {
                     break;
                 }
-                b[off + i] = (byte)c;
+                b[off + i] = (byte) c;
             }
         } catch (IOException ee) {
         }

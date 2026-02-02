@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Consumer;
+
 /*
  * This class is responsible for displaying the logo of the application directly after startup.
  * It is later discarded in the MainController's {@link MainController#initializeDataView()} method.
@@ -50,14 +51,14 @@ public class LogoPage extends Region {
     private double[] widths;
     private Font thinFont;
     private Font boldFont;
-    private final Consumer<Canvas> repaint ;
-    private final String[] txts=new String[] {" OCX ", "Viewer ", "Version " , "0.1 " };
-    private double height =36;
+    private final Consumer<Canvas> repaint;
+    private final String[] txts = new String[]{" OCX ", "Viewer ", "Version ", "0.1 "};
+    private double height = 36;
     private final DoubleProperty startX = new SimpleDoubleProperty();
-    private double  dy = 1.1*height;
-    private double y=dy;
+    private double dy = 1.1 * height;
+    private double y = dy;
     private final Random random = new Random();
-    private int boldIdx = random.nextInt(0,10);
+    private int boldIdx = random.nextInt(0, 10);
     private int numText = 10;
 
     public LogoPage() {
@@ -66,7 +67,7 @@ public class LogoPage extends Region {
         canvas = new Canvas();
         getChildren().add(canvas);
 
-        repaint = c -> paint() ;
+        repaint = c -> paint();
 
         try {
             InputStream fontStream = MainController.class.getResourceAsStream("fonts/Doto-Thin.ttf");
@@ -86,19 +87,19 @@ public class LogoPage extends Region {
                 fontStream.close();
             }
 
-            widths  = Arrays.stream(txts).mapToDouble( t -> {
+            widths = Arrays.stream(txts).mapToDouble(t -> {
                 Text text = new Text(t);
                 text.setFont(thinFont);
 
                 Bounds layoutBounds = text.getLayoutBounds();
                 return layoutBounds.getWidth();
             }).toArray();
-            double startX = -1*Arrays.stream(widths).sum();
+            double startX = -1 * Arrays.stream(widths).sum();
             double endX = 1;
 
 
-            KeyValue startKeyValue = new KeyValue(this.startX,startX);
-            KeyValue endKeyValue = new KeyValue(this.startX,endX);
+            KeyValue startKeyValue = new KeyValue(this.startX, startX);
+            KeyValue endKeyValue = new KeyValue(this.startX, endX);
             KeyFrame startFrame = new KeyFrame(Duration.ZERO, startKeyValue);
             KeyFrame endFrame = new KeyFrame(Duration.seconds(10), endKeyValue);
             Timeline timeline = new Timeline(startFrame, endFrame);
@@ -116,7 +117,6 @@ public class LogoPage extends Region {
 
 
     }
-
 
 
     @Override
@@ -137,31 +137,33 @@ public class LogoPage extends Region {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         if (WorkingContext.getInstance().darkModeProperty().get()) {
-            gc.setFill( Color.web("#ECEFF4")); // --color-fg-default from nord-dark
+            gc.setFill(Color.web("#ECEFF4")); // --color-fg-default from nord-dark
         } else {
-            gc.setFill( Color.web("#2E3440")); // --color-fg-default from nord-light
+            gc.setFill(Color.web("#2E3440")); // --color-fg-default from nord-light
         }
 
 
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         int idx = 0;
-        OUTER:while( true) {
-            INNER:while ( true) {
-                var txtIdx = idx/txts.length;
-                if ( txtIdx== boldIdx){
+        OUTER:
+        while (true) {
+            INNER:
+            while (true) {
+                var txtIdx = idx / txts.length;
+                if (txtIdx == boldIdx) {
                     gc.setFont(boldFont);
                     if (WorkingContext.getInstance().darkModeProperty().get()) {
-                        gc.setFill( Color.web("#5E81AC")); // --color-fg-default from nord-dark -color-accent-5: #5E81AC;
+                        gc.setFill(Color.web("#5E81AC")); // --color-fg-default from nord-dark -color-accent-5: #5E81AC;
                     } else {
-                        gc.setFill( Color.web("#5E81AC")); // --color-fg-default from nord-light -color-accent-5: #5E81AC;
+                        gc.setFill(Color.web("#5E81AC")); // --color-fg-default from nord-light -color-accent-5: #5E81AC;
                     }
                 } else {
                     gc.setFont(thinFont);
                     if (WorkingContext.getInstance().darkModeProperty().get()) {
-                        gc.setFill( Color.web("#ECEFF4")); // --color-fg-default from nord-dark
+                        gc.setFill(Color.web("#ECEFF4")); // --color-fg-default from nord-dark
                     } else {
-                        gc.setFill( Color.web("#2E3440")); // --color-fg-default from nord-light
+                        gc.setFill(Color.web("#2E3440")); // --color-fg-default from nord-light
                     }
                 }
 
@@ -169,21 +171,21 @@ public class LogoPage extends Region {
                 var w = widths[idx % txts.length];
                 gc.fillText(txt, x, y);
 
-                x+=w;
+                x += w;
 
-                if ( x> canvas.getWidth()) {
-                    x = -w + (x-canvas.getWidth() );
-                    if ( txtIdx==boldIdx) {
-                        boldIdx = random.nextInt(2,numText-2);
+                if (x > canvas.getWidth()) {
+                    x = -w + (x - canvas.getWidth());
+                    if (txtIdx == boldIdx) {
+                        boldIdx = random.nextInt(2, numText - 2);
                     }
                     break INNER;
                 } else {
                     idx++;
                 }
             }
-            y+=dy;
-            if ( y > (canvas.getHeight()+dy)) {
-                numText = idx/txts.length;
+            y += dy;
+            if (y > (canvas.getHeight() + dy)) {
+                numText = idx / txts.length;
                 break OUTER;
             }
         }

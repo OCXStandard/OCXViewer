@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  *
  * <p>An event bus allows subscribers to subscribe to events of a certain type and publishers to publish events to all
  * subscribers.
- *
+ * <p>
  * This code is copied from atlantafx.sampler implemented by mkpaz. It is licensed under the MIT License.
  */
 public interface EventBus {

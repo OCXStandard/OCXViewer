@@ -59,9 +59,6 @@ public class ActionDispatcher {
         key2class.entrySet().forEach(entry -> LOG.debug(entry.getKey().toString() + " " + entry.getValue().toString()));
 
 
-
-
-
     }
 
     private void putKey(Class clazz, Scene scene) {

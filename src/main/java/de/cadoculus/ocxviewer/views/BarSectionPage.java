@@ -93,7 +93,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         var titelLabel = new Label("Identification");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(titelLabel, 0, row++,4,1);
+        gridPane.add(titelLabel, 0, row++, 4, 1);
         GridPane.setHalignment(titelLabel, HPos.LEFT);
         GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
         gridPane.getRowConstraints().add(new RowConstraints());
@@ -107,7 +107,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gridPane.add(textField, 1, row);
         bindToBean(textField.textProperty(), barSection, "id", String.class);
 
-       // ocx:Guid
+        // ocx:Guid
         label = new Label("GUID");
         label.setTooltip(new Tooltip("The barSection's GUID"));
         gridPane.add(label, 2, row);
@@ -120,15 +120,15 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         label.setTooltip(new Tooltip("The barSection's description"));
         gridPane.add(label, 0, row);
         textField = new TextField();
-        gridPane.add(textField, 1, row++,3,1);
+        gridPane.add(textField, 1, row++, 3, 1);
         bindToBean(textField.textProperty(), barSection, "description", String.class);
         gridPane.getRowConstraints().add(new RowConstraints());
 
         // bar section drawing
-        var barLabel = new Label(SectionType.getType(barSection).getName() );
+        var barLabel = new Label(SectionType.getType(barSection).getName());
 
         barLabel.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(barLabel, 0, row++,4,1);
+        gridPane.add(barLabel, 0, row++, 4, 1);
         GridPane.setHalignment(barLabel, HPos.LEFT);
         GridPane.setMargin(barLabel, new Insets(20, 0, 10, 0));
         gridPane.getRowConstraints().add(new RowConstraints());
@@ -137,13 +137,11 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var tabSketch = createSketchTab();
         var tabDimensions = createDimensionsTab();
         dimeAndSketchTab = new TabPane(tabSketch, tabDimensions);
-        gridPane.add(dimeAndSketchTab, 0, row,4,3);
+        gridPane.add(dimeAndSketchTab, 0, row, 4, 3);
         RowConstraints rc = new RowConstraints();
         rc.setVgrow(Priority.ALWAYS);
         rc.setMinHeight(200);
         gridPane.getRowConstraints().add(rc);
-
-
 
 
         if (barPattern == null) {
@@ -211,7 +209,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         warning.getStyleClass().add(Styles.WARNING);
 
         int row = 0;
-        dimensionGrid.add(warning, 0, row++,4,1);
+        dimensionGrid.add(warning, 0, row++, 4, 1);
 
     }
 
@@ -330,7 +328,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         dimensionGrid.add(label, 0, row);
         var group = createAndBind(roundBar.getHeight(), true);
         dimensionGrid.add(group, 1, row);
-        
+
     }
 
     private void createDimsRectangularTube() {
@@ -364,7 +362,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void createDimsLBar() {
         var sectionType = SectionType.getType(object);
         int row = 0;
-        if ( sectionType == SectionType.L_BAR ) {
+        if (sectionType == SectionType.L_BAR) {
             var lBar = object.getLBar();
             var label = new Label("Height");
             dimensionGrid.add(label, 0, row);
@@ -387,7 +385,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
             dimensionGrid.add(group, 3, row++);
 
 
-        } else if (sectionType==SectionType.L_BAR_OF) {
+        } else if (sectionType == SectionType.L_BAR_OF) {
 
             var lBarOF = object.getLBarOF();
             var label = new Label("Height");
@@ -415,7 +413,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
             group = createAndBind(lBarOF.getOvershoot(), true);
             dimensionGrid.add(group, 1, row++);
 
-        } else if (sectionType==SectionType.L_BAR_OW) {
+        } else if (sectionType == SectionType.L_BAR_OW) {
 
             var lBarOW = object.getLBarOW();
             var label = new Label("Height");
@@ -571,7 +569,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void updateCanvas() {
 
-        canvasHeight = dimeAndSketchTab.getHeight()-20;
+        canvasHeight = dimeAndSketchTab.getHeight() - 20;
         canvasWidth = dimeAndSketchTab.getWidth() - 21;
 
         canvas.setHeight(canvasHeight);
@@ -619,12 +617,12 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void drawUserDefinedBar(GraphicsContext gc) {
 
-        var centerX = Math.round(canvasWidth/2.0)+0.5;
-        var centerY = Math.round(canvasHeight/2.0)+0.5;
+        var centerX = Math.round(canvasWidth / 2.0) + 0.5;
+        var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText("drawing user defined bars ist not implemented yet",centerX, centerY);
+        gc.fillText("drawing user defined bars ist not implemented yet", centerX, centerY);
 
 
     }
@@ -640,14 +638,14 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         var scale = Math.min(scaleX, scaleY);
 
-        var w = width*scale;
-        var ft = flangeThickness*scale;
-        var wt = webThickness*scale;
+        var w = width * scale;
+        var ft = flangeThickness * scale;
+        var wt = webThickness * scale;
 
         var offsetX = Math.round((canvasWidth - w) / 2.0); // offset X
         var offsetY = Math.round(canvasHeight - 100); // offset Y
-        var centerX = Math.round(canvasWidth/2.0)+0.5;
-        var centerY = Math.round(canvasHeight/2.0)+0.5;
+        var centerX = Math.round(canvasWidth / 2.0) + 0.5;
+        var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
         // paint the hexagon
         gc.setStroke(barColor);
@@ -656,13 +654,13 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.beginPath();
 
         gc.moveTo(offsetX, 100);
-        gc.lineTo(offsetX, 100+ft);
-        gc.lineTo(centerX-0.5*wt, 100+ft);
-        gc.lineTo(centerX-0.5*wt, offsetY);
-        gc.lineTo(offsetX+w, offsetY);
-        gc.lineTo(offsetX+w, offsetY-ft);
-        gc.lineTo(centerX+0.5*wt, offsetY-ft);
-        gc.lineTo(centerX+0.5*wt, 100);
+        gc.lineTo(offsetX, 100 + ft);
+        gc.lineTo(centerX - 0.5 * wt, 100 + ft);
+        gc.lineTo(centerX - 0.5 * wt, offsetY);
+        gc.lineTo(offsetX + w, offsetY);
+        gc.lineTo(offsetX + w, offsetY - ft);
+        gc.lineTo(centerX + 0.5 * wt, offsetY - ft);
+        gc.lineTo(centerX + 0.5 * wt, 100);
 
 
         gc.closePath();
@@ -675,44 +673,44 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
 
-        gc.strokeLine( offsetX-50, 100, offsetX, 100);
-        gc.strokeLine(offsetX-50, offsetY, centerX-0.5*wt, offsetY);
-        gc.strokeLine(offsetX-40, 100, offsetX-40, offsetY);
+        gc.strokeLine(offsetX - 50, 100, offsetX, 100);
+        gc.strokeLine(offsetX - 50, offsetY, centerX - 0.5 * wt, offsetY);
+        gc.strokeLine(offsetX - 40, 100, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX-40, 100,0,1);
-        drawArrowHead(gc, offsetX-40, offsetY,0,-1);
+        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText(String.format("h=%.2f [mm]", height),offsetX-50, centerY);
+        gc.fillText(String.format("h=%.2f [mm]", height), offsetX - 50, centerY);
 
         // width
-        gc.strokeLine(offsetX, 100+ft, offsetX, offsetY+50);
-        gc.strokeLine(offsetX+w, offsetY, offsetX+w, offsetY+50);
-        gc.strokeLine(offsetX, offsetY+40, offsetX+w, offsetY+40);
+        gc.strokeLine(offsetX, 100 + ft, offsetX, offsetY + 50);
+        gc.strokeLine(offsetX + w, offsetY, offsetX + w, offsetY + 50);
+        gc.strokeLine(offsetX, offsetY + 40, offsetX + w, offsetY + 40);
 
-        drawArrowHead(gc, offsetX, offsetY+40, 1, 0);
-        drawArrowHead(gc, offsetX+w, offsetY+40, -1, 0);
+        drawArrowHead(gc, offsetX, offsetY + 40, 1, 0);
+        drawArrowHead(gc, offsetX + w, offsetY + 40, -1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(String.format("w=%.2f [mm]", width),centerX, offsetY+35);
+        gc.fillText(String.format("w=%.2f [mm]", width), centerX, offsetY + 35);
 
         // flange thickness
-        gc.strokeLine(centerX+0.5*wt, 100.5,centerX+0.5*wt+50, 100.5);
-        gc.strokeLine(centerX+0.5*wt, 100.5+ft,centerX+0.5*wt+50, 100.5+ft);
-        gc.strokeLine(centerX+0.5*wt+40, 50,centerX+0.5*wt+40,100);
-        gc.strokeLine(centerX+0.5*wt+40, 100+ft, centerX+0.5*wt+40, 100+ft+50);
-        drawArrowHead(gc, centerX+0.5*wt+40, 100, 0,-1);
-        drawArrowHead(gc, centerX+0.5*wt+40, 100+ft,0,1);
+        gc.strokeLine(centerX + 0.5 * wt, 100.5, centerX + 0.5 * wt + 50, 100.5);
+        gc.strokeLine(centerX + 0.5 * wt, 100.5 + ft, centerX + 0.5 * wt + 50, 100.5 + ft);
+        gc.strokeLine(centerX + 0.5 * wt + 40, 50, centerX + 0.5 * wt + 40, 100);
+        gc.strokeLine(centerX + 0.5 * wt + 40, 100 + ft, centerX + 0.5 * wt + 40, 100 + ft + 50);
+        drawArrowHead(gc, centerX + 0.5 * wt + 40, 100, 0, -1);
+        drawArrowHead(gc, centerX + 0.5 * wt + 40, 100 + ft, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("flange=%.2f [mm]",flangeThickness), centerX+0.5*wt+60, 100+0.5*ft);
+        gc.fillText(String.format("flange=%.2f [mm]", flangeThickness), centerX + 0.5 * wt + 60, 100 + 0.5 * ft);
 
         // web width
-        gc.strokeLine(centerX-0.5*wt-50, offsetY-2*ft, centerX-0.5*wt, offsetY-2*ft);
-        gc.strokeLine(centerX+0.5*wt, offsetY-2*ft, centerX+0.5*wt+50, offsetY-2*ft);
+        gc.strokeLine(centerX - 0.5 * wt - 50, offsetY - 2 * ft, centerX - 0.5 * wt, offsetY - 2 * ft);
+        gc.strokeLine(centerX + 0.5 * wt, offsetY - 2 * ft, centerX + 0.5 * wt + 50, offsetY - 2 * ft);
 
-        drawArrowHead(gc, centerX-0.5*wt, offsetY-2*ft, -1,0);
-        drawArrowHead(gc, centerX+0.5*wt, offsetY-2*ft, 1,0);
+        drawArrowHead(gc, centerX - 0.5 * wt, offsetY - 2 * ft, -1, 0);
+        drawArrowHead(gc, centerX + 0.5 * wt, offsetY - 2 * ft, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("w=%.2f [mm]",webThickness), centerX+0.5*wt+60, offsetY-2*ft);
+        gc.fillText(String.format("w=%.2f [mm]", webThickness), centerX + 0.5 * wt + 60, offsetY - 2 * ft);
 
 
         // Paint the coordinate system
@@ -733,14 +731,14 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var scaleX = (canvasWidth - 200) / width;
         var scale = Math.min(scaleX, scaleY);
 
-        var w = width*scale;
-        var ft = flangeThickness*scale;
-        var wt = webThickness*scale;
+        var w = width * scale;
+        var ft = flangeThickness * scale;
+        var wt = webThickness * scale;
 
         var offsetX = Math.round((canvasWidth - w) / 2.0); // offset X
         var offsetY = Math.round(canvasHeight - 100); // offset Y
 
-        var centerY = Math.round(canvasHeight/2.0)+0.5;
+        var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
         // paint the hexagon
         gc.setStroke(barColor);
@@ -748,14 +746,14 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
 
-        gc.moveTo(offsetX+w, 100);
+        gc.moveTo(offsetX + w, 100);
         gc.lineTo(offsetX, 100);
         gc.lineTo(offsetX, offsetY);
-        gc.lineTo(offsetX+w, offsetY);
-        gc.lineTo(offsetX+w, offsetY-ft);
-        gc.lineTo(offsetX+wt, offsetY-ft);
-        gc.lineTo(offsetX+wt, 100+ft);
-        gc.lineTo(offsetX+w, 100+ft);
+        gc.lineTo(offsetX + w, offsetY);
+        gc.lineTo(offsetX + w, offsetY - ft);
+        gc.lineTo(offsetX + wt, offsetY - ft);
+        gc.lineTo(offsetX + wt, 100 + ft);
+        gc.lineTo(offsetX + w, 100 + ft);
 
         gc.closePath();
         gc.stroke();
@@ -766,43 +764,43 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
 
-        gc.strokeLine(offsetX-80, 100, offsetX, 100);
-        gc.strokeLine(offsetX-80, offsetY, offsetX, offsetY);
-        gc.strokeLine(offsetX-70, 100, offsetX-70, offsetY);
+        gc.strokeLine(offsetX - 80, 100, offsetX, 100);
+        gc.strokeLine(offsetX - 80, offsetY, offsetX, offsetY);
+        gc.strokeLine(offsetX - 70, 100, offsetX - 70, offsetY);
 
-        drawArrowHead(gc, offsetX-70, 100, 0,1);
-        drawArrowHead(gc, offsetX-70, offsetY, 0,-1);
+        drawArrowHead(gc, offsetX - 70, 100, 0, 1);
+        drawArrowHead(gc, offsetX - 70, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText(String.format("height=%.2f [mm]", height),offsetX-80,centerY);
+        gc.fillText(String.format("height=%.2f [mm]", height), offsetX - 80, centerY);
 
         // width
-        gc.strokeLine(offsetX, offsetY, offsetX, offsetY+50);
-        gc.strokeLine(offsetX+w, offsetY, offsetX+w, offsetY+50);
-        gc.strokeLine(offsetX, offsetY+40, offsetX+w, offsetY+40);
+        gc.strokeLine(offsetX, offsetY, offsetX, offsetY + 50);
+        gc.strokeLine(offsetX + w, offsetY, offsetX + w, offsetY + 50);
+        gc.strokeLine(offsetX, offsetY + 40, offsetX + w, offsetY + 40);
 
-        drawArrowHead(gc, offsetX, offsetY+40, 1, 0);
-        drawArrowHead(gc, offsetX+w, offsetY+40, -1, 0);
+        drawArrowHead(gc, offsetX, offsetY + 40, 1, 0);
+        drawArrowHead(gc, offsetX + w, offsetY + 40, -1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(String.format("w=%.2f [mm]", width),offsetX+0.5*w, offsetY+35);
+        gc.fillText(String.format("w=%.2f [mm]", width), offsetX + 0.5 * w, offsetY + 35);
 
         // flange thickness
-        gc.strokeLine(offsetX+w, 100.5, offsetX+w+50, 100.5);
-        gc.strokeLine(offsetX+w, 100.5+ft, offsetX+w+50, 100.5+ft);
-        gc.strokeLine(offsetX+w+40, 50,offsetX+w+40,100);
-        gc.strokeLine(offsetX+w+40, 100+ft, offsetX+w+40, 100+ft+50);
-        drawArrowHead(gc, offsetX+w+40, 100, 0,-1);
-        drawArrowHead(gc, offsetX+w+40, 100+ft,0,1);
+        gc.strokeLine(offsetX + w, 100.5, offsetX + w + 50, 100.5);
+        gc.strokeLine(offsetX + w, 100.5 + ft, offsetX + w + 50, 100.5 + ft);
+        gc.strokeLine(offsetX + w + 40, 50, offsetX + w + 40, 100);
+        gc.strokeLine(offsetX + w + 40, 100 + ft, offsetX + w + 40, 100 + ft + 50);
+        drawArrowHead(gc, offsetX + w + 40, 100, 0, -1);
+        drawArrowHead(gc, offsetX + w + 40, 100 + ft, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("flange=%.2f [mm]",flangeThickness), offsetX+w+60, 80);
+        gc.fillText(String.format("flange=%.2f [mm]", flangeThickness), offsetX + w + 60, 80);
 
         // web thickness
-        gc.strokeLine(offsetX-50, centerY+30, offsetX, centerY+30);
-        gc.strokeLine(offsetX+wt, centerY+30, offsetX+wt+50, centerY+30);
-        drawArrowHead(gc, offsetX, centerY+30, -1,0);
-        drawArrowHead(gc, offsetX+wt, centerY+30, 1,0);
+        gc.strokeLine(offsetX - 50, centerY + 30, offsetX, centerY + 30);
+        gc.strokeLine(offsetX + wt, centerY + 30, offsetX + wt + 50, centerY + 30);
+        drawArrowHead(gc, offsetX, centerY + 30, -1, 0);
+        drawArrowHead(gc, offsetX + wt, centerY + 30, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("web=%.2f [mm]",webThickness), offsetX+wt+60, centerY+30);
+        gc.fillText(String.format("web=%.2f [mm]", webThickness), offsetX + wt + 60, centerY + 30);
 
 
         // Paint the coordinate system
@@ -823,14 +821,14 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var scaleX = (canvasWidth - 200) / width;
         var scale = Math.min(scaleX, scaleY);
 
-        var w = width*scale;
-        var f = flangeThickness*scale;
-        var wt = webThickness*scale;
+        var w = width * scale;
+        var f = flangeThickness * scale;
+        var wt = webThickness * scale;
 
         var offsetX = Math.round((canvasWidth - w) / 2.0); // offset X
         var offsetY = Math.round(canvasHeight - 100); // offset Y
-        var centerX = Math.round(canvasWidth/2.0)+0.5;
-        var centerY = Math.round(height/2.0)+0.5;
+        var centerX = Math.round(canvasWidth / 2.0) + 0.5;
+        var centerY = Math.round(height / 2.0) + 0.5;
 
         // paint the T bar
         gc.setStroke(barColor);
@@ -839,13 +837,13 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.beginPath();
 
         gc.moveTo(offsetX, 100);
-        gc.lineTo(offsetX, 100+f);
-        gc.lineTo(centerX-0.5*wt, 100+f);
-        gc.lineTo(centerX-0.5*wt, offsetY);
-        gc.lineTo(centerX+0.5*wt, offsetY);
-        gc.lineTo(centerX+0.5*wt, 100+f);
-        gc.lineTo(offsetX+w, 100+f);
-        gc.lineTo(offsetX+w, 100);
+        gc.lineTo(offsetX, 100 + f);
+        gc.lineTo(centerX - 0.5 * wt, 100 + f);
+        gc.lineTo(centerX - 0.5 * wt, offsetY);
+        gc.lineTo(centerX + 0.5 * wt, offsetY);
+        gc.lineTo(centerX + 0.5 * wt, 100 + f);
+        gc.lineTo(offsetX + w, 100 + f);
+        gc.lineTo(offsetX + w, 100);
 
         gc.closePath();
         gc.stroke();
@@ -856,44 +854,44 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
 
-        gc.strokeLine(offsetX-50, 100, offsetX, 100);
-        gc.strokeLine(offsetX-50, offsetY, centerX-0.5*wt, offsetY);
-        gc.strokeLine(offsetX-40, 100, offsetX-40, offsetY);
+        gc.strokeLine(offsetX - 50, 100, offsetX, 100);
+        gc.strokeLine(offsetX - 50, offsetY, centerX - 0.5 * wt, offsetY);
+        gc.strokeLine(offsetX - 40, 100, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX-40, 100, 0,1);
-        drawArrowHead(gc, offsetX-40, offsetY, 0,-1);
+        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText(String.format("h=%.2f [mm]", height),offsetX-60,centerY);
+        gc.fillText(String.format("h=%.2f [mm]", height), offsetX - 60, centerY);
 
         // width
         gc.strokeLine(offsetX, 50, offsetX, 100);
-        gc.strokeLine(offsetX+w, 50, offsetX+w, 100);
-        gc.strokeLine(offsetX, 60, offsetX+w, 60);
+        gc.strokeLine(offsetX + w, 50, offsetX + w, 100);
+        gc.strokeLine(offsetX, 60, offsetX + w, 60);
 
         drawArrowHead(gc, offsetX, 60, -1, 0);
-        drawArrowHead(gc, offsetX+w, 60, 1, 0);
+        drawArrowHead(gc, offsetX + w, 60, 1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(String.format("web=%.2f [mm]", width),centerX, 40);
+        gc.fillText(String.format("web=%.2f [mm]", width), centerX, 40);
 
         // flange thickness
-        gc.strokeLine(offsetX+w, 100,offsetX+w+50,100);
-        gc.strokeLine(offsetX+w, 100+f,offsetX+w+50,100+f);
-        gc.strokeLine(offsetX+w+40, 50,offsetX+w+40,100);
-        gc.strokeLine(offsetX+w+40, 100+f,offsetX+w+40,100+f+50);
-        drawArrowHead(gc, offsetX+w+40, 100, 0,-1);
-        drawArrowHead(gc, offsetX+w+40, 100+f,0,1);
+        gc.strokeLine(offsetX + w, 100, offsetX + w + 50, 100);
+        gc.strokeLine(offsetX + w, 100 + f, offsetX + w + 50, 100 + f);
+        gc.strokeLine(offsetX + w + 40, 50, offsetX + w + 40, 100);
+        gc.strokeLine(offsetX + w + 40, 100 + f, offsetX + w + 40, 100 + f + 50);
+        drawArrowHead(gc, offsetX + w + 40, 100, 0, -1);
+        drawArrowHead(gc, offsetX + w + 40, 100 + f, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("flange=%.2f [mm]",flangeThickness), offsetX+w+66, 100+f+40);
+        gc.fillText(String.format("flange=%.2f [mm]", flangeThickness), offsetX + w + 66, 100 + f + 40);
 
         // web thickness
-        gc.strokeLine(centerX-0.5*wt-50, offsetY-100, centerX-0.5*wt, offsetY-100);
-        gc.strokeLine(centerX+0.5*wt, offsetY-100, centerX+0.5*wt+50, offsetY-100);
+        gc.strokeLine(centerX - 0.5 * wt - 50, offsetY - 100, centerX - 0.5 * wt, offsetY - 100);
+        gc.strokeLine(centerX + 0.5 * wt, offsetY - 100, centerX + 0.5 * wt + 50, offsetY - 100);
 
-        drawArrowHead(gc, centerX-0.5*wt, offsetY-100, -1,0);
-        drawArrowHead(gc, centerX+0.5*wt, offsetY-100, 1,0);
+        drawArrowHead(gc, centerX - 0.5 * wt, offsetY - 100, -1, 0);
+        drawArrowHead(gc, centerX + 0.5 * wt, offsetY - 100, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("web=%.2f [mm]",webThickness), centerX+0.5*wt+60, offsetY-100);
+        gc.fillText(String.format("web=%.2f [mm]", webThickness), centerX + 0.5 * wt + 60, offsetY - 100);
 
         // Paint the coordinate system
         drawCossys(gc, offsetX, offsetY);
@@ -907,12 +905,12 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var scaleX = (canvasWidth - 200) / height;
 
         var scale = Math.min(scaleX, scaleY);
-        var h = height*scale;
+        var h = height * scale;
 
-        var centerX = Math.round(canvasWidth/2.0); // offset X
-        var centerY = Math.round(canvasHeight/2.0); // offset Y
-        var offsetX = Math.round(centerX-0.5*h);
-        var offsetY = Math.round(centerY+0.5*h);
+        var centerX = Math.round(canvasWidth / 2.0); // offset X
+        var centerY = Math.round(canvasHeight / 2.0); // offset Y
+        var offsetX = Math.round(centerX - 0.5 * h);
+        var offsetY = Math.round(centerY + 0.5 * h);
 
         // paint the hexagon
         gc.setStroke(barColor);
@@ -920,7 +918,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setLineWidth(barLineWidth);
 
         gc.fillRect(offsetX, 100.5, h, h);
-        gc.strokeRect(offsetX, 100.5, h,h);
+        gc.strokeRect(offsetX, 100.5, h, h);
 
 
         // height
@@ -928,22 +926,22 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
 
-        gc.strokeLine(offsetX, 100.5, offsetX-50, 100.5);
-        gc.strokeLine(offsetX, offsetY, offsetX-50, offsetY);
-        gc.strokeLine(offsetX-40, 100.5, offsetX-40, offsetY);
+        gc.strokeLine(offsetX, 100.5, offsetX - 50, 100.5);
+        gc.strokeLine(offsetX, offsetY, offsetX - 50, offsetY);
+        gc.strokeLine(offsetX - 40, 100.5, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX-40, 100,0,1);
-        drawArrowHead(gc, offsetX-40, offsetY,0,-1);
+        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText(String.format("height=%.2f [mm]", height),offsetX-60, centerY);
+        gc.fillText(String.format("height=%.2f [mm]", height), offsetX - 60, centerY);
 
 
         // and the center
         gc.save();
         gc.setLineWidth(1);
-        gc.setLineDashes(30,5);
-        gc.strokeLine(centerX-0.25*h, centerY, centerX+0.25*h, centerY);
-        gc.strokeLine(centerX, centerY-0.25*h, centerX, centerY+0.25*h);
+        gc.setLineDashes(30, 5);
+        gc.strokeLine(centerX - 0.25 * h, centerY, centerX + 0.25 * h, centerY);
+        gc.strokeLine(centerX, centerY - 0.25 * h, centerX, centerY + 0.25 * h);
         gc.restore();
 
         // Paint the coordinate system
@@ -959,13 +957,13 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         var scale = Math.min(scaleX, scaleY);
 
-        var h = height*scale;
-        var r = 0.5* height*scale; // radius
+        var h = height * scale;
+        var r = 0.5 * height * scale; // radius
 
-        var centerX = Math.round(canvasWidth/2.0); // offset X
-        var centerY = Math.round(canvasHeight/2.0); // offset Y
-        var offsetX = Math.round(centerX-r);
-        var offsetY = Math.round(centerY+r);
+        var centerX = Math.round(canvasWidth / 2.0); // offset X
+        var centerY = Math.round(canvasHeight / 2.0); // offset Y
+        var offsetX = Math.round(centerX - r);
+        var offsetY = Math.round(centerY + r);
 
         // paint the hexagon
         gc.setStroke(barColor);
@@ -973,7 +971,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
 
-        gc.arc(centerX, centerY, r, r,0,360);
+        gc.arc(centerX, centerY, r, r, 0, 360);
 
         gc.closePath();
         gc.stroke();
@@ -984,21 +982,21 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setStroke(dimensionLineColor);
         gc.setFill(dimensionLineColor);
 
-        gc.strokeLine(centerX,  offsetY-h, centerX+r+50, offsetY-h);
-        gc.strokeLine(centerX, offsetY, centerX+r+50, offsetY);
-        gc.strokeLine(centerX+r+40, offsetY-h, centerX+r+40, offsetY);
+        gc.strokeLine(centerX, offsetY - h, centerX + r + 50, offsetY - h);
+        gc.strokeLine(centerX, offsetY, centerX + r + 50, offsetY);
+        gc.strokeLine(centerX + r + 40, offsetY - h, centerX + r + 40, offsetY);
 
-        drawArrowHead(gc, centerX+r+40, offsetY-h,0,1);
-        drawArrowHead(gc, centerX+r+40, offsetY,0,-1);
+        drawArrowHead(gc, centerX + r + 40, offsetY - h, 0, 1);
+        drawArrowHead(gc, centerX + r + 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("h=%.2f [mm]", height),centerX+r+50, centerY);
+        gc.fillText(String.format("h=%.2f [mm]", height), centerX + r + 50, centerY);
 
         // and the center
         gc.save();
         gc.setLineWidth(1);
-        gc.setLineDashes(30,5);
-        gc.strokeLine(centerX-0.5*r, centerY, centerX+0.5*r, centerY);
-        gc.strokeLine(centerX, centerY-0.5*r, centerX, centerY+0.5*r);
+        gc.setLineDashes(30, 5);
+        gc.strokeLine(centerX - 0.5 * r, centerY, centerX + 0.5 * r, centerY);
+        gc.strokeLine(centerX, centerY - 0.5 * r, centerX, centerY + 0.5 * r);
         gc.restore();
 
         // Paint the coordinate system
@@ -1009,21 +1007,21 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawOctagonBar(GraphicsContext gc) {
         var octagonBar = object.getOctagonBar();
         var height = UnitConverter.toDefaultUnit(octagonBar.getHeight());
-        var width = height/COS_30;
+        var width = height / COS_30;
         var scaleY = (canvasHeight - 200) / (height);
         var scaleX = (canvasWidth - 200) / width;
 
         var scale = Math.min(scaleX, scaleY);
-        var h = height*scale;
-        var w = h/COS_60;
-        var r = h/(2*COS_225); // radius
+        var h = height * scale;
+        var w = h / COS_60;
+        var r = h / (2 * COS_225); // radius
 
         LOG.info("octagon bar h {} r {} ", h, r);
 
-        var centerX = Math.round(canvasWidth/2.0); // offset X
-        var centerY = Math.round(canvasHeight/2.0); // offset Y
-        var offsetX = Math.round(centerX-0.5*h);
-        var offsetY = Math.round(centerY+0.5*h);
+        var centerX = Math.round(canvasWidth / 2.0); // offset X
+        var centerY = Math.round(canvasHeight / 2.0); // offset Y
+        var offsetX = Math.round(centerX - 0.5 * h);
+        var offsetY = Math.round(centerY + 0.5 * h);
 
         // paint the octagon
         gc.setStroke(barColor);
@@ -1031,13 +1029,13 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
 
-        var angles = new double[]{22.5, 90-22.5, 90+22.5, 180-22.5, 180+22.5, 270-22.5, 270+22.5, 360-22.5};
+        var angles = new double[]{22.5, 90 - 22.5, 90 + 22.5, 180 - 22.5, 180 + 22.5, 270 - 22.5, 270 + 22.5, 360 - 22.5};
 
-        for( int i = 0; i < angles.length; i++ ) {
+        for (int i = 0; i < angles.length; i++) {
             var angle = angles[i];
             var x = centerX + r * Math.cos(Math.toRadians(angle));
             var y = centerY + r * Math.sin(Math.toRadians(angle));
-            if ( i == 0 ) {
+            if (i == 0) {
                 gc.moveTo(Math.round(x) + 0.5, Math.round(y) + 0.5);
             } else {
                 gc.lineTo(Math.round(x) + 0.5, Math.round(y) + 0.5);
@@ -1053,21 +1051,21 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
 
-        gc.strokeLine(centerX+r*SIN_225, offsetY-h, offsetX+h+50, offsetY-h);
-        gc.strokeLine(centerX+r*SIN_225, offsetY, offsetX+h+50, offsetY);
-        gc.strokeLine(offsetX+h+40, offsetY-h, offsetX+h+40, offsetY);
+        gc.strokeLine(centerX + r * SIN_225, offsetY - h, offsetX + h + 50, offsetY - h);
+        gc.strokeLine(centerX + r * SIN_225, offsetY, offsetX + h + 50, offsetY);
+        gc.strokeLine(offsetX + h + 40, offsetY - h, offsetX + h + 40, offsetY);
 
-        drawArrowHead(gc, offsetX+h+40, offsetY-h,0,1);
-        drawArrowHead(gc, offsetX+h+40, offsetY,0,-1);
+        drawArrowHead(gc, offsetX + h + 40, offsetY - h, 0, 1);
+        drawArrowHead(gc, offsetX + h + 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("h=%.2f [mm]", height),offsetX+w+60, centerY);
+        gc.fillText(String.format("h=%.2f [mm]", height), offsetX + w + 60, centerY);
 
         // and the center
         gc.save();
         gc.setLineWidth(1);
-        gc.setLineDashes(30,5);
-        gc.strokeLine(centerX-0.5*r, centerY, centerX+0.5*r, centerY);
-        gc.strokeLine(centerX, centerY-0.5*r, centerX, centerY+0.5*r);
+        gc.setLineDashes(30, 5);
+        gc.strokeLine(centerX - 0.5 * r, centerY, centerX + 0.5 * r, centerY);
+        gc.strokeLine(centerX, centerY - 0.5 * r, centerX, centerY + 0.5 * r);
         gc.restore();
 
 
@@ -1087,14 +1085,14 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var scaleX = (canvasWidth - 200) / width;
         var scale = Math.min(scaleX, scaleY);
 
-        var w = width*scale;
-        var ft = flangeThickness*scale;
-        var wt = webThickness*scale;
+        var w = width * scale;
+        var ft = flangeThickness * scale;
+        var wt = webThickness * scale;
 
         var offsetX = Math.round((canvasWidth - w) / 2.0); // offset X
         var offsetY = Math.round(canvasHeight - 100); // offset Y
-        var centerX = Math.round(canvasWidth/2.0)+0.5;
-        var centerY = Math.round(canvasHeight/2.0)+0.5;
+        var centerX = Math.round(canvasWidth / 2.0) + 0.5;
+        var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
 
         // paint the I-bar
@@ -1104,17 +1102,17 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.beginPath();
 
         gc.moveTo(offsetX, 100);
-        gc.lineTo(offsetX, 100+ft);
-        gc.lineTo(centerX-0.5*wt, 100+ft);
-        gc.lineTo(centerX-0.5*wt, offsetY-ft);
-        gc.lineTo(offsetX, offsetY-ft);
+        gc.lineTo(offsetX, 100 + ft);
+        gc.lineTo(centerX - 0.5 * wt, 100 + ft);
+        gc.lineTo(centerX - 0.5 * wt, offsetY - ft);
+        gc.lineTo(offsetX, offsetY - ft);
         gc.lineTo(offsetX, offsetY);
-        gc.lineTo(offsetX+w, offsetY);
-        gc.lineTo(offsetX+w, offsetY-ft);
-        gc.lineTo(centerX+0.5*wt, offsetY-ft);
-        gc.lineTo(centerX+0.5*wt, 100+ft);
-        gc.lineTo(offsetX+w, 100+ft);
-        gc.lineTo(offsetX+w, 100);
+        gc.lineTo(offsetX + w, offsetY);
+        gc.lineTo(offsetX + w, offsetY - ft);
+        gc.lineTo(centerX + 0.5 * wt, offsetY - ft);
+        gc.lineTo(centerX + 0.5 * wt, 100 + ft);
+        gc.lineTo(offsetX + w, 100 + ft);
+        gc.lineTo(offsetX + w, 100);
 
         gc.closePath();
         gc.stroke();
@@ -1125,44 +1123,44 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
 
-        gc.strokeLine(offsetX-50, 100, offsetX, 100);
-        gc.strokeLine(offsetX-50, offsetY, offsetX, offsetY);
-        gc.strokeLine(offsetX-40, 100, offsetX-40, offsetY);
+        gc.strokeLine(offsetX - 50, 100, offsetX, 100);
+        gc.strokeLine(offsetX - 50, offsetY, offsetX, offsetY);
+        gc.strokeLine(offsetX - 40, 100, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX-40, 100, 0,1);
-        drawArrowHead(gc, offsetX-40, offsetY, 0,-1);
+        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText(String.format("h=%.2f [mm]", height),offsetX-60,centerY);
+        gc.fillText(String.format("h=%.2f [mm]", height), offsetX - 60, centerY);
 
         // width
         gc.strokeLine(offsetX, 50, offsetX, 100);
-        gc.strokeLine(offsetX+w, 50, offsetX+w, 100);
-        gc.strokeLine(offsetX, 60, offsetX+w, 60);
+        gc.strokeLine(offsetX + w, 50, offsetX + w, 100);
+        gc.strokeLine(offsetX, 60, offsetX + w, 60);
 
         drawArrowHead(gc, offsetX, 60, -1, 0);
-        drawArrowHead(gc, offsetX+w, 60, 1, 0);
+        drawArrowHead(gc, offsetX + w, 60, 1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(String.format("web=%.2f [mm]", width),centerX, 40);
+        gc.fillText(String.format("web=%.2f [mm]", width), centerX, 40);
 
         // flange thickness
-        gc.strokeLine(offsetX+w, 100,offsetX+w+50,100);
-        gc.strokeLine(offsetX+w, 100+ft,offsetX+w+50,100+ft);
-        gc.strokeLine(offsetX+w+40, 50,offsetX+w+40,100);
-        gc.strokeLine(offsetX+w+40, 100+ft,offsetX+w+40,100+ft+50);
-        drawArrowHead(gc, offsetX+w+40, 100, 0,-1);
-        drawArrowHead(gc, offsetX+w+40, 100+ft,0,1);
+        gc.strokeLine(offsetX + w, 100, offsetX + w + 50, 100);
+        gc.strokeLine(offsetX + w, 100 + ft, offsetX + w + 50, 100 + ft);
+        gc.strokeLine(offsetX + w + 40, 50, offsetX + w + 40, 100);
+        gc.strokeLine(offsetX + w + 40, 100 + ft, offsetX + w + 40, 100 + ft + 50);
+        drawArrowHead(gc, offsetX + w + 40, 100, 0, -1);
+        drawArrowHead(gc, offsetX + w + 40, 100 + ft, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("flange=%.2f [mm]",flangeThickness), offsetX+w+66, 100+ft+40);
+        gc.fillText(String.format("flange=%.2f [mm]", flangeThickness), offsetX + w + 66, 100 + ft + 40);
 
         // web thickness
-        gc.strokeLine(centerX-0.5*wt-50, offsetY-100, centerX+0.5*wt, offsetY-100);
-        gc.strokeLine(centerX+0.5*wt, offsetY-100, centerX+0.5*wt+50, offsetY-100);
+        gc.strokeLine(centerX - 0.5 * wt - 50, offsetY - 100, centerX + 0.5 * wt, offsetY - 100);
+        gc.strokeLine(centerX + 0.5 * wt, offsetY - 100, centerX + 0.5 * wt + 50, offsetY - 100);
 
-        drawArrowHead(gc, centerX-0.5*wt, offsetY-100, -1,0);
-        drawArrowHead(gc, centerX+0.5*wt, offsetY-100, 1,0);
+        drawArrowHead(gc, centerX - 0.5 * wt, offsetY - 100, -1, 0);
+        drawArrowHead(gc, centerX + 0.5 * wt, offsetY - 100, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("width=%.2f [mm]",webThickness), centerX+0.5*wt+60, offsetY-100);
+        gc.fillText(String.format("width=%.2f [mm]", webThickness), centerX + 0.5 * wt + 60, offsetY - 100);
 
 
         // Paint the coordinate system
@@ -1173,21 +1171,21 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         var hexagonBar = object.getHexagonBar();
         var height = UnitConverter.toDefaultUnit(hexagonBar.getHeight());
-        var radius = height/ (2*COS_30);
-        var width = 2*radius;
+        var radius = height / (2 * COS_30);
+        var width = 2 * radius;
 
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 200) / width;
 
         var scale = Math.min(scaleX, scaleY);
-        var h = height*scale;
-        var r = radius*scale;
+        var h = height * scale;
+        var r = radius * scale;
 
-        var centerX = Math.round(canvasWidth/2.)+ 0.5;
-        var centerY = Math.round(canvasHeight/2.0)+0.5;
+        var centerX = Math.round(canvasWidth / 2.) + 0.5;
+        var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
-        var offsetX = Math.round(centerX- r)+0.5; // offset X
-        var offsetY = Math.round(centerY+0.5*h ); // offset Y
+        var offsetX = Math.round(centerX - r) + 0.5; // offset X
+        var offsetY = Math.round(centerY + 0.5 * h); // offset Y
 
 
         // paint the hexagon
@@ -1196,13 +1194,13 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
 
-        var angles = new double[]{0,60,120,180,240,300,360};
+        var angles = new double[]{0, 60, 120, 180, 240, 300, 360};
 
-        for( int i = 0; i < angles.length; i++ ) {
+        for (int i = 0; i < angles.length; i++) {
             var angle = angles[i];
             var x = centerX + r * Math.cos(Math.toRadians(angle));
             var y = centerY + r * Math.sin(Math.toRadians(angle));
-            if ( i == 0 ) {
+            if (i == 0) {
                 gc.moveTo(Math.round(x) + 0.5, Math.round(y) + 0.5);
             } else {
                 gc.lineTo(Math.round(x) + 0.5, Math.round(y) + 0.5);
@@ -1218,21 +1216,21 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
 
-        gc.strokeLine(centerX+0.5*r, offsetY-h, centerX+r+30, offsetY-h);
-        gc.strokeLine(centerX+0.5*r, offsetY, centerX+r+30, offsetY);
-        gc.strokeLine(centerX+r+20, offsetY-h, centerX+r+20, offsetY);
+        gc.strokeLine(centerX + 0.5 * r, offsetY - h, centerX + r + 30, offsetY - h);
+        gc.strokeLine(centerX + 0.5 * r, offsetY, centerX + r + 30, offsetY);
+        gc.strokeLine(centerX + r + 20, offsetY - h, centerX + r + 20, offsetY);
 
-        drawArrowHead(gc, centerX+r+20, offsetY-h,0,1);
-        drawArrowHead(gc, centerX+r+20, offsetY,0,-1);
+        drawArrowHead(gc, centerX + r + 20, offsetY - h, 0, 1);
+        drawArrowHead(gc, centerX + r + 20, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("h=%.2f [mm]", height),centerX+r+40, centerY);
+        gc.fillText(String.format("h=%.2f [mm]", height), centerX + r + 40, centerY);
 
         // and the center
         gc.save();
         gc.setLineWidth(1);
-        gc.setLineDashes(30,5);
-        gc.strokeLine(centerX-0.5*r, centerY, centerX+0.5*r, centerY);
-        gc.strokeLine(centerX, centerY-0.5*r, centerX, centerY+0.5*r);
+        gc.setLineDashes(30, 5);
+        gc.strokeLine(centerX - 0.5 * r, centerY, centerX + 0.5 * r, centerY);
+        gc.strokeLine(centerX, centerY - 0.5 * r, centerX, centerY + 0.5 * r);
         gc.restore();
 
         // Paint the coordinate system
@@ -1243,16 +1241,16 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawHalfRoundBar(GraphicsContext gc) {
         var halfRoundBar = object.getHalfRoundBar();
         var diameter = UnitConverter.toDefaultUnit(halfRoundBar.getDiameter());
-        var scaleY = (canvasHeight - 200) / (diameter/2.0);
+        var scaleY = (canvasHeight - 200) / (diameter / 2.0);
         var scaleX = (canvasWidth - 200) / diameter;
 
         var scale = Math.min(scaleX, scaleY);
 
-        var r = Math.round(diameter * scale*0.5) + 0.5;
+        var r = Math.round(diameter * scale * 0.5) + 0.5;
 
-        var centerX = Math.round(canvasWidth/2.0)+0.5;
+        var centerX = Math.round(canvasWidth / 2.0) + 0.5;
 
-        var offsetX = Math.round((canvasWidth - 2*r) / 2.0); // offset X
+        var offsetX = Math.round((canvasWidth - 2 * r) / 2.0); // offset X
         var offsetY = Math.round(canvasHeight - 100); // offset Y
 
         // paint the halfround
@@ -1262,7 +1260,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.beginPath();
 
         gc.moveTo(offsetX, offsetY);
-        gc.lineTo(Math.round(offsetX +2*r) + 0.5, offsetY );
+        gc.lineTo(Math.round(offsetX + 2 * r) + 0.5, offsetY);
         gc.arc(centerX, offsetY, r, r, 0, 180);
         gc.closePath();
         gc.stroke();
@@ -1274,20 +1272,20 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
 
-        var rX = Math.round(offsetX + r + COS_45*r) + 0.5;
-        var rY = Math.round(offsetY - SIN_45*r) + 0.5;
+        var rX = Math.round(offsetX + r + COS_45 * r) + 0.5;
+        var rY = Math.round(offsetY - SIN_45 * r) + 0.5;
 
-        gc.strokeLine(rX, rY, rX+COS_45*50, rY-SIN_45*50);
+        gc.strokeLine(rX, rY, rX + COS_45 * 50, rY - SIN_45 * 50);
         drawArrowHead(gc, rX, rY, COS_45, -SIN_45);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("r=%.2f [mm]", 0.5*diameter), centerX+COS_45*(r+60),offsetY-SIN_45*(r+60));
+        gc.fillText(String.format("r=%.2f [mm]", 0.5 * diameter), centerX + COS_45 * (r + 60), offsetY - SIN_45 * (r + 60));
 
 
         // and the center
         gc.setLineWidth(dimensionLineWidth);
-        gc.setLineDashes(30,5);
-        gc.strokeLine(centerX-0.5*r, offsetY, centerX+0.5*r, offsetY);
-        gc.strokeLine(centerX, offsetY-0.5*r, centerX, offsetY+5);
+        gc.setLineDashes(30, 5);
+        gc.strokeLine(centerX - 0.5 * r, offsetY, centerX + 0.5 * r, offsetY);
+        gc.strokeLine(centerX, offsetY - 0.5 * r, centerX, offsetY + 5);
 
         gc.setLineDashes();
 
@@ -1412,7 +1410,6 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 //            gc.fill();
 
 
-
         // Height
         gc.setStroke(dimensionLineColor);
         gc.setFill(dimensionLineColor);
@@ -1479,14 +1476,14 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         var scale = Math.min(scaleX, scaleY);
         var cdia = Math.round(diameter * scale) + 0.5;
-        var r = Math.round(diameter* scale*0.5);
+        var r = Math.round(diameter * scale * 0.5);
         var ct = Math.round(thickness * scale);
 
         // paint the coordinate system of the tube
         var centerX = Math.round(canvasWidth / 2.0) + 0.5;
-        var centerY = Math.round(canvasHeight /2.0) + 0.5;
-        var offsetX = centerX-r;
-        var offsetY = centerY+r;
+        var centerY = Math.round(canvasHeight / 2.0) + 0.5;
+        var offsetX = centerX - r;
+        var offsetY = centerY + r;
 
         // paint the tube
         gc.setFill(barPattern);
@@ -1495,8 +1492,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.beginPath();
 
         //gc.moveTo(centerX, Math.round( canvasHeight/2.0)+0.5);
-        gc.arc(centerX, centerY, r, r,0,360);
-        gc.arc(centerX, centerY, r-ct, r-ct,0, -360);
+        gc.arc(centerX, centerY, r, r, 0, 360);
+        gc.arc(centerX, centerY, r - ct, r - ct, 0, -360);
         gc.closePath();
         gc.stroke();
         gc.fill();
@@ -1505,32 +1502,32 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setStroke(dimensionLineColor);
         gc.setFill(dimensionLineColor);
         gc.setLineWidth(dimensionLineWidth);
-        gc.strokeLine(centerX, centerY-r, centerX+r+50, centerY-r);
-        gc.strokeLine(centerX, offsetY, centerX+r+50, offsetY);
-        gc.strokeLine(centerX+r+40, centerY-r, centerX+r+40, offsetY);
+        gc.strokeLine(centerX, centerY - r, centerX + r + 50, centerY - r);
+        gc.strokeLine(centerX, offsetY, centerX + r + 50, offsetY);
+        gc.strokeLine(centerX + r + 40, centerY - r, centerX + r + 40, offsetY);
 
-        drawArrowHead(gc, centerX+r+40, centerY-r, 0, 1);
-        drawArrowHead(gc, centerX+r+40, offsetY, 0, -1);
+        drawArrowHead(gc, centerX + r + 40, centerY - r, 0, 1);
+        drawArrowHead(gc, centerX + r + 40, offsetY, 0, -1);
 
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(String.format("⌀ %.2f [mm]", diameter), centerX+r+50, centerY);
+        gc.fillText(String.format("⌀ %.2f [mm]", diameter), centerX + r + 50, centerY);
 
         // thickness
-        gc.strokeLine(offsetX-50, centerY, offsetX, centerY);
-        gc.strokeLine(offsetX+ct, centerY, offsetX+ct+50, centerY);
+        gc.strokeLine(offsetX - 50, centerY, offsetX, centerY);
+        gc.strokeLine(offsetX + ct, centerY, offsetX + ct + 50, centerY);
         drawArrowHead(gc, offsetX, centerY, -1, 0);
-        drawArrowHead(gc, offsetX+ct, centerY, 1, 0);
+        drawArrowHead(gc, offsetX + ct, centerY, 1, 0);
 
         gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText(String.format("t=%.2f [mm]", thickness), offsetX-60, centerY);
+        gc.fillText(String.format("t=%.2f [mm]", thickness), offsetX - 60, centerY);
 
 
         // and the center
         gc.save();
         gc.setLineWidth(dimensionLineWidth);
-        gc.setLineDashes(30,5);
-        gc.strokeLine(centerX-0.25*cdia, centerY, centerX+0.25*cdia, centerY);
-        gc.strokeLine(centerX, centerY-0.25*cdia, centerX, centerY+0.25*cdia);
+        gc.setLineDashes(30, 5);
+        gc.strokeLine(centerX - 0.25 * cdia, centerY, centerX + 0.25 * cdia, centerY);
+        gc.strokeLine(centerX, centerY - 0.25 * cdia, centerX, centerY + 0.25 * cdia);
         gc.restore();
 
         // Paint the coordinate system
@@ -1599,7 +1596,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
 
         // paint the coordinate system of the tube
-        drawCossys(gc, coordX, coordY+rheight);
+        drawCossys(gc, coordX, coordY + rheight);
 
 
     }
@@ -1608,13 +1605,13 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.setStroke(cosysColor);
         gc.setFill(cosysColor);
         gc.setLineWidth(coosysLineWidth);
-        gc.strokeLine(coordX, coordY , coordX + 50, coordY );
-        gc.strokeLine(coordX+40, coordY-5 , coordX + 50, coordY );
-        gc.strokeLine(coordX+40, coordY+5 , coordX + 50, coordY );
+        gc.strokeLine(coordX, coordY, coordX + 50, coordY);
+        gc.strokeLine(coordX + 40, coordY - 5, coordX + 50, coordY);
+        gc.strokeLine(coordX + 40, coordY + 5, coordX + 50, coordY);
 
-        gc.strokeLine(coordX, coordY , coordX, coordY  - 50);
-        gc.strokeLine(coordX-5, coordY-40 , coordX, coordY  - 50);
-        gc.strokeLine(coordX+5, coordY-40 , coordX, coordY  - 50);
+        gc.strokeLine(coordX, coordY, coordX, coordY - 50);
+        gc.strokeLine(coordX - 5, coordY - 40, coordX, coordY - 50);
+        gc.strokeLine(coordX + 5, coordY - 40, coordX, coordY - 50);
 
 
     }
@@ -1643,8 +1640,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         var offsetX = Math.round((canvasWidth - w) / 2.0); // offset X
         var offsetY = Math.round(canvasHeight - 100); // offset Y
-        var centerX = Math.round(canvasWidth/2.)+ 0.5;
-        var centerY = Math.round(canvasHeight/2.0)+0.5;
+        var centerX = Math.round(canvasWidth / 2.) + 0.5;
+        var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
         gc.setFill(barPattern);
         gc.setStroke(barColor);
@@ -1716,9 +1713,9 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         // and the center
         gc.save();
         gc.setLineWidth(1);
-        gc.setLineDashes(30,5);
-        gc.strokeLine(centerX-0.2*w, centerY, centerX+0.2*w, centerY);
-        gc.strokeLine(centerX, centerY-0.2*h, centerX, centerY+0.2*h);
+        gc.setLineDashes(30, 5);
+        gc.strokeLine(centerX - 0.2 * w, centerY, centerX + 0.2 * w, centerY);
+        gc.strokeLine(centerX, centerY - 0.2 * h, centerX, centerY + 0.2 * h);
         gc.restore();
 
         // Paint the coordinate system
@@ -1748,7 +1745,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
             flangeThickness = UnitConverter.toDefaultUnit(lbar.getFlangeThickness());
             overallHeight = webHeight;
             overallWidth = flangeWidth;
-            overshoot=0.0;
+            overshoot = 0.0;
         } else if (SectionType.L_BAR_OF == sectionType) {
             var lbar = object.getLBarOF();
             overshoot = UnitConverter.toDefaultUnit(lbar.getOvershoot());
@@ -1789,9 +1786,9 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var over = overshoot * scale; // overshoot
 
         var wX = Math.round(offsetX + (SectionType.L_BAR_OF == sectionType ? over : 0.0)) + 0.5;
-        var wY = SectionType.L_BAR_OF == sectionType ?  Math.round(100 + ft) + 0.5 : 100.5;
+        var wY = SectionType.L_BAR_OF == sectionType ? Math.round(100 + ft) + 0.5 : 100.5;
 
-        var fX = SectionType.L_BAR_OW == sectionType ? Math.round(offsetX+wt) + 0.5 : offsetX;
+        var fX = SectionType.L_BAR_OW == sectionType ? Math.round(offsetX + wt) + 0.5 : offsetX;
         var fY = SectionType.L_BAR_OW == sectionType ? Math.round(100 + over) + 0.5 : 100.5;
 
         // the web
@@ -1893,12 +1890,12 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void drawArrowHead(GraphicsContext gc, double x, double y, double xDir, double yDir) {
 
-        double lw = Math.max(gc.getLineWidth(),1);
+        double lw = Math.max(gc.getLineWidth(), 1);
         lw = Math.min(lw, 5);
 
         var p0 = new Point2D(0, 0);
-        var p1 = new Point2D(10*lw, 3*lw);
-        var p2 = new Point2D(10*lw, -3*lw);
+        var p1 = new Point2D(10 * lw, 3 * lw);
+        var p2 = new Point2D(10 * lw, -3 * lw);
 
         //LOG.info("p0 {} p1 {} p2 {}", p0, p1, p2);
 
@@ -1929,7 +1926,6 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
 
     }
-
 
 
 }

@@ -47,6 +47,7 @@ import static javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER;
 
 /**
  * Abstract base class for pages that include an outline (table of contents).
+ *
  * @author Carsten Zerbst
  */
 public abstract class OutlinePage extends StackPane implements Page {
@@ -79,8 +80,8 @@ public abstract class OutlinePage extends StackPane implements Page {
 
         // scroll spy
         scrollPane.vvalueProperty().addListener((obs, old, val) ->
-            // we need a little gap between changing vValue and fetching header bounds
-            Platform.runLater(() -> outline.select(getFirstVisibleHeader()))
+                // we need a little gap between changing vValue and fetching header bounds
+                Platform.runLater(() -> outline.select(getFirstVisibleHeader()))
         );
 
         var pageBody = new StackPane();
@@ -120,7 +121,7 @@ public abstract class OutlinePage extends StackPane implements Page {
         };
     }
 
-    private  String getFirstVisibleHeader() {
+    private String getFirstVisibleHeader() {
         var scrollBounds = scrollPane.localToScene(scrollPane.getBoundsInParent());
         Label lastHeading = null;
         for (var node : userContent.getChildren()) {
@@ -183,9 +184,6 @@ public abstract class OutlinePage extends StackPane implements Page {
     }
 
 
-
-
-
     @Override
     protected void layoutChildren() {
         super.layoutChildren();
@@ -202,7 +200,7 @@ public abstract class OutlinePage extends StackPane implements Page {
     protected void onRendered() {
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////
 
     public record Heading(String title, Node anchor) {
 

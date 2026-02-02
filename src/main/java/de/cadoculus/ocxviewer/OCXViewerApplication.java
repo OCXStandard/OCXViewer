@@ -37,6 +37,7 @@ import java.io.IOException;
 
 /**
  * The viewer application
+ *
  * @author Carsten Zerbst
  */
 public class OCXViewerApplication extends Application {
@@ -54,7 +55,7 @@ public class OCXViewerApplication extends Application {
 
         try {
 
-         Image   paper = new Image(LogoPage.class.getResource("Rastergrafik.png").toString());
+            Image paper = new Image(LogoPage.class.getResource("Rastergrafik.png").toString());
             stage.getIcons().add(paper);
 
         } catch (Exception e) {
@@ -74,19 +75,17 @@ public class OCXViewerApplication extends Application {
         stage.setScene(scene);
 
 
-
-
         // ... and the window events
         scene.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                DefaultEventBus.getInstance().publish( new WindowEvent(scene));
+                DefaultEventBus.getInstance().publish(new WindowEvent(scene));
             }
         });
         scene.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-                DefaultEventBus.getInstance().publish( new WindowEvent(scene));
+                DefaultEventBus.getInstance().publish(new WindowEvent(scene));
             }
         });
 
@@ -94,7 +93,7 @@ public class OCXViewerApplication extends Application {
         new ActionDispatcher(scene);
 
         // set the theme
-        if (! WorkingContext.getInstance().darkModeProperty().get()) {
+        if (!WorkingContext.getInstance().darkModeProperty().get()) {
             Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
         } else {
             Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());

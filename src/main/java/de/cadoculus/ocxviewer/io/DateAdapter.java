@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Adapter to convert between String and LocalDate for XML marshalling/unmarshalling.
  * Uses ISO_OFFSET_DATE format for the conversion.
+ *
  * @author Carsten Zerbst
  */
 public class DateAdapter extends XmlAdapter<String, LocalDate> {

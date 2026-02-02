@@ -23,8 +23,9 @@ import java.util.Objects;
 
 /**
  * A record for a page in the application.
- * @param title the title of the page
- * @param graphic the graphic to display
+ *
+ * @param title     the title of the page
+ * @param graphic   the graphic to display
  * @param pageClass the class of the page
  * @author Carsten Zerbst
  */

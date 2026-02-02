@@ -39,9 +39,10 @@ import java.util.List;
 
 /**
  * Page that shows the applications internal log messages.
+ *
  * @author Carsten Zerbst
  */
-public class LogPage extends AbstractDataViewPage  {
+public class LogPage extends AbstractDataViewPage {
 
     public static final String NAME = "Log Page";
     private static final Logger LOG = LogManager.getLogger(LogPage.class);
@@ -53,15 +54,16 @@ public class LogPage extends AbstractDataViewPage  {
     public static LogPage getInstance() {
         return INSTANCE;
     }
-    public void addEvent( LogRecord event) {
 
-        if ( event.category().compareTo( Level.INFO) >0) {
+    public void addEvent(LogRecord event) {
+
+        if (event.category().compareTo(Level.INFO) > 0) {
             return;
         }
 
         Platform.runLater(() -> {
-            if ( listBox.getItems().size() > 500) {
-                listBox.getItems().remove(0,100);
+            if (listBox.getItems().size() > 500) {
+                listBox.getItems().remove(0, 100);
             }
 
             listBox.getItems().add(event);
@@ -71,7 +73,7 @@ public class LogPage extends AbstractDataViewPage  {
 
     public LogPage() {
         super(NAME);
-        INSTANCE=this;
+        INSTANCE = this;
 
         //this.setBackground(new Background(new BackgroundFill(Color.web("#bcbcbc"), CornerRadii.EMPTY, Insets.EMPTY)));
         BorderPane.setMargin(this, new Insets(15));
@@ -88,9 +90,9 @@ public class LogPage extends AbstractDataViewPage  {
         var titleBox = new VBox();
         this.setTop(titleBox);
 
-        var title = new Label( NAME);
+        var title = new Label(NAME);
         title.getStyleClass().add(Styles.TITLE_2);
-        titleBox.setPadding( new Insets(0, 0, 10 , 0));
+        titleBox.setPadding(new Insets(0, 0, 10, 0));
         titleBox.getChildren().add(title);
         final TextFlow formattedText = BBCodeParser.createFormattedText("Shows the applications internal log messages");
         titleBox.getChildren().add(formattedText);
@@ -182,7 +184,7 @@ public class LogPage extends AbstractDataViewPage  {
 
     @Override
     public List<BreadcrumbRecord> getBreadcrumbs() {
-        return List.of(  new BreadcrumbRecord(getName(), LogPage.class, this, null));
+        return List.of(new BreadcrumbRecord(getName(), LogPage.class, this, null));
     }
 
     @Override

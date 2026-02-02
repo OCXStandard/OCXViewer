@@ -7,7 +7,7 @@ import java.util.UUID;
  * Base class for all events.
  *
  * <p>Each event has a unique identifier.
- *
+ * <p>
  * This code is copied from atlantafx.sampler implemented by mkpaz. It is licensed under the MIT License.
  */
 public abstract class Event {
@@ -40,8 +40,8 @@ public abstract class Event {
     @Override
     public String toString() {
         return "Event{"
-            + "id=" + id
-            + '}';
+                + "id=" + id
+                + '}';
     }
 
     public static <E extends Event> void publish(E event) {

@@ -34,6 +34,7 @@ import org.ocx_schema.v310.QuantityT;
 
 /**
  * This class displays the coordinated system contained in the OCX file
+ *
  * @author Carsten Zerbst
  */
 public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema.v310.CoordinateSystem> implements Page {
@@ -48,11 +49,11 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
 
 
     public CoordinateSystemPage(org.ocx_schema.v310.CoordinateSystem coosys, Page parent) {
-        super(coosys, parent, "Coordinate System «"+coosys.getId() + "»");
+        super(coosys, parent, "Coordinate System «" + coosys.getId() + "»");
 
         final var bcs = getBreadcrumbs();
 
-        createTitle( bcs, getName(), "Information about the contained coordinate systems.");
+        createTitle(bcs, getName(), "Information about the contained coordinate systems.");
 
         GridPane gridPane = createDefaultGrid();
         this.setCenter(gridPane);
@@ -62,20 +63,35 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         Label label = null;
         TextField textField = null;
 
+        var titelLabel = new Label("Identification");
+        titelLabel.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(titelLabel, 0, row++, 4, 1);
+        GridPane.setHalignment(titelLabel, HPos.LEFT);
+        GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+
+
+        label = new Label("Id");
+        label.setTooltip(new Tooltip("The coordinate systems's Id"));
+        gridPane.add(label, 0, row);
+        textField = new TextField();
+        gridPane.add(textField, 1, row++);
+        bindToBean(textField.textProperty(), coosys, "id", String.class);
+
+
         label = new Label("GUID");
         label.setTooltip(new Tooltip("The GUID of the Coordinate System."));
         gridPane.add(label, 0, row);
 
         textField = new TextField(coosys.getGUIDRef());
-        gridPane.add(textField, 1, row++, 3,1);
+        gridPane.add(textField, 1, row++);
 
-        if (StringUtils.isNoneEmpty( coosys.getDescription())) {
+        if (StringUtils.isNoneEmpty(coosys.getDescription())) {
             label = new Label("Description");
             label.setTooltip(new Tooltip("The description of the Coordinate System."));
             gridPane.add(label, 0, row);
 
             textField = new TextField(coosys.getDescription());
-            gridPane.add(textField, 1, row++, 3,1);
+            gridPane.add(textField, 1, row++, 3, 1);
         }
 
         label = new Label("Local Cartesian");
@@ -89,7 +105,7 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         label.setTooltip(new Tooltip("The origin of a local or global coordinate system."));
         gridPane.add(label, 0, ++row);
         originGroup = createOrRebind(null, coosys.getLocalCartesian().getOrigin(), true);
-        gridPane.add(originGroup, 1,row);
+        gridPane.add(originGroup, 1, row);
 
 
         label = new Label("Primary Axis");
@@ -110,15 +126,15 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         GridPane.setHalignment(label, HPos.LEFT);
         GridPane.setMargin(label, new Insets(20, 0, 10, 0));
 
-        var tabX = createTab("X Grid",coosys.getXRefPlanes());
+        var tabX = createTab("X Grid", coosys.getXRefPlanes());
         var tabY = createTab("Y Grid", coosys.getYRefPlanes());
         var tabZ = createTab("Z Grid", coosys.getZRefPlanes());
 
-        var gridTab = new TabPane( tabX, tabY, tabZ );
+        var gridTab = new TabPane(tabX, tabY, tabZ);
         gridTab.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         gridTab.setMinWidth(450);
 
-        gridPane.add(gridTab, 0, ++row, 4,1);
+        gridPane.add(gridTab, 0, ++row, 4, 1);
 
     }
 
@@ -128,15 +144,15 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
 
         var vbox = new VBox();
 
-        if ( refPlanesT instanceof org.ocx_schema.v310.XRefPlanes xRefPlanes) {
-            var rev = new Label( xRefPlanes.isIsReversed()? "X-Planes are reversed":"X-Planes are not reversed");
+        if (refPlanesT instanceof org.ocx_schema.v310.XRefPlanes xRefPlanes) {
+            var rev = new Label(xRefPlanes.isIsReversed() ? "X-Planes are reversed" : "X-Planes are not reversed");
             //rev.setGraphic( new FontIcon( xRefPlanes.isIsReversed()? MaterialDesignA.MDI_ARROW_LEFT_BOLD : MaterialDesignA.MDI_ARROW_RIGHT_BOLD));
-            vbox.getChildren().add(    rev);
+            vbox.getChildren().add(rev);
         }
 
         ObservableList<org.ocx_schema.v310.RefPlaneT> refplanes = FXCollections.observableArrayList();
-        if (refPlanesT !=null && refPlanesT.getRefPlanes() !=null && ! refPlanesT.getRefPlanes().isEmpty() ) {
-            refplanes.addAll( refPlanesT.getRefPlanes() );
+        if (refPlanesT != null && refPlanesT.getRefPlanes() != null && !refPlanesT.getRefPlanes().isEmpty()) {
+            refplanes.addAll(refPlanesT.getRefPlanes());
         }
 
         var tableColumn1 = new TableColumn<org.ocx_schema.v310.RefPlaneT, String>("ID");
@@ -163,7 +179,7 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         tableColumn5.setCellValueFactory(
                 c -> new SimpleObjectProperty<>(c.getValue().getReferenceLocation())
         );
-        tableColumn5.setCellFactory( createQuantityCellfactory( ));
+        tableColumn5.setCellFactory(createQuantityCellfactory());
 
         var tableX = new TableView<>(refplanes);
         tableX.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3, tableColumn4, tableColumn5);
@@ -184,7 +200,6 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         // Party !
         // table.getSelectionModel().selectFirst();
     }
-
 
 
 }

@@ -26,6 +26,7 @@ import java.util.Objects;
 
 /**
  * The base class for sub page data views
+ *
  * @author Carsten Zerbst
  */
 public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.IdBaseT> extends AbstractDataViewPage implements SubPage {
@@ -35,10 +36,10 @@ public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.IdBa
     protected final T object;
 
 
-    protected AbstractDataViewSubPage( T object , Page parentPage, String name) {
+    protected AbstractDataViewSubPage(T object, Page parentPage, String name) {
         super(name);
-        if ( object == null ) throw new IllegalArgumentException("object is null");
-        if ( parentPage == null ) throw new IllegalArgumentException("parentPage is null");
+        if (object == null) throw new IllegalArgumentException("object is null");
+        if (parentPage == null) throw new IllegalArgumentException("parentPage is null");
         this.object = object;
         this.parentPage = parentPage;
 
@@ -73,16 +74,17 @@ public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.IdBa
 
     /**
      * Get the breadcrumbs for this page. As this is a children page, the path is created from the parents path + one for this page
+     *
      * @return the list of breadcrumbs
      */
     @Override
     public List<BreadcrumbRecord> getBreadcrumbs() {
-        var robert = new ArrayList<BreadcrumbRecord>( parentPage.getBreadcrumbs());
-        robert.add( new BreadcrumbRecord(getName(), this.getClass(), this, getObject()));
+        var robert = new ArrayList<BreadcrumbRecord>(parentPage.getBreadcrumbs());
+        robert.add(new BreadcrumbRecord(getName(), this.getClass(), this, getObject()));
         return robert;
     }
 
-    protected  <T> Breadcrumbs.BreadCrumbItem<T> getTreeItemByIndex(Breadcrumbs.BreadCrumbItem<T> node, int index) {
+    protected <T> Breadcrumbs.BreadCrumbItem<T> getTreeItemByIndex(Breadcrumbs.BreadCrumbItem<T> node, int index) {
         var counter = index;
         var current = node;
         while (counter > 0 && current.getParent() != null) {

@@ -29,6 +29,7 @@ import java.util.Objects;
 /**
  * Represents a file resource, which can be either internal (within the classpath)
  * or external (on the filesystem).
+ *
  * @author Carsten Zerbst
  */
 public final class FileResource {
@@ -79,7 +80,7 @@ public final class FileResource {
         return new FileInputStream(toPath().toFile());
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////
 
     public static FileResource createInternal(String location) {
         return createInternal(location, FileResource.class);

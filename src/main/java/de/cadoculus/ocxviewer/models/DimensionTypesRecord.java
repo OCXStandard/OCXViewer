@@ -17,10 +17,11 @@ package de.cadoculus.ocxviewer.models;
 
 /**
  * A record representing different dimension types.
- * @param dimensionType the dimension type object
- * @param typeName the name of the dimension type
+ *
+ * @param dimensionType  the dimension type object
+ * @param typeName       the name of the dimension type
  * @param powerNumerator the power numerator of the dimension
- * @param symbol the symbol representing the dimension
+ * @param symbol         the symbol representing the dimension
  * @author Carsten Zerbst
  */
 public record DimensionTypesRecord(
@@ -31,7 +32,7 @@ public record DimensionTypesRecord(
 ) {
 
     public static DimensionTypesRecord create(Object dimension) {
-        if  (dimension instanceof oasis.unitsml.Length length) {
+        if (dimension instanceof oasis.unitsml.Length length) {
             return new DimensionTypesRecord(
                     length,
                     "Length",

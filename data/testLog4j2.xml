@@ -1,4 +1,4 @@
-<Configuration status="WARN" strict="true" name="XMLConfigTest" packages="org.apache.logging.log4j.test">
+<Configuration status="WARN" strict="true" name="XMLConfigTest" >
 
     <Properties>
         <Property name="filename">log.txt</Property>
@@ -9,7 +9,7 @@
             <Layout type="PatternLayout" pattern="%-1p %c{1}:%L - %m%n"/>
         </Appender>
 
-        <Appender type="File" name="File" fileName="${filename}">
+        <Appender type="File" name="File" fileName="${filename}" append="false">
             <Layout type="PatternLayout">
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
             </Layout>
@@ -28,7 +28,8 @@
         <Logger name="de.cadoculus.ocxviewer.actions.ActionDispatcher" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.io.OCXIO" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.io.NamespaceReplacingInputStream" level="debug"/>
-        <Logger name="de.cadoculus.ocxviewer.io.OCXIOUnmarshallerListener" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.io.OCXIOUnmarshallerListener" level="info"/>
+        <Logger name="de.cadoculus.ocxviewer.io.OCXIOReferenceResolver" level="debug"/>
 
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>

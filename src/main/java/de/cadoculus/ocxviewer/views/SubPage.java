@@ -17,12 +17,14 @@ package de.cadoculus.ocxviewer.views;
 
 /**
  * An interface used for sub-pages. Eg. for the SurfacePage as sub-page of the ReferenceSurfacesPage.
+ *
  * @author Carsten Zerbst
  */
 public interface SubPage extends Page {
 
     /**
      * Returns the parent page of this sub-page.
+     *
      * @return the parent page
      */
     Page getParentPage();
