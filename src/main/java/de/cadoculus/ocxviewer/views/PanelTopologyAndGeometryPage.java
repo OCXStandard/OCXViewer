@@ -70,7 +70,7 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
         setCenter(tabPanel);
 
         tabPanel.getTabs().add(createLimitsTab());
-        tabPanel.getTabs().add(createLimitsViewTab());
+        //tabPanel.getTabs().add(createLimitsViewTab());
         tabPanel.getTabs().add(createBoundaryTab());
         tabPanel.getTabs().add(createSurfaceTab());
 

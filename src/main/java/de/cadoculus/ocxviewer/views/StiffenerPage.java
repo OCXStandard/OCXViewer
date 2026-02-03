@@ -351,6 +351,23 @@ public class StiffenerPage extends AbstractDataViewSubPage<Stiffener> {
         }
 
 
+        label = new Label("Custom Properties");
+        label.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(label, 0, row++, 2, 1);
+        GridPane.setHalignment(label, HPos.LEFT);
+
+        var link = new Hyperlink("View Custom Properties");
+        link.setTooltip(new Tooltip("Goto Custom Properties page"));
+        gridPane.add(link, 0, row++, 2, 1);
+        link.setOnAction(e -> {
+            var robert = new ArrayList<>(getBreadcrumbs());
+            robert.add(new BreadcrumbRecord("Custom Properties", CustomPropertiesPage.class, null, getObject()));
+
+            var event = new SelectionEvent(robert);
+            DefaultEventBus.getInstance().publish(event);
+        });
+
+
     }
 
 }

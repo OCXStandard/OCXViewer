@@ -211,26 +211,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
                         } catch (Exception e) {
                             LOG.error("no double property 'numericvalue' found in class {}:{}", quantity.getClass().getName(), e);
                         }
-                        var unit = "unset";
-
-                        if (quantity.getUnit() instanceof Unit unit1) {
-                            while (true) {
-                                if (unit1.getUnitSymbols() != null && unit1.getUnitSymbols().getFirst() != null) {
-                                    unit = unit1.getUnitSymbols().getFirst().getType();
-                                    break;
-                                }
-                                if (unit1.getUnitNames() != null) {
-                                    var unitNameO = unit1.getUnitNames().stream().filter(u ->
-                                            "en".equalsIgnoreCase(u.getLang())).findFirst();
-                                    if (unitNameO.isPresent()) {
-                                        unit = unitNameO.get().getValue();
-                                        break;
-                                    }
-                                }
-                                unit = unit1.getId();
-                                break;
-                            }
-                        }
+                        var unit = getUnitDisplayValue( quantity.getUnit());
 
                         setGraphic(null);
                         setText(value + " [" + unit + "]");
@@ -241,6 +222,37 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
                 return cell;
             }
         };
+    }
+
+    /**
+     * Try to get a display value for a unit
+     * @param unit  the Unit or unit id
+     * @return a display name
+     */
+    public static String getUnitDisplayValue(Object unit) {
+
+        String retval = "";
+        if (unit instanceof Unit unit1) {
+            while (true) {
+                if (unit1.getUnitSymbols() != null && unit1.getUnitSymbols().getFirst() != null) {
+                    retval = unit1.getUnitSymbols().getFirst().getType();
+                    break;
+                }
+                if (unit1.getUnitNames() != null) {
+                    var unitNameO = unit1.getUnitNames().stream().filter(u ->
+                            "en".equalsIgnoreCase(u.getLang())).findFirst();
+                    if (unitNameO.isPresent()) {
+                        retval = unitNameO.get().getValue();
+                        break;
+                    }
+                }
+                retval = unit1.getId();
+                break;
+            }
+        } else if ( unit instanceof String unitId) {
+            retval = "unresolved Unit, id '"+ unitId + "'";
+        }
+        return retval;
     }
 
     /**

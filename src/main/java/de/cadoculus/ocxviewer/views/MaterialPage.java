@@ -16,6 +16,9 @@ limitations under the License.
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -23,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -154,6 +158,18 @@ public class MaterialPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Ma
         gridPane.add(label, 0, row);
         var thermalExpGroup = createAndBind(material.getThermalExpansionCoefficient(), false);
         gridPane.add(thermalExpGroup, 1, row++);
+
+
+        var link = new Hyperlink("View Custom Properties");
+        link.setTooltip(new Tooltip("Goto Custom Properties page"));
+        gridPane.add(link, 0, row++, 2, 1);
+        link.setOnAction(e -> {
+            var robert = new ArrayList<>(getBreadcrumbs());
+            robert.add(new BreadcrumbRecord("Custom Properties", CustomPropertiesPage.class, null, getObject()));
+
+            var event = new SelectionEvent(robert);
+            DefaultEventBus.getInstance().publish(event);
+        });
 
     }
 

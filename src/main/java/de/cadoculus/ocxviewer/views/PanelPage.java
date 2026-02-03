@@ -20,6 +20,7 @@ import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
+import de.cadoculus.ocxviewer.models.CutByRecord;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -36,9 +37,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
-import org.ocx_schema.v310.Material;
-import org.ocx_schema.v310.Plate;
+import org.ocx_schema.v310.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -47,12 +48,12 @@ import java.util.ArrayList;
  *
  * @author Carsten Zerbst
  */
-public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel> {
+public class PanelPage extends AbstractDataViewSubPage<Panel> {
     public static final String NAME = "Panel";
     private static final Logger LOG = LogManager.getLogger(PanelPage.class);
 
 
-    public PanelPage(org.ocx_schema.v310.Panel panel, Page parent) {
+    public PanelPage(Panel panel, Page parent) {
         super(panel, parent, "Panel «" + panel.getId() + "»");
 
         // now we can build the page
@@ -119,12 +120,17 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         label = new Label("Panel Topology and Geometry");
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++, 3, 1);
+        gridPane.add(label, 0, row, 2, 1);
+        GridPane.setHalignment(label, HPos.LEFT);
+
+        label = new Label("Custom Properties");
+        label.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(label, 2, row++, 2, 1);
         GridPane.setHalignment(label, HPos.LEFT);
 
         var link = new Hyperlink("View Topology and Geometry...");
         link.setTooltip(new Tooltip("Goto Topology and Geometry page"));
-        gridPane.add(link, 0, row++);
+        gridPane.add(link, 0, row, 2, 1);
         link.setOnAction(e -> {
             var robert = new ArrayList<>(getBreadcrumbs());
             robert.add(new BreadcrumbRecord("Topology and Geometry", PanelTopologyAndGeometryPage.class, null, getObject()));
@@ -132,6 +138,18 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
             var event = new SelectionEvent(robert);
             DefaultEventBus.getInstance().publish(event);
         });
+
+        link = new Hyperlink("View Custom Properties");
+        link.setTooltip(new Tooltip("Goto Custom Properties page"));
+        gridPane.add(link, 2, row++, 2, 1);
+        link.setOnAction(e -> {
+            var robert = new ArrayList<>(getBreadcrumbs());
+            robert.add(new BreadcrumbRecord("Custom Properties", CustomPropertiesPage.class, null, getObject()));
+
+            var event = new SelectionEvent(robert);
+            DefaultEventBus.getInstance().publish(event);
+        });
+
 
         // The parts makeing up the panel
         label = new Label("Panel Parts");
@@ -146,8 +164,9 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         var tabStiffeners = createStiffenersTab();
         var tabFlanges = createFlangesTab();
         var tabSeams = createSeamsTab();
+        var tabHoles = createCutByTab();
 
-        var gridTab = new TabPane(tabPlates, tabBrackets, tabPillars, tabStiffeners, tabFlanges, tabSeams);
+        var gridTab = new TabPane(tabPlates, tabBrackets, tabPillars, tabStiffeners, tabFlanges, tabSeams, tabHoles);
         gridTab.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         gridTab.setMinWidth(450);
 
@@ -157,6 +176,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
     private Tab createPillarsTab() {
         var tab = new Tab("Pillars");
+        tab.setClosable(false);
 
         var vbox = new VBox();
         tab.setContent(vbox);
@@ -251,12 +271,13 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
      */
     private Tab createBracketsTab() {
         var tab = new Tab("Brackets");
+        tab.setClosable(false);
 
         var vbox = new VBox();
         tab.setContent(vbox);
 
-        final ObservableList<org.ocx_schema.v310.Bracket> entities = FXCollections.observableArrayList();
-        final FilteredList<org.ocx_schema.v310.Bracket> filteredEntities = new FilteredList<>(entities, p -> true);
+        final ObservableList<Bracket> entities = FXCollections.observableArrayList();
+        final FilteredList<Bracket> filteredEntities = new FilteredList<>(entities, p -> true);
 
         if (getObject().getComposedOf() != null && getObject().getComposedOf().getBrackets() != null) {
             entities.addAll(getObject().getComposedOf().getBrackets());
@@ -293,7 +314,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         });
 
 
-        var tableColumn1 = new TableColumn<org.ocx_schema.v310.Bracket, org.ocx_schema.v310.Bracket>("ID");
+        var tableColumn1 = new TableColumn<Bracket, Bracket>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
             if (selected == null) {
@@ -308,16 +329,16 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
             DefaultEventBus.getInstance().publish(event);
         }));
 
-        var tableColumn2 = new TableColumn<org.ocx_schema.v310.Bracket, String>("GUID");
+        var tableColumn2 = new TableColumn<Bracket, String>("GUID");
         tableColumn2.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getGUIDRef()));
 
-        var tableColumn3 = new TableColumn<org.ocx_schema.v310.Bracket, String>("Name");
+        var tableColumn3 = new TableColumn<Bracket, String>("Name");
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
         // TODO: better material representation
-        var tableColumn4 = new TableColumn<org.ocx_schema.v310.Bracket, String>("Material");
+        var tableColumn4 = new TableColumn<Bracket, String>("Material");
         tableColumn4.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getPlateMaterial().getLocalRef().toString()));
 
@@ -345,12 +366,13 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
      */
     private Tab createSeamsTab() {
         var tab = new Tab("Seams");
+        tab.setClosable(false);
 
         var vbox = new VBox();
         tab.setContent(vbox);
 
-        final ObservableList<org.ocx_schema.v310.Seam> entities = FXCollections.observableArrayList();
-        final FilteredList<org.ocx_schema.v310.Seam> filteredEntities = new FilteredList<>(entities, p -> true);
+        final ObservableList<Seam> entities = FXCollections.observableArrayList();
+        final FilteredList<Seam> filteredEntities = new FilteredList<>(entities, p -> true);
 
         if (getObject().getSplitBy() != null && getObject().getSplitBy().getSeams() != null) {
             entities.addAll(getObject().getSplitBy().getSeams());
@@ -387,7 +409,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         });
 
 
-        var tableColumn1 = new TableColumn<org.ocx_schema.v310.Seam, org.ocx_schema.v310.Seam>("ID");
+        var tableColumn1 = new TableColumn<Seam, Seam>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
             if (selected == null) {
@@ -402,11 +424,11 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
             DefaultEventBus.getInstance().publish(event);
         }));
 
-        var tableColumn2 = new TableColumn<org.ocx_schema.v310.Seam, String>("GUID");
+        var tableColumn2 = new TableColumn<Seam, String>("GUID");
         tableColumn2.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getGUIDRef()));
 
-        var tableColumn3 = new TableColumn<org.ocx_schema.v310.Seam, String>("Name");
+        var tableColumn3 = new TableColumn<Seam, String>("Name");
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
@@ -435,12 +457,13 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
      */
     private Tab createFlangesTab() {
         var tab = new Tab("Flanges");
+        tab.setClosable(false);
 
         var vbox = new VBox();
         tab.setContent(vbox);
 
-        final ObservableList<org.ocx_schema.v310.EdgeReinforcement> stiffeners = FXCollections.observableArrayList();
-        final FilteredList<org.ocx_schema.v310.EdgeReinforcement> filteredStiffeners = new FilteredList<>(stiffeners, p -> true);
+        final ObservableList<EdgeReinforcement> stiffeners = FXCollections.observableArrayList();
+        final FilteredList<EdgeReinforcement> filteredStiffeners = new FilteredList<>(stiffeners, p -> true);
 
         if (getObject().getStiffenedBy() != null && getObject().getStiffenedBy().getEdgeReinforcements() != null) {
             stiffeners.addAll(getObject().getStiffenedBy().getEdgeReinforcements());
@@ -477,7 +500,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         });
 
 
-        var tableColumn1 = new TableColumn<org.ocx_schema.v310.EdgeReinforcement, org.ocx_schema.v310.EdgeReinforcement>("ID");
+        var tableColumn1 = new TableColumn<EdgeReinforcement, EdgeReinforcement>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
             if (selected == null) {
@@ -492,23 +515,23 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
             DefaultEventBus.getInstance().publish(event);
         }));
 
-        var tableColumn2 = new TableColumn<org.ocx_schema.v310.EdgeReinforcement, String>("GUID");
+        var tableColumn2 = new TableColumn<EdgeReinforcement, String>("GUID");
         tableColumn2.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getGUIDRef()));
 
-        var tableColumn3 = new TableColumn<org.ocx_schema.v310.EdgeReinforcement, String>("Name");
+        var tableColumn3 = new TableColumn<EdgeReinforcement, String>("Name");
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
 
         // TODO: better material representation
-        var tableColumn4 = new TableColumn<org.ocx_schema.v310.EdgeReinforcement, String>("Material");
+        var tableColumn4 = new TableColumn<EdgeReinforcement, String>("Material");
         tableColumn4.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getMaterialRef().toString()));
 
 
         // TODO: better quantity representation
-        var tableColumn5 = new TableColumn<org.ocx_schema.v310.EdgeReinforcement, String>("Function");
+        var tableColumn5 = new TableColumn<EdgeReinforcement, String>("Function");
         tableColumn5.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getFunctionType()));
 
@@ -537,11 +560,13 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
      */
     private Tab createStiffenersTab() {
         var tab = new Tab("Stiffeners");
+        tab.setClosable(false);
+
         var vbox = new VBox();
         tab.setContent(vbox);
 
-        final ObservableList<org.ocx_schema.v310.Stiffener> stiffeners = FXCollections.observableArrayList();
-        final FilteredList<org.ocx_schema.v310.Stiffener> filteredStiffeners = new FilteredList<>(stiffeners, p -> true);
+        final ObservableList<Stiffener> stiffeners = FXCollections.observableArrayList();
+        final FilteredList<Stiffener> filteredStiffeners = new FilteredList<>(stiffeners, p -> true);
 
         if (getObject().getStiffenedBy() != null && getObject().getStiffenedBy().getStiffeners() != null) {
             stiffeners.addAll(getObject().getStiffenedBy().getStiffeners());
@@ -578,7 +603,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         });
 
 
-        var tableColumn1 = new TableColumn<org.ocx_schema.v310.Stiffener, org.ocx_schema.v310.Stiffener>("ID");
+        var tableColumn1 = new TableColumn<Stiffener, Stiffener>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
             if (selected == null) {
@@ -593,23 +618,23 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
             DefaultEventBus.getInstance().publish(event);
         }));
 
-        var tableColumn2 = new TableColumn<org.ocx_schema.v310.Stiffener, String>("GUID");
+        var tableColumn2 = new TableColumn<Stiffener, String>("GUID");
         tableColumn2.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getGUIDRef()));
 
-        var tableColumn3 = new TableColumn<org.ocx_schema.v310.Stiffener, String>("Name");
+        var tableColumn3 = new TableColumn<Stiffener, String>("Name");
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
 
         // TODO: better material representation
-        var tableColumn4 = new TableColumn<org.ocx_schema.v310.Stiffener, String>("Material");
+        var tableColumn4 = new TableColumn<Stiffener, String>("Material");
         tableColumn4.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getMaterialRef().toString()));
 
 
         // TODO: better quantity representation
-        var tableColumn5 = new TableColumn<org.ocx_schema.v310.Stiffener, String>("Function");
+        var tableColumn5 = new TableColumn<Stiffener, String>("Function");
         tableColumn5.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getFunctionType()));
 
@@ -634,11 +659,13 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
     private Tab createPlatesTab() {
 
         var tab = new Tab("Plates");
+        tab.setClosable(false);
+
         var vbox = new VBox();
         tab.setContent(vbox);
 
-        final ObservableList<org.ocx_schema.v310.Plate> plates = FXCollections.observableArrayList();
-        final FilteredList<org.ocx_schema.v310.Plate> filteredPlates = new FilteredList<>(plates, p -> true);
+        final ObservableList<Plate> plates = FXCollections.observableArrayList();
+        final FilteredList<Plate> filteredPlates = new FilteredList<>(plates, p -> true);
 
         if (getObject().getComposedOf() != null && getObject().getComposedOf().getPlates() != null) {
             plates.addAll(getObject().getComposedOf().getPlates());
@@ -675,7 +702,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         });
 
 
-        var tableColumn1 = new TableColumn<org.ocx_schema.v310.Plate, org.ocx_schema.v310.Plate>("ID");
+        var tableColumn1 = new TableColumn<Plate, Plate>("ID");
         tableColumn1.setCellValueFactory(c -> new SimpleObjectProperty<>(c.getValue()));
         tableColumn1.setCellFactory(createHyperlinkCellfactory(selected -> {
             LOG.debug("selected plate {}", selected);
@@ -692,11 +719,11 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
 
         }));
 
-        var tableColumn2 = new TableColumn<org.ocx_schema.v310.Plate, String>("GUID");
+        var tableColumn2 = new TableColumn<Plate, String>("GUID");
         tableColumn2.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getGUIDRef()));
 
-        var tableColumn3 = new TableColumn<org.ocx_schema.v310.Plate, String>("Name");
+        var tableColumn3 = new TableColumn<Plate, String>("Name");
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
@@ -728,7 +755,7 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         // TOD: add thickness unit
 
         // TODO: better quantity representation
-        var tableColumn5 = new TableColumn<org.ocx_schema.v310.Plate, String>("Function");
+        var tableColumn5 = new TableColumn<Plate, String>("Function");
         tableColumn5.setCellValueFactory(cell ->
                 new SimpleStringProperty(cell.getValue().getFunctionType()));
 
@@ -738,6 +765,89 @@ public class PanelPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Panel
         VBox.setVgrow(table, Priority.ALWAYS);
 
         table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3, tableColumn4, tableColumn5);
+        table.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
+        );
+
+        table.setMaxWidth(Double.MAX_VALUE);
+        table.setMinHeight(150);
+        table.setMaxHeight(1500);
+
+        return tab;
+
+    }
+
+
+    private Tab createCutByTab() {
+
+        var tab = new Tab("Holes");
+        tab.setClosable(false);
+
+        var vbox = new VBox();
+        tab.setContent(vbox);
+
+        final ObservableList<CutByRecord> holes = FXCollections.observableArrayList();
+        final FilteredList<CutByRecord> filteredHoles = new FilteredList<>(holes, p -> true);
+
+        if (getObject().getCutBy() != null && getObject().getCutBy().getHole2DContoursAndInnerContours() != null) {
+            for (Serializable serializable : getObject().getCutBy().getHole2DContoursAndInnerContours()) {
+
+                LOG.warn("hole {}", serializable);
+                holes.add(CutByRecord.forHole(serializable));
+            }
+
+        } else {
+            LOG.warn("Panel {} ({})has no CutBy element or no holes", getObject().getId(), getObject().getGUIDRef());
+        }
+
+        //
+        // Define the table
+        //
+
+        var filterText = new CustomTextField();
+        filterText.setLeft(new FontIcon(MaterialDesignT.TABLE_SEARCH));
+        filterText.setPrefWidth(100);
+        filterText.setPadding(new Insets(10, 0, 10, 0));
+        filterText.setPromptText("search Hole by name");
+        vbox.getChildren().add(filterText);
+
+        filterText.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            filteredHoles.setPredicate(record -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (record.name() != null && record.name().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches name
+                } else if (record.id() != null && record.id().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches id
+                }
+                return false; // Does not match
+            });
+        });
+
+        var tableColumn0 = new TableColumn<CutByRecord, String>("Type");
+        tableColumn0.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().type().toString()));
+
+        var tableColumn1 = new TableColumn<CutByRecord, String>("ID");
+        tableColumn1.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().id()));
+
+        var tableColumn2 = new TableColumn<CutByRecord, String>("GUID");
+        tableColumn2.setCellValueFactory(
+                c -> new SimpleStringProperty(c.getValue().guid()));
+
+        var tableColumn3 = new TableColumn<CutByRecord, String>("Name");
+        tableColumn3.setCellValueFactory(
+                c -> new SimpleStringProperty(c.getValue().name()));
+
+
+        var table = new TableView<>(filteredHoles);
+        vbox.getChildren().add(table);
+        VBox.setVgrow(table, Priority.ALWAYS);
+
+        table.getColumns().setAll(tableColumn0, tableColumn1, tableColumn2, tableColumn3);
         table.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
         );
