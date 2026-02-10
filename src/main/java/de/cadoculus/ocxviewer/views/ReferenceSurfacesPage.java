@@ -19,7 +19,7 @@ import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
-import de.cadoculus.ocxviewer.utils.GeomHelper;
+import de.cadoculus.ocxviewer.geom.GeomHelper;
 import jakarta.xml.bind.JAXBElement;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

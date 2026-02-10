@@ -40,6 +40,8 @@
         <Logger name="de.cadoculus.ocxviewer.io.NamespaceReplacingInputStream" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.io.OCXIOReferenceResolver" level="debug"/>
 
+
+
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>

@@ -17,7 +17,7 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.models.ControlPointRecord;
-import de.cadoculus.ocxviewer.utils.GeomHelper;
+import de.cadoculus.ocxviewer.geom.GeomHelper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

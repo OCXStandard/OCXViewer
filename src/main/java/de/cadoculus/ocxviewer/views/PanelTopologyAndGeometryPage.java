@@ -18,8 +18,9 @@ package de.cadoculus.ocxviewer.views;
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.geom.MainPlane;
 import de.cadoculus.ocxviewer.models.*;
-import de.cadoculus.ocxviewer.utils.GeomHelper;
+import de.cadoculus.ocxviewer.geom.GeomHelper;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import jakarta.xml.bind.JAXBElement;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,7 +30,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.BoundingBox;
-import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
@@ -353,7 +353,7 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
                 maxX = Double.MIN_VALUE, maxY = Double.MIN_VALUE, maxZ = Double.MIN_VALUE;
         for (LimitedByRecord limitRecord : limits) {
 
-            var p = UnitConverter.toDefaultUnit(limitRecord.startPoint());
+            var p = UnitHelper.toDefaultUnit(limitRecord.startPoint());
             point3s.add( p);
 
             minX = Math.min(minX, p.x);
@@ -364,7 +364,7 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
             maxY = Math.max(maxY, p.y);
             maxZ = Math.max(maxZ, p.z);
 
-            p = UnitConverter.toDefaultUnit(limitRecord.endPoint());
+            p = UnitHelper.toDefaultUnit(limitRecord.endPoint());
             point3s.add( p);
 
             minX = Math.min(minX, p.x);
@@ -399,7 +399,7 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
         if (distanceTolerance == null) {
             LOG.warn("no distance tolerance defined in vessel, using 1 mm");
         } else {
-            distance = UnitConverter.toDefaultUnit(distanceTolerance);
+            distance = UnitHelper.toDefaultUnit(distanceTolerance);
         }
         LOG.info("using distance tolerance of {} mm", distance);
 

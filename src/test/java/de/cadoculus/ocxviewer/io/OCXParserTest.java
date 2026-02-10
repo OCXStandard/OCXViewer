@@ -89,27 +89,7 @@ class OCXParserTest {
 
     }
 
-    //@Test
-    void readValidFile() throws IOException {
 
-
-        //var file = new File("data/Schema version 3.0.0/test.3docx");
-        var file = new File("data/Schema version 3.0.0/NAPA-OCX_M1.3docx");
-
-        var result = OCXIO.read(file);
-
-        assertNotNull(result);
-        assertNotNull(result.ocx() );
-        var ocx = result.ocx();
-        assertNotNull(ocx.getHeader(),"header");
-
-        var outDir = new File("test-out");
-        outDir.mkdirs();
-        var outFile = new File(outDir, "OCXIOTest.readValidFile.xml");
-
-        OCXIO.write(ocx, outFile);
-
-    }
 
 
 }

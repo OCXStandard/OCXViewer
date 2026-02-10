@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.cadoculus.ocxviewer.utils;
+package de.cadoculus.ocxviewer.geom;
 
 
-import de.cadoculus.ocxviewer.models.MainPlane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.ControlPtList;
 import org.ocx_schema.v310.NURBSSurfaceT;
-import org.ocx_schema.v310.Point3DT;
+import org.ocx_schema.v310.Vector3DT;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * A helper class for geometric entities
@@ -213,5 +213,23 @@ public class GeomHelper {
             found=projected;
         }
         return found;
+    }
+
+    public static Vector3d convert(Vector3DT vDirection) {
+        return new Vector3d(vDirection.getDirections().get(0),
+                vDirection.getDirections().get(1),
+        vDirection.getDirections().get(2));
+    }
+
+    public static MainPlane getMainPlane(Vector3d vector) {
+        if ( Math.abs(vector.x) > Math.abs(vector.y) && Math.abs(vector.x) > Math.abs(vector.z) ) {
+            return MainPlane.XPLANE;
+        } else if ( Math.abs(vector.y) > Math.abs(vector.x) && Math.abs(vector.y) > Math.abs(vector.z) ) {
+            return MainPlane.YPLANE;
+        } else if ( Math.abs(vector.z) > Math.abs(vector.x) && Math.abs(vector.z) > Math.abs(vector.y) ) {
+            return MainPlane.ZPLANE;
+        } else {
+            return MainPlane.UNDEFINED;
+        }
     }
 }

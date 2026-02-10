@@ -18,17 +18,32 @@ package de.cadoculus.ocxviewer.views;
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.geom.BracketGeometry;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
+import de.cadoculus.ocxviewer.models.WorkingContext;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-import org.ocx_schema.v310.FeatureCope;
+import org.ocx_schema.v310.Bracket;
 
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 
 /**
@@ -41,23 +56,41 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
     public static final String NAME = "Bracket";
     private static final Logger LOG = LogManager.getLogger(BracketPage.class);
 
-    public BracketPage(org.ocx_schema.v310.Bracket bracket, Page parent) {
+    private final BracketGeometry bracketGeometry;
+    private final BracketGeometry.BracketPoints3D bracketGeometry3D;
+    private final BracketGeometry.BracketPoints2D bracketGeometry2D;
+    private final Canvas canvas = new Canvas();
+    private final TabPane dimeAndSketchTab;
+    private final GridPane dimensionGrid = new GridPane();
+
+    private double canvasWidth;
+    private double canvasHeight;
+
+    private Color textColor = Color.BLACK;
+    private Color dimensionLineColour = Color.BLACK;
+    private Color cosysColour = Color.BLUE;
+    private Color bracketColour = Color.BLACK;
+    private final double barLineWidth = 2.0;
+    private final double coosysLineWidth = 4.0;
+    private final double dimensionLineWidth = 1.0;
+
+    private final DropShadow dropShadow = new DropShadow();
+
+
+    public BracketPage(Bracket bracket, Page parent) {
         super(bracket, parent, "Bracket «" + bracket.getId() + "»");
+
+        bracketGeometry = new BracketGeometry(bracket);
+        bracketGeometry3D = bracketGeometry.getBracketGeometry();
+        bracketGeometry2D = bracketGeometry.getBracketGeometry2D();
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
 
         createTitle(bcs, getName(), "Information about an OCX Bracket");
 
-        ScrollPane scrollPane = new ScrollPane();
-        this.setCenter(scrollPane);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
-
         GridPane gridPane = createDefaultGrid();
-        scrollPane.setContent(gridPane);
+        setCenter(gridPane);
 
         int row = 0;
 
@@ -91,142 +124,461 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         gridPane.add(textField, 1, row++);
         bindToBean(textField.textProperty(), getObject(), "GUIDRef", String.class);
 
+
+        var tabSketch = createSketchTab();
+        var tabDimensions = createDimensionsTab();
+        dimeAndSketchTab = new TabPane(tabSketch, tabDimensions);
+        gridPane.add(dimeAndSketchTab, 0, row, 4, 3);
+
+        // ensure the last row gets all available space
+        for (int r = 0; r < GridPane.getRowIndex(dimeAndSketchTab); r++) {
+            gridPane.getRowConstraints().add(new RowConstraints());
+        }
+
+        RowConstraints rc = new RowConstraints();
+        rc.setVgrow(Priority.ALWAYS);
+        rc.setMinHeight(200);
+        gridPane.getRowConstraints().add(rc);
+
+
+        this.boundsInLocalProperty().addListener((bound, oldBound, newBound) -> updateCanvas());
+        WorkingContext.getInstance().darkModeProperty().addListener(obs -> updateCanvas());
+        updateCanvas();
+
+    }
+
+    private void updateCanvas() {
+
+        canvasHeight = dimeAndSketchTab.getHeight() - 20;
+        canvasWidth = dimeAndSketchTab.getWidth() - 21;
+
+        double dim = Math.min(canvasWidth, canvasHeight) / 33.0;
+
+        dropShadow.setOffsetY(dim);
+        dropShadow.setOffsetX(dim);
+
+        canvas.setHeight(canvasHeight);
+        canvas.setWidth(canvasWidth);
+
+        // todo: better way to get colour scheme
+        textColor = WorkingContext.getInstance().darkModeProperty().get() ? Color.WHITE : Color.BLACK;
+        dimensionLineColour = WorkingContext.getInstance().darkModeProperty().get() ? Color.WHITE : Color.BLACK;
+        cosysColour = WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#bccadc") : Color.web("#537297");
+        bracketColour = WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#508F8E") : Color.web("#457B7A");
+        dropShadow.setColor(WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#b7becb") : Color.web("#E5E9F0"));
+
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        int textHeight = canvasHeight/50 < 12 ? 12 : (int) (canvasHeight/50);
+        gc.setFont(new Font(gc.getFont().getName(), textHeight));
+
+        if  (bracketGeometry2D == null) {
+            gc.setFill(textColor);
+            gc.fillText("No 2D Geometry available for this Bracket", 10, 20);
+            return;
+        }
+
+        var height = bracketGeometry2D.height();
+        var width = bracketGeometry2D.width();
+        var scaleY = (canvasHeight - 200) / height;
+        var scaleX = (canvasWidth - 200) / width;
+        var scale = Math.min(scaleX, scaleY);
+
+        LOG.info("canvas {}x{}, bracket geometry {}x{}, scale {}, scaleX {}, scaleY {}", canvasWidth, canvasHeight, width, height, scale, scaleX, scaleY);
+
+        LOG.info("bracket geometry 2D origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.p2(), bracketGeometry2D.p3(), bracketGeometry2D.p4());
+        LOG.info("    u-dir {}, v-dir {}", bracketGeometry2D.uDirection(), bracketGeometry2D.vDirection());
+
+
+        var offsetX = Math.round( (canvasWidth - scale * width) / 2.0);
+        var offsetY = Math.round(canvasHeight - 100);
+
+        LOG.info("offsetX {}, offsetY {}", offsetX, offsetY);
+
+        var viewHoco = new Matrix4d();
+        viewHoco.setIdentity();
+        viewHoco.m11=-1;
+        viewHoco.setScale(scale);
+        viewHoco.m03 = offsetX;
+        viewHoco.m13 = offsetY;
+
+        LOG.info("viewHoco\n{}", viewHoco);
+
+
+
+        drawBracketShape(gc, viewHoco, bracketColour.brighter(), bracketColour);
+
+        // draw key points and try to avoid overlapping text
+        // Origin
+        var offDir = new Vector3d(bracketGeometry2D.uDirection());
+        offDir.add( bracketGeometry2D.vDirection());
+        offDir.negate();
+        offDir.normalize();
+        offDir.scale(4*textHeight);
+
+        drawPoint( gc, viewHoco, bracketGeometry2D.origin(),  5, scale, Color.RED, bracketGeometry3D.origin().toString(), textColor, offDir);
+
+        // p1 (udir)
+        offDir = new Vector3d(bracketGeometry2D.uDirection());
+        offDir.normalize();
+        offDir.scale(4*textHeight);
+
+        drawPoint( gc, viewHoco, bracketGeometry2D.p1(), 5, scale, Color.RED, bracketGeometry3D.p1().toString(), textColor, offDir);
+
+        // p2 (vdir)
+        offDir = new Vector3d(bracketGeometry2D.vDirection());
+        offDir.normalize();
+        offDir.scale(4*textHeight);
+        drawPoint( gc, viewHoco, bracketGeometry2D.p2(), 5, scale, Color.RED, bracketGeometry3D.p2().toString(), textColor, offDir);
+
+        drawBracketDimensions(gc, viewHoco,scale);
+
+    }
+
+    private void drawBracketDimensions(GraphicsContext gc, Matrix4d totalHoco, double scale) {
+
+        gc.setStroke(dimensionLineColour);
+        gc.setFill(dimensionLineColour);
+        gc.setLineWidth(dimensionLineWidth);
+
+        // U direction dimension
+        var offset = new Vector3d();
+        offset.cross(bracketGeometry2D.uDirection(), new Vector3d(0,0,1));
+        offset.normalize();
+        offset.scale(50/scale);
+        if ( Math.signum(offset.x) == Math.signum(bracketGeometry2D.vDirection().x) ) {
+            offset.x*=-1;
+        }
+        if ( Math.signum(offset.y) == Math.signum(bracketGeometry2D.vDirection().y) ) {
+            offset.y*=-1;
+        }
+        totalHoco.transform(offset);
+
+        var p0 = new Point3d(bracketGeometry2D.origin());
+        totalHoco.transform(p0);
+        var p01 = new Point3d(bracketGeometry2D.origin());
+        p01.add(offset);
+        totalHoco.transform(p01);
+
+        gc.strokeLine(p0.x, p0.y, p01.x, p01.y);
+
+        var p1 = new Point3d(bracketGeometry2D.p1());
+        totalHoco.transform(p1);
+        var p11 = new Point3d(bracketGeometry2D.p1());
+        p11.add(offset);
+        totalHoco.transform(p11);
+
+        gc.strokeLine(p1.x, p1.y, p11.x, p11.y);
+
+        offset.scale(0.9);
+
+        var p02 = new Point3d(bracketGeometry2D.origin());
+        p02.add(offset);
+        totalHoco.transform(p02);
+
+        var p12 = new Point3d(bracketGeometry2D.p1());
+        p12.add(offset);
+        totalHoco.transform(p12);
+
+        gc.strokeLine(p02.x, p02.y, p12.x, p12.y);
+
+        var dir = new Vector3d(p12);
+        dir.sub(p02);
+        dir.normalize();
+        drawArrowHead(gc, p02.x, p02.y, dir.x, dir.y);
+        dir.negate();
+        drawArrowHead(gc, p12.x, p12.y, dir.x, dir.y);
+
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.fillText(String.format("u=%.2f [mm]", bracketGeometry3D.armLengthU()), (p02.x+ p12.x)/2+offset.x, (p02.y+ p12.y)/2 +offset.y);
+
+
+        // V direction dimension
+        offset = new Vector3d();
+        offset.cross(bracketGeometry2D.vDirection(), new Vector3d(0,0,1));
+        offset.normalize();
+        offset.scale(50/scale);
+        if ( Math.signum(offset.x) == Math.signum(bracketGeometry2D.uDirection().x) ) {
+            offset.x*=-1;
+        }
+        if ( Math.signum(offset.y) != Math.signum(bracketGeometry2D.uDirection().y) ) {
+            offset.y*=-1;
+        }
+        totalHoco.transform(offset);
+
+
+        var p03 = new Point3d(bracketGeometry2D.origin());
+        p03.add(offset);
+        totalHoco.transform(p03);
+        gc.strokeLine(p0.x, p0.y, p03.x, p03.y);
+
+        var p2 = new Point3d(bracketGeometry2D.p2());
+        totalHoco.transform(p2);
+        var p21 = new Point3d(bracketGeometry2D.p2());
+        p21.add(offset);
+        totalHoco.transform(p21);
+
+        gc.strokeLine(p2.x, p2.y, p21.x, p21.y);
+
+        offset.scale(0.9);
+
+        var p04 = new Point3d(bracketGeometry2D.origin());
+        p04.add(offset);
+        totalHoco.transform(p04);
+
+        var p22 = new Point3d(bracketGeometry2D.p2());
+        p22.add(offset);
+        totalHoco.transform(p22);
+
+        gc.strokeLine(p04.x, p04.y, p22.x, p22.y);
+
+        dir = new Vector3d(p22);
+        dir.sub(p04);
+        dir.normalize();
+        drawArrowHead(gc, p04.x, p04.y, dir.x, dir.y);
+        dir.negate();
+        drawArrowHead(gc, p22.x, p22.y, dir.x, dir.y);
+
+        gc.setTextAlign(TextAlignment.RIGHT);
+        gc.fillText(String.format("v=%.2f [mm]", bracketGeometry3D.armLengthV()), (p04.x+ p22.x)/2-offset.x, (p04.y+ p22.y)/2 -offset.y);
+
+
+    }
+
+    private void drawBracketShape(GraphicsContext gc, Matrix4d totalHoco, Color fillColor, Color strokeColor) {
+        // paint the HP
+        gc.setFill(fillColor);
+        gc.setStroke(bracketColour);
+        gc.setLineWidth(barLineWidth);
+
+        gc.beginPath();
+
+        var start = new Point3d( bracketGeometry2D.origin());
+        totalHoco.transform(start);
+        gc.moveTo(start.x, start.y);
+
+        var next = new Point3d(bracketGeometry2D.p1());
+        totalHoco.transform(next);
+        gc.lineTo(next.x, next.y);
+
+        next = new Point3d(bracketGeometry2D.p3());
+        totalHoco.transform(next);
+        gc.lineTo(next.x, next.y);
+
+        if ( bracketGeometry2D.p5() != null) {
+            // TODD: draw arc
+        }
+        next = new Point3d(bracketGeometry2D.p4());
+        totalHoco.transform(next);
+        gc.lineTo(next.x, next.y);
+
+        next = new Point3d(bracketGeometry2D.p2());
+        totalHoco.transform(next);
+        gc.lineTo(next.x, next.y);
+
+        gc.closePath();
+        gc.setEffect(dropShadow);
+        gc.fill();
+        gc.setEffect(null);
+        gc.stroke();
+
+    }
+
+    private void drawPoint(GraphicsContext gc, Matrix4d totalHoco, Point3d point, int size, double scale, Color colour,
+                            String label, Color labelColor, Vector3d offDir  ) {
+
+        var d = size*scale;
+        if  ( d <5) {
+            d = 5;
+        } else if ( d > 20) {
+            d = 20;
+        }
+        gc.setLineWidth(coosysLineWidth);
+        gc.setStroke(colour);
+
+        var start = new Point3d(point);
+        totalHoco.transform(start);
+
+        totalHoco.transform(offDir);
+
+        LOG.info("draw point {} at {}, {}", point, start.x, start.y);
+
+        gc.strokeLine(start.x-d, start.y-d, start.x+d, start.y+d);
+        gc.strokeLine(start.x+d, start.y-d, start.x-d, start.y+d);
+
+        if ( StringUtils.isNotEmpty(label) ) {
+            gc.setFill( labelColor );
+            var textX = start.x+offDir.x;
+            var textY = start.y+offDir.y;
+            LOG.info("draw text {} at {}, {}", label, textX, textY);
+            gc.setTextAlign(offDir.x < 0 ? TextAlignment.RIGHT : TextAlignment.LEFT);
+            gc.fillText(label, textX, textY);
+        }
+
+
+    }
+
+
+    private Tab createDimensionsTab() {
+        var tab = new Tab("Dimensions & Material");
+        tab.setClosable(false);
+
+        ScrollPane scrollPane = new ScrollPane();
+        tab.setContent(scrollPane);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
+        scrollPane.setContent(dimensionGrid);
+
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setHalignment(HPos.RIGHT);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setHalignment(HPos.LEFT);
+        col2.setHgrow(Priority.ALWAYS);
+        col2.setMaxWidth(600);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setHalignment(HPos.RIGHT);
+        ColumnConstraints col4 = new ColumnConstraints();
+        col4.setHalignment(HPos.LEFT);
+        col4.setHgrow(Priority.ALWAYS);
+        col4.setMaxWidth(600);
+        dimensionGrid.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 10;");
+
+        var bracket = getObject();
         //
         // Bracket Parameters
         //
+        Label label = null;
+        Label titelLabel = null;
+        int row = 0;
+
         if (bracket.getBracketParameters() == null) {
             var warning = new atlantafx.base.controls.Message(
                     "Warning",
-                    "Not Bracket Paramters found in Bracket",
+                    "No Bracket Parameters found in Bracket",
                     new FontIcon(MaterialDesignA.ALERT)
             );
             warning.getStyleClass().add(Styles.WARNING);
-            gridPane.add(warning, 0, row, 4, 1);
+            dimensionGrid.add(warning, 0, row, 4, 1);
         } else {
-            label = new Label("Bracket Parameters");
+            titelLabel = new Label("Bracket Parameters");
             titelLabel.getStyleClass().add(Styles.TITLE_4);
-            gridPane.add(titelLabel, 0, row++, 4, 1);
-            GridPane.setHalignment(titelLabel, HPos.LEFT);
-            GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+            dimensionGrid.add(titelLabel, 0, row++, 4, 1);
+            dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
+            dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
 
             label = new Label("Origin");
             label.setTooltip(new Tooltip("The origin or root point of the Bracket"));
-            gridPane.add(label, 0, row);
+            dimensionGrid.add(label, 0, row);
 
             var group = createOrRebind(null, bracket.getBracketParameters().getOrigin(), true);
-            gridPane.add(group, 1, row++);
+            dimensionGrid.add(group, 1, row++);
 
 
             // U
             label = new Label("U-Arm Length");
             label.setTooltip(new Tooltip("The bracket's U arm length"));
-            gridPane.add(label, 0, row);
+            dimensionGrid.add(label, 0, row);
 
             group = createOrRebind(null, bracket.getBracketParameters().getArmLengthU(), true);
-            gridPane.add(group, 1, row);
+            dimensionGrid.add(group, 1, row);
 
             label = new Label("U-Direction");
-            label.setTooltip(new Tooltip("Local U direction of the Bracket"));
-            gridPane.add(label, 2, row);
+            label.setTooltip(new Tooltip("Local U-direction of the Bracket"));
+            dimensionGrid.add(label, 2, row);
 
             group = createOrRebind(null, bracket.getBracketParameters().getUDirection(), true);
-            gridPane.add(group, 3, row++);
+            dimensionGrid.add(group, 3, row++);
 
             // V
             label = new Label("V-Arm Length");
             label.setTooltip(new Tooltip("The bracket's V arm length"));
-            gridPane.add(label, 0, row);
+            dimensionGrid.add(label, 0, row);
 
             group = createOrRebind(null, bracket.getBracketParameters().getArmLengthV(), true);
-            gridPane.add(group, 1, row);
+            dimensionGrid.add(group, 1, row);
 
             label = new Label("V-Direction");
-            label.setTooltip(new Tooltip("Local V direction of the Bracket"));
-            gridPane.add(label, 2, row);
+            label.setTooltip(new Tooltip("Local V-direction of the Bracket"));
+            dimensionGrid.add(label, 2, row);
 
             group = createOrRebind(null, bracket.getBracketParameters().getVDirection(), true);
-            gridPane.add(group, 3, row++);
+            dimensionGrid.add(group, 3, row++);
 
 
             // Nose
             label = new Label("U Nose");
-            label.setTooltip(new Tooltip("?? the height of the bracket's nose in U direction??"));
-            gridPane.add(label, 0, row);
+            label.setTooltip(new Tooltip("The bracket nose depth at the local U end of the bracket. "));
+            dimensionGrid.add(label, 0, row);
             group = createAndBind(bracket.getBracketParameters().getUnose(), false);
-            gridPane.add(group, 1, row);
+            dimensionGrid.add(group, 1, row);
 
             label = new Label("V Nose");
-            label.setTooltip(new Tooltip("?? the height of the bracket's nose in V direction??"));
-            gridPane.add(label, 2, row);
+            label.setTooltip(new Tooltip("The bracket nose depth at the local V end of the bracket. "));
+            dimensionGrid.add(label, 2, row);
             group = createAndBind(bracket.getBracketParameters().getUnose(), false);
-            gridPane.add(group, 3, row);
-
+            dimensionGrid.add(group, 3, row++);
 
             label = new Label("Free Edge Radius");
             label.setTooltip(new Tooltip("??"));
-            gridPane.add(label, 0, row);
+            dimensionGrid.add(label, 0, row);
             group = createAndBind(bracket.getBracketParameters().getFreeEdgeRadius(), false);
-            gridPane.add(group, 1, row++);
-
+            dimensionGrid.add(group, 1, row++);
 
             if ( bracket.getBracketParameters().getFeatureCope() != null ) {
 
-                label = new Label("Feature Cope");
+                titelLabel = new Label("Feature Cope");
                 titelLabel.getStyleClass().add(Styles.TITLE_4);
-                gridPane.add(titelLabel, 0, row++, 4, 1);
-                GridPane.setHalignment(titelLabel, HPos.LEFT);
-                GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+                dimensionGrid.add(titelLabel, 0, row++, 4, 1);
+                dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
+                dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
                 label = new Label("Cope Radius");
                 label.setTooltip(new Tooltip("??"));
-                gridPane.add(label, 0, row);
+                dimensionGrid.add(label, 0, row);
                 group = createAndBind(bracket.getBracketParameters().getFeatureCope().getCopeRadius(), true);
-                gridPane.add(group, 1, row++);
+                dimensionGrid.add(group, 1, row++);
 
                 label = new Label("Cope Length");
                 label.setTooltip(new Tooltip("The length of the cope measured along the stiffener trace-line (X-axis)  from the end of the stiffener to the centre of the cope radius."));
-                gridPane.add(label, 0, row);
+                dimensionGrid.add(label, 0, row);
                 group = createAndBind(bracket.getBracketParameters().getFeatureCope().getCopeLength(), false);
-                gridPane.add(group, 1, row);
+                dimensionGrid.add(group, 1, row);
 
                 label = new Label("Cope Height");
                 label.setTooltip(new Tooltip("The height of the cope measured along the cross section local V-direction from the root point to the centre of the cope radius."));
-                gridPane.add(label, 0, row);
+                dimensionGrid.add(label, 2, row);
                 group = createAndBind(bracket.getBracketParameters().getFeatureCope().getCopeHeight(), false);
-                gridPane.add(group, 1, row);
+                dimensionGrid.add(group, 3, row++);
             }
 
             if ( bracket.getBracketParameters().getFlangeEdgeReinforcement() != null ) {
-                label = new Label("Flange Edge Reinforcement");
-                label.setTooltip(new Tooltip("Bracket flange edge reinforcement parameters."));
+                titelLabel = new Label("Flange Edge Reinforcement");
+                titelLabel.setTooltip(new Tooltip("Bracket flange edge reinforcement parameters."));
                 titelLabel.getStyleClass().add(Styles.TITLE_4);
-                gridPane.add(titelLabel, 0, row++, 4, 1);
-                GridPane.setHalignment(titelLabel, HPos.LEFT);
-                GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+                dimensionGrid.add(titelLabel, 0, row++, 4, 1);
+                dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
+                dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
                 label = new Label("Flange Width");
                 label.setTooltip(new Tooltip("The width of the bracket flange edge reinforcement."));
-                gridPane.add(label, 0, row);
+                dimensionGrid.add(label, 0, row);
                 group = createAndBind(bracket.getBracketParameters().getFlangeEdgeReinforcement().getFlangeWidth(), false);
-                gridPane.add(group, 1, row++);
+                dimensionGrid.add(group, 1, row++);
 
                 label = new Label("Radius");
                 label.setTooltip(new Tooltip("The bend radius of the transition zone between bracket web and bracket flange."));
-                gridPane.add(label, 2, row);
+                dimensionGrid.add(label, 2, row);
                 group = createAndBind(bracket.getBracketParameters().getFlangeEdgeReinforcement().getRadius(), false);
-                gridPane.add(group, 3, row++);
+                dimensionGrid.add(group, 3, row++);
             }
 
 
         }
-
-
-        label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++, 2, 1);
-        GridPane.setHalignment(label, HPos.LEFT);
-
-
 
         // Physical Properties
         if (bracket.getPhysicalProperties() == null) {
@@ -236,40 +588,108 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
                     new FontIcon(MaterialDesignA.ALERT)
             );
             warning.getStyleClass().add(Styles.WARNING);
-            gridPane.add(warning, 0, row, 4, 1);
+            dimensionGrid.add(warning, 0, row, 4, 1);
         } else {
             titelLabel = new Label("Physical Properties");
             titelLabel.getStyleClass().add(Styles.TITLE_4);
-            gridPane.add(titelLabel, 0, row++, 4, 1);
-            GridPane.setHalignment(titelLabel, HPos.LEFT);
-            GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+            dimensionGrid.add(titelLabel, 0, row++, 4, 1);
+            dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
+            dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
 
             label = new Label("Weight");
             label.setTooltip(new Tooltip("The bracket's weight"));
-            gridPane.add(label, 0, row);
+            dimensionGrid.add(label, 0, row);
 
             var group = createOrRebind(null, bracket.getPhysicalProperties().getDryWeight(), true);
-            gridPane.add(group, 1, row++);
+            dimensionGrid.add(group, 1, row++);
 
             label = new Label("Center of Gravity");
             label.setTooltip(new Tooltip("The bracket's COG"));
-            gridPane.add(label, 0, row);
+            dimensionGrid.add(label, 0, row);
 
             group = createOrRebind(null, bracket.getPhysicalProperties().getCenterOfGravity(), true);
-            gridPane.add(group, 1, row++);
+            dimensionGrid.add(group, 1, row++);
+
+        }
+
+        // Material
+        titelLabel = new Label("Bracket Material");
+        titelLabel.getStyleClass().add(Styles.TITLE_4);
+        dimensionGrid.add(titelLabel, 0, row++, 4, 1);
+        dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
+        dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+
+
+        if (bracket.getPlateMaterial() == null) {
+            var warning = new atlantafx.base.controls.Message(
+                    "Warning",
+                    "No PlateMaterial found in Bracket/PlateMaterial !",
+                    new FontIcon(MaterialDesignA.ALERT)
+            );
+            warning.getStyleClass().add(Styles.WARNING);
+
+            var warningIcon = new FontIcon(MaterialDesignA.ALERT);
+            warningIcon.getStyleClass().add(Styles.WARNING);
+
+            dimensionGrid.add(warning, 0, ++row, 4, 1);
+
+        } else {
+
+            label = new Label("Thickness");
+            label.setTooltip(new Tooltip("The plate's thickness"));
+            dimensionGrid.add(label, 0, row);
+            var group1 = createAndBind(bracket.getPlateMaterial().getThickness(), true);
+            dimensionGrid.add(group1, 1, row);
+
+
+            label = new Label("Offset");
+            label.setTooltip(new Tooltip("The plate's offset"));
+            dimensionGrid.add(label, 2, row);
+            group1 = createAndBind(bracket.getOffset(), true);
+            dimensionGrid.add(group1, 3, row++);
+
+
+            label = new Label("Material Quality");
+            label.setTooltip(new Tooltip("The plate's material"));
+            dimensionGrid.add(label, 0, row);
+
+            if (bracket.getPlateMaterial().getReferenced() != null) {
+                var link = new Hyperlink("Material  «" + bracket.getPlateMaterial().getReferenced().getId() + "»");
+                link.setTooltip(new Tooltip("Goto Material"));
+                dimensionGrid.add(link, 1, row++);
+                link.setOnAction(e -> {
+                    var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+                    robert.add(new BreadcrumbRecord(bracket.getPlateMaterial().getReferenced().getId(), MaterialPage.class, null, bracket.getPlateMaterial().getReferenced()));
+
+                    var event = new SelectionEvent(robert);
+                    DefaultEventBus.getInstance().publish(event);
+                });
+            } else if (bracket.getPlateMaterial().getLocalRef() instanceof String) {
+                var naLabel = new Label("failed to resolve local ref " + bracket.getPlateMaterial().getLocalRef() + " to Material.");
+                naLabel.getStyleClass().add(Styles.WARNING);
+                dimensionGrid.add(naLabel, 1, row++);
+            } else if (StringUtils.isNoneEmpty(bracket.getPlateMaterial().getGUIDRef())) {
+                var naLabel = new Label("failed to resolve GUIDRef " + bracket.getPlateMaterial().getGUIDRef() + " to Material.");
+                naLabel.getStyleClass().add(Styles.WARNING);
+                dimensionGrid.add(naLabel, 1, row++);
+            } else {
+                var naLabel = new Label("failed to resolve MaterialRef, not localRef or GUIDRef found");
+                naLabel.getStyleClass().add(Styles.WARNING);
+                dimensionGrid.add(naLabel, 1, row++);
+            }
 
         }
 
         // Custom Properties
         label = new Label("Custom Properties");
         label.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(label, 0, row++, 2, 1);
-        GridPane.setHalignment(label, HPos.LEFT);
+        dimensionGrid.add(label, 0, row++, 2, 1);
+        dimensionGrid.setHalignment(label, HPos.LEFT);
 
         var link = new Hyperlink("View Custom Properties");
         link.setTooltip(new Tooltip("Goto Custom Properties page"));
-        gridPane.add(link, 0, row++, 2, 1);
+        dimensionGrid.add(link, 0, row++, 2, 1);
         link.setOnAction(e -> {
             var robert = new ArrayList<>(getBreadcrumbs());
             robert.add(new BreadcrumbRecord("Custom Properties", CustomPropertiesPage.class, null, getObject()));
@@ -278,7 +698,19 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
             DefaultEventBus.getInstance().publish(event);
         });
 
-
+        return tab;
     }
+
+    private Tab createSketchTab() {
+        var tab = new Tab("Sketch");
+        tab.setClosable(false);
+
+        tab.setContent(canvas);
+        canvas.setWidth(200);
+        canvas.setHeight(200);
+
+        return tab;
+    }
+
 
 }

@@ -28,10 +28,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextFlow;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import oasis.unitsml.Unit;
@@ -93,6 +97,45 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         this.setPrefWidth(1200);
 
         this.getStyleClass().add("content-pane");
+
+    }
+
+    protected static  void drawArrowHead(GraphicsContext gc, double x, double y, double xDir, double yDir) {
+
+        double lw = Math.max(gc.getLineWidth(), 1);
+        lw = Math.min(lw, 5);
+
+        var p0 = new Point2D(0, 0);
+        var p1 = new Point2D(10 * lw, 3 * lw);
+        var p2 = new Point2D(10 * lw, -3 * lw);
+
+        //LOG.info("p0 {} p1 {} p2 {}", p0, p1, p2);
+
+        var angle = Math.atan2(yDir, xDir);
+        //LOG.info("angle {}°", Math.toDegrees(angle));
+        Rotate rotate = new Rotate(Math.toDegrees(angle), 0, 0);
+
+        var p0I = rotate.transform(p0);
+        var p1I = rotate.transform(p1);
+        var p2I = rotate.transform(p2);
+
+        //LOG.info("p0I {} p1I {} p2I {}", p0I, p1I, p2I);
+
+        Translate translate = new Translate(x, y);
+
+        var p0II = translate.transform(p0I);
+        var p1II = translate.transform(p1I);
+        var p2II = translate.transform(p2I);
+
+        //LOG.info("p0I {} p1I {} p2I {}", p0II, p1II, p1II);
+
+        gc.beginPath();
+        gc.moveTo(p0II.getX(), p0II.getY());
+        gc.lineTo(p1II.getX(), p1II.getY());
+        gc.lineTo(p2II.getX(), p2II.getY());
+        gc.closePath();
+        gc.fill();
+
 
     }
 

@@ -17,8 +17,8 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.models.HoleShapeType;
-import de.cadoculus.ocxviewer.models.UnitConverter;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.utils.UnitHelper;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -40,8 +40,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.*;
@@ -253,10 +251,10 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
             return;
         }
 
-        var width = UnitConverter.toDefaultUnit(mickeyMouseEarsT.getWidth());
-        var height = UnitConverter.toDefaultUnit(mickeyMouseEarsT.getHeight());
-        var radius = UnitConverter.toDefaultUnit(mickeyMouseEarsT.getRadius());
-        var displ = UnitConverter.toDefaultUnit(mickeyMouseEarsT.getDisplacement());
+        var width = UnitHelper.toDefaultUnit(mickeyMouseEarsT.getWidth());
+        var height = UnitHelper.toDefaultUnit(mickeyMouseEarsT.getHeight());
+        var radius = UnitHelper.toDefaultUnit(mickeyMouseEarsT.getRadius());
+        var displ = UnitHelper.toDefaultUnit(mickeyMouseEarsT.getDisplacement());
 
 
         var scaleY = (canvasHeight - 200) / (height + 2 * radius);
@@ -368,9 +366,9 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
             return;
         }
 
-        var width = UnitConverter.toDefaultUnit(rechHoleT.getWidth());
-        var height = UnitConverter.toDefaultUnit(rechHoleT.getHeight());
-        var radius = UnitConverter.toDefaultUnit(rechHoleT.getFilletRadius());
+        var width = UnitHelper.toDefaultUnit(rechHoleT.getWidth());
+        var height = UnitHelper.toDefaultUnit(rechHoleT.getHeight());
+        var radius = UnitHelper.toDefaultUnit(rechHoleT.getFilletRadius());
 
 
         var scaleY = (canvasHeight - 300) / height;
@@ -485,8 +483,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
             return;
         }
 
-        var width = UnitConverter.toDefaultUnit(ellipticalHoleHole.getWidth());
-        var height = UnitConverter.toDefaultUnit(ellipticalHoleHole.getHeight());
+        var width = UnitHelper.toDefaultUnit(ellipticalHoleHole.getWidth());
+        var height = UnitHelper.toDefaultUnit(ellipticalHoleHole.getHeight());
         var exponent = ellipticalHoleHole.getExponent();
         if (exponent == 0) {
             exponent = 2;
@@ -613,8 +611,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
             return;
         }
 
-        var width = UnitConverter.toDefaultUnit(symmetricalHole.getWidth());
-        var height = UnitConverter.toDefaultUnit(symmetricalHole.getHeight());
+        var width = UnitHelper.toDefaultUnit(symmetricalHole.getWidth());
+        var height = UnitHelper.toDefaultUnit(symmetricalHole.getHeight());
         var diameter = width > height ? height : width;
 
         //LOG.info("width {} height {} diameter {}", width, height, diameter);
@@ -717,7 +715,7 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
             return;
         }
 
-        var diameter = UnitConverter.toDefaultUnit(circle.getDiameter());
+        var diameter = UnitHelper.toDefaultUnit(circle.getDiameter());
 
         var scaleY = (canvasHeight - 200) / diameter;
         var scaleX = (canvasWidth - 200) / diameter;
@@ -832,45 +830,6 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         }
     }
 
-
-    private void drawArrowHead(GraphicsContext gc, double x, double y, double xDir, double yDir) {
-
-        double lw = Math.max(gc.getLineWidth(), 1);
-        lw = Math.min(lw, 5);
-
-        var p0 = new Point2D(0, 0);
-        var p1 = new Point2D(10 * lw, 3 * lw);
-        var p2 = new Point2D(10 * lw, -3 * lw);
-
-        //LOG.info("p0 {} p1 {} p2 {}", p0, p1, p2);
-
-        var angle = Math.atan2(yDir, xDir);
-        //LOG.info("angle {}°", Math.toDegrees(angle));
-        Rotate rotate = new Rotate(Math.toDegrees(angle), 0, 0);
-
-        var p0I = rotate.transform(p0);
-        var p1I = rotate.transform(p1);
-        var p2I = rotate.transform(p2);
-
-        //LOG.info("p0I {} p1I {} p2I {}", p0I, p1I, p2I);
-
-        Translate translate = new Translate(x, y);
-
-        var p0II = translate.transform(p0I);
-        var p1II = translate.transform(p1I);
-        var p2II = translate.transform(p2I);
-
-        //LOG.info("p0I {} p1I {} p2I {}", p0II, p1II, p1II);
-
-        gc.beginPath();
-        gc.moveTo(p0II.getX(), p0II.getY());
-        gc.lineTo(p1II.getX(), p1II.getY());
-        gc.lineTo(p2II.getX(), p2II.getY());
-        gc.closePath();
-        gc.fill();
-
-
-    }
 
     private void updateHoleShape(Hole2D oldSection, Hole2D selectedSection) {
 

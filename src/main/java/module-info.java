@@ -32,9 +32,6 @@ module ocxviewer {
     requires org.apache.logging.log4j;
     requires javafx.controls;
     requires javafx.base;
-    requires java.xml;
-
-
 
     exports de.cadoculus.ocxviewer;
     opens de.cadoculus.ocxviewer;
@@ -46,6 +43,8 @@ module ocxviewer {
     exports de.cadoculus.ocxviewer.views to javafx.fxml;
     exports de.cadoculus.ocxviewer.models to javafx.fxml;
     exports de.cadoculus.ocxviewer.io to org.glassfish.jaxb.runtime;
+    exports de.cadoculus.ocxviewer.geom to javafx.fxml;
+    exports de.cadoculus.ocxviewer.utils to javafx.fxml;
 
 
 }

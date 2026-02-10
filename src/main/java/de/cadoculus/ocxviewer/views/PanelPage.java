@@ -322,7 +322,7 @@ public class PanelPage extends AbstractDataViewSubPage<Panel> {
                 return;
             }
 
-            var robert = new ArrayList<>(getBreadcrumbs());
+            var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
             robert.add(new BreadcrumbRecord(selected.getId(), BracketPage.class, null, selected));
 
             var event = new SelectionEvent(robert);
@@ -337,11 +337,28 @@ public class PanelPage extends AbstractDataViewSubPage<Panel> {
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
-        // TODO: better material representation
-        var tableColumn4 = new TableColumn<Bracket, String>("Material");
-        tableColumn4.setCellValueFactory(cell ->
-                new SimpleStringProperty(cell.getValue().getPlateMaterial().getLocalRef().toString()));
+        var tableColumn4 = new TableColumn<Bracket, Pair<Bracket, Material>>("Material");
+        tableColumn4.setCellValueFactory(
+                cell -> new SimpleObjectProperty<>(
+                        new Pair<>(cell.getValue(), (Material) cell.getValue().getPlateMaterial().getReferenced()))
+        );
+        tableColumn4.setCellFactory(createHyperlinkCellfactory(selected -> {
+            LOG.debug("selected material pair {}", selected);
+            if (selected == null) {
+                // no change
+                return;
+            }
+            var bracket = selected.getKey();
+            var material = selected.getValue();
 
+            var robert = new ArrayList<>(getBreadcrumbs());
+            robert.add(new BreadcrumbRecord(bracket.getId(), BracketPage.class, null, bracket));
+            robert.add(new BreadcrumbRecord(material.getId(), MaterialPage.class, null, material));
+
+            var event = new SelectionEvent(robert);
+            DefaultEventBus.getInstance().publish(event);
+
+        }));
 
         var table = new TableView<>(filteredEntities);
         vbox.getChildren().add(table);
@@ -727,8 +744,6 @@ public class PanelPage extends AbstractDataViewSubPage<Panel> {
         tableColumn3.setCellValueFactory(
                 c -> new SimpleStringProperty(c.getValue().getName()));
 
-
-        // TODO: better material representation
         var tableColumn4 = new TableColumn<Plate, Pair<Plate, Material>>("Material");
         tableColumn4.setCellValueFactory(
                 cell -> new SimpleObjectProperty<>(

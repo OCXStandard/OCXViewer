@@ -17,8 +17,8 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.models.SectionType;
-import de.cadoculus.ocxviewer.models.UnitConverter;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.utils.UnitHelper;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -59,7 +59,6 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private static final Logger LOG = LogManager.getLogger(BarSectionPage.class);
     private static ImagePattern barPattern;
 
-    private final GridPane gridPane;
     private final GridPane dimensionGrid = new GridPane();
     private final Canvas canvas = new Canvas();
     private final TabPane dimeAndSketchTab;
@@ -86,7 +85,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         createTitle(bcs, getName(), "Information about a BarSection.");
 
-        gridPane = createDefaultGrid();
+        GridPane gridPane = createDefaultGrid();
         setCenter(gridPane);
 
         int row = 0;
@@ -157,6 +156,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private Tab createDimensionsTab() {
         var tab = new Tab("Dimensions");
+        tab.setClosable(false);
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);
@@ -558,6 +558,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private Tab createSketchTab() {
         var tab = new Tab("Sketch");
+        tab.setClosable(false);
 
         tab.setContent(canvas);
         canvas.setWidth(200);
@@ -629,10 +630,10 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void drawZBar(GraphicsContext gc) {
         var zBar = object.getZBar();
-        var height = UnitConverter.toDefaultUnit(zBar.getHeight());
-        var width = UnitConverter.toDefaultUnit(zBar.getWidth());
-        var webThickness = UnitConverter.toDefaultUnit(zBar.getWebThickness());
-        var flangeThickness = UnitConverter.toDefaultUnit(zBar.getFlangeThickness());
+        var height = UnitHelper.toDefaultUnit(zBar.getHeight());
+        var width = UnitHelper.toDefaultUnit(zBar.getWidth());
+        var webThickness = UnitHelper.toDefaultUnit(zBar.getWebThickness());
+        var flangeThickness = UnitHelper.toDefaultUnit(zBar.getFlangeThickness());
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 200) / width;
 
@@ -722,10 +723,10 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawUBar(GraphicsContext gc) {
         var uBar = object.getUBar();
 
-        var height = UnitConverter.toDefaultUnit(uBar.getHeight());
-        var width = UnitConverter.toDefaultUnit(uBar.getWidth());
-        var webThickness = UnitConverter.toDefaultUnit(uBar.getWebThickness());
-        var flangeThickness = UnitConverter.toDefaultUnit(uBar.getFlangeThickness());
+        var height = UnitHelper.toDefaultUnit(uBar.getHeight());
+        var width = UnitHelper.toDefaultUnit(uBar.getWidth());
+        var webThickness = UnitHelper.toDefaultUnit(uBar.getWebThickness());
+        var flangeThickness = UnitHelper.toDefaultUnit(uBar.getFlangeThickness());
 
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 200) / width;
@@ -812,10 +813,10 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawTBar(GraphicsContext gc) {
         var tBar = object.getTBar();
 
-        var height = UnitConverter.toDefaultUnit(tBar.getHeight());
-        var width = UnitConverter.toDefaultUnit(tBar.getWidth());
-        var webThickness = UnitConverter.toDefaultUnit(tBar.getWebThickness());
-        var flangeThickness = UnitConverter.toDefaultUnit(tBar.getFlangeThickness());
+        var height = UnitHelper.toDefaultUnit(tBar.getHeight());
+        var width = UnitHelper.toDefaultUnit(tBar.getWidth());
+        var webThickness = UnitHelper.toDefaultUnit(tBar.getWebThickness());
+        var flangeThickness = UnitHelper.toDefaultUnit(tBar.getFlangeThickness());
 
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 200) / width;
@@ -900,7 +901,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void drawSquareBar(GraphicsContext gc) {
         var squareBar = object.getSquareBar();
-        var height = UnitConverter.toDefaultUnit(squareBar.getHeight());
+        var height = UnitHelper.toDefaultUnit(squareBar.getHeight());
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 200) / height;
 
@@ -951,7 +952,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void drawRoundBar(GraphicsContext gc) {
         var roundBar = object.getRoundBar();
-        var height = UnitConverter.toDefaultUnit(roundBar.getHeight());
+        var height = UnitHelper.toDefaultUnit(roundBar.getHeight());
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 200) / height;
 
@@ -1006,7 +1007,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void drawOctagonBar(GraphicsContext gc) {
         var octagonBar = object.getOctagonBar();
-        var height = UnitConverter.toDefaultUnit(octagonBar.getHeight());
+        var height = UnitHelper.toDefaultUnit(octagonBar.getHeight());
         var width = height / COS_30;
         var scaleY = (canvasHeight - 200) / (height);
         var scaleX = (canvasWidth - 200) / width;
@@ -1076,10 +1077,10 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawIBar(GraphicsContext gc) {
         var iBar = object.getIBar();
 
-        var height = UnitConverter.toDefaultUnit(iBar.getHeight());
-        var width = UnitConverter.toDefaultUnit(iBar.getWidth());
-        var webThickness = UnitConverter.toDefaultUnit(iBar.getWebThickness());
-        var flangeThickness = UnitConverter.toDefaultUnit(iBar.getFlangeThickness());
+        var height = UnitHelper.toDefaultUnit(iBar.getHeight());
+        var width = UnitHelper.toDefaultUnit(iBar.getWidth());
+        var webThickness = UnitHelper.toDefaultUnit(iBar.getWebThickness());
+        var flangeThickness = UnitHelper.toDefaultUnit(iBar.getFlangeThickness());
 
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 200) / width;
@@ -1170,7 +1171,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawHexagonBar(GraphicsContext gc) {
 
         var hexagonBar = object.getHexagonBar();
-        var height = UnitConverter.toDefaultUnit(hexagonBar.getHeight());
+        var height = UnitHelper.toDefaultUnit(hexagonBar.getHeight());
         var radius = height / (2 * COS_30);
         var width = 2 * radius;
 
@@ -1240,7 +1241,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void drawHalfRoundBar(GraphicsContext gc) {
         var halfRoundBar = object.getHalfRoundBar();
-        var diameter = UnitConverter.toDefaultUnit(halfRoundBar.getDiameter());
+        var diameter = UnitHelper.toDefaultUnit(halfRoundBar.getDiameter());
         var scaleY = (canvasHeight - 200) / (diameter / 2.0);
         var scaleX = (canvasWidth - 200) / diameter;
 
@@ -1298,12 +1299,12 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
     private void drawBulbFlat(GraphicsContext gc) {
         var bulbFlat = object.getBulbFlat();
-        var profileHeight = UnitConverter.toDefaultUnit(bulbFlat.getHeight());
-        var webThickness = UnitConverter.toDefaultUnit(bulbFlat.getWebThickness());
+        var profileHeight = UnitHelper.toDefaultUnit(bulbFlat.getHeight());
+        var webThickness = UnitHelper.toDefaultUnit(bulbFlat.getWebThickness());
         var flangeWidth = bulbFlat.getFlangeWidth() != null ?
-                UnitConverter.toDefaultUnit(bulbFlat.getFlangeWidth()) : webThickness * 3;
+                UnitHelper.toDefaultUnit(bulbFlat.getFlangeWidth()) : webThickness * 3;
         var radius = bulbFlat.getBulbOuterRadius() != null ?
-                UnitConverter.toDefaultUnit(bulbFlat.getBulbOuterRadius()) : webThickness;
+                UnitHelper.toDefaultUnit(bulbFlat.getBulbOuterRadius()) : webThickness;
         LOG.info("selected HP {}x{}, width {}, radius {}", profileHeight, webThickness, flangeWidth, radius);
 
 
@@ -1468,8 +1469,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawTube(GraphicsContext gc) {
         var tube = object.getTube();
 
-        var diameter = UnitConverter.toDefaultUnit(tube.getDiameter());
-        var thickness = UnitConverter.toDefaultUnit(tube.getThickness());
+        var diameter = UnitHelper.toDefaultUnit(tube.getDiameter());
+        var thickness = UnitHelper.toDefaultUnit(tube.getThickness());
 
         var scaleY = (canvasHeight - 200) / diameter;
         var scaleX = (canvasWidth - 200) / diameter;
@@ -1538,8 +1539,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawFlatBar(GraphicsContext gc) {
         var flatBar = object.getFlatBar();
 
-        var flangeWidth = UnitConverter.toDefaultUnit(flatBar.getWidth());
-        var profileHeight = UnitConverter.toDefaultUnit(flatBar.getHeight());
+        var flangeWidth = UnitHelper.toDefaultUnit(flatBar.getWidth());
+        var profileHeight = UnitHelper.toDefaultUnit(flatBar.getHeight());
 
         var scaleY = (canvasHeight - 200) / profileHeight;
         var scaleX = (canvasWidth - 200) / flangeWidth;
@@ -1619,9 +1620,9 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private void drawRectangularTube(GraphicsContext gc) {
 
         var tube = object.getRectangularTube();
-        double profileHeight = UnitConverter.toDefaultUnit(tube.getHeight());
-        double profileWidth = UnitConverter.toDefaultUnit(tube.getWidth());
-        double thickness = UnitConverter.toDefaultUnit(tube.getThickness());
+        double profileHeight = UnitHelper.toDefaultUnit(tube.getHeight());
+        double profileWidth = UnitHelper.toDefaultUnit(tube.getWidth());
+        double thickness = UnitHelper.toDefaultUnit(tube.getThickness());
 
         var scaleX = (canvasWidth - 300) / profileWidth * 0.75;
         var scaleY = (canvasHeight - 200) / profileHeight * 0.75;
@@ -1739,30 +1740,30 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         if (SectionType.L_BAR == sectionType) {
             var lbar = object.getLBar();
-            webHeight = UnitConverter.toDefaultUnit(lbar.getHeight());
-            webThickness = UnitConverter.toDefaultUnit(lbar.getWebThickness());
-            flangeWidth = UnitConverter.toDefaultUnit(lbar.getWidth());
-            flangeThickness = UnitConverter.toDefaultUnit(lbar.getFlangeThickness());
+            webHeight = UnitHelper.toDefaultUnit(lbar.getHeight());
+            webThickness = UnitHelper.toDefaultUnit(lbar.getWebThickness());
+            flangeWidth = UnitHelper.toDefaultUnit(lbar.getWidth());
+            flangeThickness = UnitHelper.toDefaultUnit(lbar.getFlangeThickness());
             overallHeight = webHeight;
             overallWidth = flangeWidth;
             overshoot = 0.0;
         } else if (SectionType.L_BAR_OF == sectionType) {
             var lbar = object.getLBarOF();
-            overshoot = UnitConverter.toDefaultUnit(lbar.getOvershoot());
-            webHeight = UnitConverter.toDefaultUnit(lbar.getHeight());
-            webThickness = UnitConverter.toDefaultUnit(lbar.getWebThickness());
-            flangeWidth = UnitConverter.toDefaultUnit(lbar.getWidth());
-            flangeThickness = UnitConverter.toDefaultUnit(lbar.getFlangeThickness());
+            overshoot = UnitHelper.toDefaultUnit(lbar.getOvershoot());
+            webHeight = UnitHelper.toDefaultUnit(lbar.getHeight());
+            webThickness = UnitHelper.toDefaultUnit(lbar.getWebThickness());
+            flangeWidth = UnitHelper.toDefaultUnit(lbar.getWidth());
+            flangeThickness = UnitHelper.toDefaultUnit(lbar.getFlangeThickness());
             overallHeight = webHeight + flangeThickness;
             overallWidth = flangeWidth;
         } else {
             // L_BAR_OW
             var lbar = object.getLBarOW();
-            overshoot = UnitConverter.toDefaultUnit(lbar.getOvershoot());
-            webHeight = UnitConverter.toDefaultUnit(lbar.getHeight());
-            webThickness = UnitConverter.toDefaultUnit(lbar.getWebThickness());
-            flangeWidth = UnitConverter.toDefaultUnit(lbar.getWidth());
-            flangeThickness = UnitConverter.toDefaultUnit(lbar.getFlangeThickness());
+            overshoot = UnitHelper.toDefaultUnit(lbar.getOvershoot());
+            webHeight = UnitHelper.toDefaultUnit(lbar.getHeight());
+            webThickness = UnitHelper.toDefaultUnit(lbar.getWebThickness());
+            flangeWidth = UnitHelper.toDefaultUnit(lbar.getWidth());
+            flangeThickness = UnitHelper.toDefaultUnit(lbar.getFlangeThickness());
             overallHeight = webHeight;
             overallWidth = flangeWidth + webThickness;
         }
@@ -1888,44 +1889,6 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         return new ImagePattern(hatch, 0, 0, 100, 100, false);
     }
 
-    private void drawArrowHead(GraphicsContext gc, double x, double y, double xDir, double yDir) {
-
-        double lw = Math.max(gc.getLineWidth(), 1);
-        lw = Math.min(lw, 5);
-
-        var p0 = new Point2D(0, 0);
-        var p1 = new Point2D(10 * lw, 3 * lw);
-        var p2 = new Point2D(10 * lw, -3 * lw);
-
-        //LOG.info("p0 {} p1 {} p2 {}", p0, p1, p2);
-
-        var angle = Math.atan2(yDir, xDir);
-        //LOG.info("angle {}°", Math.toDegrees(angle));
-        Rotate rotate = new Rotate(Math.toDegrees(angle), 0, 0);
-
-        var p0I = rotate.transform(p0);
-        var p1I = rotate.transform(p1);
-        var p2I = rotate.transform(p2);
-
-        //LOG.info("p0I {} p1I {} p2I {}", p0I, p1I, p2I);
-
-        Translate translate = new Translate(x, y);
-
-        var p0II = translate.transform(p0I);
-        var p1II = translate.transform(p1I);
-        var p2II = translate.transform(p2I);
-
-        //LOG.info("p0I {} p1I {} p2I {}", p0II, p1II, p1II);
-
-        gc.beginPath();
-        gc.moveTo(p0II.getX(), p0II.getY());
-        gc.lineTo(p1II.getX(), p1II.getY());
-        gc.lineTo(p2II.getX(), p2II.getY());
-        gc.closePath();
-        gc.fill();
-
-
-    }
 
 
 }
