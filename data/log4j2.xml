@@ -39,6 +39,7 @@
         <Logger name="de.cadoculus.ocxviewer.io.OCXParser" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.io.NamespaceReplacingInputStream" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.io.OCXIOReferenceResolver" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.geom.BracketGeometry" level="debug"/>
 
 
 

@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * See https://stackoverflow.com/questions/32625212/convert-color-from-css-to-javafx-color-object
  *
- * @author Carsten Zerbst
+ * @author https://stackoverflow.com/users/4866516/zydar
  */
 public class CssToColorHelper extends Parent {
     public static final Color DEFAULT_NAMED_COLOR = null;

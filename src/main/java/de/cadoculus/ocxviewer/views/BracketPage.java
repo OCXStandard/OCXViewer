@@ -17,20 +17,24 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.EventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.geom.BracketGeometry;
+import de.cadoculus.ocxviewer.geom.GeomHelper;
+import de.cadoculus.ocxviewer.geom.MainPlane;
+import de.cadoculus.ocxviewer.geom.PlaneGeometry;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
+import de.cadoculus.ocxviewer.models.CSSRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.utils.CSSUtil;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -49,6 +53,7 @@ import java.util.ArrayList;
 /**
  * A page displaying information about a Bracket.
  * The BracketPage is not intended to be navigated directly, but rather as a logical child.
+ * The style of the sketch drawing is configured via CSS using the #brackets identifier.
  *
  * @author Carsten Zerbst
  */
@@ -56,23 +61,34 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
     public static final String NAME = "Bracket";
     private static final Logger LOG = LogManager.getLogger(BracketPage.class);
 
-    private final BracketGeometry bracketGeometry;
     private final BracketGeometry.BracketPoints3D bracketGeometry3D;
     private final BracketGeometry.BracketPoints2D bracketGeometry2D;
     private final Canvas canvas = new Canvas();
     private final TabPane dimeAndSketchTab;
     private final GridPane dimensionGrid = new GridPane();
 
-    private double canvasWidth;
-    private double canvasHeight;
-
-    private Color textColor = Color.BLACK;
-    private Color dimensionLineColour = Color.BLACK;
+    // Fill
+    private Color bracketColour = Color.GREEN;
+    // Colour1
+    private Color bracketBorderColour = Color.DARKGREEN;
+    // Colour2
+    private Color shadowColour = Color.GRAY;
+    // Colour3
+    private Color pointLineColour = Color.RED;
+    // Colour4
     private Color cosysColour = Color.BLUE;
-    private Color bracketColour = Color.BLACK;
-    private final double barLineWidth = 2.0;
-    private final double coosysLineWidth = 4.0;
-    private final double dimensionLineWidth = 1.0;
+
+    private Color textColour = Color.BLACK;
+
+    private Color dimensionLineColour = Color.BLACK;
+
+    // Width 1
+    private  double bracketLineWidth = 2.0;
+    // Width 2
+    private  double dimensionLineWidth = 1.0;
+    // Width 3
+    private  double coosysLineWidth = 4.0;
+
 
     private final DropShadow dropShadow = new DropShadow();
 
@@ -80,9 +96,15 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
     public BracketPage(Bracket bracket, Page parent) {
         super(bracket, parent, "Bracket «" + bracket.getId() + "»");
 
-        bracketGeometry = new BracketGeometry(bracket);
+        BracketGeometry bracketGeometry = new BracketGeometry(bracket);
         bracketGeometry3D = bracketGeometry.getBracketGeometry();
         bracketGeometry2D = bracketGeometry.getBracketGeometry2D();
+
+        updateStyle();
+        DefaultEventBus.getInstance().subscribe( ThemeEvent.class, themeEvent -> {
+            updateStyle();
+            updateCanvas();
+        });
 
         // now we can build the page
         final var bcs = getBreadcrumbs();
@@ -147,10 +169,30 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
 
     }
 
-    private void updateCanvas() {
+    /**
+     * Updates the parameters used in the canvas from CSS.
+     */
+    private void updateStyle() {
+        final CSSRecord brackets = CSSUtil.lookup("brackets");
+        bracketColour = brackets.fill() != null ? brackets.fill() : bracketColour;
+        bracketBorderColour= brackets.colour1() != null ? brackets.colour1() : bracketBorderColour;
+        shadowColour = brackets.colour2() != null ? brackets.colour2() : shadowColour;
+        pointLineColour  = brackets.colour3() != null ? brackets.colour3() : pointLineColour;
+        cosysColour  = brackets.colour4() != null ? brackets.colour4() : cosysColour;
+        textColour = brackets.colour5() != null ? brackets.colour5() : textColour;
+        dimensionLineColour = textColour;
 
-        canvasHeight = dimeAndSketchTab.getHeight() - 20;
-        canvasWidth = dimeAndSketchTab.getWidth() - 21;
+        bracketLineWidth = Double.isNaN( brackets.width1()) ? bracketLineWidth : brackets.width1();
+        dimensionLineWidth = Double.isNaN( brackets.width2()) ? dimensionLineWidth : brackets.width2();
+        coosysLineWidth = Double.isNaN( brackets.width3()) ? coosysLineWidth : brackets.width3();
+
+    }
+
+
+    private void  updateCanvas() {
+
+        double canvasHeight = dimeAndSketchTab.getHeight() - 20;
+        double canvasWidth = dimeAndSketchTab.getWidth() - 21;
 
         double dim = Math.min(canvasWidth, canvasHeight) / 33.0;
 
@@ -160,21 +202,16 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         canvas.setHeight(canvasHeight);
         canvas.setWidth(canvasWidth);
 
-        // todo: better way to get colour scheme
-        textColor = WorkingContext.getInstance().darkModeProperty().get() ? Color.WHITE : Color.BLACK;
-        dimensionLineColour = WorkingContext.getInstance().darkModeProperty().get() ? Color.WHITE : Color.BLACK;
-        cosysColour = WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#bccadc") : Color.web("#537297");
-        bracketColour = WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#508F8E") : Color.web("#457B7A");
-        dropShadow.setColor(WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#b7becb") : Color.web("#E5E9F0"));
+        dropShadow.setColor(shadowColour);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        int textHeight = canvasHeight/50 < 12 ? 12 : (int) (canvasHeight/50);
+        int textHeight = canvasHeight /50 < 12 ? 12 : (int) (canvasHeight /50);
         gc.setFont(new Font(gc.getFont().getName(), textHeight));
 
         if  (bracketGeometry2D == null) {
-            gc.setFill(textColor);
+            gc.setFill(textColour);
             gc.fillText("No 2D Geometry available for this Bracket", 10, 20);
             return;
         }
@@ -182,32 +219,31 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         var height = bracketGeometry2D.height();
         var width = bracketGeometry2D.width();
         var scaleY = (canvasHeight - 200) / height;
-        var scaleX = (canvasWidth - 200) / width;
+        var scaleX = (canvasWidth - 250) / width;
         var scale = Math.min(scaleX, scaleY);
 
         LOG.info("canvas {}x{}, bracket geometry {}x{}, scale {}, scaleX {}, scaleY {}", canvasWidth, canvasHeight, width, height, scale, scaleX, scaleY);
 
-        LOG.info("bracket geometry 2D origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.p2(), bracketGeometry2D.p3(), bracketGeometry2D.p4());
+        LOG.info("3D bracket geometry    origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry3D.origin(), bracketGeometry3D.p1(), bracketGeometry3D.p2(), bracketGeometry3D.p3(), bracketGeometry3D.p4());
+        LOG.info("    u-dir {}, v-dir {}", bracketGeometry3D.uDirection(), bracketGeometry3D.vDirection());
+        LOG.info("2D bracket geometry 2D origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.p2(), bracketGeometry2D.p3(), bracketGeometry2D.p4());
         LOG.info("    u-dir {}, v-dir {}", bracketGeometry2D.uDirection(), bracketGeometry2D.vDirection());
 
-
         var offsetX = Math.round( (canvasWidth - scale * width) / 2.0);
-        var offsetY = Math.round(canvasHeight - 100);
+        var offsetY = Math.round( 100);
 
         LOG.info("offsetX {}, offsetY {}", offsetX, offsetY);
 
         var viewHoco = new Matrix4d();
         viewHoco.setIdentity();
-        viewHoco.m11=-1;
+        //viewHoco.m11=-1;
         viewHoco.setScale(scale);
         viewHoco.m03 = offsetX;
         viewHoco.m13 = offsetY;
 
         LOG.info("viewHoco\n{}", viewHoco);
 
-
-
-        drawBracketShape(gc, viewHoco, bracketColour.brighter(), bracketColour);
+        drawBracketShape(gc, viewHoco);
 
         // draw key points and try to avoid overlapping text
         // Origin
@@ -217,140 +253,126 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         offDir.normalize();
         offDir.scale(4*textHeight);
 
-        drawPoint( gc, viewHoco, bracketGeometry2D.origin(),  5, scale, Color.RED, bracketGeometry3D.origin().toString(), textColor, offDir);
+        var d = 5*scale;
+        if  ( d <5) {
+            d = 5;
+        } else if ( d > 20) {
+            d = 20;
+        }
+
+
+        drawPoint( gc, viewHoco, bracketGeometry2D.origin(),  d, pointLineColour,2,
+                bracketGeometry3D.origin().toString(), textColour,
+                offDir, dimensionLineColour, 1);
 
         // p1 (udir)
         offDir = new Vector3d(bracketGeometry2D.uDirection());
         offDir.normalize();
         offDir.scale(4*textHeight);
 
-        drawPoint( gc, viewHoco, bracketGeometry2D.p1(), 5, scale, Color.RED, bracketGeometry3D.p1().toString(), textColor, offDir);
+        drawPoint( gc, viewHoco, bracketGeometry2D.p1(), d, pointLineColour,2,
+                bracketGeometry3D.p1().toString(), textColour,
+                offDir, dimensionLineColour, 1);
 
         // p2 (vdir)
         offDir = new Vector3d(bracketGeometry2D.vDirection());
         offDir.normalize();
         offDir.scale(4*textHeight);
-        drawPoint( gc, viewHoco, bracketGeometry2D.p2(), 5, scale, Color.RED, bracketGeometry3D.p2().toString(), textColor, offDir);
+        drawPoint( gc, viewHoco, bracketGeometry2D.p2(), d, pointLineColour,2,
+                bracketGeometry3D.p2().toString(), textColour,
+                offDir, dimensionLineColour, 1);
 
-        drawBracketDimensions(gc, viewHoco,scale);
+        drawBracketDimensions(gc, viewHoco);
+
+        drawCoordinatSystem(canvas, gc, viewHoco);
 
     }
 
-    private void drawBracketDimensions(GraphicsContext gc, Matrix4d totalHoco, double scale) {
+    private void drawCoordinatSystem(Canvas canvas, GraphicsContext gc, Matrix4d viewHoco) {
+
+        final MainPlane mainPlane = GeomHelper.getMainPlane(new Vector3d(viewHoco.m03, viewHoco.m13, viewHoco.m23));
+        LOG.info("drawCoordinatSystem {} {}", mainPlane, viewHoco);
+
+        var global2local = bracketGeometry2D.global2localT();
+        LOG.info("bracketGeometry2D.hoco {}", global2local);
+
+        var xVector = new Vector3d(PlaneGeometry.NORMAL_X);
+        global2local.transform(xVector);
+        viewHoco.transform(xVector);
+        xVector.normalize();
+        xVector.scale(50);
+
+        var yVector = new Vector3d(PlaneGeometry.NORMAL_Y);
+        global2local.transform(yVector);
+        viewHoco.transform(yVector);
+        yVector.normalize();
+        yVector.scale(50);
+
+        var zVector = new Vector3d(PlaneGeometry.NORMAL_Z);
+        global2local.transform(zVector);
+        viewHoco.transform(zVector);
+        zVector.normalize();
+        zVector.scale(50);
+
+        LOG.info("coosys dir in view coord: xVector' {}, yVector' {}, zVector' {}", xVector, yVector, zVector);
+
+        var  offset = 75;
+        gc.setStroke( cosysColour);
+        gc.setFill(cosysColour);
+
+        if ( Math.abs(xVector.x) > 1 || Math.abs(yVector.y) > 1 ) {
+            gc.setLineWidth(coosysLineWidth);
+            gc.strokeLine(canvas.getWidth()-offset, canvas.getHeight()-offset,
+                    canvas.getWidth()-offset + xVector.x, canvas.getHeight()-offset + xVector.y);
+            gc.fillText("X", canvas.getWidth()-offset+ xVector.x +10,
+                                canvas.getHeight()-offset + xVector.y+10);
+        }
+
+        if ( Math.abs(yVector.x) > 1 || Math.abs(yVector.y) > 1 ) {
+            gc.setLineWidth(coosysLineWidth);
+            gc.strokeLine(canvas.getWidth()-offset, canvas.getHeight()-offset,
+                    canvas.getWidth()-offset + yVector.x, canvas.getHeight()-offset + yVector.y);
+            gc.fillText("Y", canvas.getWidth()-offset+ yVector.x +10,
+                    canvas.getHeight()-offset + yVector.y+10);
+        }
+
+        if ( Math.abs(zVector.x) > 1 || Math.abs(zVector.y) > 1 ) {
+            gc.setLineWidth(coosysLineWidth);
+            gc.strokeLine(canvas.getWidth()-offset, canvas.getHeight()-offset,
+                    canvas.getWidth()-offset + zVector.x, canvas.getHeight()-offset + zVector.y);
+            gc.fillText("Z", canvas.getWidth()-offset+ zVector.x +10,
+                    canvas.getHeight()-offset + zVector.y+10);
+        }
+
+
+    }
+
+    private void drawBracketDimensions(GraphicsContext gc, Matrix4d totalHoco) {
 
         gc.setStroke(dimensionLineColour);
         gc.setFill(dimensionLineColour);
         gc.setLineWidth(dimensionLineWidth);
 
         // U direction dimension
-        var offset = new Vector3d();
-        offset.cross(bracketGeometry2D.uDirection(), new Vector3d(0,0,1));
-        offset.normalize();
-        offset.scale(50/scale);
-        if ( Math.signum(offset.x) == Math.signum(bracketGeometry2D.vDirection().x) ) {
-            offset.x*=-1;
-        }
-        if ( Math.signum(offset.y) == Math.signum(bracketGeometry2D.vDirection().y) ) {
-            offset.y*=-1;
-        }
-        totalHoco.transform(offset);
-
-        var p0 = new Point3d(bracketGeometry2D.origin());
-        totalHoco.transform(p0);
-        var p01 = new Point3d(bracketGeometry2D.origin());
-        p01.add(offset);
-        totalHoco.transform(p01);
-
-        gc.strokeLine(p0.x, p0.y, p01.x, p01.y);
-
-        var p1 = new Point3d(bracketGeometry2D.p1());
-        totalHoco.transform(p1);
-        var p11 = new Point3d(bracketGeometry2D.p1());
-        p11.add(offset);
-        totalHoco.transform(p11);
-
-        gc.strokeLine(p1.x, p1.y, p11.x, p11.y);
-
-        offset.scale(0.9);
-
-        var p02 = new Point3d(bracketGeometry2D.origin());
-        p02.add(offset);
-        totalHoco.transform(p02);
-
-        var p12 = new Point3d(bracketGeometry2D.p1());
-        p12.add(offset);
-        totalHoco.transform(p12);
-
-        gc.strokeLine(p02.x, p02.y, p12.x, p12.y);
-
-        var dir = new Vector3d(p12);
-        dir.sub(p02);
-        dir.normalize();
-        drawArrowHead(gc, p02.x, p02.y, dir.x, dir.y);
-        dir.negate();
-        drawArrowHead(gc, p12.x, p12.y, dir.x, dir.y);
-
-        gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText(String.format("u=%.2f [mm]", bracketGeometry3D.armLengthU()), (p02.x+ p12.x)/2+offset.x, (p02.y+ p12.y)/2 +offset.y);
-
+        drawDimensionLine(gc, totalHoco, bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.vDirection(),
+                String.format("u=%.2f [mm]", bracketGeometry3D.armLengthU()));
 
         // V direction dimension
-        offset = new Vector3d();
-        offset.cross(bracketGeometry2D.vDirection(), new Vector3d(0,0,1));
-        offset.normalize();
-        offset.scale(50/scale);
-        if ( Math.signum(offset.x) == Math.signum(bracketGeometry2D.uDirection().x) ) {
-            offset.x*=-1;
-        }
-        if ( Math.signum(offset.y) != Math.signum(bracketGeometry2D.uDirection().y) ) {
-            offset.y*=-1;
-        }
-        totalHoco.transform(offset);
+        drawDimensionLine(gc, totalHoco, bracketGeometry2D.origin(), bracketGeometry2D.p2(), bracketGeometry2D.uDirection(),
+                String.format("v=%.2f [mm]", bracketGeometry3D.armLengthV()));
 
-
-        var p03 = new Point3d(bracketGeometry2D.origin());
-        p03.add(offset);
-        totalHoco.transform(p03);
-        gc.strokeLine(p0.x, p0.y, p03.x, p03.y);
-
-        var p2 = new Point3d(bracketGeometry2D.p2());
-        totalHoco.transform(p2);
-        var p21 = new Point3d(bracketGeometry2D.p2());
-        p21.add(offset);
-        totalHoco.transform(p21);
-
-        gc.strokeLine(p2.x, p2.y, p21.x, p21.y);
-
-        offset.scale(0.9);
-
-        var p04 = new Point3d(bracketGeometry2D.origin());
-        p04.add(offset);
-        totalHoco.transform(p04);
-
-        var p22 = new Point3d(bracketGeometry2D.p2());
-        p22.add(offset);
-        totalHoco.transform(p22);
-
-        gc.strokeLine(p04.x, p04.y, p22.x, p22.y);
-
-        dir = new Vector3d(p22);
-        dir.sub(p04);
-        dir.normalize();
-        drawArrowHead(gc, p04.x, p04.y, dir.x, dir.y);
-        dir.negate();
-        drawArrowHead(gc, p22.x, p22.y, dir.x, dir.y);
-
-        gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText(String.format("v=%.2f [mm]", bracketGeometry3D.armLengthV()), (p04.x+ p22.x)/2-offset.x, (p04.y+ p22.y)/2 -offset.y);
 
 
     }
 
-    private void drawBracketShape(GraphicsContext gc, Matrix4d totalHoco, Color fillColor, Color strokeColor) {
-        // paint the HP
-        gc.setFill(fillColor);
-        gc.setStroke(bracketColour);
-        gc.setLineWidth(barLineWidth);
+
+
+    private void drawBracketShape(GraphicsContext gc, Matrix4d totalHoco) {
+
+        // paint the bracket shape
+        gc.setFill(bracketColour);
+        gc.setStroke(bracketBorderColour);
+        gc.setLineWidth(bracketLineWidth);
 
         gc.beginPath();
 
@@ -378,46 +400,15 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         gc.lineTo(next.x, next.y);
 
         gc.closePath();
+        gc.stroke();
         gc.setEffect(dropShadow);
         gc.fill();
         gc.setEffect(null);
-        gc.stroke();
-
-    }
-
-    private void drawPoint(GraphicsContext gc, Matrix4d totalHoco, Point3d point, int size, double scale, Color colour,
-                            String label, Color labelColor, Vector3d offDir  ) {
-
-        var d = size*scale;
-        if  ( d <5) {
-            d = 5;
-        } else if ( d > 20) {
-            d = 20;
-        }
-        gc.setLineWidth(coosysLineWidth);
-        gc.setStroke(colour);
-
-        var start = new Point3d(point);
-        totalHoco.transform(start);
-
-        totalHoco.transform(offDir);
-
-        LOG.info("draw point {} at {}, {}", point, start.x, start.y);
-
-        gc.strokeLine(start.x-d, start.y-d, start.x+d, start.y+d);
-        gc.strokeLine(start.x+d, start.y-d, start.x-d, start.y+d);
-
-        if ( StringUtils.isNotEmpty(label) ) {
-            gc.setFill( labelColor );
-            var textX = start.x+offDir.x;
-            var textY = start.y+offDir.y;
-            LOG.info("draw text {} at {}, {}", label, textX, textY);
-            gc.setTextAlign(offDir.x < 0 ? TextAlignment.RIGHT : TextAlignment.LEFT);
-            gc.fillText(label, textX, textY);
-        }
 
 
     }
+
+
 
 
     private Tab createDimensionsTab() {

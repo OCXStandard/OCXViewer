@@ -33,6 +33,7 @@ import java.util.Set;
  * <p>
  * The progress of the resolution can be monitored using a PropertyChangeListener and is NOT reported
  * in the JavaFX Application Thread.
+ * </p>
  *
  * @author Carsten Zerbst
  */
@@ -157,7 +158,7 @@ class OCXIOReferenceResolver {
             counter++;
             int prog = CATALOGUE_SETUP + (int) (((double) counter / (double) total) * CATALOGUE_RESLV);
             updateProgress(prog);
-            LOG.info("handle object #{} / #{} ({}%}: reference of type {} with localRef='{}'",
+            LOG.debug("handle object #{} / #{} ({}%}: reference of type {} with localRef='{}'",
                     counter, total, prog,
                     refBaseT.getClass().getSimpleName(),
                     refBaseT.getLocalRef()
@@ -169,7 +170,7 @@ class OCXIOReferenceResolver {
             if (refBaseT.getLocalRef() instanceof IdBaseT idBaseT) {
                 // this was already resolved by JAXB
                 var refId = idBaseT.getId();
-                LOG.info("resolved reference by Id '{}'=={}", refId, idBaseT);
+                LOG.debug("resolved reference by Id '{}'=={}", refId, idBaseT);
                 refBaseT.setReferenced(idBaseT);
                 continue;
             }
@@ -183,7 +184,7 @@ class OCXIOReferenceResolver {
             } else if (refBaseT instanceof VesselRefT vesselRefT) {
                 refGUIDRef = vesselRefT.getGUIDRef();
             } else {
-                LOG.warn("find a {} refernece with unresolved localRef='{}', cannot get GUIDRef, unsupported type",
+                LOG.warn("find a {} reference with unresolved localRef='{}', cannot get GUIDRef, unsupported type",
                         refBaseT.getClass().getSimpleName(),
                         refBaseT.getLocalRef());
                 continue;
@@ -196,9 +197,9 @@ class OCXIOReferenceResolver {
 
             var referencedObject = guidMap.get(refGUIDRef);
             if (referencedObject == null) {
-                LOG.info("failed to resolve reference by GUIDRef '{}'=={}", refGUIDRef, referencedObject);
+                LOG.warn("failed to resolve reference by GUIDRef '{}'=={}", refGUIDRef, referencedObject);
             } else {
-                LOG.info("resolved reference by GUIDRef '{}'=={}", refGUIDRef, referencedObject);
+                LOG.debug("resolved reference by GUIDRef '{}'=={}", refGUIDRef, referencedObject);
                 refBaseT.setReferenced(referencedObject);
             }
 

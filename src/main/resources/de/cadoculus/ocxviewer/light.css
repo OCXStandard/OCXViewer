@@ -1,4 +1,12 @@
 /* Light theme for OCX Viewer */
+
+
+#brackets {
+    -fx-background-color: -color-success-4;
+    -fx-border-color: -color-success-6 -color-base-4 -color-danger-4 -color-accent-6;
+    -fx-border-width: 2 1 4 0;
+}
+
 .text-field {
 
     -fx-padding: 5px;

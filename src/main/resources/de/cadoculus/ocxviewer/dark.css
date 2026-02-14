@@ -1,3 +1,10 @@
+#brackets {
+    -fx-background-color: -color-success-4;
+    -fx-border-color: -color-success-6 -color-base-4 -color-danger-4 -color-accent-6;
+    -fx-border-width: 2 1 4 0;
+    -fx-font-size: 10px;
+    -fx-text-fill: white;
+}
 
 
 .text-field {

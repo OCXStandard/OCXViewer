@@ -21,6 +21,7 @@ import atlantafx.base.theme.Styles;
 import atlantafx.base.util.BBCodeParser;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.geom.PlaneGeometry;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.*;
@@ -33,6 +34,8 @@ import javafx.geometry.Pos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -48,6 +51,9 @@ import org.ocx_schema.v310.Point3DT;
 import org.ocx_schema.v310.QuantityT;
 import org.ocx_schema.v310.Vector3DT;
 
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -100,7 +106,139 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     }
 
-    protected static  void drawArrowHead(GraphicsContext gc, double x, double y, double xDir, double yDir) {
+
+    protected static void drawDimensionLine(GraphicsContext gc, Matrix4d totalHoco, Point3d start, Point3d end, Vector3d awayFrom, String label) {
+
+        var rawDir = new Vector3d(end);
+        rawDir.sub(start);
+
+        var offset = new Vector3d();
+        offset.cross(rawDir, new Vector3d(0, 0, 1));
+        if (offset.dot(awayFrom) > 0) {
+            offset.negate();
+        }
+
+        totalHoco.transform(offset);
+        offset.normalize();
+        offset.scale(50);
+
+        var p0 = new Point3d(start);
+        totalHoco.transform(p0);
+        var p01 = new Point3d(start);
+        totalHoco.transform(p01);
+        p01.add(offset);
+
+        gc.strokeLine(p0.x, p0.y, p01.x, p01.y);
+
+        var p1 = new Point3d(end);
+        totalHoco.transform(p1);
+        var p11 = new Point3d(end);
+        totalHoco.transform(p11);
+        p11.add(offset);
+
+        gc.strokeLine(p1.x, p1.y, p11.x, p11.y);
+
+        // now the line between the two dimension lines
+        offset.normalize();
+        offset.scale(45);
+
+        var p02 = new Point3d(start);
+        totalHoco.transform(p02);
+        p02.add(offset);
+
+        var p12 = new Point3d(end);
+        totalHoco.transform(p12);
+        p12.add(offset);
+
+        gc.strokeLine(p02.x, p02.y, p12.x, p12.y);
+
+        var dir = new Vector3d(p12);
+        dir.sub(p02);
+        dir.normalize();
+        drawArrowHead(gc, p02.x, p02.y, dir.x, dir.y);
+        dir.negate();
+        drawArrowHead(gc, p12.x, p12.y, dir.x, dir.y);
+
+        offset.normalize();
+        offset.scale(10);
+
+        var angle = Math.toDegrees(dir.angle(PlaneGeometry.NORMAL_X));
+        LOG.debug("{} angle to X axis: {}", label, angle);
+
+
+        if (angle > 45 && angle < 225) {
+            angle += 180;
+        }
+        LOG.debug("{} angle' to X axis: {}", label, angle);
+
+        gc.save();
+
+        gc.translate((p02.x + p12.x) / 2 + offset.x, (p01.y + p11.y) / 2 + offset.y);
+        gc.rotate(angle);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(label, 0, 0);
+
+        gc.restore();
+
+
+    }
+
+    /**
+     * Draws a point as a cross with a label. The label is drawn in the direction of offDir and connected to the point with a line if connectionLineWidth > 0
+     *
+     * @param gc                  the graphics context to draw on
+     * @param hoco                a homogenous transformation to apply to the point and the offDir before drawing
+     * @param point               the point to draw to
+     * @param length              the length of the cross arms
+     * @param strokeColour        the color of the cross
+     * @param strokeWidth         the width of the cross lines
+     * @param label               the label to draw next to the point, can be null or empty for no label
+     * @param labelColor          the color of the label text
+     * @param offDir              the direction to draw the label in, will be transformed by hoco, should not be zero vector
+     * @param connectionColour    the color of the line connecting the point to the label, if connectionLineWidth > 0
+     * @param connectionLineWidth the width of the line connecting the point to the label, if <= 0 no line will be drawn
+     */
+    protected static void drawPoint(GraphicsContext gc, Matrix4d hoco, Point3d point, double length,
+                                    Color strokeColour, int strokeWidth,
+                                    String label, Color labelColor,
+                                    Vector3d offDir, Color connectionColour, int connectionLineWidth) {
+
+
+        gc.setLineWidth(strokeWidth);
+        gc.setStroke(strokeColour);
+
+        var start = new Point3d(point);
+        hoco.transform(start);
+
+        hoco.transform(offDir);
+
+        LOG.debug("draw point {} at {}, {}", point, start.x, start.y);
+
+        gc.strokeLine(start.x - length, start.y - length, start.x + length, start.y + length);
+        gc.strokeLine(start.x + length, start.y - length, start.x - length, start.y + length);
+
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(label)) {
+
+            var offset = new Vector3d(offDir);
+            offset.normalize();
+            offset.scale(3 * length);
+
+            var textX = start.x + offDir.x;
+            var textY = start.y + offDir.y;
+            gc.setFill(labelColor);
+
+            gc.setTextAlign(offDir.x < 0 ? TextAlignment.RIGHT : TextAlignment.LEFT);
+            gc.fillText(label, textX, textY);
+
+            if (connectionLineWidth > 0 && connectionColour != null) {
+                gc.setLineWidth(connectionLineWidth);
+                gc.setStroke(connectionColour);
+                gc.strokeLine(start.x, start.y, textX, textY);
+            }
+        }
+    }
+
+    protected static void drawArrowHead(GraphicsContext gc, double x, double y, double xDir, double yDir) {
 
         double lw = Math.max(gc.getLineWidth(), 1);
         lw = Math.min(lw, 5);
@@ -138,32 +276,6 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
 
     }
-
-    public static class PointTableCell<E, F extends Point3DT> extends TableCell<E, F> {
-        @Override
-        public void updateItem(F point3DT, boolean empty) {
-            super.updateItem(point3DT, empty);
-            if (point3DT == null) {
-                setText(null);
-                setGraphic(null);
-            } else {
-                var text =
-                        "(" +
-                                DEC4.format(point3DT.getCoordinates().get(0)) + ", " +
-                                DEC4.format(point3DT.getCoordinates().get(1)) + ", " +
-                                DEC4.format(point3DT.getCoordinates().get(2)) + ")";
-
-                if (point3DT.getUnit() instanceof Unit unit1) {
-                    text += " [" + unit1.getUnitNames().getFirst().getValue() + "]";
-                    ;
-                }
-
-                setText(text);
-            }
-        }
-
-    }
-
 
     /**
      * This method creates a cell factory for a table column that displays hyperlinks.
@@ -254,7 +366,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
                         } catch (Exception e) {
                             LOG.error("no double property 'numericvalue' found in class {}:{}", quantity.getClass().getName(), e);
                         }
-                        var unit = getUnitDisplayValue( quantity.getUnit());
+                        var unit = getUnitDisplayValue(quantity.getUnit());
 
                         setGraphic(null);
                         setText(value + " [" + unit + "]");
@@ -269,7 +381,8 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     /**
      * Try to get a display value for a unit
-     * @param unit  the Unit or unit id
+     *
+     * @param unit the Unit or unit id
      * @return a display name
      */
     public static String getUnitDisplayValue(Object unit) {
@@ -292,8 +405,8 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
                 retval = unit1.getId();
                 break;
             }
-        } else if ( unit instanceof String unitId) {
-            retval = "unresolved Unit, id '"+ unitId + "'";
+        } else if (unit instanceof String unitId) {
+            retval = "unresolved Unit, id '" + unitId + "'";
         }
         return retval;
     }
@@ -689,8 +802,6 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     }
 
-    ;
-
     @Override
     public void beforeClose() {
 
@@ -704,9 +815,36 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         return Objects.equals(name, that.name);
     }
 
+    ;
+
     @Override
     public int hashCode() {
         return Objects.hashCode(name);
+    }
+
+    public static class PointTableCell<E, F extends Point3DT> extends TableCell<E, F> {
+        @Override
+        public void updateItem(F point3DT, boolean empty) {
+            super.updateItem(point3DT, empty);
+            if (point3DT == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                var text =
+                        "(" +
+                                DEC4.format(point3DT.getCoordinates().get(0)) + ", " +
+                                DEC4.format(point3DT.getCoordinates().get(1)) + ", " +
+                                DEC4.format(point3DT.getCoordinates().get(2)) + ")";
+
+                if (point3DT.getUnit() instanceof Unit unit1) {
+                    text += " [" + unit1.getUnitNames().getFirst().getValue() + "]";
+                    ;
+                }
+
+                setText(text);
+            }
+        }
+
     }
 
     @SuppressWarnings("rawtypes")

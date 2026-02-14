@@ -21,6 +21,7 @@ import de.cadoculus.ocxviewer.actions.*;
 import de.cadoculus.ocxviewer.event.*;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.views.*;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -30,12 +31,18 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.MotionBlur;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
@@ -144,7 +151,7 @@ public class MainController {
         }
 
         // TODO: check existing path, e.g. panels/panel/stiffener pages and clean up if needed
-        LOG.info("compare existing {} with target path {}", pageStack, event.getBreadcrumbs());
+        LOG.debug("compare existing {} with target path {}", pageStack, event.getBreadcrumbs());
 
         Page lastPage = null;
         int lastMatchingIndex = -1;
@@ -153,7 +160,7 @@ public class MainController {
 
             if (i < pageStack.size()) {
                 var existBC = pageStack.get(i);
-                LOG.info("#{}: compare stack {}/{} vs. target {}/{}", i,
+                LOG.debug("#{}: compare stack {}/{} vs. target {}/{}", i,
                         existBC.name(), existBC.object(), trgtBC.name(), trgtBC.object());
                 var found = false;
 
@@ -176,7 +183,7 @@ public class MainController {
                     lastMatchingIndex = i;
                     lastPage = existBC.page();
                 } else {
-                    LOG.info("#{}: failed to compare stack {} vs. target {}", i, existBC, trgtBC);
+                    LOG.warn("#{}: failed to compare stack {} vs. target {}", i, existBC, trgtBC);
                     break;
                 }
             } else {
@@ -184,20 +191,20 @@ public class MainController {
             }
         }
 
-        LOG.info("found common path up to index {}", lastMatchingIndex);
+        LOG.debug("found common path up to index {}", lastMatchingIndex);
         while (pageStack.size() > lastMatchingIndex + 1) {
             final BreadcrumbRecord popped = pageStack.pop();
-            LOG.info("pop existing breadcrumb {}", popped);
+            LOG.debug("pop existing breadcrumb {}", popped);
         }
-        LOG.info("remaining page stack {}", pageStack);
+        LOG.debug("remaining page stack {}", pageStack);
 
 
         // now create new pages if needed
         for (int i = lastMatchingIndex + 1; i < event.getBreadcrumbs().size(); i++) {
             var parentPage = pageStack.isEmpty() ? null : pageStack.peek().page();
             var trgtBC = event.getBreadcrumbs().get(i);
-            LOG.info("#{}: target breadcrumb {}", i, trgtBC);
-            LOG.info("    stack {}", pageStack);
+            LOG.debug("#{}: target breadcrumb {}", i, trgtBC);
+            LOG.debug("    stack {}", pageStack);
 
             Page newPage = null;
 
@@ -214,13 +221,13 @@ public class MainController {
 
                 Constructor constructor = null;
                 for (Constructor<?> cstr : pageClass.getConstructors()) {
-                    LOG.info("found constructor {} with params {}", cstr, cstr.getParameterTypes());
+                    LOG.debug("found constructor {} with params {}", cstr, cstr.getParameterTypes());
                     constructor = cstr;
                 }
                 // now instantiate the sub page
                 try {
                     newPage = (Page) constructor.newInstance(trgtBC.object(), parentPage);
-                    LOG.info("created a new sub page {} for {}", newPage, trgtBC.object());
+                    LOG.debug("created a new sub page {} for {}", newPage, trgtBC.object());
                 } catch (Exception exp) {
                     LOG.error("Error creating sub page for trgtBC {}", trgtBC, exp);
                     break;
@@ -230,7 +237,7 @@ public class MainController {
                 var event2 = new NavigationEvent(trgtBC.pageClazz());
                 this.switchPages(event2);
                 newPage = pageClass2page.get(trgtBC.pageClazz());
-                LOG.info("switched to a new page {} of type {}", newPage, trgtBC.pageClazz());
+                LOG.debug("switched to a new page {} of type {}", newPage, trgtBC.pageClazz());
             } else {
                 LOG.error("expect a page class extending AbstractDataViewSubPage for target Breadcrump {}, got {}", trgtBC, trgtBC.pageClazz());
                 break;
@@ -241,7 +248,7 @@ public class MainController {
             lastPage = newPage;
         }
 
-        LOG.info("finished updateing page stack {}", pageStack);
+        LOG.debug("finished updateing page stack {}", pageStack);
         if (lastPage != null) {
             switchToPage((BorderPane) lastPage);
         } else {
@@ -271,7 +278,7 @@ public class MainController {
         AbstractDataViewPage newPage = null;
         if (existing == null) {
             // Lazy loading of pages
-            LOG.info("Creating page {}", event.getPage());
+            LOG.debug("Creating page {}", event.getPage());
 
             try {
                 newPage = (AbstractDataViewPage) event.getPage().getConstructor().newInstance();
@@ -449,7 +456,6 @@ public class MainController {
             css = this.getClass().getResource("light.css").toExternalForm();
         }
 
-        // Todo: do we need this?
         WorkingContext.getInstance().getMainScene().getStylesheets().clear();
         WorkingContext.getInstance().getMainScene().getStylesheets().add(css);
         WorkingContext.getInstance().darkModeProperty().set(dark);
@@ -457,6 +463,8 @@ public class MainController {
         var event = new ThemeEvent(ThemeEvent.EventType.THEME_CHANGE);
         DefaultEventBus.getInstance().publish(event);
     }
+
+
 
 
 //    // TODO: fail to load arbitrary color from css variables, investigate later
