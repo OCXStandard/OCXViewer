@@ -21,7 +21,6 @@ import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -34,8 +33,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -678,8 +675,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX - 50, offsetY, centerX - 0.5 * wt, offsetY);
         gc.strokeLine(offsetX - 40, 100, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
-        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawSolidArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("h=%.2f [mm]", height), offsetX - 50, centerY);
 
@@ -688,8 +685,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w, offsetY, offsetX + w, offsetY + 50);
         gc.strokeLine(offsetX, offsetY + 40, offsetX + w, offsetY + 40);
 
-        drawArrowHead(gc, offsetX, offsetY + 40, 1, 0);
-        drawArrowHead(gc, offsetX + w, offsetY + 40, -1, 0);
+        drawSolidArrowHead(gc, offsetX, offsetY + 40, 1, 0);
+        drawSolidArrowHead(gc, offsetX + w, offsetY + 40, -1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(String.format("w=%.2f [mm]", width), centerX, offsetY + 35);
@@ -699,8 +696,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(centerX + 0.5 * wt, 100.5 + ft, centerX + 0.5 * wt + 50, 100.5 + ft);
         gc.strokeLine(centerX + 0.5 * wt + 40, 50, centerX + 0.5 * wt + 40, 100);
         gc.strokeLine(centerX + 0.5 * wt + 40, 100 + ft, centerX + 0.5 * wt + 40, 100 + ft + 50);
-        drawArrowHead(gc, centerX + 0.5 * wt + 40, 100, 0, -1);
-        drawArrowHead(gc, centerX + 0.5 * wt + 40, 100 + ft, 0, 1);
+        drawSolidArrowHead(gc, centerX + 0.5 * wt + 40, 100, 0, -1);
+        drawSolidArrowHead(gc, centerX + 0.5 * wt + 40, 100 + ft, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("flange=%.2f [mm]", flangeThickness), centerX + 0.5 * wt + 60, 100 + 0.5 * ft);
 
@@ -708,8 +705,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(centerX - 0.5 * wt - 50, offsetY - 2 * ft, centerX - 0.5 * wt, offsetY - 2 * ft);
         gc.strokeLine(centerX + 0.5 * wt, offsetY - 2 * ft, centerX + 0.5 * wt + 50, offsetY - 2 * ft);
 
-        drawArrowHead(gc, centerX - 0.5 * wt, offsetY - 2 * ft, -1, 0);
-        drawArrowHead(gc, centerX + 0.5 * wt, offsetY - 2 * ft, 1, 0);
+        drawSolidArrowHead(gc, centerX - 0.5 * wt, offsetY - 2 * ft, -1, 0);
+        drawSolidArrowHead(gc, centerX + 0.5 * wt, offsetY - 2 * ft, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("w=%.2f [mm]", webThickness), centerX + 0.5 * wt + 60, offsetY - 2 * ft);
 
@@ -769,8 +766,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX - 80, offsetY, offsetX, offsetY);
         gc.strokeLine(offsetX - 70, 100, offsetX - 70, offsetY);
 
-        drawArrowHead(gc, offsetX - 70, 100, 0, 1);
-        drawArrowHead(gc, offsetX - 70, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX - 70, 100, 0, 1);
+        drawSolidArrowHead(gc, offsetX - 70, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("height=%.2f [mm]", height), offsetX - 80, centerY);
 
@@ -779,8 +776,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w, offsetY, offsetX + w, offsetY + 50);
         gc.strokeLine(offsetX, offsetY + 40, offsetX + w, offsetY + 40);
 
-        drawArrowHead(gc, offsetX, offsetY + 40, 1, 0);
-        drawArrowHead(gc, offsetX + w, offsetY + 40, -1, 0);
+        drawSolidArrowHead(gc, offsetX, offsetY + 40, 1, 0);
+        drawSolidArrowHead(gc, offsetX + w, offsetY + 40, -1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(String.format("w=%.2f [mm]", width), offsetX + 0.5 * w, offsetY + 35);
@@ -790,16 +787,16 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w, 100.5 + ft, offsetX + w + 50, 100.5 + ft);
         gc.strokeLine(offsetX + w + 40, 50, offsetX + w + 40, 100);
         gc.strokeLine(offsetX + w + 40, 100 + ft, offsetX + w + 40, 100 + ft + 50);
-        drawArrowHead(gc, offsetX + w + 40, 100, 0, -1);
-        drawArrowHead(gc, offsetX + w + 40, 100 + ft, 0, 1);
+        drawSolidArrowHead(gc, offsetX + w + 40, 100, 0, -1);
+        drawSolidArrowHead(gc, offsetX + w + 40, 100 + ft, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("flange=%.2f [mm]", flangeThickness), offsetX + w + 60, 80);
 
         // web thickness
         gc.strokeLine(offsetX - 50, centerY + 30, offsetX, centerY + 30);
         gc.strokeLine(offsetX + wt, centerY + 30, offsetX + wt + 50, centerY + 30);
-        drawArrowHead(gc, offsetX, centerY + 30, -1, 0);
-        drawArrowHead(gc, offsetX + wt, centerY + 30, 1, 0);
+        drawSolidArrowHead(gc, offsetX, centerY + 30, -1, 0);
+        drawSolidArrowHead(gc, offsetX + wt, centerY + 30, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("web=%.2f [mm]", webThickness), offsetX + wt + 60, centerY + 30);
 
@@ -859,8 +856,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX - 50, offsetY, centerX - 0.5 * wt, offsetY);
         gc.strokeLine(offsetX - 40, 100, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
-        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawSolidArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("h=%.2f [mm]", height), offsetX - 60, centerY);
 
@@ -869,8 +866,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w, 50, offsetX + w, 100);
         gc.strokeLine(offsetX, 60, offsetX + w, 60);
 
-        drawArrowHead(gc, offsetX, 60, -1, 0);
-        drawArrowHead(gc, offsetX + w, 60, 1, 0);
+        drawSolidArrowHead(gc, offsetX, 60, -1, 0);
+        drawSolidArrowHead(gc, offsetX + w, 60, 1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(String.format("web=%.2f [mm]", width), centerX, 40);
@@ -880,8 +877,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w, 100 + f, offsetX + w + 50, 100 + f);
         gc.strokeLine(offsetX + w + 40, 50, offsetX + w + 40, 100);
         gc.strokeLine(offsetX + w + 40, 100 + f, offsetX + w + 40, 100 + f + 50);
-        drawArrowHead(gc, offsetX + w + 40, 100, 0, -1);
-        drawArrowHead(gc, offsetX + w + 40, 100 + f, 0, 1);
+        drawSolidArrowHead(gc, offsetX + w + 40, 100, 0, -1);
+        drawSolidArrowHead(gc, offsetX + w + 40, 100 + f, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("flange=%.2f [mm]", flangeThickness), offsetX + w + 66, 100 + f + 40);
 
@@ -889,8 +886,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(centerX - 0.5 * wt - 50, offsetY - 100, centerX - 0.5 * wt, offsetY - 100);
         gc.strokeLine(centerX + 0.5 * wt, offsetY - 100, centerX + 0.5 * wt + 50, offsetY - 100);
 
-        drawArrowHead(gc, centerX - 0.5 * wt, offsetY - 100, -1, 0);
-        drawArrowHead(gc, centerX + 0.5 * wt, offsetY - 100, 1, 0);
+        drawSolidArrowHead(gc, centerX - 0.5 * wt, offsetY - 100, -1, 0);
+        drawSolidArrowHead(gc, centerX + 0.5 * wt, offsetY - 100, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("web=%.2f [mm]", webThickness), centerX + 0.5 * wt + 60, offsetY - 100);
 
@@ -931,8 +928,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX, offsetY, offsetX - 50, offsetY);
         gc.strokeLine(offsetX - 40, 100.5, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
-        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawSolidArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("height=%.2f [mm]", height), offsetX - 60, centerY);
 
@@ -987,8 +984,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(centerX, offsetY, centerX + r + 50, offsetY);
         gc.strokeLine(centerX + r + 40, offsetY - h, centerX + r + 40, offsetY);
 
-        drawArrowHead(gc, centerX + r + 40, offsetY - h, 0, 1);
-        drawArrowHead(gc, centerX + r + 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, centerX + r + 40, offsetY - h, 0, 1);
+        drawSolidArrowHead(gc, centerX + r + 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("h=%.2f [mm]", height), centerX + r + 50, centerY);
 
@@ -1056,8 +1053,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(centerX + r * SIN_225, offsetY, offsetX + h + 50, offsetY);
         gc.strokeLine(offsetX + h + 40, offsetY - h, offsetX + h + 40, offsetY);
 
-        drawArrowHead(gc, offsetX + h + 40, offsetY - h, 0, 1);
-        drawArrowHead(gc, offsetX + h + 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX + h + 40, offsetY - h, 0, 1);
+        drawSolidArrowHead(gc, offsetX + h + 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("h=%.2f [mm]", height), offsetX + w + 60, centerY);
 
@@ -1128,8 +1125,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX - 50, offsetY, offsetX, offsetY);
         gc.strokeLine(offsetX - 40, 100, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
-        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawSolidArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("h=%.2f [mm]", height), offsetX - 60, centerY);
 
@@ -1138,8 +1135,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w, 50, offsetX + w, 100);
         gc.strokeLine(offsetX, 60, offsetX + w, 60);
 
-        drawArrowHead(gc, offsetX, 60, -1, 0);
-        drawArrowHead(gc, offsetX + w, 60, 1, 0);
+        drawSolidArrowHead(gc, offsetX, 60, -1, 0);
+        drawSolidArrowHead(gc, offsetX + w, 60, 1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(String.format("web=%.2f [mm]", width), centerX, 40);
@@ -1149,8 +1146,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w, 100 + ft, offsetX + w + 50, 100 + ft);
         gc.strokeLine(offsetX + w + 40, 50, offsetX + w + 40, 100);
         gc.strokeLine(offsetX + w + 40, 100 + ft, offsetX + w + 40, 100 + ft + 50);
-        drawArrowHead(gc, offsetX + w + 40, 100, 0, -1);
-        drawArrowHead(gc, offsetX + w + 40, 100 + ft, 0, 1);
+        drawSolidArrowHead(gc, offsetX + w + 40, 100, 0, -1);
+        drawSolidArrowHead(gc, offsetX + w + 40, 100 + ft, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("flange=%.2f [mm]", flangeThickness), offsetX + w + 66, 100 + ft + 40);
 
@@ -1158,8 +1155,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(centerX - 0.5 * wt - 50, offsetY - 100, centerX + 0.5 * wt, offsetY - 100);
         gc.strokeLine(centerX + 0.5 * wt, offsetY - 100, centerX + 0.5 * wt + 50, offsetY - 100);
 
-        drawArrowHead(gc, centerX - 0.5 * wt, offsetY - 100, -1, 0);
-        drawArrowHead(gc, centerX + 0.5 * wt, offsetY - 100, 1, 0);
+        drawSolidArrowHead(gc, centerX - 0.5 * wt, offsetY - 100, -1, 0);
+        drawSolidArrowHead(gc, centerX + 0.5 * wt, offsetY - 100, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("width=%.2f [mm]", webThickness), centerX + 0.5 * wt + 60, offsetY - 100);
 
@@ -1221,8 +1218,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(centerX + 0.5 * r, offsetY, centerX + r + 30, offsetY);
         gc.strokeLine(centerX + r + 20, offsetY - h, centerX + r + 20, offsetY);
 
-        drawArrowHead(gc, centerX + r + 20, offsetY - h, 0, 1);
-        drawArrowHead(gc, centerX + r + 20, offsetY, 0, -1);
+        drawSolidArrowHead(gc, centerX + r + 20, offsetY - h, 0, 1);
+        drawSolidArrowHead(gc, centerX + r + 20, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("h=%.2f [mm]", height), centerX + r + 40, centerY);
 
@@ -1277,7 +1274,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var rY = Math.round(offsetY - SIN_45 * r) + 0.5;
 
         gc.strokeLine(rX, rY, rX + COS_45 * 50, rY - SIN_45 * 50);
-        drawArrowHead(gc, rX, rY, COS_45, -SIN_45);
+        drawSolidArrowHead(gc, rX, rY, COS_45, -SIN_45);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("r=%.2f [mm]", 0.5 * diameter), centerX + COS_45 * (r + 60), offsetY - SIN_45 * (r + 60));
 
@@ -1420,8 +1417,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX - 105, 100, offsetX, 100);
         gc.strokeLine(offsetX - 105, offsetY, offsetX, offsetY);
 
-        drawArrowHead(gc, offsetX - 100, 100, 0, 1);
-        drawArrowHead(gc, offsetX - 100, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX - 100, 100, 0, 1);
+        drawSolidArrowHead(gc, offsetX - 100, offsetY, 0, -1);
 
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("Height %.2f [mm]", profileHeight), offsetX - 150, canvasHeight / 2.0);
@@ -1436,8 +1433,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(p4X, offsetY, p4X, p5Y);
         gc.strokeLine(offsetX - 25, p3Y - 10, p4X + 100, p5Y - 10);
 
-        drawArrowHead(gc, offsetX, p3Y - 10, -1, 0);
-        drawArrowHead(gc, p4X, p5Y - 10, 1, 0);
+        drawSolidArrowHead(gc, offsetX, p3Y - 10, -1, 0);
+        drawSolidArrowHead(gc, p4X, p5Y - 10, 1, 0);
 
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("Web Thickness %.2f [mm]", webThickness), p4X + 20, p5Y - 20);
@@ -1456,8 +1453,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(p8X, p8Y, p9X, p9Y);
         gc.strokeLine(offsetX, p6Y + 10, p8X, p8Y + 10);
 
-        drawArrowHead(gc, offsetX, p6Y + 10, -1, 0);
-        drawArrowHead(gc, p8X, p8Y + 10, 1, 0);
+        drawSolidArrowHead(gc, offsetX, p6Y + 10, -1, 0);
+        drawSolidArrowHead(gc, p8X, p8Y + 10, 1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(String.format("Width %.2f [mm]", flangeWidth), offsetX + 0.5 * b, p6Y - 15);
@@ -1507,8 +1504,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(centerX, offsetY, centerX + r + 50, offsetY);
         gc.strokeLine(centerX + r + 40, centerY - r, centerX + r + 40, offsetY);
 
-        drawArrowHead(gc, centerX + r + 40, centerY - r, 0, 1);
-        drawArrowHead(gc, centerX + r + 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, centerX + r + 40, centerY - r, 0, 1);
+        drawSolidArrowHead(gc, centerX + r + 40, offsetY, 0, -1);
 
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("⌀ %.2f [mm]", diameter), centerX + r + 50, centerY);
@@ -1516,8 +1513,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         // thickness
         gc.strokeLine(offsetX - 50, centerY, offsetX, centerY);
         gc.strokeLine(offsetX + ct, centerY, offsetX + ct + 50, centerY);
-        drawArrowHead(gc, offsetX, centerY, -1, 0);
-        drawArrowHead(gc, offsetX + ct, centerY, 1, 0);
+        drawSolidArrowHead(gc, offsetX, centerY, -1, 0);
+        drawSolidArrowHead(gc, offsetX + ct, centerY, 1, 0);
 
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("t=%.2f [mm]", thickness), offsetX - 60, centerY);
@@ -1571,8 +1568,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(p0X, p1Y, Math.round(canvasWidth / 2.0), p1Y);
         gc.strokeLine(p0X + 10, p0Y, p0X + 10, p1Y);
 
-        drawArrowHead(gc, p0X + 10, p0Y, 0, 1);
-        drawArrowHead(gc, p0X + 10, p1Y, 0, -1);
+        drawSolidArrowHead(gc, p0X + 10, p0Y, 0, 1);
+        drawSolidArrowHead(gc, p0X + 10, p1Y, 0, -1);
 
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("Height %.2f [mm]", profileHeight), p0X, (p0Y + p1Y) / 2.0);
@@ -1588,8 +1585,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(p4X, p1Y, p4X, p5Y);
         gc.strokeLine(p2X - 25, p3Y - 10, p4X + 100, p5Y - 10);
 
-        drawArrowHead(gc, p2X, p3Y - 10, -1, 0);
-        drawArrowHead(gc, p4X, p5Y - 10, 1, 0);
+        drawSolidArrowHead(gc, p2X, p3Y - 10, -1, 0);
+        drawSolidArrowHead(gc, p4X, p5Y - 10, 1, 0);
 
 
         gc.setTextAlign(TextAlignment.LEFT);
@@ -1683,8 +1680,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX - 50, offsetY, offsetX + outerRadius, offsetY);
         gc.strokeLine(offsetX - 40, 100, offsetX - 40, offsetY);
 
-        drawArrowHead(gc, offsetX - 40, 100, 0, 1);
-        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX - 40, 100, 0, 1);
+        drawSolidArrowHead(gc, offsetX - 40, offsetY, 0, -1);
 
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("Height %.2f [mm]", profileHeight), offsetX - 60, canvasHeight / 2.0);
@@ -1694,8 +1691,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w, 50, offsetX + w, 100 + outerRadius);
         gc.strokeLine(offsetX, 60, offsetX + w, 60);
 
-        drawArrowHead(gc, offsetX, 60, 1, 0);
-        drawArrowHead(gc, offsetX + w, 60, -1, 0);
+        drawSolidArrowHead(gc, offsetX, 60, 1, 0);
+        drawSolidArrowHead(gc, offsetX + w, 60, -1, 0);
 
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(String.format("Width %.2f [mm]", profileWidth), canvasWidth / 2.0, 40);
@@ -1704,8 +1701,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX + w - t - 50, canvasHeight / 2.0, offsetX + w - t, canvasHeight / 2.0);
         gc.strokeLine(offsetX + w, canvasHeight / 2.0, offsetX + w + 50, canvasHeight / 2.0);
 
-        drawArrowHead(gc, offsetX + w - t, canvasHeight / 2.0, -1, 0);
-        drawArrowHead(gc, offsetX + w, canvasHeight / 2.0, 1, 0);
+        drawSolidArrowHead(gc, offsetX + w - t, canvasHeight / 2.0, -1, 0);
+        drawSolidArrowHead(gc, offsetX + w, canvasHeight / 2.0, 1, 0);
 
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("t=%.2f [mm]", thickness), offsetX + w + 60, canvasHeight / 2.0);
@@ -1813,8 +1810,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(offsetX - 50, wY, wX, wY);
         gc.strokeLine(offsetX - 50, offsetY, wX, offsetY);
         gc.strokeLine(offsetX - 40, wY, offsetX - 40, offsetY);
-        drawArrowHead(gc, offsetX - 40, wY, 0, 1);
-        drawArrowHead(gc, offsetX - 40, offsetY, 0, -1);
+        drawSolidArrowHead(gc, offsetX - 40, wY, 0, 1);
+        drawSolidArrowHead(gc, offsetX - 40, offsetY, 0, -1);
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText(String.format("web height %.2f [mm]", webHeight), offsetX - 150, canvasHeight / 2.0);
 
@@ -1822,16 +1819,16 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(wX + wt, offsetY, wX + wt, offsetY + 40);
         gc.strokeLine(wX - 50, offsetY + 30, wX, offsetY + 30);
         gc.strokeLine(wX + wt, offsetY + 30, wX + wt + 50, offsetY + 30);
-        drawArrowHead(gc, wX, offsetY + 30, -1, 0);
-        drawArrowHead(gc, wX + wt, offsetY + 30, 1, 0);
+        drawSolidArrowHead(gc, wX, offsetY + 30, -1, 0);
+        drawSolidArrowHead(gc, wX + wt, offsetY + 30, 1, 0);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("web t=%.2f [mm]", webHeight), wX + wt + 60, offsetY + 30);
 
         gc.strokeLine(fX, fY, fX, 50);
         gc.strokeLine(fX + f, fY, fX + f, 50);
         gc.strokeLine(fX, 60, fX + f, 60);
-        drawArrowHead(gc, fX, 60, -1, 0);
-        drawArrowHead(gc, fX + f, 60, 1, 0);
+        drawSolidArrowHead(gc, fX, 60, -1, 0);
+        drawSolidArrowHead(gc, fX + f, 60, 1, 0);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(String.format("flange width %.2f [mm]", flangeWidth), fX + 0.5 * f, 40);
 
@@ -1839,8 +1836,8 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gc.strokeLine(fX + f, fY + ft, fX + f + 40, fY + ft);
         gc.strokeLine(fX + f + 30, fY - 30, fX + f + 30, fY);
         gc.strokeLine(fX + f + 30, fY + ft, fX + f + 30, fY + ft + 30);
-        drawArrowHead(gc, fX + f + 30, fY, 0, -1);
-        drawArrowHead(gc, fX + f + 30, fY + ft, 0, 1);
+        drawSolidArrowHead(gc, fX + f + 30, fY, 0, -1);
+        drawSolidArrowHead(gc, fX + f + 30, fY + ft, 0, 1);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(String.format("flange t=%.2f [mm]", flangeThickness), fX + f + 60, fY + 0.5 * ft);
 

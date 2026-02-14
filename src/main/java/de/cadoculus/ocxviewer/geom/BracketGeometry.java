@@ -105,38 +105,17 @@ public class BracketGeometry {
 
     }
 
-    /**
-     * Initializes the 2D geometry of the bracket based on the calculated 3D geometry.
-     * The display plane for the 2D geometry is determined based on the W direction of the 3D geometry and an upvector.
-     * The w direction is set according standard view directions, either from fore ( upvector 0,0,1), starboard (upvector 0,0,1) , or top view (upvector 0,1,0).*
-     */
-    private void initTwoDGeometry() {
-
-        if (bracketGeometry == null) {
-            LOG.warn("cannot initialize 2D geometry for bracket {} ({}) because 3D geometry is not available", bracket.getName(), bracket.getGUIDRef());
-            return;
-        }
-        LOG.debug("initializing bracket 2D geometry for bracket {} ({}) based on parameters", bracket.getName(), bracket.getGUIDRef());
-
-
+    private Matrix4d createL2G(boolean flip) {
         var mainPlane = GeomHelper.getMainPlane(bracketGeometry.wDirection);
 
         var viewDirection = new Vector3d(bracketGeometry.wDirection);
+
         var leftVector = new Vector3d(0,0,1);
         if ( XPLANE == mainPlane) {
-            if ( viewDirection.x < 0) {
-                viewDirection.negate();
-            }
             leftVector=new Vector3d(0,1,0);
         } else if ( YPLANE == mainPlane) {
-            if ( viewDirection.y > 0) {
-                viewDirection.negate();
-            }
             leftVector=new Vector3d(1,0,0);
         } else if ( ZPLANE == mainPlane) {
-            if ( viewDirection.z< 0) {
-                viewDirection.negate();
-            }
             leftVector = new Vector3d(1,0,0);
         }
 
@@ -150,8 +129,15 @@ public class BracketGeometry {
         final Vector3d projectLeft = rawPlane3D.projectToPlane(leftVector);
         LOG.debug("projected left vector {}", projectLeft);
 
+        final Vector3d normal = rawPlane3D.getNormal();
+        LOG.debug("normal {}", normal);
+        if ( flip) {
+            normal.negate();
+            LOG.debug("normal flipped {}", normal);
+        }
+
         final Vector3d zVector = new Vector3d();
-        zVector.cross( projectLeft, bracketGeometry.wDirection);
+        zVector.cross( projectLeft, normal);
         LOG.debug("zVector {}", zVector);
 
         var rot = new Matrix3d();
@@ -168,11 +154,51 @@ public class BracketGeometry {
         local2global.m13 = bracketGeometry.origin.y;
         local2global.m23 = bracketGeometry.origin.z;
 
-        LOG.debug("local2global {}", local2global);
+        return local2global;
+    }
 
+    /**
+     * Initializes the 2D geometry of the bracket based on the calculated 3D geometry.
+     * The display plane for the 2D geometry is determined based on the W direction of the 3D geometry and an upvector.
+     * The w direction is set according standard view directions, either from fore ( upvector 0,0,1), starboard (upvector 0,0,1) , or top view (upvector 0,1,0).*
+     */
+    private void initTwoDGeometry() {
+
+        if (bracketGeometry == null) {
+            LOG.warn("cannot initialize 2D geometry for bracket {} ({}) because 3D geometry is not available", bracket.getName(), bracket.getGUIDRef());
+            return;
+        }
+        LOG.debug("initializing bracket 2D geometry for bracket {} ({}) based on parameters", bracket.getName(), bracket.getGUIDRef());
+
+
+
+        var local2global = createL2G( false);//U, boolean flipV, bracketGeometry.origin, bracketGeometry.uDirection, bracketGeometry.vDirection);
+        LOG.debug("local2global {}", local2global);
         var global2local = new Matrix4d(local2global);
         global2local.invert();
         LOG.debug("global2local I {}", global2local);
+
+
+        // check if the up vector is in the right direction too
+        var mainPlane = GeomHelper.getMainPlane(bracketGeometry.wDirection);
+        var upVector = switch (mainPlane) {
+           case MainPlane.XPLANE -> new Vector3d(0,0,-1);
+            case MainPlane.YPLANE -> new Vector3d(0,0,-1);
+            case MainPlane.ZPLANE -> new Vector3d(0,-1,0);
+                default -> throw new IllegalStateException("unexpected main plane "+mainPlane);
+        };
+
+        var upVectorT = new Vector3d(upVector);
+        global2local.transform(upVectorT);
+        LOG.debug("upVectorT {}", upVectorT);
+        if ( Math.toDegrees(upVectorT.angle(new Vector3d(0,1,0))) > 45) {
+            LOG.debug("flipping view because up vector is not in the right direction");
+            local2global = createL2G( true);
+            global2local = new Matrix4d(local2global);
+            global2local.invert();
+            LOG.debug("global2local II {}", global2local);
+        }
+
 
         var originP = new Point3d( bracketGeometry.origin );
         global2local.transform(originP);

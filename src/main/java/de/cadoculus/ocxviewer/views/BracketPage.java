@@ -17,7 +17,6 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.EventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.geom.BracketGeometry;
@@ -34,10 +33,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -222,17 +223,17 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         var scaleX = (canvasWidth - 250) / width;
         var scale = Math.min(scaleX, scaleY);
 
-        LOG.info("canvas {}x{}, bracket geometry {}x{}, scale {}, scaleX {}, scaleY {}", canvasWidth, canvasHeight, width, height, scale, scaleX, scaleY);
-
-        LOG.info("3D bracket geometry    origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry3D.origin(), bracketGeometry3D.p1(), bracketGeometry3D.p2(), bracketGeometry3D.p3(), bracketGeometry3D.p4());
-        LOG.info("    u-dir {}, v-dir {}", bracketGeometry3D.uDirection(), bracketGeometry3D.vDirection());
-        LOG.info("2D bracket geometry 2D origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.p2(), bracketGeometry2D.p3(), bracketGeometry2D.p4());
-        LOG.info("    u-dir {}, v-dir {}", bracketGeometry2D.uDirection(), bracketGeometry2D.vDirection());
+        //        LOG.info("canvas {}x{}, bracket geometry {}x{}, scale {}, scaleX {}, scaleY {}", canvasWidth, canvasHeight, width, height, scale, scaleX, scaleY);
+        //
+        //        LOG.info("3D bracket geometry    origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry3D.origin(), bracketGeometry3D.p1(), bracketGeometry3D.p2(), bracketGeometry3D.p3(), bracketGeometry3D.p4());
+        //        LOG.info("    u-dir {}, v-dir {}", bracketGeometry3D.uDirection(), bracketGeometry3D.vDirection());
+        //        LOG.info("2D bracket geometry 2D origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.p2(), bracketGeometry2D.p3(), bracketGeometry2D.p4());
+        //        LOG.info("    u-dir {}, v-dir {}", bracketGeometry2D.uDirection(), bracketGeometry2D.vDirection());
 
         var offsetX = Math.round( (canvasWidth - scale * width) / 2.0);
-        var offsetY = Math.round( 100);
+        var offsetY = 100.0;
 
-        LOG.info("offsetX {}, offsetY {}", offsetX, offsetY);
+        LOG.debug("offsetX {}, offsetY {}", offsetX, offsetY);
 
         var viewHoco = new Matrix4d();
         viewHoco.setIdentity();
@@ -241,7 +242,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         viewHoco.m03 = offsetX;
         viewHoco.m13 = offsetY;
 
-        LOG.info("viewHoco\n{}", viewHoco);
+        LOG.debug("viewHoco\n{}", viewHoco);
 
         drawBracketShape(gc, viewHoco);
 
@@ -262,8 +263,9 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
 
 
         drawPoint( gc, viewHoco, bracketGeometry2D.origin(),  d, pointLineColour,2,
-                bracketGeometry3D.origin().toString(), textColour,
-                offDir, dimensionLineColour, 1);
+                "(%.1f, %.1f, %.1f)".formatted(bracketGeometry3D.origin().x, bracketGeometry3D.origin().y,bracketGeometry3D.origin().z),
+                textColour, offDir, dimensionLineColour, 1);
+
 
         // p1 (udir)
         offDir = new Vector3d(bracketGeometry2D.uDirection());
@@ -271,16 +273,28 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         offDir.scale(4*textHeight);
 
         drawPoint( gc, viewHoco, bracketGeometry2D.p1(), d, pointLineColour,2,
-                bracketGeometry3D.p1().toString(), textColour,
-                offDir, dimensionLineColour, 1);
+                "(%.1f, %.1f, %.1f)".formatted(bracketGeometry3D.p1().x, bracketGeometry3D.p1().y,bracketGeometry3D.p1().z),
+                textColour, offDir, dimensionLineColour, 1);
 
         // p2 (vdir)
         offDir = new Vector3d(bracketGeometry2D.vDirection());
         offDir.normalize();
         offDir.scale(4*textHeight);
         drawPoint( gc, viewHoco, bracketGeometry2D.p2(), d, pointLineColour,2,
-                bracketGeometry3D.p2().toString(), textColour,
-                offDir, dimensionLineColour, 1);
+                "(%.1f, %.1f, %.1f)".formatted(bracketGeometry3D.p2().x, bracketGeometry3D.p2().y,bracketGeometry3D.p2().z),
+                textColour,  offDir, dimensionLineColour, 1);
+
+        if ( bracketGeometry2D.p5() != null ) {
+
+            offDir = new Vector3d(bracketGeometry2D.p5());
+            offDir.sub(bracketGeometry2D.origin());
+            offDir.normalize();
+            offDir.scale(4*textHeight);
+            drawPoint( gc, viewHoco, bracketGeometry2D.p5(), d, pointLineColour,2,
+                    "%.1f, %.1f, %.1f".formatted(bracketGeometry3D.p5().x, bracketGeometry3D.p2().y,bracketGeometry3D.p2().z),
+                    textColour,  offDir, dimensionLineColour, 1);
+
+        }
 
         drawBracketDimensions(gc, viewHoco);
 
@@ -317,29 +331,40 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         LOG.info("coosys dir in view coord: xVector' {}, yVector' {}, zVector' {}", xVector, yVector, zVector);
 
         var  offset = 75;
+
         gc.setStroke( cosysColour);
         gc.setFill(cosysColour);
 
+        var coosysStart = new Point3d(canvas.getWidth()-offset, canvas.getHeight()-offset,0);
+
         if ( Math.abs(xVector.x) > 1 || Math.abs(yVector.y) > 1 ) {
             gc.setLineWidth(coosysLineWidth);
-            gc.strokeLine(canvas.getWidth()-offset, canvas.getHeight()-offset,
-                    canvas.getWidth()-offset + xVector.x, canvas.getHeight()-offset + xVector.y);
+            var tipPoint = new Point3d(canvas.getWidth()-offset + xVector.x, canvas.getHeight()-offset + xVector.y,0);
+            gc.strokeLine(coosysStart.x, coosysStart.y, tipPoint.x, tipPoint.y);
+            drawLineArrowHead(gc, tipPoint, yVector, 10, cosysColour, coosysLineWidth);
+
             gc.fillText("X", canvas.getWidth()-offset+ xVector.x +10,
                                 canvas.getHeight()-offset + xVector.y+10);
         }
 
         if ( Math.abs(yVector.x) > 1 || Math.abs(yVector.y) > 1 ) {
             gc.setLineWidth(coosysLineWidth);
-            gc.strokeLine(canvas.getWidth()-offset, canvas.getHeight()-offset,
-                    canvas.getWidth()-offset + yVector.x, canvas.getHeight()-offset + yVector.y);
+            var tipPoint = new Point3d(canvas.getWidth()-offset + yVector.x,canvas.getHeight()-offset + yVector.y,0);
+            gc.strokeLine(coosysStart.x, coosysStart.y,  tipPoint.x, tipPoint.y);
+            drawLineArrowHead(gc, tipPoint, yVector, 10, cosysColour, coosysLineWidth);
+
             gc.fillText("Y", canvas.getWidth()-offset+ yVector.x +10,
                     canvas.getHeight()-offset + yVector.y+10);
         }
 
         if ( Math.abs(zVector.x) > 1 || Math.abs(zVector.y) > 1 ) {
             gc.setLineWidth(coosysLineWidth);
-            gc.strokeLine(canvas.getWidth()-offset, canvas.getHeight()-offset,
-                    canvas.getWidth()-offset + zVector.x, canvas.getHeight()-offset + zVector.y);
+            var tipPoint = new Point3d(canvas.getWidth()-offset + zVector.x, canvas.getHeight()-offset + zVector.y,0);
+            gc.strokeLine(coosysStart.x, coosysStart.y,  tipPoint.x, tipPoint.y);
+            var zInv = new Vector3d(zVector);
+            zInv.negate();
+            drawLineArrowHead(gc, tipPoint, zInv, 10, cosysColour, coosysLineWidth);
+
             gc.fillText("Z", canvas.getWidth()-offset+ zVector.x +10,
                     canvas.getHeight()-offset + zVector.y+10);
         }
@@ -361,6 +386,31 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         drawDimensionLine(gc, totalHoco, bracketGeometry2D.origin(), bracketGeometry2D.p2(), bracketGeometry2D.uDirection(),
                 String.format("v=%.2f [mm]", bracketGeometry3D.armLengthV()));
 
+        if ( bracketGeometry2D.p5() != null) {
+            // TODO: get rid of the duplicated code
+            var center = new Point3d(bracketGeometry2D.p5());
+            var p3p4 = new Vector3d(bracketGeometry2D.p4());
+            p3p4.sub(bracketGeometry2D.p3());
+            p3p4.scale(0.5);
+
+            var pM = new Point3d(bracketGeometry2D.p3());
+            pM.add(p3p4);
+
+            var center2pM = new Vector3d(pM);
+            center2pM.sub(center);
+            center2pM.normalize();
+            center2pM.scale( bracketGeometry3D.freeEdgeRadius());
+
+            var por = new Point3d(center);
+            por.add(center2pM);
+
+//            totalHoco.transform(por);
+//            totalHoco.transform(center);
+
+            drawRadiusDimensionLine(gc, totalHoco, center, por, String.format("r=%.1f [mm]", bracketGeometry3D.freeEdgeRadius()));
+
+
+        }
 
 
     }
@@ -388,12 +438,38 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         totalHoco.transform(next);
         gc.lineTo(next.x, next.y);
 
+
         if ( bracketGeometry2D.p5() != null) {
-            // TODD: draw arc
+            // calculate in original 2D space
+
+            var center = new Point3d(bracketGeometry2D.p5());
+            var p3p4 = new Vector3d(bracketGeometry2D.p4());
+            p3p4.sub(bracketGeometry2D.p3());
+            p3p4.scale(0.5);
+
+            var pM = new Point3d(bracketGeometry2D.p3());
+            pM.add(p3p4);
+
+            var center2pM = new Vector3d(pM);
+            center2pM.sub(center);
+            center2pM.normalize();
+            center2pM.scale( bracketGeometry3D.freeEdgeRadius());
+
+            var por = new Point3d(center);
+            por.add(center2pM);
+
+            next = new Point3d(bracketGeometry2D.p4());
+            totalHoco.transform(next);
+
+            totalHoco.transform(por);
+            totalHoco.transform(center);
+
+            gc.arcTo(por.x, por.y, next.x,next.y, por.distance(center));
+        } else {
+            next = new Point3d(bracketGeometry2D.p4());
+            totalHoco.transform(next);
+            gc.lineTo(next.x, next.y);
         }
-        next = new Point3d(bracketGeometry2D.p4());
-        totalHoco.transform(next);
-        gc.lineTo(next.x, next.y);
 
         next = new Point3d(bracketGeometry2D.p2());
         totalHoco.transform(next);
@@ -458,8 +534,8 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
             titelLabel = new Label("Bracket Parameters");
             titelLabel.getStyleClass().add(Styles.TITLE_4);
             dimensionGrid.add(titelLabel, 0, row++, 4, 1);
-            dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
-            dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+            GridPane.setHalignment(titelLabel, HPos.LEFT);
+            GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
 
             label = new Label("Origin");
@@ -525,8 +601,8 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
                 titelLabel = new Label("Feature Cope");
                 titelLabel.getStyleClass().add(Styles.TITLE_4);
                 dimensionGrid.add(titelLabel, 0, row++, 4, 1);
-                dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
-                dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+                GridPane.setHalignment(titelLabel, HPos.LEFT);
+                GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
                 label = new Label("Cope Radius");
                 label.setTooltip(new Tooltip("??"));
@@ -552,8 +628,8 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
                 titelLabel.setTooltip(new Tooltip("Bracket flange edge reinforcement parameters."));
                 titelLabel.getStyleClass().add(Styles.TITLE_4);
                 dimensionGrid.add(titelLabel, 0, row++, 4, 1);
-                dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
-                dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+                GridPane.setHalignment(titelLabel, HPos.LEFT);
+                GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
                 label = new Label("Flange Width");
                 label.setTooltip(new Tooltip("The width of the bracket flange edge reinforcement."));
@@ -584,8 +660,8 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
             titelLabel = new Label("Physical Properties");
             titelLabel.getStyleClass().add(Styles.TITLE_4);
             dimensionGrid.add(titelLabel, 0, row++, 4, 1);
-            dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
-            dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+            GridPane.setHalignment(titelLabel, HPos.LEFT);
+            GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
 
             label = new Label("Weight");
@@ -608,8 +684,8 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         titelLabel = new Label("Bracket Material");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
         dimensionGrid.add(titelLabel, 0, row++, 4, 1);
-        dimensionGrid.setHalignment(titelLabel, HPos.LEFT);
-        dimensionGrid.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+        GridPane.setHalignment(titelLabel, HPos.LEFT);
+        GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
 
         if (bracket.getPlateMaterial() == null) {
@@ -650,7 +726,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
                 link.setTooltip(new Tooltip("Goto Material"));
                 dimensionGrid.add(link, 1, row++);
                 link.setOnAction(e -> {
-                    var robert = new ArrayList<BreadcrumbRecord>(getBreadcrumbs());
+                    var robert = new ArrayList<>(getBreadcrumbs());
                     robert.add(new BreadcrumbRecord(bracket.getPlateMaterial().getReferenced().getId(), MaterialPage.class, null, bracket.getPlateMaterial().getReferenced()));
 
                     var event = new SelectionEvent(robert);
@@ -676,7 +752,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         label = new Label("Custom Properties");
         label.getStyleClass().add(Styles.TITLE_4);
         dimensionGrid.add(label, 0, row++, 2, 1);
-        dimensionGrid.setHalignment(label, HPos.LEFT);
+        GridPane.setHalignment(label, HPos.LEFT);
 
         var link = new Hyperlink("View Custom Properties");
         link.setTooltip(new Tooltip("Goto Custom Properties page"));

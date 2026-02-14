@@ -61,7 +61,6 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
     private final Label barLabel = new Label();
     private final Canvas canvas = new Canvas();
     private final ObjectProperty<Hole2D> selectedHoleShape = new SimpleObjectProperty<>();
-    private ImagePattern barPattern;
     private double canvasWidth;
     private double canvasHeight;
 
@@ -69,7 +68,6 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
     private Color dimensionLineColor = Color.BLACK;
     private Color cosysColor = Color.BLUE;
     private Color panelColor = Color.GREEN;
-    private final double barLineWidth = 2.0;
     private final double coosysLineWidth = 4.0;
     private final double dimensionLineWidth = 1.0;
 
@@ -312,8 +310,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX + a - r, centerY + b, centerX + a + r + 50, centerY + b);
         gc.strokeLine(centerX + a + r + 40, centerY - b, centerX + r + a + 40, centerY + b);
 
-        drawArrowHead(gc, centerX + r + a + 40, centerY - b, 0, 1);
-        drawArrowHead(gc, centerX + r + a + 40, centerY + b, 0, -1);
+        drawSolidArrowHead(gc, centerX + r + a + 40, centerY - b, 0, 1);
+        drawSolidArrowHead(gc, centerX + r + a + 40, centerY + b, 0, -1);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
@@ -324,8 +322,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX + a, centerY + b - r, centerX + a, centerY + b + r + 50);
         gc.strokeLine(centerX - a, centerY + b + r + 40, centerX + a, centerY + b + r + 40);
 
-        drawArrowHead(gc, centerX - a, centerY + r + b + 40, 1, 0);
-        drawArrowHead(gc, centerX + a, centerY + r + b + 40, -1, 0);
+        drawSolidArrowHead(gc, centerX - a, centerY + r + b + 40, 1, 0);
+        drawSolidArrowHead(gc, centerX + a, centerY + r + b + 40, -1, 0);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.CENTER);
@@ -338,7 +336,7 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         var pY = cY - COS_45 * r;
 
         gc.strokeLine(pX, pY, pX + 40, pY + 40);
-        drawArrowHead(gc, pX, pY, COS_45, SIN_45);
+        drawSolidArrowHead(gc, pX, pY, COS_45, SIN_45);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
@@ -427,8 +425,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX + a - r, centerY + b, centerX + a + 50, centerY + b);
         gc.strokeLine(centerX + a + 40, centerY - b, centerX + a + 40, centerY + b);
 
-        drawArrowHead(gc, centerX + a + 40, centerY - b, 0, 1);
-        drawArrowHead(gc, centerX + a + 40, centerY + b, 0, -1);
+        drawSolidArrowHead(gc, centerX + a + 40, centerY - b, 0, 1);
+        drawSolidArrowHead(gc, centerX + a + 40, centerY + b, 0, -1);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
@@ -439,8 +437,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX + a, centerY + b - r, centerX + a, centerY + b + 50);
         gc.strokeLine(centerX - a, centerY + b + 40, centerX + a, centerY + b + 40);
 
-        drawArrowHead(gc, centerX - a, centerY + b + 40, 1, 0);
-        drawArrowHead(gc, centerX + a, centerY + b + 40, -1, 0);
+        drawSolidArrowHead(gc, centerX - a, centerY + b + 40, 1, 0);
+        drawSolidArrowHead(gc, centerX + a, centerY + b + 40, -1, 0);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
@@ -454,7 +452,7 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
             var pY = cY - COS_45 * r;
 
             gc.strokeLine(pX, pY, pX + 40, pY + 40);
-            drawArrowHead(gc, pX, pY, COS_45, SIN_45);
+            drawSolidArrowHead(gc, pX, pY, COS_45, SIN_45);
 
             gc.setFill(textColor);
             gc.setTextAlign(TextAlignment.LEFT);
@@ -559,8 +557,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX, centerY + b, centerX + a + 50, centerY + b);
         gc.strokeLine(centerX + a + 40, centerY - b, centerX + a + 40, centerY + b);
 
-        drawArrowHead(gc, centerX + a + 40, centerY - b, 0, 1);
-        drawArrowHead(gc, centerX + a + 40, centerY + b, 0, -1);
+        drawSolidArrowHead(gc, centerX + a + 40, centerY - b, 0, 1);
+        drawSolidArrowHead(gc, centerX + a + 40, centerY + b, 0, -1);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
@@ -571,8 +569,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX + a, centerY, centerX + a, centerY + b + 50);
         gc.strokeLine(centerX - a, centerY + b + 40, centerX + a, centerY + b + 40);
 
-        drawArrowHead(gc, centerX - a, centerY + b + 40, 1, 0);
-        drawArrowHead(gc, centerX + a, centerY + b + 40, -1, 0);
+        drawSolidArrowHead(gc, centerX - a, centerY + b + 40, 1, 0);
+        drawSolidArrowHead(gc, centerX + a, centerY + b + 40, -1, 0);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
@@ -673,8 +671,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX, canvasHeight - 100, centerX + w / 2.0 + 50, canvasHeight - 100);
         gc.strokeLine(centerX + w / 2.0 + 40, 100, centerX + w / 2.0 + 40, canvasHeight - 100);
 
-        drawArrowHead(gc, centerX + w / 2.0 + 40, 100, 0, 1);
-        drawArrowHead(gc, centerX + w / 2.0 + 40, canvasHeight - 100, 0, -1);
+        drawSolidArrowHead(gc, centerX + w / 2.0 + 40, 100, 0, 1);
+        drawSolidArrowHead(gc, centerX + w / 2.0 + 40, canvasHeight - 100, 0, -1);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
@@ -685,8 +683,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX + w / 2.0, centerY, centerX + w / 2.0, canvasHeight - 60);
         gc.strokeLine(centerX - w / 2.0, canvasHeight - 70, centerX + w / 2.0, canvasHeight - 70);
 
-        drawArrowHead(gc, centerX - w / 2.0, canvasHeight - 70, 1, 0);
-        drawArrowHead(gc, centerX + w / 2.0, canvasHeight - 70, -1, 0);
+        drawSolidArrowHead(gc, centerX - w / 2.0, canvasHeight - 70, 1, 0);
+        drawSolidArrowHead(gc, centerX + w / 2.0, canvasHeight - 70, -1, 0);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);
@@ -754,8 +752,8 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         gc.strokeLine(centerX, centerY + r, centerX + r + 50, centerY + r);
         gc.strokeLine(centerX + r + 40, centerY - r, centerX + r + 40, centerY + r);
 
-        drawArrowHead(gc, centerX + r + 40, centerY - r, 0, 1);
-        drawArrowHead(gc, centerX + r + 40, centerY + r, 0, -1);
+        drawSolidArrowHead(gc, centerX + r + 40, centerY - r, 0, 1);
+        drawSolidArrowHead(gc, centerX + r + 40, centerY + r, 0, -1);
 
         gc.setFill(textColor);
         gc.setTextAlign(TextAlignment.LEFT);

@@ -106,6 +106,50 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     }
 
+    protected static void drawRadiusDimensionLine(GraphicsContext gc, Matrix4d totalHoco, Point3d center, Point3d end, String label) {
+
+        var p0 = new Point3d(center);
+        totalHoco.transform(p0);
+
+        var p1 = new Point3d(end);
+        totalHoco.transform(p1);
+
+        gc.strokeLine(p0.x, p0.y, p1.x, p1.y);
+
+        var dir = new Vector3d(p1);
+        dir.sub(p0);
+        dir.normalize();
+        dir.negate();
+        drawSolidArrowHead(gc, p1.x, p1.y, dir.x, dir.y);
+
+        dir.negate();
+
+        var angle = Math.toDegrees(dir.angle(PlaneGeometry.NORMAL_X));
+        LOG.debug("{} angle to X axis: {}", label, angle);
+
+
+        if (angle > 45 && angle < 225) {
+            angle += 180;
+        }
+        LOG.debug("{} angle' to X axis: {}", label, angle);
+
+        var tp = new Point3d(p0);
+        tp.add(p1);
+        tp.scale(0.5);
+
+        var offset = new Vector3d(0,0,0);
+
+        gc.save();
+
+        gc.translate(tp.x + offset.x, tp.y + offset.y);
+        gc.rotate(angle);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(label, 0, 0);
+
+        gc.restore();
+
+
+    }
 
     protected static void drawDimensionLine(GraphicsContext gc, Matrix4d totalHoco, Point3d start, Point3d end, Vector3d awayFrom, String label) {
 
@@ -155,9 +199,9 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         var dir = new Vector3d(p12);
         dir.sub(p02);
         dir.normalize();
-        drawArrowHead(gc, p02.x, p02.y, dir.x, dir.y);
+        drawSolidArrowHead(gc, p02.x, p02.y, dir.x, dir.y);
         dir.negate();
-        drawArrowHead(gc, p12.x, p12.y, dir.x, dir.y);
+        drawSolidArrowHead(gc, p12.x, p12.y, dir.x, dir.y);
 
         offset.normalize();
         offset.scale(10);
@@ -238,7 +282,49 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         }
     }
 
-    protected static void drawArrowHead(GraphicsContext gc, double x, double y, double xDir, double yDir) {
+
+    protected static void drawLineArrowHead(GraphicsContext gc, Point3d tipPoint, Vector3d direction, double length, Color stroke, double strokeWidth) {
+
+        var p0 = new Point2D(0, 0);
+        var p1 = new Point2D(length/3.0, length);
+        var p2 = new Point2D(-length/3.0, length);
+
+        //LOG.info("p0 {} p1 {} p2 {}", p0, p1, p2);
+
+        var angle = Math.atan2(direction.x, direction.y);
+        //LOG.info("angle {}°", Math.toDegrees(angle));
+        Rotate rotate = new Rotate(Math.toDegrees(angle), 0, 0);
+
+        var p0I = rotate.transform(p0);
+        var p1I = rotate.transform(p1);
+        var p2I = rotate.transform(p2);
+
+        //LOG.info("p0I {} p1I {} p2I {}", p0I, p1I, p2I);
+
+        Translate translate = new Translate(tipPoint.x, tipPoint.y);
+
+        var p0II = translate.transform(p0I);
+        var p1II = translate.transform(p1I);
+        var p2II = translate.transform(p2I);
+
+        //LOG.info("p0I {} p1I {} p2I {}", p0II, p1II, p1II);
+
+        gc.save();
+        gc.setLineWidth(strokeWidth);
+        gc.setStroke(stroke);
+        gc.beginPath();
+        gc.moveTo(p1II.getX(), p1II.getY());
+        gc.lineTo(p0II.getX(), p0II.getY());
+        gc.lineTo(p2II.getX(), p2II.getY());
+        gc.stroke();
+
+        gc.restore();
+
+
+    }
+
+
+    protected static void drawSolidArrowHead(GraphicsContext gc, double x, double y, double xDir, double yDir) {
 
         double lw = Math.max(gc.getLineWidth(), 1);
         lw = Math.min(lw, 5);
