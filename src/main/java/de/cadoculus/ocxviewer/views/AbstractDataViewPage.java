@@ -21,6 +21,7 @@ import atlantafx.base.theme.Styles;
 import atlantafx.base.util.BBCodeParser;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.geom.PlaneGeometry;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import javafx.beans.property.StringProperty;

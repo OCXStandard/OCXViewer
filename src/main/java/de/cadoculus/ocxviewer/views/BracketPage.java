@@ -101,9 +101,9 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         bracketGeometry3D = bracketGeometry.getBracketGeometry();
         bracketGeometry2D = bracketGeometry.getBracketGeometry2D();
 
-        updateStyle();
+
         DefaultEventBus.getInstance().subscribe( ThemeEvent.class, themeEvent -> {
-            updateStyle();
+            updatedStyle();
             updateCanvas();
         });
 
@@ -173,7 +173,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
     /**
      * Updates the parameters used in the canvas from CSS.
      */
-    private void updateStyle() {
+    private void updatedStyle() {
         final CSSRecord brackets = CSSUtil.lookup("brackets");
         bracketColour = brackets.fill() != null ? brackets.fill() : bracketColour;
         bracketBorderColour= brackets.colour1() != null ? brackets.colour1() : bracketBorderColour;
@@ -190,6 +190,10 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
     }
 
 
+    /**
+     * repaint the canvas using the precalculated geometry from {@link BracketGeometry },
+     * the current canvas dimensions, and the current CSS settings.
+     */
     private void  updateCanvas() {
 
         double canvasHeight = dimeAndSketchTab.getHeight() - 20;
@@ -222,13 +226,6 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         var scaleY = (canvasHeight - 200) / height;
         var scaleX = (canvasWidth - 250) / width;
         var scale = Math.min(scaleX, scaleY);
-
-        //        LOG.info("canvas {}x{}, bracket geometry {}x{}, scale {}, scaleX {}, scaleY {}", canvasWidth, canvasHeight, width, height, scale, scaleX, scaleY);
-        //
-        //        LOG.info("3D bracket geometry    origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry3D.origin(), bracketGeometry3D.p1(), bracketGeometry3D.p2(), bracketGeometry3D.p3(), bracketGeometry3D.p4());
-        //        LOG.info("    u-dir {}, v-dir {}", bracketGeometry3D.uDirection(), bracketGeometry3D.vDirection());
-        //        LOG.info("2D bracket geometry 2D origin {}, p1 {}, p2 {}, p3 {}, p4 {}", bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.p2(), bracketGeometry2D.p3(), bracketGeometry2D.p4());
-        //        LOG.info("    u-dir {}, v-dir {}", bracketGeometry2D.uDirection(), bracketGeometry2D.vDirection());
 
         var offsetX = Math.round( (canvasWidth - scale * width) / 2.0);
         var offsetY = 100.0;
@@ -404,11 +401,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
             var por = new Point3d(center);
             por.add(center2pM);
 
-//            totalHoco.transform(por);
-//            totalHoco.transform(center);
-
             drawRadiusDimensionLine(gc, totalHoco, center, por, String.format("r=%.1f [mm]", bracketGeometry3D.freeEdgeRadius()));
-
 
         }
 

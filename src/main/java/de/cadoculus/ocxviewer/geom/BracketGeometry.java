@@ -102,7 +102,14 @@ public class BracketGeometry {
             initTwoDGeometry();
         }
 
+        if ( bracket.getOuterContour() != null) {
+            initOuterContourGeometry();
+        }
 
+    }
+
+    private void initOuterContourGeometry() {
+        // TODO: render outer contour to points
     }
 
     private Matrix4d createL2G(boolean flip) {

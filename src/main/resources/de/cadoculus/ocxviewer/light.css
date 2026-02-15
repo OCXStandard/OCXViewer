@@ -7,6 +7,17 @@
     -fx-border-width: 2 1 4 0;
 }
 
+#barSections {
+    /*  colour */
+    -fx-background-color: -color-danger-5;
+    /* hatchColour, hatchColour2, bar contour colour, cosys */
+    -fx-border-color: -color-light, -color-base-2, -color-warning-6, -color-accent-6;
+    /* bar countour, dimension line, coordinate system */
+    -fx-border-width: 2 1 4 0;
+    -fx-font-size: 10px;
+    -fx-text-fill: black;
+}
+
 .text-field {
 
     -fx-padding: 5px;

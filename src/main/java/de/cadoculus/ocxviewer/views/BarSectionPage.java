@@ -16,8 +16,12 @@ limitations under the License.
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.ThemeEvent;
+import de.cadoculus.ocxviewer.models.CSSRecord;
 import de.cadoculus.ocxviewer.models.SectionType;
 import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -68,10 +72,18 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
     private Color textColor = Color.BLACK;
     private Color dimensionLineColor = Color.BLACK;
     private Color cosysColor = Color.BLUE;
-    private Color barColor = Color.BLACK;
-    private final double barLineWidth = 2.0;
-    private final double coosysLineWidth = 4.0;
-    private final double dimensionLineWidth = 1.0;
+    private Color barFillColour = Color.RED;
+    private Color barHatchColor = Color.WHITE;
+    private Color barHatchColor2 = Color.LIGHTGRAY;
+    private Color barContourColor = Color.RED;
+    private Color cosysColour = Color.BLUE;
+    private Color textColour = Color.BLACK;
+    private Color dimensionLineColour = Color.BLACK;
+
+    private  double barLineWidth = 2.0;
+    private  double dimensionLineWidth = 1.0;
+    private  double coosysLineWidth = 4.0;
+
 
 
     public BarSectionPage(BarSection barSection, Page parent) {
@@ -140,16 +152,44 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         gridPane.getRowConstraints().add(rc);
 
 
+        updatedStyle();
+
         if (barPattern == null) {
             barPattern = createHatch();
         }
-
         updateCanvas();
 
+        // follow changes in dimension
         this.boundsInLocalProperty().addListener((bound, oldBound, newBound) -> updateCanvas());
-        WorkingContext.getInstance().darkModeProperty().addListener(obs -> updateCanvas());
+
+        // follow changes in style
+        DefaultEventBus.getInstance().subscribe( ThemeEvent.class, themeEvent -> {
+            updatedStyle();
+            updateCanvas();
+        });
+
 
     }
+    /**
+     * Updates the parameters used in the canvas from CSS.
+     */
+    private void updatedStyle() {
+        final CSSRecord cssRecord = CSSUtil.lookup("barSections");
+        barFillColour = cssRecord.fill() != null ? cssRecord.fill() : barFillColour;
+        barHatchColor= cssRecord.colour1() != null ? cssRecord.colour1() : barHatchColor;
+        barHatchColor2 = cssRecord.colour2() != null ? cssRecord.colour2() : barHatchColor2;
+        barContourColor  = cssRecord.colour3() != null ? cssRecord.colour3() : barContourColor;
+        cosysColour  = cssRecord.colour4() != null ? cssRecord.colour4() : cosysColour;
+        textColour = cssRecord.colour5() != null ? cssRecord.colour5() : textColour;
+        dimensionLineColour = textColour;
+
+        barLineWidth = Double.isNaN( cssRecord.width1()) ? barLineWidth : cssRecord.width1();
+        dimensionLineWidth = Double.isNaN( cssRecord.width2()) ? dimensionLineWidth : cssRecord.width2();
+        coosysLineWidth = Double.isNaN( cssRecord.width3()) ? coosysLineWidth : cssRecord.width3();
+
+    }
+
+
 
     private Tab createDimensionsTab() {
         var tab = new Tab("Dimensions");
@@ -579,7 +619,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         textColor = WorkingContext.getInstance().darkModeProperty().get() ? Color.WHITE : Color.BLACK;
         dimensionLineColor = WorkingContext.getInstance().darkModeProperty().get() ? Color.WHITE : Color.BLACK;
         cosysColor = WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#bccadc") : Color.web("#537297");
-        barColor = WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#d29097") : Color.web("#86444a");
+        barContourColor = WorkingContext.getInstance().darkModeProperty().get() ? Color.web("#d29097") : Color.web("#86444a");
 
 
         LOG.info("repaint canvas {}, {}x{}", object, canvas.getWidth(), canvas.getHeight());
@@ -646,7 +686,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
         // paint the hexagon
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
@@ -739,7 +779,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
         // paint the hexagon
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
@@ -829,7 +869,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var centerY = Math.round(height / 2.0) + 0.5;
 
         // paint the T bar
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
@@ -911,7 +951,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var offsetY = Math.round(centerY + 0.5 * h);
 
         // paint the hexagon
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
 
@@ -964,7 +1004,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var offsetY = Math.round(centerY + r);
 
         // paint the hexagon
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
@@ -1022,7 +1062,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var offsetY = Math.round(centerY + 0.5 * h);
 
         // paint the octagon
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
@@ -1094,7 +1134,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
 
         // paint the I-bar
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
@@ -1187,7 +1227,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
 
         // paint the hexagon
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
@@ -1252,7 +1292,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var offsetY = Math.round(canvasHeight - 100); // offset Y
 
         // paint the halfround
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setFill(barPattern);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
@@ -1371,7 +1411,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         // paint the HP
         gc.setFill(barPattern);
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setLineWidth(barLineWidth);
 
         gc.beginPath();
@@ -1485,7 +1525,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
 
         // paint the tube
         gc.setFill(barPattern);
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
 
@@ -1550,7 +1590,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var rwidth = Math.round(flangeWidth * scale) + 0.5;
 
         gc.setFill(barPattern);
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setLineWidth(barLineWidth);
 
         gc.fillRect(coordX, coordY, rwidth, rheight);
@@ -1642,7 +1682,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var centerY = Math.round(canvasHeight / 2.0) + 0.5;
 
         gc.setFill(barPattern);
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setLineWidth(barLineWidth);
         gc.beginPath();
 
@@ -1790,7 +1830,7 @@ public class BarSectionPage extends AbstractDataViewSubPage<BarSection> {
         var fY = SectionType.L_BAR_OW == sectionType ? Math.round(100 + over) + 0.5 : 100.5;
 
         // the web
-        gc.setStroke(barColor);
+        gc.setStroke(barContourColor);
         gc.setLineWidth(barLineWidth);
         gc.setFill(barPattern);
 
