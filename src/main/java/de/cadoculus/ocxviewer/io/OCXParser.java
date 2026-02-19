@@ -142,7 +142,8 @@ public class OCXParser {
             // newer and older versions are replaced in t ReplacingInputStream
             var jaxbContext = JAXBContext.newInstance(new Class[]{
                     oasis.unitsml.ObjectFactory.class,
-                    org.ocx_schema.v310.ObjectFactory.class});
+                    org.ocx_schema.v310.ObjectFactory.class
+            });
             var jaxUnmarshaller = jaxbContext.createUnmarshaller();
             jaxUnmarshaller.setListener(jaxListener);
 

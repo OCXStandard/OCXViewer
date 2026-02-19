@@ -12,6 +12,7 @@ import org.ocx_schema.v310.ReferenceBaseT;
  */
 public class ReferenceBaseTImpl extends ReferenceBaseT {
 
+
     @XmlTransient
     private IdBaseT referenced;
 

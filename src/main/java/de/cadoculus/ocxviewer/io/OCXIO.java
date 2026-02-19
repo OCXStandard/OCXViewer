@@ -46,8 +46,8 @@ public class OCXIO {
         try {
 
             var jaxbContext = JAXBContext.newInstance(new Class[]{
-                    oasis.unitsml.ObjectFactory.class,
-                    org.ocx_schema.v310.ObjectFactory.class});
+                    oasis.unitsml.ObjectFactory.class});
+                    //org.ocx_schema.v310.ObjectFactory.class});
 
             var jaxMarshaller = jaxbContext.createMarshaller();
             jaxMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);

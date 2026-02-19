@@ -43,9 +43,9 @@ module ocxviewer {
     exports de.cadoculus.ocxviewer.logging to org.apache.logging.log4j.core;
     exports de.cadoculus.ocxviewer.views to javafx.fxml;
     exports de.cadoculus.ocxviewer.models to javafx.fxml;
-    exports de.cadoculus.ocxviewer.io to org.glassfish.jaxb.runtime;
     exports de.cadoculus.ocxviewer.geom to javafx.fxml;
     exports de.cadoculus.ocxviewer.utils to javafx.fxml;
+    exports de.cadoculus.ocxviewer.io to javafx.fxml, org.glassfish.jaxb.runtime;
 
 
 }
