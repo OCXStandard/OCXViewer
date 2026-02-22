@@ -47,7 +47,6 @@ public final class PageTree extends TreeView<PageRecord> {
     private static final Logger LOG = LogManager.getLogger(PageTree.class);
 
     private final static String BASE_DATA_GROUP = "Base Data";
-    private final static String HEADER_PAGE = "Header";
 
 
     public PageTree() {
@@ -95,8 +94,7 @@ public final class PageTree extends TreeView<PageRecord> {
 
 
         // DesignView
-        var dsgnViewGroup = Item.group("Design Views", new FontIcon(MaterialDesignC.CAMERA_OUTLINE));
-        root.getChildren().add(dsgnViewGroup);
+        root.getChildren().add(Item.page(DesignViewsPage.NAME, new FontIcon(MaterialDesignC.CAMERA_OUTLINE), DesignViewsPage.class));
 
         // Arrangements
         var arrangementsGroup = Item.group("Arrangements", new FontIcon(MaterialDesignF.FILE_TREE));
@@ -210,10 +208,6 @@ public final class PageTree extends TreeView<PageRecord> {
 
         public boolean isGroup() {
             return record.isGroup();
-        }
-
-        public Class<? extends Page> pageClass() {
-            return record.pageClass();
         }
 
         public static Item root() {

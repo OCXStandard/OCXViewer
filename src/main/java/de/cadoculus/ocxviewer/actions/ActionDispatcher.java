@@ -93,8 +93,6 @@ public class ActionDispatcher {
 
     private void handleHotkeyEvent(HotkeyEvent hotkeyEvent) {
         LOG.debug("handleHotkeyEvent: {} ({})", hotkeyEvent, hotkeyEvent.getKeys().toString());
-        LOG.debug("About: {} ", AboutAction.KEYS);
-
 
         // TODO: use static Action.Keys instead of hardcoded strings
         var key = hotkeyEvent.getKeys();
@@ -105,7 +103,6 @@ public class ActionDispatcher {
             LOG.info("got unknown key combination {}", key);
             LOG.info("supported keycodes are");
             key2class.entrySet().forEach(entry -> LOG.info("    " + entry.getKey().toString() + " " + entry.getValue().toString()));
-
         }
     }
 

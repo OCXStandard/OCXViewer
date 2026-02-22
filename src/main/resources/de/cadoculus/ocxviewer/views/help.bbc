@@ -10,6 +10,15 @@ After loading the file, the content is displayed in the tree view on the left si
 
 [heading=2]UI[/heading]
 
+The navigation tree on the left side of the application window shows the content of the loaded OCX file.
+The content is organized in a hierarchical structure, where each node represents an element of the OCX file.
+Clicking on a node will display its content in the main view on the right side of the application window.
+
+The main view on the right side of the application window displays the content of the selected node
+in the navigation tree. It supports drilling down into the content of the node, as well as going back
+to the previous view using either the breadcrumps at the top of the main view or
+the back shortcut (ALT+LEFT) on the keyboard.
+
 [heading=2]Actions[/heading]
 
 [heading=3]Schema Check[/heading]

@@ -21,7 +21,6 @@ import atlantafx.base.theme.Styles;
 import atlantafx.base.util.BBCodeParser;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
-import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.geom.PlaneGeometry;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import javafx.beans.property.StringProperty;
@@ -47,10 +46,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jvnet.basicjaxb.lang.Bound;
 import org.jvnet.basicjaxb.lang.StringUtils;
-import org.ocx_schema.v310.IdBaseT;
-import org.ocx_schema.v310.Point3DT;
-import org.ocx_schema.v310.QuantityT;
-import org.ocx_schema.v310.Vector3DT;
+import org.ocx_schema.v310.*;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
@@ -64,9 +60,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -88,6 +82,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
     public static double COS_225 = 0.923879533;
     public static double SIN_225 = 0.382683432;
     private final String name;
+    private final Map<Class<?>, Class<? extends AbstractDataViewPage>> type2page = new HashMap<>();
 
     protected AbstractDataViewPage(String name) {
         super();
@@ -138,7 +133,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         tp.add(p1);
         tp.scale(0.5);
 
-        var offset = new Vector3d(0,0,0);
+        var offset = new Vector3d(0, 0, 0);
 
         gc.save();
 
@@ -285,8 +280,8 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
     protected static void drawLineArrowHead(GraphicsContext gc, Point3d tipPoint, Vector3d direction, double length, Color stroke, double strokeWidth) {
 
         var p0 = new Point2D(0, 0);
-        var p1 = new Point2D(length/3.0, length);
-        var p2 = new Point2D(-length/3.0, length);
+        var p1 = new Point2D(length / 3.0, length);
+        var p2 = new Point2D(-length / 3.0, length);
 
         //LOG.info("p0 {} p1 {} p2 {}", p0, p1, p2);
 
@@ -395,7 +390,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
                         var label = "unset";
                         if (value instanceof IdBaseT idBaseT) {
                             label = idBaseT.getId();
-                        } else if (value instanceof Pair pair) {
+                        } else if (value instanceof Pair<?,?> pair) {
                             if (pair.getValue() instanceof IdBaseT idBaseT) {
                                 label = idBaseT.getId();
                             } else {
@@ -857,6 +852,45 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     }
 
+    public List<BreadcrumbRecord> createBreadcrumbs(List<BreadcrumbRecord> parentPath, IdBaseT entity) {
+
+        initPageLookup();
+
+        // TODO: add some magic lookup to determine the page class and parameters based on the entity type
+        var robert = new ArrayList<>(getBreadcrumbs());
+        var pageClass = type2page.get(entity.getClass());
+        if (pageClass == null) {
+            LOG.warn("no page class found for entity type {}, using default page class {}", entity.getClass(), Panel.class);
+        }
+
+        robert.add(new BreadcrumbRecord(entity.getId(), pageClass, null, entity));
+        return robert;
+
+    }
+
+
+    private void initPageLookup() {
+        if (type2page.isEmpty()) {
+
+            // generic lookup is not your friend, that's why this is hardcoded for now
+
+            type2page.put(Panel.class, PanelPage.class);
+            type2page.put(Stiffener.class, StiffenerPage.class);
+            type2page.put(EdgeReinforcement.class, FlangePage.class);
+            type2page.put(PillarT.class, PillarPage.class);
+            type2page.put(Plate.class, PlatePage.class);
+            type2page.put(Seam.class, SeamPage.class);
+
+            type2page.put(Material.class, MaterialPage.class);
+            type2page.put(BarSection.class, BarSectionPage.class);
+            //type2page.put( BarSection.class, HoleShapePage.class);
+
+            type2page.put(SurfaceT.class, SurfacePage.class);
+            type2page.put(Vessel.class, VesselDataPage.class);
+        }
+
+    }
+
     @Override
     public String getName() {
         return name;
@@ -892,15 +926,11 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
 
     }
 
-    ;
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof AbstractDataViewPage that)) return false;
         return Objects.equals(name, that.name);
     }
-
-    ;
 
     @Override
     public int hashCode() {
@@ -950,11 +980,11 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
                 } else if (propertyClass == Year.class) {
                     toAppendTo.append(calendar.toGregorianCalendar().get(GregorianCalendar.YEAR));
                 } else {
-                    toAppendTo.append(obj.toString());
+                    toAppendTo.append(obj);
                 }
 
             } else {
-                toAppendTo.append(obj.toString());
+                toAppendTo.append(obj);
             }
 
             return toAppendTo;
@@ -966,17 +996,4 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         }
     }
 
-    static class CSClassEnumConverter extends Format {
-
-        @Override
-        public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-            toAppendTo.append(obj.toString());
-            return toAppendTo;
-        }
-
-        @Override
-        public Object parseObject(String source, ParsePosition pos) {
-            return null;
-        }
-    }
 }

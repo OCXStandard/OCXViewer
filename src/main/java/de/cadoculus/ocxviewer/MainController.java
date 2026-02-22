@@ -21,7 +21,6 @@ import de.cadoculus.ocxviewer.actions.*;
 import de.cadoculus.ocxviewer.event.*;
 import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
-import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.views.*;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -29,26 +28,26 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.MotionBlur;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Stack;
@@ -84,14 +83,43 @@ public class MainController {
     }
 
     @FXML
-    public void initialize() throws IOException {
+    public void initialize() {
 
         // register for navigation
         DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> initializeViews());
 
+        DefaultEventBus.getInstance().subscribe(HotkeyEvent.class, event->handleHotkeyEvent(event));
+
         // This is initialized here to start collecting log events when the user opens a file
         final LogPage logPage = new LogPage();
         pageClass2page.put(LogPage.class, logPage);
+
+    }
+
+    /**
+     * Generic handler for hotkey events
+     * @param event
+     */
+    private void handleHotkeyEvent(HotkeyEvent event) {
+        LOG.debug("Hotkey event: {}", event);
+
+        if ( NavigateBackAction.KEYS.equals(event.getKeys())) {
+            LOG.debug("Navigate back event: {}", event);
+            if( pageStack.size() <= 1) {
+                LOG.debug("no page to navigate back to");
+                return;
+            }
+            LOG.debug("current page stack {}", pageStack);
+            if ( pageStack.size() > 1) {
+                final BreadcrumbRecord popped = pageStack.pop();
+                popped.page().beforeHide();
+                LOG.debug("popped page {}", popped.page());
+                popped.page().afterHide();
+                pageStack.peek().page().beforeShow();
+                switchToPage((BorderPane) pageStack.peek().page());
+                pageStack.peek().page().afterShow();
+            }
+        }
 
     }
 
@@ -403,9 +431,11 @@ public class MainController {
         pageClass2page.put(HeaderPage.class, headerPage);
         this.switchPages(new NavigationEvent(HeaderPage.class));
 
-
     }
 
+    //
+    // This should become more elegant, e.g. by using a central action dispatcher and static Action.Keys instead of hardcoded action handlers in the controller.
+    //
 
     // The actions from the menu bar, all directed to the event bus
     public void help(ActionEvent actionEvent) {
@@ -428,6 +458,12 @@ public class MainController {
         DefaultEventBus.getInstance().publish(hke);
     }
 
+    public void navigateBack(ActionEvent actionEvent) {
+        var hke = new HotkeyEvent(NavigateBackAction.KEYS);
+        DefaultEventBus.getInstance().publish(hke);
+    }
+
+
     public void schemaCheck(ActionEvent actionEvent) {
 
         var hke = new HotkeyEvent(SchemaCheckAction.KEYS);
@@ -440,7 +476,6 @@ public class MainController {
     }
 
     public void switchUIMode(ActionEvent actionEvent) {
-
         boolean dark = !WorkingContext.getInstance().darkModeProperty().get();
         go(dark);
     }
@@ -464,27 +499,6 @@ public class MainController {
         DefaultEventBus.getInstance().publish(event);
     }
 
-
-
-
-//    // TODO: fail to load arbitrary color from css variables, investigate later
-//    private void updateColorInfo(Duration delay) {
-//        var t = new Timeline(new KeyFrame(delay));
-//        t.setOnFinished(e -> {
-//            var colorTest = new Label("nothing to see here");
-//            colorTest.setStyle("-fx-text-fill:-color-accent-8;");
-//            mainBorderPane.setLeft(colorTest);
-//            //LOG.info("-color-accent-8 {}" , colorTest.getTextFill());
-//
-//            mainBorderPane.setLeft(null);
-//            colorTest = new Label("nothing to see here");
-//            colorTest.setStyle("-fx-text-fill:-color-base-3;");
-//            //LOG.info("-color-accent-8 {}" , colorTest.getTextFill());
-//
-//           mainBorderPane.setLeft(null);
-//        });
-//        t.play();
-//    }
 
 
 }

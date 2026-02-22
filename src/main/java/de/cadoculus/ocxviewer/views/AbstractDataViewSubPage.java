@@ -35,7 +35,6 @@ public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.IdBa
     private final Page parentPage;
     protected final T object;
 
-
     protected AbstractDataViewSubPage(T object, Page parentPage, String name) {
         super(name);
         if (object == null) throw new IllegalArgumentException("object is null");
@@ -44,8 +43,7 @@ public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.IdBa
         this.parentPage = parentPage;
 
         LOG.info("created a new sub page {} for {}", name, object);
-        LOG.info("   parent {}, breadcrums {}", getParentPage(), getBreadcrumbs());
-
+        LOG.info("   parent {}, breadcrumps {}", getParentPage(), getBreadcrumbs());
     }
 
     @Override
@@ -79,16 +77,16 @@ public abstract class AbstractDataViewSubPage<T extends org.ocx_schema.v310.IdBa
      */
     @Override
     public List<BreadcrumbRecord> getBreadcrumbs() {
-        var robert = new ArrayList<BreadcrumbRecord>(parentPage.getBreadcrumbs());
+        var robert = new ArrayList<>(parentPage.getBreadcrumbs());
         robert.add(new BreadcrumbRecord(getName(), this.getClass(), this, getObject()));
         return robert;
     }
 
-    protected <T> Breadcrumbs.BreadCrumbItem<T> getTreeItemByIndex(Breadcrumbs.BreadCrumbItem<T> node, int index) {
+    protected <U> Breadcrumbs.BreadCrumbItem<U> getTreeItemByIndex(Breadcrumbs.BreadCrumbItem<U> node, int index) {
         var counter = index;
         var current = node;
         while (counter > 0 && current.getParent() != null) {
-            current = (Breadcrumbs.BreadCrumbItem<T>) current.getParent();
+            current = (Breadcrumbs.BreadCrumbItem<U>) current.getParent();
             counter--;
         }
         return current;

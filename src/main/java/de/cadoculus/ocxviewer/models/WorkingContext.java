@@ -15,6 +15,7 @@
  */
 package de.cadoculus.ocxviewer.models;
 
+import de.cadoculus.ocxviewer.MainController;
 import de.cadoculus.ocxviewer.OCXViewerApplication;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -40,6 +41,7 @@ public class WorkingContext {
     private Scene mainScene;
     private String targetNamespace;
     private BooleanProperty darkMode = new SimpleBooleanProperty(false);
+    private MainController mainController;
 
 
     /**
@@ -143,4 +145,11 @@ public class WorkingContext {
     }
 
 
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    public MainController getMainController() {
+        return mainController;
+    }
 }

@@ -31,6 +31,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -171,6 +172,15 @@ public class PanelPage extends AbstractDataViewSubPage<Panel> {
         gridTab.setMinWidth(450);
 
         gridPane.add(gridTab, 0, ++row, 4, 1);
+
+
+        // ensure the last row gets all available space
+        for (int r = 0; r < GridPane.getRowIndex(gridTab); r++) {
+            gridPane.getRowConstraints().add(new RowConstraints());
+        }
+        var tableRow = new RowConstraints();
+        tableRow.setVgrow(Priority.ALWAYS);
+        gridPane.getRowConstraints().add(tableRow);
 
     }
 

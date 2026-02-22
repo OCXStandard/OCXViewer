@@ -53,14 +53,6 @@ public class OCXViewerApplication extends Application {
             System.exit(0);
         });
 
-        try {
-
-            Image paper = new Image(LogoPage.class.getResource("Rastergrafik.png").toString());
-            stage.getIcons().add(paper);
-
-        } catch (Exception e) {
-            LOG.error("Could not load logo.png", e);
-        }
 
 
         // This loads the main-view.fxml file and thus starts the complete UI of the application

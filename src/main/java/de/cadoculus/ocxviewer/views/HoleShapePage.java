@@ -37,7 +37,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.TextAlignment;
 import org.apache.logging.log4j.LogManager;
@@ -135,7 +134,7 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
         );
 
         ObservableList<Hole2D> holeShapes = FXCollections.observableArrayList();
-        table = new TableView<Hole2D>(holeShapes);
+        table = new TableView<>(holeShapes);
         table.getColumns().setAll(tableColumn1, tableColumn2, tableColumn3, tableColumn4);
         table.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
@@ -611,7 +610,7 @@ public class HoleShapePage extends AbstractDataViewPage implements Page {
 
         var width = UnitHelper.toDefaultUnit(symmetricalHole.getWidth());
         var height = UnitHelper.toDefaultUnit(symmetricalHole.getHeight());
-        var diameter = width > height ? height : width;
+        var diameter = Math.min(width, height);
 
         //LOG.info("width {} height {} diameter {}", width, height, diameter);
 

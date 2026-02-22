@@ -1,5 +1,8 @@
 /* Light theme for OCX Viewer */
 
+#pseudeMB {
+    -fx-background-color: "#000000";
+}
 #brackets {
     -fx-background-color: -color-success-4;
     -fx-border-color: -color-success-6 -color-base-4 -color-danger-4 -color-accent-6;
