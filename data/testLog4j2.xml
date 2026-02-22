@@ -26,12 +26,13 @@
         <Logger name="de.cadoculus.ocxviewer.logging.LoggerHelper" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.MainController" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.actions.ActionDispatcher" level="debug"/>
-        <Logger name="de.cadoculus.ocxviewer.io.OCXIO" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.io.OCXIO" level="INFO"/>
         <Logger name="de.cadoculus.ocxviewer.io.NamespaceReplacingInputStream" level="debug"/>
-        <Logger name="de.cadoculus.ocxviewer.io.OCXIOUnmarshallerListener" level="info"/>
-        <Logger name="de.cadoculus.ocxviewer.io.OCXIOReferenceResolver" level="debug"/>
+        <Logger name="de.cadoculus.ocxviewer.io.OCXIOUnmarshallerListener" level="INFO"/>
+        <Logger name="de.cadoculus.ocxviewer.io.OCXIOReferenceResolver" level="INFO"/>
         <Logger name="de.cadoculus.ocxviewer.geom.BracketGeometryTest" level ="debug"/>
         <Logger name="de.cadoculus.ocxviewer.geom.BracketGeometry" level ="trace"/>
+        <Logger name="de.cadoculus.ocxviewer.geom.PolygonSimplifier" level="debug"/>
 
 
         <Root level="INFO">

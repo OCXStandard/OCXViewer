@@ -16,6 +16,7 @@ limitations under the License.
 package de.cadoculus.ocxviewer.geom;
 
 
+import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,10 +24,11 @@ import org.ocx_schema.v310.Bracket;
 import org.ocx_schema.v310.Point3DT;
 import org.ocx_schema.v310.Vector3DT;
 
-import javax.vecmath.*;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import javax.vecmath.Matrix3d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+import java.util.*;
 
 import static de.cadoculus.ocxviewer.geom.MainPlane.*;
 
@@ -45,29 +47,32 @@ import static de.cadoculus.ocxviewer.geom.MainPlane.*;
  *   U            R                    P_3 = P1 + vNose
  *   U             RRR                 P_4 = P2 + uNose
  *   U                RRR              P_5 = center of radius. Is null if no freeEdgeRadius was given
- *   U                   RRRR
- *   U                       RRRR P_4
- *   U                            u
- *   U                            u
- *   P_0 VVVVVVVVVVVVVVVVVVVVVVVV P_2
+ *   U                   RRRR          P_01 = P0+
+ *   P_01 R                 RRRR P_4
+ *        RR                       u
+ *          RR                     u
+ *   P_0     P_02VVVVVVVVVVVVVV P_2
  *
  * </pre>
+ *
  * @author Carsten Zerbst
  */
 public class BracketGeometry {
     private static final Logger LOG = LogManager.getLogger(BracketGeometry.class);
     private final Bracket bracket;
+    private final Set<String> issues = new HashSet<>();
     private BracketPoints3D bracketGeometry;
     private BracketPoints2D bracketGeometry2D;
-    private final Set<String> issues = new HashSet<>();
-
+    private List<Point3d> bracketContour = new ArrayList<>();
 
     public BracketGeometry(Bracket bracket) {
         this.bracket = bracket;
         this.init();
     }
 
-    /** Returns the calculated geometry of the bracket, or null if the geometry could not be calculated due to missing or invalid parameters. */
+    /**
+     * Returns the calculated geometry of the bracket, or null if the geometry could not be calculated due to missing or invalid parameters.
+     */
     public BracketPoints3D getBracketGeometry() {
         return bracketGeometry;
     }
@@ -77,7 +82,13 @@ public class BracketGeometry {
         return bracketGeometry2D;
     }
 
-    /** Returns a set of issues that were encountered during the geometry calculation. If the set is empty, the geometry was calculated successfully. */
+    public List<Point3d> getBracketContour() {
+        return Collections.unmodifiableList(bracketContour);
+    }
+
+    /**
+     * Returns a set of issues that were encountered during the geometry calculation. If the set is empty, the geometry was calculated successfully.
+     */
     public Set<String> getIssues() {
         return Collections.unmodifiableSet(issues);
     }
@@ -98,18 +109,31 @@ public class BracketGeometry {
 
         }
 
-        if ( bracketGeometry != null) {
+        if (bracketGeometry != null) {
             initTwoDGeometry();
         }
 
-        if ( bracket.getOuterContour() != null) {
+        if (bracket.getOuterContour() != null) {
             initOuterContourGeometry();
         }
 
     }
 
     private void initOuterContourGeometry() {
-        // TODO: render outer contour to points
+        if ( bracket.getOuterContour()==null) {
+            LOG.warn("no bracket contour found");
+            return;
+        }
+        try {
+            bracketContour.addAll(
+            CurveGeometry.toPoints(
+                    WorkingContext.getInstance().getOcx(),
+                    bracket.getOuterContour().getCurve3Ds().get(0).getValue(),
+                    GeometryQuality.FINE,true));
+        } catch (Exception e) {
+            LOG.error("faied to render points for bracket contour", e);
+        }
+
     }
 
     private Matrix4d createL2G(boolean flip) {
@@ -117,34 +141,34 @@ public class BracketGeometry {
 
         var viewDirection = new Vector3d(bracketGeometry.wDirection);
 
-        var leftVector = new Vector3d(0,0,1);
-        if ( XPLANE == mainPlane) {
-            leftVector=new Vector3d(0,1,0);
-        } else if ( YPLANE == mainPlane) {
-            leftVector=new Vector3d(1,0,0);
-        } else if ( ZPLANE == mainPlane) {
-            leftVector = new Vector3d(1,0,0);
+        var leftVector = new Vector3d(0, 0, 1);
+        if (XPLANE == mainPlane) {
+            leftVector = new Vector3d(0, 1, 0);
+        } else if (YPLANE == mainPlane) {
+            leftVector = new Vector3d(1, 0, 0);
+        } else if (ZPLANE == mainPlane) {
+            leftVector = new Vector3d(1, 0, 0);
         }
 
         LOG.debug("mainPlane{}, view {}, left  {}", mainPlane, viewDirection, leftVector);
 
-        var rawPlane3D = new PlaneGeometry("plane for bracket view "+bracket.getName(),
-                bracketGeometry.origin, bracketGeometry.uDirection,bracketGeometry.vDirection, viewDirection);
+        var rawPlane3D = new PlaneGeometry("plane for bracket view " + bracket.getName(),
+                bracketGeometry.origin, bracketGeometry.uDirection, bracketGeometry.vDirection, viewDirection);
 
-        LOG.debug("raw plane  {}",  rawPlane3D);
+        LOG.debug("raw plane  {}", rawPlane3D);
 
         final Vector3d projectLeft = rawPlane3D.projectToPlane(leftVector);
         LOG.debug("projected left vector {}", projectLeft);
 
         final Vector3d normal = rawPlane3D.getNormal();
         LOG.debug("normal {}", normal);
-        if ( flip) {
+        if (flip) {
             normal.negate();
             LOG.debug("normal flipped {}", normal);
         }
 
         final Vector3d zVector = new Vector3d();
-        zVector.cross( projectLeft, normal);
+        zVector.cross(projectLeft, normal);
         LOG.debug("zVector {}", zVector);
 
         var rot = new Matrix3d();
@@ -178,8 +202,7 @@ public class BracketGeometry {
         LOG.debug("initializing bracket 2D geometry for bracket {} ({}) based on parameters", bracket.getName(), bracket.getGUIDRef());
 
 
-
-        var local2global = createL2G( false);//U, boolean flipV, bracketGeometry.origin, bracketGeometry.uDirection, bracketGeometry.vDirection);
+        var local2global = createL2G(false);//U, boolean flipV, bracketGeometry.origin, bracketGeometry.uDirection, bracketGeometry.vDirection);
         LOG.debug("local2global {}", local2global);
         var global2local = new Matrix4d(local2global);
         global2local.invert();
@@ -189,43 +212,52 @@ public class BracketGeometry {
         // check if the up vector is in the right direction too
         var mainPlane = GeomHelper.getMainPlane(bracketGeometry.wDirection);
         var upVector = switch (mainPlane) {
-           case MainPlane.XPLANE -> new Vector3d(0,0,-1);
-            case MainPlane.YPLANE -> new Vector3d(0,0,-1);
-            case MainPlane.ZPLANE -> new Vector3d(0,-1,0);
-                default -> throw new IllegalStateException("unexpected main plane "+mainPlane);
+            case MainPlane.XPLANE -> new Vector3d(0, 0, -1);
+            case MainPlane.YPLANE -> new Vector3d(0, 0, -1);
+            case MainPlane.ZPLANE -> new Vector3d(0, -1, 0);
+            default -> throw new IllegalStateException("unexpected main plane " + mainPlane);
         };
 
         var upVectorT = new Vector3d(upVector);
         global2local.transform(upVectorT);
         LOG.debug("upVectorT {}", upVectorT);
-        if ( Math.toDegrees(upVectorT.angle(new Vector3d(0,1,0))) > 45) {
+        if (Math.toDegrees(upVectorT.angle(new Vector3d(0, 1, 0))) > 45) {
             LOG.debug("flipping view because up vector is not in the right direction");
-            local2global = createL2G( true);
+            local2global = createL2G(true);
             global2local = new Matrix4d(local2global);
             global2local.invert();
             LOG.debug("global2local II {}", global2local);
         }
 
 
-        var originP = new Point3d( bracketGeometry.origin );
+        var originP = new Point3d(bracketGeometry.origin);
         global2local.transform(originP);
 
 
-        var p1P = new Point3d( bracketGeometry.p1 );
+        var p1P = new Point3d(bracketGeometry.p1);
         global2local.transform(p1P);
-        var p2P = new Point3d( bracketGeometry.p2 );
+        var p2P = new Point3d(bracketGeometry.p2);
         global2local.transform(p2P);
-        var p3P = new Point3d( bracketGeometry.p3 );
+        var p3P = new Point3d(bracketGeometry.p3);
         global2local.transform(p3P);
-        var p4P = new Point3d( bracketGeometry.p4 );
+        var p4P = new Point3d(bracketGeometry.p4);
         global2local.transform(p4P);
-        var p5P = p1P;
-        if ( bracketGeometry.p5 != null) {
-            p5P = new Point3d( bracketGeometry.p5 );
+        Point3d p5P =null;
+        if (bracketGeometry.p5 != null) {
+            p5P = new Point3d(bracketGeometry.p5);
             global2local.transform(p5P);
         }
-        LOG.debug("points {}/{}/{}/{}/{}/{}", bracketGeometry.origin, bracketGeometry.p1, bracketGeometry.p2, bracketGeometry.p3,bracketGeometry.p4, bracketGeometry.p5);
-        LOG.debug("points' {}/{}/{}/{}/{}/{}", originP, p1P, p2P, p3P,p4P, p5P);
+        Point3d p01P = null;
+        Point3d p02P = null;
+        if ( bracketGeometry.p01 !=null && bracketGeometry.p02 !=null) {
+            p01P = new Point3d(bracketGeometry.p01);
+            global2local.transform(p01P);
+            p02P = new Point3d(bracketGeometry.p02);
+            global2local.transform(p02P);
+        }
+
+        LOG.debug("points {}/{}/{}/{}/{}/{}", bracketGeometry.origin, bracketGeometry.p1, bracketGeometry.p2, bracketGeometry.p3, bracketGeometry.p4, bracketGeometry.p5);
+        LOG.debug("points' {}/{}/{}/{}/{}/{}", originP, p1P, p2P, p3P, p4P, p5P);
 
         var bboxL = new javax.media.j3d.BoundingBox(javax.media.j3d.BoundingBox.DEFAULT_EMPTY_BBOX);
         bboxL.combine(originP);
@@ -233,60 +265,75 @@ public class BracketGeometry {
         bboxL.combine(p2P);
         bboxL.combine(p3P);
         bboxL.combine(p4P);
-        bboxL.combine(p5P);
+        if ( p5P != null) {
+            bboxL.combine(p5P);
+        }
 
-        LOG.debug("bboxL {}",bboxL);
+        LOG.debug("bboxL {}", bboxL);
 
         var offset = new Vector3d(bboxL.getLower());
 
-        LOG.debug("offset t {}",offset);
+        LOG.debug("offset t {}", offset);
 
         global2local.m03 -= offset.x;
         global2local.m13 -= offset.y;
         global2local.m23 -= offset.z;
 
-        LOG.debug("global2local t {}",global2local);
+        LOG.debug("global2local t {}", global2local);
 
-        originP = new Point3d( bracketGeometry.origin );
+        originP = new Point3d(bracketGeometry.origin);
         global2local.transform(originP);
-        p1P = new Point3d( bracketGeometry.p1 );
+        p1P = new Point3d(bracketGeometry.p1);
         global2local.transform(p1P);
-        p2P = new Point3d( bracketGeometry.p2 );
+        p2P = new Point3d(bracketGeometry.p2);
         global2local.transform(p2P);
-         p3P = new Point3d( bracketGeometry.p3 );
+        p3P = new Point3d(bracketGeometry.p3);
         global2local.transform(p3P);
-        p4P = new Point3d( bracketGeometry.p4 );
+        p4P = new Point3d(bracketGeometry.p4);
         global2local.transform(p4P);
-         p5P = p1P;
-        if ( bracketGeometry.p5 != null) {
-            p5P = new Point3d( bracketGeometry.p5 );
+        p5P = null;
+        if (bracketGeometry.p5 != null) {
+            p5P = new Point3d(bracketGeometry.p5);
             global2local.transform(p5P);
         }
-        LOG.debug("points {}/{}/{}/{}/{}/{}", bracketGeometry.origin, bracketGeometry.p1, bracketGeometry.p2, bracketGeometry.p3,bracketGeometry.p4, bracketGeometry.p5);
-        LOG.debug("points' {}/{}/{}/{}/{}/{}", originP, p1P, p2P, p3P,p4P, p5P);
+         p01P = null;
+         p02P = null;
+        if ( bracketGeometry.p01 !=null && bracketGeometry.p02 !=null) {
+            p01P = new Point3d(bracketGeometry.p01);
+            global2local.transform(p01P);
+            p02P = new Point3d(bracketGeometry.p02);
+            global2local.transform(p02P);
+        }
 
 
-        var origin2d = new Point3d(originP.x, originP.y,0);
-        var p12d = new Point3d(p1P.x, p1P.y,0);
-        var p22d = new Point3d(p2P.x, p2P.y,0);
-        var p32d = new Point3d(p3P.x, p3P.y,0);
-        var p42d = new Point3d(p4P.x, p4P.y,0);
+        LOG.debug("points {}/{}/{}/{}/{}/{}", bracketGeometry.origin, bracketGeometry.p1, bracketGeometry.p2, bracketGeometry.p3, bracketGeometry.p4, bracketGeometry.p5);
+        LOG.debug("points' {}/{}/{}/{}/{}/{}", originP, p1P, p2P, p3P, p4P, p5P);
+
+
+        var origin2d = new Point3d(originP.x, originP.y, 0);
+        var p12d = new Point3d(p1P.x, p1P.y, 0);
+        var p22d = new Point3d(p2P.x, p2P.y, 0);
+        var p32d = new Point3d(p3P.x, p3P.y, 0);
+        var p42d = new Point3d(p4P.x, p4P.y, 0);
         var p52d = bracketGeometry.p5 != null ? new Point3d(p5P.x, p5P.y, 0) : null;
+        var p012d = new Point3d(p01P.x, p01P.y, p01P.z);
+        var p022d = new Point3d(p02P.x, p02P.y, p02P.z);
 
-        var u2d = new Vector3d( bracketGeometry.uDirection);
+        var u2d = new Vector3d(bracketGeometry.uDirection);
         global2local.transform(u2d);
 
-        var v2d = new Vector3d( bracketGeometry.vDirection);
+        var v2d = new Vector3d(bracketGeometry.vDirection);
         global2local.transform(v2d);
 
 
         LOG.debug("u2d {}, v2d {}", u2d, v2d);
         bracketGeometry2D = new BracketPoints2D(
-                 origin2d, u2d, v2d,
-                 bboxL.getUpper().x-bboxL.getLower().x,
-                bboxL.getUpper().y-bboxL.getLower().y,
-                 p12d, p22d, p32d, p42d, p52d,global2local
-         );
+                origin2d, u2d, v2d,
+                bboxL.getUpper().x - bboxL.getLower().x,
+                bboxL.getUpper().y - bboxL.getLower().y,
+                p12d, p22d, p32d, p42d, p52d,p012d, p022d,
+                global2local
+        );
 
 
     }
@@ -297,7 +344,7 @@ public class BracketGeometry {
      * If any required parameter is missing or invalid, it adds an issue to the issues set and does not calculate the geometry.
      * The W direction is calculated as the cross product of the U and V directions and should point in the material direction.
      */
-    private  void initBracketParameters() {
+    private void initBracketParameters() {
         LOG.debug("initializing bracket geometry for bracket {} ({}) based on parameters", bracket.getName(), bracket.getGUIDRef());
         final var bracketIssues = new HashSet<String>();
 
@@ -333,7 +380,7 @@ public class BracketGeometry {
             vDirection.normalize();
         }
 
-        if ( uDirection.angle(vDirection) > Math.toRadians(160) || uDirection.angle(vDirection) < Math.toRadians(20)) {
+        if (uDirection.angle(vDirection) > Math.toRadians(160) || uDirection.angle(vDirection) < Math.toRadians(20)) {
             bracketIssues.add("the angle %f between uDirection and vDirection is outside [20°,160°] range".formatted(Math.toDegrees(uDirection.angle(vDirection))));
         }
 
@@ -361,6 +408,27 @@ public class BracketGeometry {
         if (freeEdgeRadius < 0) {
             bracketIssues.add("freeEdgeRadius is negative: %f".formatted(vNose));
         }
+        double copeRadius = 0;
+        double copeLength = 0;
+        double copeHeight = 0;
+        if (bracket.getBracketParameters().getFeatureCope() != null) {
+            copeRadius = bracket.getBracketParameters().getFeatureCope().getCopeRadius() != null ? UnitHelper.toDefaultUnit(bracket.getBracketParameters().getFeatureCope().getCopeRadius()) : 0.0;
+            copeLength = bracket.getBracketParameters().getFeatureCope().getCopeLength() != null ? UnitHelper.toDefaultUnit(bracket.getBracketParameters().getFeatureCope().getCopeLength()) : 0.0;
+            copeHeight = bracket.getBracketParameters().getFeatureCope().getCopeHeight() != null ? UnitHelper.toDefaultUnit(bracket.getBracketParameters().getFeatureCope().getCopeHeight()) : 0.0;
+            if (copeRadius <=0) {
+                if (copeLength<=0 || copeHeight <=0) {
+                    bracketIssues.add("no copeRadius given, expect to get both cope length and height, but got copeLength=%f, copeHeight=%f".formatted(copeLength, copeHeight));
+                } else if (copeLength > 0.5 * armLengthU || copeHeight > 0.5 * armLengthV) {
+                    bracketIssues.add("found excessive feature cope length or height, exceed 50% arm lenth: copeLength=%f, copeHeight=%f".formatted(copeLength, copeHeight));
+                }
+            } else {
+                if (copeRadius < 1) {
+                    bracketIssues.add("copeRadius is too small, less than 1: %f".formatted(copeRadius));
+                } else if (copeRadius > 0.5 * armLengthU || copeRadius > 0.5 * armLengthV) {
+                    bracketIssues.add("found excessive feature cope radius, exceed 50% arm lenth: copeRadius=%f".formatted(copeRadius));
+                }
+            }
+        }
 
         if (!bracketIssues.isEmpty()) {
             issues.addAll(bracketIssues);
@@ -386,13 +454,13 @@ public class BracketGeometry {
 
         // the nose is perpendicular on the arm, so we need to calculate the direction of the nose as the cross product of the arm direction and the wDirection
         var p3 = new Point3d(p1);
-        if ( vNose > 0) {
+        if (vNose > 0) {
 
             tmp = new Vector3d();
             tmp.cross(uDirection, wDirection);
             tmp.scale(vNose);
             // the nose must point inwards the bracket, so we may need to invert the direction
-            if ( tmp.angle(vDirection) > Math.toRadians(90)) {
+            if (tmp.angle(vDirection) > Math.toRadians(90)) {
                 p3.sub(tmp);
             } else {
                 p3.add(tmp);
@@ -400,14 +468,14 @@ public class BracketGeometry {
         }
 
         var p4 = new Point3d(p2);
-        if ( uNose > 0) {
+        if (uNose > 0) {
 
             tmp = new Vector3d();
             tmp.cross(vDirection, wDirection);
             tmp.scale(uNose);
 
             // the nose must point inwards the bracket, so we may need to invert the direction
-            if ( tmp.angle(uDirection) > Math.toRadians(90)) {
+            if (tmp.angle(uDirection) > Math.toRadians(90)) {
                 p4.sub(tmp);
             } else {
                 p4.add(tmp);
@@ -415,8 +483,8 @@ public class BracketGeometry {
         }
 
         Point3d p5 = null;
-        if ( freeEdgeRadius > 0) {
-            if ( freeEdgeRadius*1.42 < p3.distance(p4)) {
+        if (freeEdgeRadius > 0) {
+            if (freeEdgeRadius * 1.42 < p3.distance(p4)) {
                 bracketIssues.add("freeEdgeRadius is too small to fit between p3 and p4: %f < %f".formatted(freeEdgeRadius, p3.distance(p4)));
             } else {
                 // https://math.stackexchange.com/questions/1594340/center-of-arc-with-two-points-radius-and-normal-in-3d
@@ -430,7 +498,7 @@ public class BracketGeometry {
 
                 // The direction from the center of the cord to the center of the arc is given by the cross product of the vector from p3 to p4 and the wDirection,
                 var p3p4 = new Vector3d();
-                p3p4.sub(p4,p3);
+                p3p4.sub(p4, p3);
 
                 var cOchord2Center = new Vector3d();
                 cOchord2Center.cross(p3p4, wDirection);
@@ -443,7 +511,25 @@ public class BracketGeometry {
         }
         LOG.debug("bracket geometry calculated successfully for bracket {} ({}), p0={}, p1={}, p2={}, p3={}, p4={}, p5={}", bracket.getName(), bracket.getGUIDRef(), p0, p1, p2, p3, p4, p5);
 
-        bracketGeometry = new BracketPoints3D(p0, uDirection, vDirection, wDirection, armLengthU, armLengthV, uNose, vNose, freeEdgeRadius, p1, p2, p3, p4, p5);
+
+        Point3d p01 = null;
+        Point3d p02 = null;
+
+        if (copeRadius > 0 || (  copeLength> 0 && copeHeight >0)) {
+            p01 = new Point3d(p0);
+            p02 = new Point3d(p0);
+            var offsetU = new Vector3d(uDirection);
+            offsetU.normalize();
+            offsetU.scale(Double.isNaN(copeRadius) ? copeLength : copeRadius);
+            p01.add(offsetU);
+
+            var offsetV = new Vector3d(vDirection);
+            offsetV.normalize();
+            offsetV.scale(Double.isNaN(copeRadius) ? copeHeight : copeRadius);
+            p02.add(offsetV);
+        }
+
+        bracketGeometry = new BracketPoints3D(p0, uDirection, vDirection, wDirection, armLengthU, armLengthV, uNose, vNose, freeEdgeRadius, copeRadius, copeLength, copeHeight, p1, p2, p3, p4, p5, p01, p02);
 
     }
 
@@ -458,7 +544,10 @@ public class BracketGeometry {
             Point3d p3,
             Point3d p4,
             Point3d p5,
-            Matrix4d global2localT){}
+            Point3d p01,
+            Point3d p02,
+            Matrix4d global2localT) {
+    }
 
 
     public record BracketPoints3D(
@@ -471,12 +560,18 @@ public class BracketGeometry {
             double uNose,
             double vNose,
             double freeEdgeRadius,
+            double copeRadius,
+            double copeLength,
+            double copeHeight,
             Point3d p1,
             Point3d p2,
             Point3d p3,
             Point3d p4,
-            Point3d p5
-    ){}
+            Point3d p5,
+            Point3d p01,
+            Point3d p02
+    ) {
+    }
 
 }
 

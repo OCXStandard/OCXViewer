@@ -52,7 +52,8 @@ public class LogoPage extends Region {
     private Font thinFont;
     private Font boldFont;
     private final Consumer<Canvas> repaint;
-    private final String[] txts = new String[]{" OCX ", "Viewer ", "Version ", "0.2.1 "};
+    private final String[] txts = new String[]{" OCX ", "Viewer ", "Version ", "0.2.1 ",
+            " Carsten ", "Zerbst ", "cadoculus "};
     private double height = 36;
     private final DoubleProperty startX = new SimpleDoubleProperty();
     private double dy = 1.1 * height;

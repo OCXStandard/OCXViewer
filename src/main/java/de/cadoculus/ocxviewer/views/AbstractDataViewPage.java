@@ -255,8 +255,6 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         var start = new Point3d(point);
         hoco.transform(start);
 
-        hoco.transform(offDir);
-
         LOG.debug("draw point {} at {}, {}", point, start.x, start.y);
 
         gc.strokeLine(start.x - length, start.y - length, start.x + length, start.y + length);

@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.ControlPtList;
 import org.ocx_schema.v310.NURBSSurfaceT;
+import org.ocx_schema.v310.Point3DT;
 import org.ocx_schema.v310.Vector3DT;
 
 import javax.vecmath.Point2d;
@@ -220,6 +221,8 @@ public class GeomHelper {
                 vDirection.getDirections().get(1),
         vDirection.getDirections().get(2));
     }
+
+
 
     public static MainPlane getMainPlane(Vector3d vector) {
         if ( Math.abs(vector.x) > Math.abs(vector.y) && Math.abs(vector.x) > Math.abs(vector.z) ) {

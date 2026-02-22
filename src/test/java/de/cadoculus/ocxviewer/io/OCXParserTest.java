@@ -1,20 +1,19 @@
 package de.cadoculus.ocxviewer.io;
 
 import de.cadoculus.ocxviewer.logging.LoggerHelper;
+import jakarta.xml.bind.JAXBElement;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.ocx_schema.v310.Panel;
-import org.ocx_schema.v310.Plate;
-import org.ocx_schema.v310.Stiffener;
-import org.ocx_schema.v310.Vessel;
+import org.ocx_schema.v310.*;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,6 +88,48 @@ class OCXParserTest {
 
     }
 
+
+    @Test
+    public void testGeometryExtensions() throws IOException {
+
+        var file = new File("data/Schema310/brackets.3docx");
+        LOG.info("load {}", file.getAbsolutePath());
+
+        var parser = new OCXParser(file);
+
+        parser.progressProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                LOG.info("total progress: {}%", String.format("%.2f", t1.doubleValue() * 100.0));
+            }
+        });
+
+        var result =parser.parse();
+
+        LOG.info("parsed {}", file.getAbsolutePath());
+        assertNotNull(result);
+
+        final OcxXMLT ocx = result.ocx();
+        Vessel vessel = (Vessel) ocx.getForm().getValue();
+        final Arrangement arrangement = vessel.getArrangement();
+        assertNotNull(result, "arrangement");
+        arrangement.getCompartmentsAndPhysicalSpaces().stream().forEach( entityBaseT -> { LOG.info(" found {}", entityBaseT.getId());});
+        final Optional<EntityBaseT> firstO = arrangement.getCompartmentsAndPhysicalSpaces().stream().filter(entityBaseT -> "nplcid22".equals(entityBaseT.getId())).findFirst();
+        assertTrue(firstO.isPresent(), "found nplcid22");
+        Compartment comp = (Compartment)firstO.get();
+        var compFace0 = comp.getCompartmentFaces().getFirst();
+        for (JAXBElement<? extends Curve3DT> curve3D : compFace0.getFaceBoundaryCurve().getCurve3Ds()) {
+            LOG.info("curve {}", curve3D.getValue());
+            if ( curve3D.getValue() instanceof  CompositeCurve3DT compositeCurve3DT) {
+                for (var  innerCurves : compositeCurve3DT.getPolyLine3DsAndLine3DsAndNURBS3DS()) {
+                    LOG.info("inner curve {}", innerCurves);
+                }
+
+            }
+        }
+
+
+    }
 
 
 

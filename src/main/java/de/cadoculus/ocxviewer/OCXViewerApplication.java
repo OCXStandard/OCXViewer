@@ -67,7 +67,7 @@ public class OCXViewerApplication extends Application {
         // See MainController for the actual logic
         FXMLLoader fxmlLoader = new FXMLLoader(OCXViewerApplication.class.getResource("main-view.fxml"));
         // TODO: figure out screen size and scaling, then set the size
-        Scene scene = new Scene(fxmlLoader.load(), 1024, 512);
+        Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
         WorkingContext.getInstance().setMainScene(scene);
         stage.setTitle("OCX Viewer");
         stage.setMinHeight(600);

@@ -118,6 +118,8 @@ public class UnitHelper {
         return point3DT;
     }
 
+
+
     /**
      * Converts a Point3DT to the default unit (millimeters).
      * The scale factor is determined based on the unit specified in the Point3DT, @{see #getScaleFactor(Unit)}.
