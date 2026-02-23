@@ -28,6 +28,7 @@ import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.CSSRecord;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
+import javafx.animation.AnimationTimer;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -36,10 +37,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.apache.commons.lang3.StringUtils;
@@ -47,11 +45,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignV;
 import org.ocx_schema.v310.Bracket;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,11 +61,21 @@ import java.util.List;
  * The BracketPage is not intended to be navigated directly, but rather as a logical child.
  * The style of the sketch drawing is configured via CSS using the #brackets identifier.
  *
+ * See <a href="https://stackoverflow.com/questions/71471546/how-to-make-a-smooth-time-based-animation-with-javafx-animationtimer">How to make a smooth time-based animation with JavaFx AnimationTimer?</a>
+ * as the inspiration for the frame rate measurement and animation in the sketch.
+ *
  * @author Carsten Zerbst
  */
 public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bracket> {
     public static final String NAME = "Bracket";
     private static final Logger LOG = LogManager.getLogger(BracketPage.class);
+
+    //Frame rate measurement
+    private long frameCount = 0;
+    private BigDecimal fps = null;
+    long[] frameTimes = new long[120]; //length defines number of rendered frames to average over
+    //Frame duration in nanoseconds according to screen refresh rate
+    private final long frameNs = 1_000_000_000L / 60; //Default to 60Hz
 
     private final BracketGeometry.BracketPoints3D bracketGeometry3D;
     private final BracketGeometry.BracketPoints2D bracketGeometry2D;
@@ -99,6 +110,9 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
 
 
     private final DropShadow dropShadow = new DropShadow();
+    private Pane pane;
+    private boolean drawBracketContour;
+    private AnimationTimer timer;
 
 
     public BracketPage(Bracket bracket, Page parent) {
@@ -107,7 +121,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         BracketGeometry bracketGeometry = new BracketGeometry(bracket);
         bracketGeometry3D = bracketGeometry.getBracketGeometry();
         bracketGeometry2D = bracketGeometry.getBracketGeometry2D();
-
+        bracketContour = bracketGeometry.getBracketContour();
 
         DefaultEventBus.getInstance().subscribe( ThemeEvent.class, themeEvent -> {
             updatedStyle();
@@ -203,18 +217,24 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
      */
     private void  updateCanvas() {
 
-        double canvasHeight = dimeAndSketchTab.getHeight() - 20;
+
+        double canvasHeight = dimeAndSketchTab.getHeight() -30;
         double canvasWidth = dimeAndSketchTab.getWidth() - 21;
+
+        canvas.setHeight(canvasHeight);
+        canvas.setWidth(canvasWidth);
 
         double dim = Math.min(canvasWidth, canvasHeight) / 33.0;
 
         dropShadow.setOffsetY(dim);
         dropShadow.setOffsetX(dim);
-
-        canvas.setHeight(canvasHeight);
-        canvas.setWidth(canvasWidth);
-
         dropShadow.setColor(shadowColour);
+
+        var labelX = 10;
+        var labelY = pane.getHeight() - sketchBox.getHeight();
+        //sketchBox.relocate(labelX, labelY);
+        sketchBox.setLayoutX(labelX);
+        sketchBox.setLayoutY(labelY);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -237,18 +257,18 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         var offsetX = Math.round( (canvasWidth - scale * width) / 2.0);
         var offsetY = 100.0;
 
-        LOG.debug("offsetX {}, offsetY {}", offsetX, offsetY);
+        LOG.trace("offsetX {}, offsetY {}", offsetX, offsetY);
 
-        var viewHoco = new Matrix4d();
+
         viewHoco.setIdentity();
         //viewHoco.m11=-1;
         viewHoco.setScale(scale);
         viewHoco.m03 = offsetX;
         viewHoco.m13 = offsetY;
 
-        LOG.debug("viewHoco\n{}", viewHoco);
+        LOG.trace("viewHoco\n{}", viewHoco);
 
-        drawBracketShape(gc, viewHoco);
+        drawBracketShape(gc);
 
         // draw key points and try to avoid overlapping text
         // Origin
@@ -300,19 +320,23 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
 
         }
 
-        drawBracketDimensions(gc, viewHoco);
+        drawBracketDimensions(gc);
 
-        drawCoordinatSystem(canvas, gc, viewHoco);
+        drawCoordinatSystem( gc);
+
+        if ( drawBracketContour) {
+            drawBracketContour(gc);
+        }
 
     }
 
-    private void drawCoordinatSystem(Canvas canvas, GraphicsContext gc, Matrix4d viewHoco) {
+    private void drawCoordinatSystem(GraphicsContext gc) {
 
         final MainPlane mainPlane = GeomHelper.getMainPlane(new Vector3d(viewHoco.m03, viewHoco.m13, viewHoco.m23));
-        LOG.info("drawCoordinatSystem {} {}", mainPlane, viewHoco);
+        LOG.trace("drawCoordinatSystem {} {}", mainPlane, viewHoco);
 
         var global2local = bracketGeometry2D.global2localT();
-        LOG.info("bracketGeometry2D.hoco {}", global2local);
+        LOG.trace("bracketGeometry2D.hoco {}", global2local);
 
         var xVector = new Vector3d(PlaneGeometry.NORMAL_X);
         global2local.transform(xVector);
@@ -332,7 +356,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         zVector.normalize();
         zVector.scale(50);
 
-        LOG.info("coosys dir in view coord: xVector' {}, yVector' {}, zVector' {}", xVector, yVector, zVector);
+        LOG.trace("coosys dir in view coord: xVector' {}, yVector' {}, zVector' {}", xVector, yVector, zVector);
 
         var  offset = 75;
 
@@ -376,18 +400,18 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
 
     }
 
-    private void drawBracketDimensions(GraphicsContext gc, Matrix4d totalHoco) {
+    private void drawBracketDimensions(GraphicsContext gc) {
 
         gc.setStroke(dimensionLineColour);
         gc.setFill(dimensionLineColour);
         gc.setLineWidth(dimensionLineWidth);
 
         // U direction dimension
-        drawDimensionLine(gc, totalHoco, bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.vDirection(),
+        drawDimensionLine(gc, viewHoco, bracketGeometry2D.origin(), bracketGeometry2D.p1(), bracketGeometry2D.vDirection(),
                 String.format("u=%.2f [mm]", bracketGeometry3D.armLengthU()));
 
         // V direction dimension
-        drawDimensionLine(gc, totalHoco, bracketGeometry2D.origin(), bracketGeometry2D.p2(), bracketGeometry2D.uDirection(),
+        drawDimensionLine(gc, viewHoco, bracketGeometry2D.origin(), bracketGeometry2D.p2(), bracketGeometry2D.uDirection(),
                 String.format("v=%.2f [mm]", bracketGeometry3D.armLengthV()));
 
         if ( bracketGeometry2D.p5() != null) {
@@ -408,34 +432,145 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
             var por = new Point3d(center);
             por.add(center2pM);
 
-            drawRadiusDimensionLine(gc, totalHoco, center, por, String.format("r=%.1f [mm]", bracketGeometry3D.freeEdgeRadius()));
+            drawRadiusDimensionLine(gc, viewHoco, center, por, String.format("r=%.1f [mm]", bracketGeometry3D.freeEdgeRadius()));
 
         }
 
 
     }
 
+    private void drawBracketContour(GraphicsContext gc) {
+        LOG.trace("drawBracketContour");
+
+        gc.save();
+        gc.setStroke(Color.DARKGOLDENROD);
+        gc.setLineWidth(bracketLineWidth+2);
 
 
-    private void drawBracketShape(GraphicsContext gc, Matrix4d totalHoco) {
+        gc.beginPath();
 
-        // paint the bracket shape
+        boolean first = true;
+        for (Point3d point3d : bracketContour) {
+
+            var p = new Point3d(point3d);
+            bracketGeometry2D.global2localT().transform(p);
+            viewHoco.transform(p);
+
+            if ( first) {
+                gc.moveTo(p.x, p.y);
+                first = false;
+            } else {
+                gc.lineTo(p.x, p.y);
+            }
+        }
+
+        gc.closePath();
+        gc.stroke();
+
+        gc.setLineDashes(5.0, 15.0);
+
+        double offset = 0.01*(System.currentTimeMillis()%Short.MAX_VALUE);
+        LOG.trace("current time millis {}, offset {}", System.currentTimeMillis(), offset);
+        gc.setLineDashOffset( offset);
+        gc.setStroke(Color.YELLOW);
+        gc.setLineWidth(bracketLineWidth);
+
+        gc.beginPath();
+
+        first = true;
+        for (Point3d point3d : bracketContour) {
+
+            var p = new Point3d(point3d);
+            bracketGeometry2D.global2localT().transform(p);
+            viewHoco.transform(p);
+
+            if ( first) {
+                gc.moveTo(p.x, p.y);
+                first = false;
+            } else {
+                gc.lineTo(p.x, p.y);
+            }
+        }
+
+        gc.closePath();
+        gc.stroke();
+
+
+        gc.restore();
+
+
+    }
+
+
+    /**
+     * Paints the bracket shape on the canvas using the 2D geometry from {@link BracketGeometry},
+     * @param gc the GraphicsContext to paint on
+     */
+    private void drawBracketShape(GraphicsContext gc) {
+
         gc.setFill(bracketColour);
         gc.setStroke(bracketBorderColour);
         gc.setLineWidth(bracketLineWidth);
 
         gc.beginPath();
 
+        if ( bracketGeometry3D.copeRadius() > 0) {
+
+            var p02 = new Point3d( bracketGeometry2D.p02());
+            viewHoco.transform(p02);
+            gc.moveTo(p02.x, p02.y);
+
+            var center = new Point3d(bracketGeometry2D.origin());
+            viewHoco.transform(center);
+
+            double radius = p02.distance(center);
+
+            var startDir = new Vector3d(p02);
+            startDir.sub(center);
+
+            LOG.trace("arc center {}, startDir {}, radius {}", center, startDir, radius);
+
+            var startAngle = Math.toDegrees(new Vector3d(1,0,0).angle(startDir));
+            var length = Math.toDegrees( bracketGeometry2D.uDirection().angle( bracketGeometry2D.vDirection()));
+
+            var uDir = new Vector3d(bracketGeometry2D.uDirection());
+            viewHoco.transform(uDir);
+            var vDir = new Vector3d(bracketGeometry2D.vDirection());
+            viewHoco.transform(vDir);
+
+            var cross = new Vector3d();
+            cross.cross(uDir, vDir);
+
+             if ( cross.z < 0) {
+                 length = -length;
+             }
+
+            LOG.trace("start angle {}, length {}", startAngle, length);
+
+            gc.arc(center.x, center.y, radius, radius, startAngle, length);
+
+
+        } else if ( bracketGeometry3D.copeHeight() > 0) {
+            var p02 = new Point3d( bracketGeometry2D.p02());
+            viewHoco.transform(p02);
+            gc.moveTo(p02.x, p02.y);
+
+            var p01 = new Point3d( bracketGeometry2D.p01());
+            viewHoco.transform(p01);
+            gc.lineTo(p01.x, p01.y);
+
+        } else {
         var start = new Point3d( bracketGeometry2D.origin());
-        totalHoco.transform(start);
+            viewHoco.transform(start);
         gc.moveTo(start.x, start.y);
+        }
 
         var next = new Point3d(bracketGeometry2D.p1());
-        totalHoco.transform(next);
+        viewHoco.transform(next);
         gc.lineTo(next.x, next.y);
 
         next = new Point3d(bracketGeometry2D.p3());
-        totalHoco.transform(next);
+        viewHoco.transform(next);
         gc.lineTo(next.x, next.y);
 
 
@@ -459,20 +594,20 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
             por.add(center2pM);
 
             next = new Point3d(bracketGeometry2D.p4());
-            totalHoco.transform(next);
+            viewHoco.transform(next);
 
-            totalHoco.transform(por);
-            totalHoco.transform(center);
+            viewHoco.transform(por);
+            viewHoco.transform(center);
 
             gc.arcTo(por.x, por.y, next.x,next.y, por.distance(center));
         } else {
             next = new Point3d(bracketGeometry2D.p4());
-            totalHoco.transform(next);
+            viewHoco.transform(next);
             gc.lineTo(next.x, next.y);
         }
 
         next = new Point3d(bracketGeometry2D.p2());
-        totalHoco.transform(next);
+        viewHoco.transform(next);
         gc.lineTo(next.x, next.y);
 
         gc.closePath();
@@ -518,8 +653,8 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         //
         // Bracket Parameters
         //
-        Label label = null;
-        Label titelLabel = null;
+        Label label ;
+        Label titelLabel;
         int row = 0;
 
         if (bracket.getBracketParameters() == null) {
@@ -605,7 +740,7 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
                 GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
                 label = new Label("Cope Radius");
-                label.setTooltip(new Tooltip("??"));
+                label.setTooltip(new Tooltip("The length of the cope measured along the stiffener trace-line (X-axis)  from the end of the stiffener to the centre of the cope radius."));
                 dimensionGrid.add(label, 0, row);
                 group = createAndBind(bracket.getBracketParameters().getFeatureCope().getCopeRadius(), true);
                 dimensionGrid.add(group, 1, row++);
@@ -772,9 +907,98 @@ public class BracketPage extends AbstractDataViewSubPage<org.ocx_schema.v310.Bra
         var tab = new Tab("Sketch");
         tab.setClosable(false);
 
-        tab.setContent(canvas);
+
+        pane = new Pane();
+        tab.setContent(pane);
+        pane.getChildren().add( canvas);
+
+        pane.getChildren().add(sketchBox);
+        sketchBox.setAlignment(Pos.CENTER_LEFT);
+        sketchBox.toFront();
+
+        var label = new Label("");
+        label.setGraphic(new FontIcon(MaterialDesignV.VIDEO_3D));
+        sketchBox.getChildren().add(label);
+
+        var posLabel = new Label("");
+        sketchBox.getChildren().add(posLabel);
+
+        if ( bracketContour != null && !bracketContour.isEmpty()) {
+            var contour = new ToggleSwitch("  Draw Contour");
+            sketchBox.getChildren().add(contour);
+            contour.setSelected(false);
+
+            contour.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                drawBracketContour = newValue;
+
+                LOG.info("drawBracketContour {}", drawBracketContour);
+
+                if (drawBracketContour) {
+                    timer = new AnimationTimer() {
+                        private long previousFrame = 0;
+                        @Override
+                        public void handle(long now) {
+                            // Skip first frame but record its timing
+                            if (previousFrame == 0) {
+                                previousFrame = now;
+                                frameTimes[0] = now;
+                                frameCount++;
+                                return;
+                            }
+                            // If we had 2 JFX frames for 1 screen frame, save a cycle by skipping render
+                            if (now <= previousFrame) {
+                                return;
+                            }
+
+                            // Measure FPS
+                            int frameIndex = (int) (frameCount % frameTimes.length);
+                            frameTimes[frameIndex] = now;
+                            if (frameCount > frameTimes.length) {
+                                int prev = (int) ((frameCount + 1) % frameTimes.length);
+                                long delta = now - frameTimes[prev];
+                                double fr = 1e9 / (delta / frameTimes.length);
+                                fps = new BigDecimal(fr).setScale(2, RoundingMode.HALF_UP);
+                            }
+                            frameCount++;
+
+                            // Calculate remaining time until next screen frame (next multiple of frameNs)
+                            long rest = now % frameNs;
+                            long nextFrame = now;
+                            if (rest != 0) //Fix timing to next screen frame
+                                nextFrame += frameNs - rest;
+
+                            updateCanvas();
+                        }
+                    };
+                    timer.start();
+                } else if (timer != null) {
+                    timer.stop();
+                    updateCanvas();
+                }
+            });
+        }
+
+        canvas.setOnMouseMoved( event -> {
+            var rawPos = new Point3d(event.getX(), event.getY(), 0);
+
+            var pos2d = new Point3d(rawPos);
+            var invViewHoco = new Matrix4d(viewHoco);
+            invViewHoco.invert();
+            invViewHoco.transform(pos2d);
+
+            var pos3d = new Point3d(pos2d);
+            var invGlobal2Local = new Matrix4d( bracketGeometry2D.global2localT());
+            invGlobal2Local.invert();
+            invGlobal2Local.transform(pos3d);
+
+            posLabel.setText("( %.0f, %.0f, %.0f)".formatted( pos3d.x, pos3d.y,pos3d.z  ));
+
+        });
+
         canvas.setWidth(200);
         canvas.setHeight(200);
+
+        canvas.setCursor( Cursor.CROSSHAIR);
 
         return tab;
     }
