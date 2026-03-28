@@ -92,7 +92,7 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
         BorderPane.setMargin(this, new Insets(15));
 
         this.maxHeight(1950);
-        this.setMaxWidth(1800);
+        this.setMaxWidth(2400);
         this.setMinHeight(500);
         this.setMinWidth(500);
         this.setPrefHeight(1024);

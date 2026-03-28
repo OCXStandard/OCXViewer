@@ -17,6 +17,9 @@ package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.layout.InputGroup;
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,6 +34,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.QuantityT;
+
+import java.util.ArrayList;
 
 /**
  * This class displays the coordinated system contained in the OCX file
@@ -65,7 +70,14 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
 
         var titelLabel = new Label("Identification");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(titelLabel, 0, row++, 4, 1);
+        gridPane.add(titelLabel, 0, row, 2, 1);
+        GridPane.setHalignment(titelLabel, HPos.LEFT);
+        GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+
+
+        titelLabel = new Label("3D View");
+        titelLabel.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(titelLabel, 2, row, 2, 1);
         GridPane.setHalignment(titelLabel, HPos.LEFT);
         GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
@@ -76,6 +88,19 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         textField = new TextField();
         gridPane.add(textField, 1, row++);
         bindToBean(textField.textProperty(), coosys, "id", String.class);
+
+
+        var link = new Hyperlink("View Coordinate System ...");
+        link.setTooltip(new Tooltip("View the coordinate system in a 3D view"));
+        gridPane.add(link, 2, row, 2, 1);
+        link.setOnAction(e -> {
+            var robert = new ArrayList<>(getBreadcrumbs());
+            robert.add(new BreadcrumbRecord("3D View " + coosys.getId(), CoordinateSystem3DViewPage.class, null, getObject()));
+
+            var event = new SelectionEvent(robert);
+            DefaultEventBus.getInstance().publish(event);
+        });
+
 
 
         label = new Label("GUID");
