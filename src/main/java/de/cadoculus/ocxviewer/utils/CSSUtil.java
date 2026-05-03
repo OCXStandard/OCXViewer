@@ -85,7 +85,7 @@ public class CSSUtil {
         try {
             colourFill = (Color) label1.getBackground().getFills().getFirst().getFill();
         } catch (Exception e) {
-            LOG.debug("Could not get background fill for {}", identifier, e);
+            LOG.warn("Could not get background fill for {}", identifier, e);
         }
         try {
             colour1 = (Color) label1.getBorder().getStrokes().getFirst().getTopStroke();
@@ -94,12 +94,12 @@ public class CSSUtil {
             colour4 = (Color) label1.getBorder().getStrokes().getFirst().getLeftStroke();
 
         } catch (Exception e) {
-            LOG.debug("Could not get border stroke for {}", identifier, e);
+            LOG.warn("Could not get border stroke for {}", identifier, e);
         }
         try {
             colour5 = (Color) label1.getTextFill();
         } catch (Exception e) {
-            LOG.debug("Could not get text fill for {}", identifier, e);
+            LOG.warn("Could not get text fill for {}", identifier, e);
         }
 
         try {
@@ -108,12 +108,12 @@ public class CSSUtil {
             width3 = label1.getBorder().getStrokes().getFirst().getWidths().getBottom();
             width4 = label1.getBorder().getStrokes().getFirst().getWidths().getLeft();
         } catch (Exception e) {
-            LOG.debug("Could not get border stroke for {}", identifier, e);
+            LOG.warn("Could not get border stroke for {}", identifier, e);
         }
         try {
             width5= label1.getFont().getSize();
         } catch (Exception e) {
-            LOG.debug("Could not get font size for {}", identifier, e);
+            LOG.warn("Could not get font size for {}", identifier, e);
         }
 
 

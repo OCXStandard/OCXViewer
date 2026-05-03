@@ -51,6 +51,7 @@ public final class PageTree extends TreeView<PageRecord> {
 
     public PageTree() {
         super();
+        setId("pageTree");
 
         createTreeItems();
 

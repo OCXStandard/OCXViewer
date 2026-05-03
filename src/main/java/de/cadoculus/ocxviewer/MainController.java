@@ -132,14 +132,7 @@ public class MainController {
             // run this only once
             // The tree on the left side of the application
             ScrollPane navigationTreeScrollPane = new ScrollPane();
-            BorderPane.setMargin(navigationTreeScrollPane, new Insets(15, 15, 15, 15));
-
-
-            // TODO: move to central style sheet
-            navigationTreeScrollPane.getStyleClass().add("content-pane");
-
-            PageTree navigationTree = new PageTree();
-            navigationTreeScrollPane.setContent(navigationTree);
+            navigationTreeScrollPane.setId("navigationTreeScrollPane");
 
             navigationTreeScrollPane.setFitToWidth(true);
             navigationTreeScrollPane.setFitToHeight(true);
@@ -147,6 +140,10 @@ public class MainController {
             navigationTreeScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
             mainBorderPane.setLeft(navigationTreeScrollPane);
+
+            PageTree navigationTree = new PageTree();
+            navigationTreeScrollPane.setContent(navigationTree);
+
 
             stackPane = new StackPane();
             stackPane.setId("mainStackPane");

@@ -6,7 +6,7 @@
 
     <groupId>com.prostep.openpdm</groupId>
     <artifactId>ocxviewer</artifactId>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
     <name>ocxviewer</name>
 
     <properties>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.25.3</version>
+            <version>2.25.4</version>
         </dependency>
 
 
@@ -77,6 +77,14 @@
             <groupId>javax.vecmath</groupId>
             <artifactId>vecmath</artifactId>
             <version>1.5.2</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.orbisgis</groupId>
+            <artifactId>poly2tri</artifactId>
+            <version>0.7.0</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -106,6 +114,7 @@
             <artifactId>atlantafx-base</artifactId>
             <version>${atlantafx.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
@@ -260,8 +269,8 @@
 
                 <configuration>
                     <useModulePath>true</useModulePath>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>25</source>
+                    <target>25</target>
 
 
                 </configuration>

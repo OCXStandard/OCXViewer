@@ -13,7 +13,7 @@ public class SubSceneResizer extends Pane {
     public SubSceneResizer(SubScene subScene) {
         this.subScene = subScene;
         setPrefSize(subScene.getWidth(),subScene.getHeight());
-        setMinSize(50,50);
+        setMinSize(0,0);
         setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
         getChildren().addAll(subScene);
     }

@@ -32,7 +32,9 @@ module ocxviewer {
     requires org.apache.logging.log4j;
     requires javafx.controls;
     requires javafx.base;
-
+    requires java.logging;
+    requires poly2tri;
+    requires org.kordamp.ikonli.core;
 
 
     exports de.cadoculus.ocxviewer;

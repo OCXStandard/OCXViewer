@@ -20,6 +20,58 @@
     -fx-text-fill: black;
 }
 
+#threeDView {
+    /*  colour of frame #0 */
+    -fx-background-color: -color-accent-2;
+    /* even colour, odd colour */
+    -fx-border-color: -color-accent-6,-color-accent-8, -color-warning-6, -color-accent-6;
+}
+
+#refPlaneFrames {
+    /*  colour of frame #0 */
+    -fx-background-color: -color-accent-2;
+    /* even colour, odd colour */
+    -fx-border-color: -color-accent-6,-color-accent-8, -color-warning-6, -color-accent-6;
+}
+#refPlaneLongitudinals {
+    /*  colour of center LP */
+    -fx-background-color: -color-accent-3;
+    /* PS even colour, odd colour, SB even colour, odd colour */
+    -fx-border-color: -color-warning-6, -color-warning-8, -color-success-2, -color-success-2;
+}
+#refPlaneverticals {
+    /* even colour, odd colour */
+    -fx-border-color: -color-chart-4, -color-chart-5, -color-success-2, -color-success-2;
+}
+
+/** some specific pages */
+
+/* TODO #CoordinateSystem3DViewPage {
+    -fx-padding: 5  0 5;
+}
+*/
+
+/* TODO: get rid of the padding in the content-pane
+#CoordinateSystem3DViewPage__3DView {
+    -fx-padding: 0 0 0 0;
+    -fx-border-radius: 10 20 30 40;
+    -fx-background-radius: 10 20 30 40;
+}
+
+*/
+/** general rules */
+
+#infoPaneContainer {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 25px;
+    -fx-border-color: rgba(200, 200, 200, 0.5);
+    -fx-border-width: 1px;
+    -fx-border-radius: 25px;
+    -fx-padding: 14px 16px 14px 16px;
+}
+
+
+
 .text-field {
 
     -fx-padding: 5px;
@@ -34,16 +86,7 @@
     -fx-background-color: #efefef;
 }
 
-.content-pane {
 
-    -fx-padding: 15px;
-    -fx-background-color: -color-bg-default;
-    -fx-background-radius: 15px;
-
-    -fx-border-radius: 15px;
-    -fx-border-width: 1px;
-    -fx-border-color: -color-accent-6;
-}
 
 .tree-view, .tree-cell {
     //-fx-background-color: -color-base-0;
@@ -70,12 +113,38 @@
 
 
 #mainBorderPane {
-    -fx-background-color: -color-base-3;
-}
-#mainStackPane {
-    -fx-padding: 15px;
+    -fx-background-color: -color-base-2
 }
 
+#pageTree {
+    -fx-padding: 10px;
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 5px;
+
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-border-color: -color-accent-6;
+
+}
+
+#navigationTreeScrollPane {
+    -fx-padding: 10px;
+
+
+}
+#mainStackPane {
+    -fx-padding: 10px, 10px, 10px, 0px;
+}
+.content-pane {
+
+    -fx-padding: 10px;
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 5px;
+
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-border-color: -color-accent-6;
+}
 
 .quantity-input-group {
     -fx-padding: 1px;
@@ -97,18 +166,6 @@
 }
 
 
-/*
-#unitsName {
-
-    -fx-padding: 15px;
-    //-fx-background-color: -color-bg-default;
-    -fx-background-radius: 10px;
-    -fx-spacing: 20px;
-    -fx-border-radius: 10px;
-    -fx-border-width: 1px;
-    -fx-border-color: -color-border-default;
-}
-*/
 #helpBorderPane {
     -fx-background-color: -color-bg-default;
     -fx-padding: 5px;

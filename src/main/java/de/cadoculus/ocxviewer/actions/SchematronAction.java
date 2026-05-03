@@ -26,7 +26,7 @@ import javafx.scene.input.KeyCombination;
  */
 public class SchematronAction extends AbstractAction {
 
-    public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
+    public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.F5);
     public final static String NAME = "Schematron Check";
 
     //TODO: implement a dialogue to select the file

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Carsten Zerbst
+ * Copyright 2026 Carsten Zerbst
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,21 @@
  */
 package de.cadoculus.ocxviewer.views;
 
-import atlantafx.base.layout.InputGroup;
-import atlantafx.base.theme.Styles;
-import de.cadoculus.ocxviewer.models.ViewDirections;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.ThemeEvent;
+import de.cadoculus.ocxviewer.models.CSSRecord;
+import de.cadoculus.ocxviewer.models.Plane3D;
+import de.cadoculus.ocxviewer.models.WorkingContext;
+import de.cadoculus.ocxviewer.utils.CSSUtil;
+import de.cadoculus.ocxviewer.utils.UnitHelper;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignI;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
-import org.ocx_schema.v310.QuantityT;
+import org.ocx_schema.v310.RefPlane;
+import javafx.scene.paint.Color;
+
+import java.util.List;
 
 /**
  * This class displays the coordinated system contained in the OCX file
@@ -49,86 +39,189 @@ import org.ocx_schema.v310.QuantityT;
 public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_schema.v310.CoordinateSystem> implements Page {
     public static final String NAME = "Coordinate System";
     private static final Logger LOG = LogManager.getLogger(CoordinateSystem3DViewPage.class);
-    private final Controller3D controller;
+    private final ThreeDView threeDView;
+    private Color frame0Colour = Color.GREY;
+    private Color evenFrameColour = Color.DARKGRAY;
+    private Color oddFrameColour = Color.LIGHTGRAY;
+    private Color centerLPColour = Color.GREY;
+    private Color evenLPPSColour = Color.RED;
+    private Color oddLPPSColour = Color.ORANGERED;
+    private Color evenLPSBColour = Color.GREEN;
+    private Color oddLPPSBColour = Color.LIGHTGREEN;
+    private Color evenLVRTColour = Color.DARKBLUE;
+    private Color oddVRTColour = Color.LIGHTBLUE;
 
+    private double minX=-10;
+    private double maxX=150;
+    private double breadth=40;
+    private double height=30;
 
     public CoordinateSystem3DViewPage(org.ocx_schema.v310.CoordinateSystem coosys, Page parent) {
         super(coosys, parent, "3D View of Coordinate System «" + coosys.getId() + "»");
 
+        setId("CoordinateSystem3DViewPage");
         final var bcs = getBreadcrumbs();
-        createTitle(bcs, getName(), "3D view of the coordinate system.");
+        createTitle(bcs, getName(), "3D view of the coordinate system.  Camera controls:" +
+                "Zoom: <Ctrl><+> and <Ctrl><-> zoom in and out. Also available using <Ctrl><Scrollwheel>\n" +
+                "Pan: <Left>, <Right>, <Up>, <Down> pan. Also available using pressed middle mouse button\n"+
+                "Rotate: using pressed left mousebutton. Double click with the middle mouse button sets the rotation center.");
 
-//        VBox vBox = new VBox();
-//        this.setCenter(vBox);
-//        vBox.prefWidthProperty().bind(this.widthProperty());
-//        vBox.prefHeightProperty().bind(this.heightProperty());
+        coosys.getXRefPlanes().getRefPlanes().stream().filter(rp-> rp.isDisplayGrid()).forEach( rp -> {
 
-        var box = new Box(70, 50, 20);
+            minX = Math.min( UnitHelper.toDefaultUnit(rp.getReferenceLocation())/1000.0, minX);
+            maxX = Math.max( UnitHelper.toDefaultUnit(rp.getReferenceLocation())/1000.0, maxX);
+        });
 
-        var group3D = new Group(box);
+        minX -= 0.1* maxX;
+        maxX += 0.1* maxX;
 
-        BorderPane container = new BorderPane();
-        this.setCenter(container);
-        SubScene subScene = new SubScene(group3D, 300, 300, true, SceneAntialiasing.BALANCED);
+        coosys.getYRefPlanes().getRefPlanes().stream().filter(rp -> rp.isDisplayGrid()).forEach( rp -> {
+            breadth = Math.max( UnitHelper.toDefaultUnit(rp.getReferenceLocation())/500.0, breadth);
+        });
+        breadth*=1.1;
 
-        SubSceneResizer subSceneResizer = new SubSceneResizer(subScene);
-        container.setCenter(subSceneResizer);
+        coosys.getZRefPlanes().getRefPlanes().stream().filter( rp-> rp.isDisplayGrid()).forEach( rp -> {
+            height = Math.max( UnitHelper.toDefaultUnit(rp.getReferenceLocation())/10000, height);
+        });
 
-        var camera = new PerspectiveCamera();
-        subScene.setCamera(camera);
+        updatedStyle();
 
-        controller =   new Controller3D(group3D, camera, container);
+        threeDView = new ThreeDView();
+        threeDView.setId(getId() + "_3DView");
+        this.setCenter(threeDView);
 
-        final ToolBar toolbar = new ToolBar();
-        toolbar.setMaxWidth( Double.MAX_VALUE );
-        toolbar.setMinWidth( 200 );
+        LOG.info("create framegrid {}-{}, b {}, h {}", minX, maxX,breadth,height);
+        threeDView.drawCoordinateSystem(minX, maxX, breadth, height);
 
-        // ToolBar-Höhe festlegen
-        toolbar.setMinHeight(40);
-        toolbar.setPrefHeight(40);
-        toolbar.setMaxHeight(40);
-        VBox.setVgrow(toolbar, Priority.NEVER);
-        VBox.setVgrow(container, Priority.ALWAYS);
-
-        var zoomAll = new Button( "", new FontIcon(MaterialDesignM.MAGNIFY_SCAN));
-        zoomAll.setTooltip(new Tooltip("Zoom out"));
-        zoomAll.setOnAction(e -> { controller.zoomAll(); });
-        toolbar.getItems().add(zoomAll);
-
-        var zoomIn = new Button( "", new FontIcon(MaterialDesignM.MAGNIFY_PLUS_OUTLINE));
-        zoomIn.setTooltip(new Tooltip("Zoom in"));
-        zoomIn.setOnAction(e -> { controller.zoomIn(); });
-        toolbar.getItems().add(zoomIn);
-
-        var zoomOut = new Button( "", new FontIcon(MaterialDesignM.MAGNIFY_MINUS_OUTLINE));
-        zoomOut.setTooltip(new Tooltip("Zoom out"));
-        zoomOut.setOnAction(e -> { controller.zoomOut(); });
-        toolbar.getItems().add(zoomOut);
-
-        // Views-Menü als MenuButton in der ToolBar
-        var viewsMenuButton = new MenuButton("Views");
-        for (ViewDirections viewDirections : ViewDirections.values()) {
-            var viewItem = new MenuItem(viewDirections.getName());
-            viewItem.setOnAction(e -> { controller.setViewDirection(viewDirections); });
-            viewsMenuButton.getItems().add(viewItem);
-        }
-        toolbar.getItems().add(viewsMenuButton);
-        container.setBottom(toolbar);
-
-
-
-
+        // follow changes in style
+        DefaultEventBus.getInstance().subscribe( ThemeEvent.class, themeEvent -> {
+            updatedStyle();
+            drawFrames();
+        });
 
     }
 
 
 
 
+    /**
+     * Updates the parameters used in the canvas from CSS.
+     */
+    private void updatedStyle() {
+        try {
+            CSSRecord cssRecord = CSSUtil.lookup("#refPlaneFrames");
+            frame0Colour = cssRecord.fill() != null ? cssRecord.fill() : frame0Colour;
+            evenFrameColour = cssRecord.colour1() != null ? cssRecord.colour1() : evenFrameColour;
+            oddFrameColour = cssRecord.colour2() != null ? cssRecord.colour2() : oddFrameColour;
+
+            cssRecord = CSSUtil.lookup("#refPlaneLongitudinals");
+            centerLPColour = cssRecord.fill() != null ? cssRecord.fill() : centerLPColour;
+            evenLPPSColour = cssRecord.colour1() != null ? cssRecord.colour1() : evenLPPSColour;
+            oddLPPSColour = cssRecord.colour2() != null ? cssRecord.colour2() : oddLPPSColour;
+            evenLPSBColour = cssRecord.colour3() != null ? cssRecord.colour3() : evenLPSBColour;
+            oddLPPSBColour = cssRecord.colour4() != null ? cssRecord.colour4() : oddLPPSBColour;
+
+            cssRecord = CSSUtil.lookup("#refPlaneverticals");
+            evenLVRTColour = cssRecord.colour1() != null ? cssRecord.colour1() : evenLVRTColour;
+            oddVRTColour = cssRecord.colour2() != null ? cssRecord.colour2() : oddVRTColour;
+        } catch (Exception exp) {
+            LOG.warn("failed to update style from CSS, use default values", exp);
+        }
+    }
+
+
+
+    private void drawFrames() {
+
+        var coosys = getObject();
+
+        threeDView.clear();
+        threeDView.drawCoordinateSystem(minX, maxX, breadth, height);
+
+        var refPlanesGroup = new Group();
+        refPlanesGroup.setId("refPlanes");
+
+
+        var frameGroup = new Group();
+        frameGroup.setId("frames");
+        refPlanesGroup.getChildren().add(frameGroup);
+
+        var frWidth=10;
+        var frHeight=10;
+
+        final List<RefPlane> frames = coosys.getXRefPlanes().getRefPlanes();
+        for( int i =0; i < frames.size();i++) {
+            var refPlane  = frames.get(i);
+            if ( ! refPlane.isDisplayGrid()) {
+                continue;
+            }
+            var x = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
+            x /=1000.0f;
+
+            var colour = Math.abs(x) < 0.01 ? frame0Colour : (i%2==0? evenFrameColour : oddFrameColour);
+            var plane = new Plane3D( refPlane.getName() + " (" + refPlane.getId() + ")", new Point3D(x, 0, frHeight/2.0), new Point3D(1, 0, 0),
+                    frWidth, frHeight, colour, Color.RED);
+            frameGroup.getChildren().add(plane);
+
+        }
+
+        var verticalGroup = new Group();
+        verticalGroup.setId("verticalGroup");
+        refPlanesGroup.getChildren().add(verticalGroup);
+
+
+        final List<RefPlane> verticals = coosys.getZRefPlanes().getRefPlanes();
+        for( int i =0; i < verticals.size();i++) {
+            var refPlane  = verticals.get(i);
+            if ( ! refPlane.isDisplayGrid()) {
+                continue;
+            }
+            var z = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
+            z /=1000.0f;
+
+            var colour =  (i%2==0? evenLVRTColour : oddVRTColour);
+            var plane = new Plane3D( refPlane.getName() + " (" + refPlane.getName() + ")", new Point3D(0.25*maxX, 0, z), new Point3D(0, 0, 1),
+                    frWidth, frHeight, colour, Color.RED);
+            frameGroup.getChildren().add(plane);
+
+        }
+
+        var longitudinalGroup = new Group();
+        longitudinalGroup.setId("longitudinalGroup");
+        refPlanesGroup.getChildren().add(longitudinalGroup);
+
+        final List<RefPlane>  longitudinals = coosys.getYRefPlanes().getRefPlanes();
+        for( int i =0; i < longitudinals.size();i++) {
+            var refPlane  = longitudinals.get(i);
+            if ( ! refPlane.isDisplayGrid()) {
+                continue;
+            }
+            var y = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
+            y /=1000.0f;
+
+            var colour =Color.YELLOW;
+            if( Math.abs(y) < 0.01) {
+                colour= centerLPColour;
+            } else if ( y > 0) {
+                colour = (i%2==0? evenLPPSColour : oddLPPSColour);
+            } else {
+                colour = (i%2==0? evenLPSBColour : oddLPPSBColour);
+            }
+            var plane = new Plane3D( refPlane.getName() + " (" + refPlane.getName() + ")", new Point3D(0, y, height/2.0+2), new Point3D(0, 1, 0),
+                    frWidth, frHeight, colour, Color.RED);
+            longitudinalGroup.getChildren().add(plane);
+
+        }
+
+        threeDView.addGroupToWorld(refPlanesGroup);
+    }
+
+
+
     @Override
     public void afterShow() {
+        drawFrames();
 
-        // Party !
-        // table.getSelectionModel().selectFirst();
     }
 
 

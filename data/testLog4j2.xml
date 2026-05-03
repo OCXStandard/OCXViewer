@@ -33,7 +33,7 @@
         <Logger name="de.cadoculus.ocxviewer.geom.BracketGeometryTest" level ="debug"/>
         <Logger name="de.cadoculus.ocxviewer.geom.BracketGeometry" level ="trace"/>
         <Logger name="de.cadoculus.ocxviewer.geom.PolygonSimplifier" level="debug"/>
-
+        <Logger name="de.cadoculus.ocxviewer.utils.CSSUtil" level="debug"/>
 
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
