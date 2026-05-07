@@ -61,7 +61,7 @@ public class OCXViewerApplication extends Application {
         // TODO: figure out screen size and scaling, then set the size
         Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
         WorkingContext.getInstance().setMainScene(scene);
-        stage.setTitle("OCX Viewer");
+        stage.setTitle("OCX Viewer " + BuildVersion.getMvnVersion());
         stage.setMinHeight(600);
         stage.setMinWidth(1024);
         stage.setScene(scene);

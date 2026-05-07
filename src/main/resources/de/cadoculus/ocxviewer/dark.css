@@ -36,6 +36,10 @@
 
 /** some specific pages */
 
+#logoPage {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, -color-accent-0 0%, -color-accent-1 45%, -color-accent-3 100%);
+}
+
 /* TODO #CoordinateSystem3DViewPage {
     -fx-padding: 5  0 5;
 }
@@ -135,6 +139,16 @@
     -fx-border-radius: 5px;
     -fx-border-width: 1px;
     -fx-border-color: -color-accent-6;
+}
+
+.three-d-view-bottom-toolbar {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-accent-6;
+    -fx-border-width: 0 1px 1px 1px;
+    -fx-background-radius: 0 0 5px 5px;
+    -fx-border-radius: 0 0 5px 5px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
 }
 
 .quantity-input-group {

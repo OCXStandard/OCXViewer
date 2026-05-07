@@ -19,11 +19,12 @@ import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.models.CSSRecord;
 import de.cadoculus.ocxviewer.models.Plane3D;
-import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
+import javafx.geometry.Insets;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.RefPlane;
@@ -64,7 +65,14 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
         createTitle(bcs, getName(), "3D view of the coordinate system.  Camera controls:" +
                 "Zoom: <Ctrl><+> and <Ctrl><-> zoom in and out. Also available using <Ctrl><Scrollwheel>\n" +
                 "Pan: <Left>, <Right>, <Up>, <Down> pan. Also available using pressed middle mouse button\n"+
-                "Rotate: using pressed left mousebutton. Double click with the middle mouse button sets the rotation center.");
+                "Rotate: using pressed left mouse button. Double click with the middle mouse button sets the rotation center.\n" +
+                "Use <R>, <P>, <Y> to roll, pitch, or yaw the camera. Adding <CTRL> gives fine control, <SHIFT> inverts the direction"
+        );
+
+        if (getTop() instanceof VBox titleBox) {
+            titleBox.setPadding(new Insets(10));
+            titleBox.setSpacing(5);
+        }
 
         coosys.getXRefPlanes().getRefPlanes().stream().filter(rp-> rp.isDisplayGrid()).forEach( rp -> {
 
@@ -109,19 +117,19 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
      */
     private void updatedStyle() {
         try {
-            CSSRecord cssRecord = CSSUtil.lookup("#refPlaneFrames");
+            CSSRecord cssRecord = CSSUtil.lookup("refPlaneFrames");
             frame0Colour = cssRecord.fill() != null ? cssRecord.fill() : frame0Colour;
             evenFrameColour = cssRecord.colour1() != null ? cssRecord.colour1() : evenFrameColour;
             oddFrameColour = cssRecord.colour2() != null ? cssRecord.colour2() : oddFrameColour;
 
-            cssRecord = CSSUtil.lookup("#refPlaneLongitudinals");
+            cssRecord = CSSUtil.lookup("refPlaneLongitudinals");
             centerLPColour = cssRecord.fill() != null ? cssRecord.fill() : centerLPColour;
             evenLPPSColour = cssRecord.colour1() != null ? cssRecord.colour1() : evenLPPSColour;
             oddLPPSColour = cssRecord.colour2() != null ? cssRecord.colour2() : oddLPPSColour;
             evenLPSBColour = cssRecord.colour3() != null ? cssRecord.colour3() : evenLPSBColour;
             oddLPPSBColour = cssRecord.colour4() != null ? cssRecord.colour4() : oddLPPSBColour;
 
-            cssRecord = CSSUtil.lookup("#refPlaneverticals");
+            cssRecord = CSSUtil.lookup("refPlaneVerticals");
             evenLVRTColour = cssRecord.colour1() != null ? cssRecord.colour1() : evenLVRTColour;
             oddVRTColour = cssRecord.colour2() != null ? cssRecord.colour2() : oddVRTColour;
         } catch (Exception exp) {
@@ -221,7 +229,6 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
     @Override
     public void afterShow() {
         drawFrames();
-
     }
 
 

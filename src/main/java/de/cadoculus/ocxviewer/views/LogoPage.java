@@ -15,30 +15,12 @@
  */
 package de.cadoculus.ocxviewer.views;
 
-import de.cadoculus.ocxviewer.MainController;
-import de.cadoculus.ocxviewer.models.WorkingContext;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.function.Consumer;
 
 /*
  * This class is responsible for displaying the logo of the application directly after startup.
@@ -47,76 +29,33 @@ import java.util.function.Consumer;
  */
 public class LogoPage extends Region {
     private static final Logger LOG = LogManager.getLogger(LogoPage.class);
+    private static final String LOGO_RESOURCE = "/de/cadoculus/ocxviewer/images/logo.png";
     private final Canvas canvas;
-    private double[] widths;
-    private Font thinFont;
-    private Font boldFont;
-    private final Consumer<Canvas> repaint;
-    private final String[] txts = new String[]{" OCX ", "Viewer ", "Version ", "0.3.0 ",
-            " Carsten ", "Zerbst ", "cadoculus "};
-    private double height = 36;
-    private final DoubleProperty startX = new SimpleDoubleProperty();
-    private double dy = 1.1 * height;
-    private double y = dy;
-    private final Random random = new Random();
-    private int boldIdx = random.nextInt(0, 10);
-    private int numText = 10;
+    private final ImageView logoView;
 
     public LogoPage() {
         super();
+        setId("logoPage");
 
         canvas = new Canvas();
-        getChildren().add(canvas);
+        logoView = createLogoView();
+        getChildren().addAll(canvas, logoView);
 
-        repaint = c -> paint();
+    }
 
-        try {
-            InputStream fontStream = MainController.class.getResourceAsStream("fonts/Doto-Thin.ttf");
-            if (fontStream == null) {
-                LOG.error("Could not create font");
-                thinFont = new Font("Arial", 36);
-            } else {
-                thinFont = Font.loadFont(fontStream, 36);
-                fontStream.close();
-            }
-            fontStream = MainController.class.getResourceAsStream("fonts/Doto-ExtraBold.ttf");
-            if (fontStream == null) {
-                LOG.error("Could not create font");
-                boldFont = Font.font("Arial", FontWeight.BOLD, FontPosture.REGULAR, 36);
-            } else {
-                boldFont = Font.loadFont(fontStream, 36);
-                fontStream.close();
-            }
-
-            widths = Arrays.stream(txts).mapToDouble(t -> {
-                Text text = new Text(t);
-                text.setFont(thinFont);
-
-                Bounds layoutBounds = text.getLayoutBounds();
-                return layoutBounds.getWidth();
-            }).toArray();
-            double startX = -1 * Arrays.stream(widths).sum();
-            double endX = 1;
-
-
-            KeyValue startKeyValue = new KeyValue(this.startX, startX);
-            KeyValue endKeyValue = new KeyValue(this.startX, endX);
-            KeyFrame startFrame = new KeyFrame(Duration.ZERO, startKeyValue);
-            KeyFrame endFrame = new KeyFrame(Duration.seconds(10), endKeyValue);
-            Timeline timeline = new Timeline(startFrame, endFrame);
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.play();
-
-            this.startX.addListener((obs, oldVal, newVal) -> {
-                layoutChildren();
-            });
-
-        } catch (Exception e) {
-            LOG.error("Could not load font", e);
-            thinFont = new Font("Arial", 36);
+    private ImageView createLogoView() {
+        var logoResource = LogoPage.class.getResource(LOGO_RESOURCE);
+        if (logoResource == null) {
+            LOG.error("Could not load logo resource {}", LOGO_RESOURCE);
+            return new ImageView();
         }
 
-
+        ImageView imageView = new ImageView(new Image(logoResource.toExternalForm()));
+        imageView.setManaged(false);
+        imageView.setMouseTransparent(true);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        return imageView;
     }
 
 
@@ -128,67 +67,20 @@ public class LogoPage extends Region {
         canvas.setWidth(width);
         double height = getHeight();
         canvas.setHeight(height);
-        repaint.accept(canvas);
-    }
 
+        if (logoView.getImage() != null) {
+            double imageWidth = logoView.getImage().getWidth();
+            double imageHeight = logoView.getImage().getHeight();
+            double maxWidth = Math.min(imageWidth, width * 0.6);
+            double maxHeight = Math.min(imageHeight, height * 0.6);
 
-    private void paint() {
-        double x = startX.doubleValue();
-        y = dy;
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        if (WorkingContext.getInstance().darkModeProperty().get()) {
-            gc.setFill(Color.web("#ECEFF4")); // --color-fg-default from nord-dark
-        } else {
-            gc.setFill(Color.web("#2E3440")); // --color-fg-default from nord-light
+            logoView.setFitWidth(maxWidth);
+            logoView.setFitHeight(maxHeight);
+            logoView.autosize();
+            logoView.relocate((width - logoView.prefWidth(-1)) / 2, (height - logoView.prefHeight(-1)) / 2);
         }
 
 
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        int idx = 0;
-        OUTER:
-        while (true) {
-            INNER:
-            while (true) {
-                var txtIdx = idx / txts.length;
-                if (txtIdx == boldIdx) {
-                    gc.setFont(boldFont);
-                    if (WorkingContext.getInstance().darkModeProperty().get()) {
-                        gc.setFill(Color.web("#5E81AC")); // --color-fg-default from nord-dark -color-accent-5: #5E81AC;
-                    } else {
-                        gc.setFill(Color.web("#5E81AC")); // --color-fg-default from nord-light -color-accent-5: #5E81AC;
-                    }
-                } else {
-                    gc.setFont(thinFont);
-                    if (WorkingContext.getInstance().darkModeProperty().get()) {
-                        gc.setFill(Color.web("#ECEFF4")); // --color-fg-default from nord-dark
-                    } else {
-                        gc.setFill(Color.web("#2E3440")); // --color-fg-default from nord-light
-                    }
-                }
-
-                var txt = txts[idx % txts.length];
-                var w = widths[idx % txts.length];
-                gc.fillText(txt, x, y);
-
-                x += w;
-
-                if (x > canvas.getWidth()) {
-                    x = -w + (x - canvas.getWidth());
-                    if (txtIdx == boldIdx) {
-                        boldIdx = random.nextInt(2, numText - 2);
-                    }
-                    break INNER;
-                } else {
-                    idx++;
-                }
-            }
-            y += dy;
-            if (y > (canvas.getHeight() + dy)) {
-                numText = idx / txts.length;
-                break OUTER;
-            }
-        }
     }
+
 }

@@ -16,6 +16,8 @@ limitations under the License.
 
 package de.cadoculus.ocxviewer.views;
 
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.HotkeyEvent;
 import de.cadoculus.ocxviewer.models.CSSRecord;
 import de.cadoculus.ocxviewer.models.Plane3D;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
@@ -26,9 +28,7 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.PickResult;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -49,6 +49,8 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
 import javax.vecmath.Vector3d;
 import java.util.List;
 import java.util.Optional;
+
+import static javafx.scene.input.KeyCombination.*;
 
 /**
  * The ThreeDView offers a simple widget to show three-dimensional content using JavaFX's capability.
@@ -71,6 +73,11 @@ class ThreeDView extends BorderPane {
     private static final double MAX_PITCH_DEG = 85.0;
     private static final double MIN_CAMERA_PIVOT_DISTANCE = 1e-3;
     private static final double BILLBOARD_SCALE = 0.01;
+    private static final KeyCodeCombination CTRL_PLUS = new KeyCodeCombination(KeyCode.PLUS, CONTROL_DOWN);
+    private static final KeyCodeCombination CTRL_ADD = new KeyCodeCombination(KeyCode.ADD, CONTROL_DOWN);
+    private static final KeyCodeCombination CTRL_EQUALS = new KeyCodeCombination(KeyCode.EQUALS, CONTROL_DOWN);
+    private static final KeyCodeCombination CTRL_MINUS = new KeyCodeCombination(KeyCode.MINUS, CONTROL_DOWN);
+    private static final KeyCodeCombination CTRL_SUBTRACT = new KeyCodeCombination(KeyCode.SUBTRACT, CONTROL_DOWN);
     private Point3D pivotPoint = new Point3D(0, 0, 0);
     private double panStartMouseX;
     private double panStartMouseY;
@@ -178,7 +185,6 @@ class ThreeDView extends BorderPane {
     }
 
 
-
     private void createContent() {
 
         var root = new Group();
@@ -195,7 +201,6 @@ class ThreeDView extends BorderPane {
         camera = new PerspectiveCamera(true);
         camera.setNearClip(5);
         camera.setFarClip(500_000);
-
 
         var affine = new Affine();
         affine.append(new Translate(75, -200, 0));
@@ -270,6 +275,7 @@ class ThreeDView extends BorderPane {
             }
         });
         subScene.setOnMousePressed(event -> {
+            subScene.requestFocus();
             if (event.getButton() == MouseButton.PRIMARY) {
                 rotateStartMouseX = event.getX();
                 rotateStartMouseY = event.getY();
@@ -349,79 +355,7 @@ class ThreeDView extends BorderPane {
             applyInteractionCursor();
             selectPlane(null);
         });
-        subScene.setOnKeyPressed(event -> {
-            KeyCode code = event.getCode();
 
-            if (event.isControlDown() &&
-                    (code == KeyCode.PLUS || code == KeyCode.ADD || code == KeyCode.EQUALS)) {
-                showZoomCursor(KEYBOARD_ZOOM_DELTA);
-                zoom(KEYBOARD_ZOOM_DELTA);
-                event.consume();
-                return;
-            }
-
-            if (event.isControlDown() && (code == KeyCode.MINUS || code == KeyCode.SUBTRACT)) {
-                showZoomCursor(-KEYBOARD_ZOOM_DELTA);
-                zoom(-KEYBOARD_ZOOM_DELTA);
-                event.consume();
-                return;
-            }
-
-            if (code == KeyCode.LEFT) {
-                pan(event.isControlDown() ? -0.1 * KEYBOARD_PAN_DELTA : -KEYBOARD_PAN_DELTA, 0);
-                event.consume();
-                return;
-            }
-            if (code == KeyCode.RIGHT) {
-                pan(event.isControlDown() ? 0.1 * KEYBOARD_PAN_DELTA : KEYBOARD_PAN_DELTA, 0);
-                event.consume();
-                return;
-            }
-            if (code == KeyCode.UP) {
-                pan(0, event.isControlDown() ? -0.1 * KEYBOARD_PAN_DELTA : -KEYBOARD_PAN_DELTA);
-                event.consume();
-                return;
-            }
-            if (code == KeyCode.DOWN) {
-                pan(0, event.isControlDown() ? 0.1 * KEYBOARD_PAN_DELTA : KEYBOARD_PAN_DELTA);
-                event.consume();
-                return;
-            }
-
-            if (code == KeyCode.R) {
-                var amount = KEYBOARD_ROTATIONS_STEP_DEG;
-                amount *= event.isControlDown() ? 0.1:1;
-                amount*= event.isShiftDown() ? -1: 1;
-
-                rotateAroundCurrentRightAxis(amount);
-                event.consume();
-                return;
-            }
-            if (code == KeyCode.P) {
-                var amount = KEYBOARD_ROTATIONS_STEP_DEG;
-                amount *= event.isControlDown() ? 0.1 : 1;
-                amount *= event.isShiftDown() ? -1 : 1;
-
-                pitchAroundCurrentRightAxis(amount);
-                event.consume();
-                return;
-            }
-            if (code == KeyCode.Y) {
-                var amount = KEYBOARD_ROTATIONS_STEP_DEG;
-                amount *= event.isControlDown() ? 0.1:1;
-                amount*= event.isShiftDown() ? -1: 1;
-
-                rotateAroundCurrentVerticalAxis(amount);
-                event.consume();
-                return;
-            }
-
-
-            if (event.isControlDown() && (code == KeyCode.DIGIT0 || code == KeyCode.NUMPAD0)) {
-                fitAll(ZOOM_ALL_MARGIN);
-                event.consume();
-            }
-        });
         subScene.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.CONTROL) {
                 if (zoomCursorReset != null) {
@@ -432,8 +366,67 @@ class ThreeDView extends BorderPane {
             }
         });
 
+        subScene.setOnKeyPressed(event -> {
+            if (CTRL_PLUS.match(event) || CTRL_ADD.match(event) || CTRL_EQUALS.match(event)) {
+                showZoomCursor(KEYBOARD_ZOOM_DELTA);
+                zoom(KEYBOARD_ZOOM_DELTA);
+                event.consume();
+                return;
+            }
 
+            if (CTRL_MINUS.match(event) || CTRL_SUBTRACT.match(event)) {
+                showZoomCursor(-KEYBOARD_ZOOM_DELTA);
+                zoom(-KEYBOARD_ZOOM_DELTA);
+                event.consume();
+                return;
+            }
 
+            if (event.getCode() == KeyCode.LEFT) {
+                pan(event.isControlDown() ? -0.1 * KEYBOARD_PAN_DELTA : -KEYBOARD_PAN_DELTA, 0);
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.RIGHT) {
+                pan(event.isControlDown() ? 0.1 * KEYBOARD_PAN_DELTA : KEYBOARD_PAN_DELTA, 0);
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.UP) {
+                pan(0, event.isControlDown() ? 0.1 * KEYBOARD_PAN_DELTA : KEYBOARD_PAN_DELTA);
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.DOWN) {
+                pan(0, event.isControlDown() ? -0.1 * KEYBOARD_PAN_DELTA : -KEYBOARD_PAN_DELTA);
+                event.consume();
+            }
+
+            if (event.getCode() == KeyCode.R) {
+                var amount = KEYBOARD_ROTATIONS_STEP_DEG;
+                amount *= event.isControlDown() ? 0.1:1;
+                amount*= event.isShiftDown() ? -1: 1;
+
+                rotateAroundCurrentRightAxis(amount);
+                event.consume();
+                return;
+            }
+            if (event.getCode() == KeyCode.P) {
+                var amount = KEYBOARD_ROTATIONS_STEP_DEG;
+                amount *= event.isControlDown() ? 0.1 : 1;
+                amount *= event.isShiftDown() ? -1 : 1;
+
+                pitchAroundCurrentViewAxis(amount);
+                event.consume();
+                return;
+            }
+            if (event.getCode() == KeyCode.Y) {
+                var amount = KEYBOARD_ROTATIONS_STEP_DEG;
+                amount *= event.isControlDown() ? 0.1:1;
+                amount*= event.isShiftDown() ? -1: 1;
+
+                rotateAroundCurrentVerticalAxis(amount);
+                event.consume();
+                return;
+            }
+
+        });
 
         Group cornerOverlayRoot = new Group();
         // Orientation cube built from 6 individual face panels with 3D text labels
@@ -570,10 +563,6 @@ class ThreeDView extends BorderPane {
         //Platform.runLater(() -> applyPresetView("SB"));
 
 
-//        setLeft(new Label("left"));
-//        setRight(new Label("right"));
-//        setBottom(new Label("bottom"));
-
         // --- Bottom status bar ---
         pickCoordinateLabel = new Label("X: –  Y: –  Z: –");
         pickCoordinateLabel.setMinWidth(250);
@@ -594,6 +583,7 @@ class ThreeDView extends BorderPane {
         });
 
         var bottomBar = new ToolBar(pickCoordinateLabel, new Separator(), spacer, skyboxToggleButton);
+        bottomBar.getStyleClass().add("three-d-view-bottom-toolbar");
         setBottom(bottomBar);
 
         infoPaneFadeOut = new FadeTransition(Duration.millis(180), infoPaneContainer);
@@ -622,6 +612,7 @@ class ThreeDView extends BorderPane {
         // BorderPane is this class itself.
     }
 
+
     private void updatePickCoordinateLabel(PickResult pickResult) {
         if (pickCoordinateLabel == null) {
             return;
@@ -633,10 +624,10 @@ class ThreeDView extends BorderPane {
             Point3D hitLocal = pickResult.getIntersectedPoint();
             Point3D hitScene = pickResult.getIntersectedNode().localToScene(hitLocal);
             Point3D hitWorld = world.sceneToLocal(hitScene);
-            pickCoordinateLabel.setText(String.format("X: %.3f  Y: %.3f  Z: %.3f",
+            pickCoordinateLabel.setText(String.format("(%.2f %.2f %.2f)",
                     hitWorld.getX(), hitWorld.getY(), hitWorld.getZ()));
         } else {
-            pickCoordinateLabel.setText("X: –  Y: –  Z: –");
+            pickCoordinateLabel.setText("");
         }
     }
 
@@ -797,6 +788,31 @@ class ThreeDView extends BorderPane {
 
         setCameraAffine(new Affine(rotated));
     }
+
+
+    private void pitchAroundCurrentViewAxis(double angleDeg) {
+        if (camera == null || camera.getTransforms().isEmpty()) {
+            return;
+        }
+
+        var base = (Affine) camera.getTransforms().getFirst();
+        Point3D axis = normalize(new Point3D(base.getMxz(), base.getMyz(), base.getMzz()));
+        if (axis.magnitude() < 1e-6) {
+            return;
+        }
+        Point3D pivot = pivotPoint != null ? pivotPoint : Point3D.ZERO;
+
+        Transform rotated = new Rotate(
+                angleDeg,
+                pivot.getX(),
+                pivot.getY(),
+                pivot.getZ(),
+                axis
+        ).createConcatenation(base);
+
+        setCameraAffine(new Affine(rotated));
+    }
+
 
     private void viewFrom(String side) {
 

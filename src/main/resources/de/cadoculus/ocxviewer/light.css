@@ -25,33 +25,35 @@
     -fx-background-color: -color-accent-2;
     /* even colour, odd colour */
     -fx-border-color: -color-accent-6,-color-accent-8, -color-warning-6, -color-accent-6;
+    -fx-border-width: 1;
 }
 
 #refPlaneFrames {
     /*  colour of frame #0 */
     -fx-background-color: -color-accent-2;
     /* even colour, odd colour */
-    -fx-border-color: -color-accent-6,-color-accent-8, -color-warning-6, -color-accent-6;
+    -fx-border-color: -color-accent-6 -color-accent-8 -color-warning-6 -color-accent-6;
+
 }
 #refPlaneLongitudinals {
     /*  colour of center LP */
     -fx-background-color: -color-accent-3;
     /* PS even colour, odd colour, SB even colour, odd colour */
-    -fx-border-color: -color-warning-6, -color-warning-8, -color-success-2, -color-success-2;
+    -fx-border-color: -color-warning-6 -color-warning-8 -color-success-2 -color-success-4;
 }
-#refPlaneverticals {
+#refPlaneVerticals {
+    /* not used */
+    -fx-background-color: -color-accent-3;
     /* even colour, odd colour */
-    -fx-border-color: -color-chart-4, -color-chart-5, -color-success-2, -color-success-2;
+    -fx-border-color: -color-chart-4 -color-chart-5 -color-success-2 -color-success-2;
 }
 
 /** some specific pages */
 
-/* TODO #CoordinateSystem3DViewPage {
-    -fx-padding: 5  0 5;
+#CoordinateSystem3DViewPage {
+    -fx-padding: 0  0 0 0;
 }
-*/
 
-/* TODO: get rid of the padding in the content-pane
 #CoordinateSystem3DViewPage__3DView {
     -fx-padding: 0 0 0 0;
     -fx-border-radius: 10 20 30 40;
@@ -144,6 +146,16 @@
     -fx-border-radius: 5px;
     -fx-border-width: 1px;
     -fx-border-color: -color-accent-6;
+}
+
+.three-d-view-bottom-toolbar {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-accent-6;
+    -fx-border-width: 0 1px 1px 1px;
+    -fx-background-radius: 0 0 5px 5px;
+    -fx-border-radius: 0 0 5px 5px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
 }
 
 .quantity-input-group {
