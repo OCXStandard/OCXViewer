@@ -1,4 +1,4 @@
-package de.cadoculus.ocxviewer.models.threed;
+package de.cadoculus.ocxviewer.views.threed;
 
 import de.cadoculus.ocxviewer.models.InformationProvider;
 import javafx.scene.Group;

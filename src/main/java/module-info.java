@@ -49,7 +49,7 @@ module ocxviewer {
     exports de.cadoculus.ocxviewer.geom to javafx.fxml;
     exports de.cadoculus.ocxviewer.utils to javafx.fxml;
     exports de.cadoculus.ocxviewer.io to javafx.fxml, org.glassfish.jaxb.runtime;
-    exports de.cadoculus.ocxviewer.models.threed to javafx.fxml;
+    exports de.cadoculus.ocxviewer.views.threed to javafx.fxml;
 
 
 }

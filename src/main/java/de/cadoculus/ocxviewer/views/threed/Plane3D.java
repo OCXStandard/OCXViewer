@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.cadoculus.ocxviewer.models.threed;
+package de.cadoculus.ocxviewer.views.threed;
 
 import de.cadoculus.ocxviewer.models.InformationProvider;
 import javafx.geometry.Point3D;

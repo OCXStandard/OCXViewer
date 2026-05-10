@@ -17,7 +17,8 @@ limitations under the License.
 package de.cadoculus.ocxviewer.views;
 
 import de.cadoculus.ocxviewer.models.CSSRecord;
-import de.cadoculus.ocxviewer.models.threed.Plane3D;
+import de.cadoculus.ocxviewer.models.InformationProvider;
+import de.cadoculus.ocxviewer.views.threed.Plane3D;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -84,7 +85,7 @@ class ThreeDView extends BorderPane {
     private Affine rotateStartCameraAffine;
     private boolean primaryDragActive;
     private boolean middlePanActive;
-    private Plane3D selectedPlane;
+    private InformationProvider selectedProvider;
     private VBox infoPaneContainer;
     private FadeTransition infoPaneFadeOut;
     private PerspectiveCamera camera;
@@ -229,6 +230,9 @@ class ThreeDView extends BorderPane {
         );
 
         pivotPoint = lookAtPoint;
+        // Adapt clip planes to the view distance so near geometry is never cut
+        camera.setNearClip(Math.max(0.001, distance * 0.001));
+        camera.setFarClip(Math.max(500_000, distance * 1000));
         setCameraAffine(next);
     }
 
@@ -262,7 +266,7 @@ class ThreeDView extends BorderPane {
 
         // Create and position camera
         camera = new PerspectiveCamera(true);
-        camera.setNearClip(5);
+        camera.setNearClip(0.1);
         camera.setFarClip(500_000);
 
         var affine = new Affine();
@@ -415,7 +419,7 @@ class ThreeDView extends BorderPane {
         });
         subScene.setOnMouseMoved(event -> {
             if (!primaryDragActive) {
-                pickPlane(event.getPickResult());
+                pickProvider(event.getPickResult());
             }
             updatePickCoordinateLabel(event.getPickResult());
         });
@@ -424,7 +428,7 @@ class ThreeDView extends BorderPane {
             primaryDragActive = false;
             zoomCursorActive = false;
             applyInteractionCursor();
-            selectPlane(null);
+            selectProvider(null);
         });
 
         subScene.setOnKeyReleased(event -> {
@@ -1233,47 +1237,49 @@ class ThreeDView extends BorderPane {
         affine.prependTranslation(move.getX(), move.getY(), move.getZ());
     }
 
-    private void pickPlane(PickResult pickResult) {
+    private void pickProvider(PickResult pickResult) {
         if (pickResult == null) {
-            selectPlane(null);
+            selectProvider(null);
             return;
         }
         Node node = pickResult.getIntersectedNode();
-        Plane3D plane = findPlane(node);
-        selectPlane(plane);
+        selectProvider(findProvider(node));
     }
 
-    private Plane3D findPlane(Node node) {
+    private InformationProvider findProvider(Node node) {
         Node current = node;
         while (current != null) {
-            if (current instanceof Plane3D plane3D) {
-                return plane3D;
+            if (current instanceof InformationProvider provider) {
+                return provider;
             }
             current = current.getParent();
         }
         return null;
     }
 
-    private void selectPlane(Plane3D plane) {
-        if (selectedPlane == plane) {
+    private void selectProvider(InformationProvider provider) {
+        if (selectedProvider == provider) {
             return;
         }
-        if (selectedPlane != null) {
-            selectedPlane.setHighlighted(false);
+        if (selectedProvider instanceof Plane3D plane) {
+            plane.setHighlighted(false);
         }
-        selectedPlane = plane;
-        if (selectedPlane != null) {
-            selectedPlane.setHighlighted(true);
-            updateInfoPane(selectedPlane);
+        selectedProvider = provider;
+        if (selectedProvider != null) {
+            if (selectedProvider instanceof Plane3D plane) {
+                plane.setHighlighted(true);
+            }
+            updateInfoPane(selectedProvider);
         } else {
             hideInfoPane();
         }
     }
 
-    private void updateInfoPane(Plane3D plane) {
-        if (infoPaneContainer != null && plane != null) {
+    private void updateInfoPane(InformationProvider provider) {
+        if (infoPaneContainer != null && provider != null) {
             infoPaneContainer.getChildren().clear();
-            infoPaneContainer.getChildren().add(atlantafx.base.util.BBCodeParser.createFormattedText(plane.getInformation()));
+            infoPaneContainer.getChildren().add(
+                    atlantafx.base.util.BBCodeParser.createFormattedText(provider.getInformation()));
             infoPaneContainer.setManaged(true);
             infoPaneContainer.setVisible(true);
             infoPaneContainer.setOpacity(1.0);
@@ -1386,6 +1392,15 @@ class ThreeDView extends BorderPane {
                     (wb.getMinY() + wb.getMaxY()) * 0.5,
                     (wb.getMinZ() + wb.getMaxZ()) * 0.5
             );
+            // Adapt near clip so no visible geometry is cut by the near plane
+            var finalAffine = (Affine) camera.getTransforms().getFirst();
+            Point3D camPos = new Point3D(finalAffine.getTx(), finalAffine.getTy(), finalAffine.getTz());
+            double diag = Math.sqrt(
+                    wb.getWidth() * wb.getWidth() +
+                    wb.getHeight() * wb.getHeight() +
+                    wb.getDepth() * wb.getDepth());
+            double distToNearSurface = Math.max(0.001, pivotPoint.distance(camPos) - diag * 0.5);
+            camera.setNearClip(distToNearSurface * 0.1);
         }
     }
 

@@ -20,9 +20,11 @@ import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.geom.GeomHelper;
 import de.cadoculus.ocxviewer.models.CSSRecord;
-import de.cadoculus.ocxviewer.models.threed.Plane3D;
-import de.cadoculus.ocxviewer.models.threed.Point3D;
-import de.cadoculus.ocxviewer.models.threed.Sphere3D;
+import de.cadoculus.ocxviewer.views.threed.Cone3D;
+import de.cadoculus.ocxviewer.views.threed.Cylinder3D;
+import de.cadoculus.ocxviewer.views.threed.Plane3D;
+import de.cadoculus.ocxviewer.views.threed.Point3D;
+import de.cadoculus.ocxviewer.views.threed.Sphere3D;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import javafx.geometry.Insets;
@@ -32,7 +34,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.fxyz3d.geometry.Vector3D;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.ocx_schema.v310.*;
@@ -209,11 +210,92 @@ public class Surface3DViewPage extends AbstractDataViewSubPage<org.ocx_schema.v3
 
 
     private void render(Cone3DT cone) {
-        
+        var origin = UnitHelper.toDefaultUnit(cone.getOrigin());
+        origin.scale(1 / 1000.0);
+
+        var tip = UnitHelper.toDefaultUnit(cone.getTip());
+        tip.scale(1 / 1000.0);
+
+        double baseRadius = UnitHelper.toDefaultUnit(cone.getBaseRadius()) / 1000.0;
+        double tipRadius = cone.getTipRadius() != null
+                ? UnitHelper.toDefaultUnit(cone.getTipRadius()) / 1000.0
+                : 0.0;
+
+        var cone3D = new Cone3D(
+                cone.getId(),
+                origin.x, origin.y, origin.z,
+                tip.x, tip.y, tip.z,
+                baseRadius, tipRadius,
+                String.format("[heading=4]%s[/heading][ul]" +
+                                "[li]Origin: (%.2f, %.2f, %.2f)[/li]" +
+                                "[li]Tip: (%.2f, %.2f, %.2f)[/li]" +
+                                "[li]Base radius: %.2f[/li]" +
+                                "[li]Tip radius: %.2f[/li][/ul]",
+                        cone.getId(), origin.x, origin.y, origin.z,
+                        tip.x, tip.y, tip.z, baseRadius, tipRadius),
+                surfaceColour);
+        surfaceGroup.getChildren().add(cone3D);
+
+        pointsGroup.getChildren().add(new Point3D(cone.getId() + " origin",
+                origin.x, origin.y, origin.z, "base centre at " + origin));
+        pointsGroup.getChildren().add(new Point3D(cone.getId() + " tip",
+                tip.x, tip.y, tip.z, "tip centre at " + tip));
+
+        // Look at the cone centre from a direction perpendicular to the axis
+        var axis = new Vector3d(tip.x - origin.x, tip.y - origin.y, tip.z - origin.z);
+        double height = axis.length();
+        axis.normalize();
+        var perp = new Vector3d();
+        perp.cross(axis, Math.abs(axis.x) < 0.9 ? new Vector3d(1, 0, 0) : new Vector3d(0, 1, 0));
+        perp.normalize();
+        var viewCenter = new javax.vecmath.Point3d(
+                origin.x + axis.x * height / 2,
+                origin.y + axis.y * height / 2,
+                origin.z + axis.z * height / 2);
+        threeDView.setView(viewCenter, perp, Math.max(baseRadius, height) * 3);
     }
 
     private void render(Cylinder3DT cylinder) {
+        var origin = UnitHelper.toDefaultUnit(cylinder.getOrigin());
+        origin.scale(1 / 1000.0);
 
+        Vector3DT axisDT = cylinder.getAxis();
+        var axisVec = new Vector3d(
+                axisDT.getDirections().get(0),
+                axisDT.getDirections().get(1),
+                axisDT.getDirections().get(2));
+        axisVec.normalize();
+
+        double radius = UnitHelper.toDefaultUnit(cylinder.getRadius()) / 1000.0;
+        double height = UnitHelper.toDefaultUnit(cylinder.getHeight()) / 1000.0;
+
+        var cyl = new Cylinder3D(
+                cylinder.getId(),
+                origin.x, origin.y, origin.z,
+                axisVec.x, axisVec.y, axisVec.z,
+                radius, height,
+                String.format("[heading=4]%s[/heading][ul]" +
+                                "[li]Origin: (%.2f, %.2f, %.2f)[/li]" +
+                                "[li]Axis: (%.3f, %.3f, %.3f)[/li]" +
+                                "[li]Radius: %.2f[/li]" +
+                                "[li]Height: %.2f[/li][/ul]",
+                        cylinder.getId(), origin.x, origin.y, origin.z,
+                        axisVec.x, axisVec.y, axisVec.z, radius, height),
+                surfaceColour);
+        surfaceGroup.getChildren().add(cyl);
+
+        pointsGroup.getChildren().add(new Point3D(cylinder.getId() + " origin",
+                origin.x, origin.y, origin.z, "base centre at " + origin));
+
+        // Look at the cylinder midpoint from a direction perpendicular to the axis
+        var perp = new Vector3d();
+        perp.cross(axisVec, Math.abs(axisVec.x) < 0.9 ? new Vector3d(1, 0, 0) : new Vector3d(0, 1, 0));
+        perp.normalize();
+        var viewCenter = new javax.vecmath.Point3d(
+                origin.x + axisVec.x * height / 2,
+                origin.y + axisVec.y * height / 2,
+                origin.z + axisVec.z * height / 2);
+        threeDView.setView(viewCenter, perp, radius * 5);
     }
 
     private void render(NURBSSurfaceT nurbsSurface) {
