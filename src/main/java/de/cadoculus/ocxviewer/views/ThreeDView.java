@@ -219,7 +219,7 @@ class ThreeDView extends BorderPane {
 
         root.getChildren().add(camera);
 
-        // Skybox – large sphere with inward-facing texture
+        // Skybox – a box with inward-facing texture
         // TODO: configure from CSS
         var top = new Image(getClass().getResourceAsStream("top.png"));
         var right = new Image(getClass().getResourceAsStream("left.png"));
@@ -244,6 +244,14 @@ class ThreeDView extends BorderPane {
         infoPaneContainer.setMaxWidth(200);
         infoPaneContainer.setMinHeight(VBox.USE_PREF_SIZE);
         infoPaneContainer.setMaxHeight(VBox.USE_PREF_SIZE);
+        infoPaneContainer.setStyle(
+                "-fx-background-color: rgba(255,255,255,0.85);" +
+                "-fx-background-radius: 10px;" +
+                "-fx-border-color: rgba(200,200,200,0.5);" +
+                "-fx-border-width: 1px;" +
+                "-fx-border-radius: 10px;" +
+                "-fx-padding: 14px 16px 14px 16px;"
+        );
         infoPaneContainer.setMouseTransparent(true);
         infoPaneContainer.setManaged(false);
         infoPaneContainer.setVisible(false);
@@ -512,6 +520,7 @@ class ThreeDView extends BorderPane {
         subSceneHost.setMinSize(0, 0);
 
         StackPane overlayPane = new StackPane(subSceneHost, infoPaneContainer, cornerOverlaySubScene);
+        infoPaneContainer.toFront();
         overlayPane.setMinSize(0, 0);
         setMinSize(0, 0);
         overlayPane.setPickOnBounds(false);

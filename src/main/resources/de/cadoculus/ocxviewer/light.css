@@ -1,3 +1,11 @@
+/* define some extrac colours */
+.root {
+    -color-warning-6-alpha70: rgba(166, 108, 90, 0.7);
+    -color-warning-8-alpha70: rgba(125, 81, 67, 0.7);
+    -color-success-2-alpha70: rgba(130, 184, 184, 0.7);
+    -color-success-4-alpha70: rgba(91, 162, 161, 0.7);
+}
+
 /* Light theme for OCX Viewer */
 
 #pseudeMB {
@@ -31,21 +39,21 @@
 #refPlaneFrames {
     /*  colour of frame #0 */
     -fx-background-color: -color-accent-2;
-    /* even colour, odd colour */
-    -fx-border-color: -color-accent-6 -color-accent-8 -color-warning-6 -color-accent-6;
+    /* even colour, odd colour -color-accent-6 -color-accent-8 -color-warning-6 */
+    -fx-border-color: rgba(83, 114, 151, 0.7) rgba(60, 83, 110, 0.7) rgba(166, 108, 90, 0.7) -color-accent-6;
 
 }
 #refPlaneLongitudinals {
     /*  colour of center LP */
     -fx-background-color: -color-accent-3;
-    /* PS even colour, odd colour, SB even colour, odd colour */
-    -fx-border-color: -color-warning-6 -color-warning-8 -color-success-2 -color-success-4;
+    /* PS even colour, odd colour, SB even colour, odd colour -color-warning-6 -color-warning-8 -color-success-2 -color-success-4; */
+    -fx-border-color: -color-warning-6-alpha70 -color-warning-8-alpha70 -color-success-2-alpha70 -color-success-4-alpha70;
 }
 #refPlaneVerticals {
     /* not used */
     -fx-background-color: -color-accent-3;
     /* even colour, odd colour */
-    -fx-border-color: -color-chart-4 -color-chart-5 -color-success-2 -color-success-2;
+    -fx-border-color: -color-chart-4-alpha70 -color-chart-5-alpha70 -color-success-2 -color-success-2;
 }
 
 /** some specific pages */
@@ -60,7 +68,6 @@
     -fx-background-radius: 10 20 30 40;
 }
 
-*/
 /** general rules */
 
 #infoPaneContainer {
@@ -71,8 +78,6 @@
     -fx-border-radius: 25px;
     -fx-padding: 14px 16px 14px 16px;
 }
-
-
 
 .text-field {
 

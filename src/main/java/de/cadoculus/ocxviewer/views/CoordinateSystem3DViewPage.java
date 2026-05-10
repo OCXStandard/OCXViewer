@@ -83,14 +83,22 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
         minX -= 0.1* maxX;
         maxX += 0.1* maxX;
 
-        coosys.getYRefPlanes().getRefPlanes().stream().filter(rp -> rp.isDisplayGrid()).forEach( rp -> {
-            breadth = Math.max( UnitHelper.toDefaultUnit(rp.getReferenceLocation())/500.0, breadth);
-        });
-        breadth*=1.1;
+        if ( coosys.getYRefPlanes() != null && coosys.getYRefPlanes().getRefPlanes() != null) {
+            coosys.getYRefPlanes().getRefPlanes().stream().filter(rp -> rp.isDisplayGrid()).forEach(rp -> {
+                breadth = Math.max(UnitHelper.toDefaultUnit(rp.getReferenceLocation()) / 500.0, breadth);
+            });
+            breadth*=1.1;
+        } else {
+            breadth = maxX*0.2;
+        }
 
-        coosys.getZRefPlanes().getRefPlanes().stream().filter( rp-> rp.isDisplayGrid()).forEach( rp -> {
-            height = Math.max( UnitHelper.toDefaultUnit(rp.getReferenceLocation())/10000, height);
-        });
+        if ( coosys.getZRefPlanes()!=null && coosys.getZRefPlanes().getRefPlanes() != null) {
+            coosys.getZRefPlanes().getRefPlanes().stream().filter(rp -> rp.isDisplayGrid()).forEach(rp -> {
+                height = Math.max(UnitHelper.toDefaultUnit(rp.getReferenceLocation()) / 10000, height);
+            });
+        } else {
+            height = maxX*0.2;
+        }
 
         updatedStyle();
 
@@ -108,9 +116,6 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
         });
 
     }
-
-
-
 
     /**
      * Updates the parameters used in the canvas from CSS.
