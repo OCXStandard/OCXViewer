@@ -16,10 +16,8 @@ limitations under the License.
 
 package de.cadoculus.ocxviewer.views;
 
-import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.HotkeyEvent;
 import de.cadoculus.ocxviewer.models.CSSRecord;
-import de.cadoculus.ocxviewer.models.Plane3D;
+import de.cadoculus.ocxviewer.models.threed.Plane3D;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -177,11 +175,76 @@ class ThreeDView extends BorderPane {
      *
      * @param group group to add (ignored when {@code null})
      */
-    public void addGroupToWorld(Group group) {
-        if (group == null || world == null) {
+    public void addGroupToWorld(Group ... groups) {
+        if (groups == null || world == null) {
             return;
         }
-        world.getChildren().add(group);
+        world.getChildren().addAll(groups);
+    }
+
+    /**
+     * Sets the camera view so the camera looks at {@code lookAtPoint} from
+     * {@code viewDirection} with the given {@code distance}.
+     *
+     * @param lookAtPoint world-space point to look at
+     * @param viewDirection forward direction (camera -> look-at)
+     * @param distance distance from camera position to look-at point
+     */
+    public void setView(Point3D lookAtPoint, Point3D viewDirection, double distance) {
+        if (lookAtPoint == null || !isFinite(lookAtPoint)) {
+            LOG.warn("Ignoring setView(): lookAtPoint is null or non-finite: {}", lookAtPoint);
+            return;
+        }
+
+        Point3D forward = normalize(viewDirection == null ? Point3D.ZERO : viewDirection);
+        if (forward.magnitude() < 1e-9) {
+            forward = getCurrentForwardDirection();
+        }
+
+        if (!Double.isFinite(distance) || distance < MIN_CAMERA_PIVOT_DISTANCE) {
+            distance = 200.0;
+        }
+
+        Point3D upRef = WORLD_UP;
+        if (Math.abs(forward.dotProduct(upRef)) > 0.995) {
+            upRef = new Point3D(1, 0, 0);
+        }
+
+        Point3D right = normalize(upRef.crossProduct(forward));
+        if (right.magnitude() < 1e-9) {
+            right = normalize(new Point3D(0, 1, 0).crossProduct(forward));
+        }
+        if (right.magnitude() < 1e-9) {
+            LOG.warn("Ignoring setView(): could not derive a stable right axis for direction {}", forward);
+            return;
+        }
+
+        Point3D up = normalize(forward.crossProduct(right));
+        Point3D cameraPos = lookAtPoint.subtract(forward.multiply(distance));
+
+        Affine next = new Affine(
+                right.getX(), up.getX(), forward.getX(), cameraPos.getX(),
+                right.getY(), up.getY(), forward.getY(), cameraPos.getY(),
+                right.getZ(), up.getZ(), forward.getZ(), cameraPos.getZ()
+        );
+
+        pivotPoint = lookAtPoint;
+        setCameraAffine(next);
+    }
+
+    /**
+     * Convenience overload for vecmath callers.
+     */
+    public void setView(javax.vecmath.Point3d lookAtPoint, Vector3d viewDirection, double distance) {
+        if (lookAtPoint == null || viewDirection == null) {
+            LOG.warn("Ignoring setView(): lookAtPoint or viewDirection is null");
+            return;
+        }
+        setView(
+                new Point3D(lookAtPoint.x, lookAtPoint.y, lookAtPoint.z),
+                new Point3D(viewDirection.x, viewDirection.y, viewDirection.z),
+                distance
+        );
     }
 
 
@@ -1129,6 +1192,20 @@ class ThreeDView extends BorderPane {
         return v.multiply(1.0 / len);
     }
 
+    private Point3D getCurrentForwardDirection() {
+        if (camera != null && !camera.getTransforms().isEmpty() && camera.getTransforms().getFirst() instanceof Affine affine) {
+            Point3D forward = normalize(new Point3D(affine.getMxz(), affine.getMyz(), affine.getMzz()));
+            if (forward.magnitude() >= 1e-9) {
+                return forward;
+            }
+        }
+        return new Point3D(1, 0, 0);
+    }
+
+    private boolean isFinite(Point3D p) {
+        return Double.isFinite(p.getX()) && Double.isFinite(p.getY()) && Double.isFinite(p.getZ());
+    }
+
     private double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
@@ -1416,6 +1493,7 @@ class ThreeDView extends BorderPane {
         final Optional<Node> gOpt = world.getChildren().stream().filter(c -> c instanceof Group g && "coordinate-system".equals(g.getId())).findFirst();
         if ( gOpt.isPresent()) {
             world.getChildren().remove(gOpt.get());
+            billboardAffines.clear();
         }
         var cosysGroup = new Group();
         cosysGroup.setId("coordinate-system");
@@ -1495,7 +1573,9 @@ class ThreeDView extends BorderPane {
             }
         }
 
-
+        if (camera != null && !camera.getTransforms().isEmpty()) {
+            updateBillboards((Affine) camera.getTransforms().getFirst());
+        }
     }
 
     /**
@@ -1777,6 +1857,7 @@ class ThreeDView extends BorderPane {
       */
     public void clear() {
         world.getChildren().clear();
+        billboardAffines.clear();
     }
 }
 

@@ -16,6 +16,9 @@ limitations under the License.
 package de.cadoculus.ocxviewer.views;
 
 import atlantafx.base.theme.Styles;
+import de.cadoculus.ocxviewer.event.DefaultEventBus;
+import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
 import de.cadoculus.ocxviewer.models.ControlPointRecord;
 import de.cadoculus.ocxviewer.geom.GeomHelper;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -35,6 +38,8 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignB;
 import org.ocx_schema.v310.*;
+
+import java.util.ArrayList;
 
 /**
  * A page displaying information about a Surface.
@@ -117,6 +122,29 @@ public class SurfacePage extends AbstractDataViewSubPage<SurfaceT> {
                 setCenter(warning);
             }
         }
+
+
+        titelLabel = new Label("3D View");
+        titelLabel.getStyleClass().add(Styles.TITLE_4);
+        gridPane.add(titelLabel, 0, row, 1, 1);
+        GridPane.setHalignment(titelLabel, HPos.LEFT);
+        GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+
+        var viewButton = new Button(null ,new FontIcon(MaterialDesignA.AXIS_ARROW));
+        viewButton.setTooltip(new Tooltip("View the surface in a 3D view"));
+        viewButton.getStyleClass().addAll(
+                Styles.BUTTON_ICON, Styles.ACCENT
+        );
+        gridPane.add(viewButton, 1, row, 1, 1);
+        viewButton.setOnAction(e -> {
+            var robert = new ArrayList<>(getBreadcrumbs());
+            robert.add(new BreadcrumbRecord("3D View " + surface.getId(), Surface3DViewPage.class, null, getObject()));
+
+            var event = new SelectionEvent(robert);
+            DefaultEventBus.getInstance().publish(event);
+        });
+
+
 
     }
 

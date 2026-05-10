@@ -141,16 +141,6 @@
     -fx-border-color: -color-accent-6;
 }
 
-.three-d-view-bottom-toolbar {
-    -fx-background-color: -color-bg-default;
-    -fx-border-color: -color-accent-6;
-    -fx-border-width: 0 1px 1px 1px;
-    -fx-background-radius: 0 0 5px 5px;
-    -fx-border-radius: 0 0 5px 5px;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-}
-
 .quantity-input-group {
     -fx-padding: 1px;
     -fx-background-color: -color-base-1;

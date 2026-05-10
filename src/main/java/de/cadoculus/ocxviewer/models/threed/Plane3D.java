@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.cadoculus.ocxviewer.models;
+package de.cadoculus.ocxviewer.models.threed;
 
+import de.cadoculus.ocxviewer.models.InformationProvider;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -24,18 +25,21 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 /**
  * The class represents a rectangle used to represent e.g. frame grids
  */
 public class Plane3D extends Group implements InformationProvider {
-	private static final Point3D DEFAULT_NORMAL = new Point3D(0, 0, 1);
+	private static final Vector3d DEFAULT_NORMAL = new Vector3d(0, 0, 1);
 
 	private final MeshView meshView;
 	private final PhongMaterial material;
 	private final Rotate orientation;
 
-	private Point3D center;
-	private Point3D normal;
+	private Point3d center;
+	private Vector3d normal;
 	private double width;
 	private double height;
 	private Color colour;
@@ -52,12 +56,12 @@ public class Plane3D extends Group implements InformationProvider {
 	 * @param colour the mesh colour
 	 * @param highlightColor the mesh colour used when setting state to 'highlighted'
 	 */
-	public Plane3D(String id, Point3D center, Point3D normal, double width, double height,
+	public Plane3D(String id, Point3d center, Vector3d normal, double width, double height,
 	               Color colour, Color highlightColor) {
 		this.setId(id);
 		this.meshView = new MeshView();
 		this.material = new PhongMaterial();
-		this.orientation = new Rotate(0, DEFAULT_NORMAL);
+		this.orientation = new Rotate(0, new Point3D(0,0,1));
 
 		meshView.getTransforms().add(orientation);
 		// Render one front-facing triangle set per view direction.
@@ -75,11 +79,11 @@ public class Plane3D extends Group implements InformationProvider {
 	}
 
 
-	public Point3D getCenter() {
+	public Point3d getCenter() {
 		return center;
 	}
 
-	public void setCenter(Point3D center) {
+	public void setCenter(Point3d center) {
 		if (center == null) {
 			throw new IllegalArgumentException("center must not be null");
 		}
@@ -89,15 +93,16 @@ public class Plane3D extends Group implements InformationProvider {
 		setTranslateZ(center.getZ());
 	}
 
-	public Point3D getNormal() {
+	public Vector3d getNormal() {
 		return normal;
 	}
 
-	public void setNormal(Point3D normal) {
-		if (normal == null || normal.magnitude() == 0.0) {
+	public void setNormal(Vector3d normal) {
+		if (normal == null || normal.length() < 1e-1) {
 			throw new IllegalArgumentException("normal must not be null or zero");
 		}
-		this.normal = normal.normalize();
+		normal.normalize();
+		this.normal =normal;
 		updateOrientation();
 	}
 
@@ -189,7 +194,7 @@ public class Plane3D extends Group implements InformationProvider {
 	}
 
 	private void updateOrientation() {
-		double dot = Math.clamp(DEFAULT_NORMAL.dotProduct(normal), -1.0, 1.0);
+		double dot = Math.clamp(DEFAULT_NORMAL.dot( normal), -1.0, 1.0);
 
 		if (dot > 0.999999) {
 			orientation.setAxis(Rotate.Z_AXIS);
@@ -203,9 +208,11 @@ public class Plane3D extends Group implements InformationProvider {
 			return;
 		}
 
-		Point3D axis = DEFAULT_NORMAL.crossProduct(normal).normalize();
+		Vector3d axis = new Vector3d();
+		axis.cross(DEFAULT_NORMAL, normal);
+		axis.normalize();
 		double angle = Math.toDegrees(Math.acos(dot));
-		orientation.setAxis(axis);
+		orientation.setAxis(new Point3D(axis.x, axis.y, axis.z));
 		orientation.setAngle(angle);
 	}
 

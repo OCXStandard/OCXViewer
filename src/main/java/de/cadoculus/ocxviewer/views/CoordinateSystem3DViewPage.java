@@ -18,7 +18,7 @@ package de.cadoculus.ocxviewer.views;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.models.CSSRecord;
-import de.cadoculus.ocxviewer.models.Plane3D;
+import de.cadoculus.ocxviewer.models.threed.Plane3D;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import javafx.geometry.Insets;
@@ -30,6 +30,8 @@ import org.apache.logging.log4j.Logger;
 import org.ocx_schema.v310.RefPlane;
 import javafx.scene.paint.Color;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 import java.util.List;
 
 /**
@@ -172,58 +174,63 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
             x /=1000.0f;
 
             var colour = Math.abs(x) < 0.01 ? frame0Colour : (i%2==0? evenFrameColour : oddFrameColour);
-            var plane = new Plane3D( refPlane.getName() + " (" + refPlane.getId() + ")", new Point3D(x, 0, frHeight/2.0), new Point3D(1, 0, 0),
+            var plane = new Plane3D( refPlane.getName() + " (" + refPlane.getId() + ")", new Point3d(x, 0, frHeight/2.0), new Vector3d(1, 0, 0),
                     frWidth, frHeight, colour, Color.RED);
             frameGroup.getChildren().add(plane);
 
         }
 
-        var verticalGroup = new Group();
-        verticalGroup.setId("verticalGroup");
-        refPlanesGroup.getChildren().add(verticalGroup);
+        if ( coosys.getZRefPlanes() != null && coosys.getZRefPlanes().getRefPlanes() != null) {
+            LOG.info("found {} vertical reference planes", coosys.getZRefPlanes().getRefPlanes().size());
 
+            var verticalGroup = new Group();
+            verticalGroup.setId("verticalGroup");
+            refPlanesGroup.getChildren().add(verticalGroup);
 
-        final List<RefPlane> verticals = coosys.getZRefPlanes().getRefPlanes();
-        for( int i =0; i < verticals.size();i++) {
-            var refPlane  = verticals.get(i);
-            if ( ! refPlane.isDisplayGrid()) {
-                continue;
+            final List<RefPlane> verticals = coosys.getZRefPlanes().getRefPlanes();
+            for (int i = 0; i < verticals.size(); i++) {
+                var refPlane = verticals.get(i);
+                if (!refPlane.isDisplayGrid()) {
+                    continue;
+                }
+                var z = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
+                z /= 1000.0f;
+
+                var colour = (i % 2 == 0 ? evenLVRTColour : oddVRTColour);
+                var plane = new Plane3D(refPlane.getName() + " (" + refPlane.getName() + ")", new Point3d(0.25 * maxX, 0, z), new Vector3d(0, 0, 1),
+                        frWidth, frHeight, colour, Color.RED);
+                frameGroup.getChildren().add(plane);
             }
-            var z = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
-            z /=1000.0f;
-
-            var colour =  (i%2==0? evenLVRTColour : oddVRTColour);
-            var plane = new Plane3D( refPlane.getName() + " (" + refPlane.getName() + ")", new Point3D(0.25*maxX, 0, z), new Point3D(0, 0, 1),
-                    frWidth, frHeight, colour, Color.RED);
-            frameGroup.getChildren().add(plane);
-
         }
 
-        var longitudinalGroup = new Group();
-        longitudinalGroup.setId("longitudinalGroup");
-        refPlanesGroup.getChildren().add(longitudinalGroup);
+        if ( coosys.getYRefPlanes() !=null && coosys.getYRefPlanes().getRefPlanes() != null) {
+            LOG.info("found {} longitudinal reference planes", coosys.getYRefPlanes().getRefPlanes().size());
+            var longitudinalGroup = new Group();
+            longitudinalGroup.setId("longitudinalGroup");
+            refPlanesGroup.getChildren().add(longitudinalGroup);
 
-        final List<RefPlane>  longitudinals = coosys.getYRefPlanes().getRefPlanes();
-        for( int i =0; i < longitudinals.size();i++) {
-            var refPlane  = longitudinals.get(i);
-            if ( ! refPlane.isDisplayGrid()) {
-                continue;
+            final List<RefPlane> longitudinals = coosys.getYRefPlanes().getRefPlanes();
+            for (int i = 0; i < longitudinals.size(); i++) {
+                var refPlane = longitudinals.get(i);
+                if (!refPlane.isDisplayGrid()) {
+                    continue;
+                }
+                var y = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
+                y /= 1000.0f;
+
+                var colour = Color.YELLOW;
+                if (Math.abs(y) < 0.01) {
+                    colour = centerLPColour;
+                } else if (y > 0) {
+                    colour = (i % 2 == 0 ? evenLPPSColour : oddLPPSColour);
+                } else {
+                    colour = (i % 2 == 0 ? evenLPSBColour : oddLPPSBColour);
+                }
+                var plane = new Plane3D(refPlane.getName() + " (" + refPlane.getName() + ")", new Point3d(0, y, height / 2.0 + 2), new Vector3d(0, 1, 0),
+                        frWidth, frHeight, colour, Color.RED);
+                longitudinalGroup.getChildren().add(plane);
+
             }
-            var y = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
-            y /=1000.0f;
-
-            var colour =Color.YELLOW;
-            if( Math.abs(y) < 0.01) {
-                colour= centerLPColour;
-            } else if ( y > 0) {
-                colour = (i%2==0? evenLPPSColour : oddLPPSColour);
-            } else {
-                colour = (i%2==0? evenLPSBColour : oddLPPSBColour);
-            }
-            var plane = new Plane3D( refPlane.getName() + " (" + refPlane.getName() + ")", new Point3D(0, y, height/2.0+2), new Point3D(0, 1, 0),
-                    frWidth, frHeight, colour, Color.RED);
-            longitudinalGroup.getChildren().add(plane);
-
         }
 
         threeDView.addGroupToWorld(refPlanesGroup);

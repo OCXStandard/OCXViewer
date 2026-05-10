@@ -55,6 +55,14 @@
     /* even colour, odd colour */
     -fx-border-color: -color-chart-4-alpha70 -color-chart-5-alpha70 -color-success-2 -color-success-2;
 }
+#surfaces {
+    /* the surface colour */
+    -fx-background-color: rgba(65, 169, 201, 0.45);
+    /* points, line1, line2 */
+    -fx-border-color: -color-chart-4 -color-chart-1 -color-chart-3 -color-success-2;
+
+}
+
 
 /** some specific pages */
 

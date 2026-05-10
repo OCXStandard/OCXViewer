@@ -33,6 +33,8 @@ import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.ocx_schema.v310.QuantityT;
 
 import java.util.ArrayList;
@@ -77,9 +79,24 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
 
         titelLabel = new Label("3D View");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(titelLabel, 2, row, 2, 1);
+        gridPane.add(titelLabel, 2, row, 1, 1);
         GridPane.setHalignment(titelLabel, HPos.LEFT);
         GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+
+
+        var viewButton = new Button(null ,new FontIcon(MaterialDesignA.AXIS_ARROW));
+        viewButton.setTooltip(new Tooltip("View the coordinate system in a 3D view"));
+        viewButton.getStyleClass().addAll(
+                Styles.BUTTON_ICON, Styles.ACCENT
+        );
+        gridPane.add(viewButton, 3, row, 1, 1);
+        viewButton.setOnAction(e -> {
+            var robert = new ArrayList<>(getBreadcrumbs());
+            robert.add(new BreadcrumbRecord("3D View " + coosys.getId(), CoordinateSystem3DViewPage.class, null, getObject()));
+
+            var event = new SelectionEvent(robert);
+            DefaultEventBus.getInstance().publish(event);
+        });
 
 
         label = new Label("Id");
@@ -90,16 +107,7 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         bindToBean(textField.textProperty(), coosys, "id", String.class);
 
 
-        var link = new Hyperlink("View Coordinate System ...");
-        link.setTooltip(new Tooltip("View the coordinate system in a 3D view"));
-        gridPane.add(link, 2, row, 2, 1);
-        link.setOnAction(e -> {
-            var robert = new ArrayList<>(getBreadcrumbs());
-            robert.add(new BreadcrumbRecord("3D View " + coosys.getId(), CoordinateSystem3DViewPage.class, null, getObject()));
 
-            var event = new SelectionEvent(robert);
-            DefaultEventBus.getInstance().publish(event);
-        });
 
 
 
