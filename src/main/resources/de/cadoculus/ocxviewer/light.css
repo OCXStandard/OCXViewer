@@ -76,15 +76,34 @@
     -fx-background-radius: 10 20 30 40;
 }
 
+#Surface3DCollectionPage {
+    -fx-padding: 0 0 0 0;
+}
+
+#Surface3DCollectionPage__3DView {
+    -fx-padding: 0 0 0 0;
+    -fx-border-radius: 10 20 30 40;
+    -fx-background-radius: 10 20 30 40;
+}
+
 /** general rules */
 
 #infoPaneContainer {
     -fx-background-color: rgba(255, 255, 255, 0.85);
-    -fx-background-radius: 25px;
+    -fx-background-radius: 10px;
     -fx-border-color: rgba(200, 200, 200, 0.5);
     -fx-border-width: 1px;
-    -fx-border-radius: 25px;
+    -fx-border-radius: 10px;
     -fx-padding: 14px 16px 14px 16px;
+}
+
+#legendContainer {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 10px;
+    -fx-border-color: rgba(200, 200, 200, 0.5);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px 12px 10px 12px;
 }
 
 .text-field {

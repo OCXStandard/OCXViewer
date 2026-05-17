@@ -15,56 +15,38 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.views;
 
-import atlantafx.base.controls.CustomTextField;
-import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
-import de.cadoculus.ocxviewer.event.SelectionEvent;
 import de.cadoculus.ocxviewer.event.ThemeEvent;
 import de.cadoculus.ocxviewer.geom.CurveGeometry;
 import de.cadoculus.ocxviewer.geom.GeomHelper;
 import de.cadoculus.ocxviewer.geom.GeometryQuality;
 import de.cadoculus.ocxviewer.geom.PolygonSimplifier;
 import de.cadoculus.ocxviewer.models.CSSRecord;
-import de.cadoculus.ocxviewer.models.BreadcrumbRecord;
+import de.cadoculus.ocxviewer.models.ObjectType;
+import de.cadoculus.ocxviewer.models.TargetType;
 import de.cadoculus.ocxviewer.models.WorkingContext;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
+import de.cadoculus.ocxviewer.utils.ColourManager;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import jakarta.xml.bind.JAXBElement;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import net.jgeom.nurbs.ControlPoint4f;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxyz3d.shapes.composites.PolyLine3D;
-import net.jgeom.nurbs.ControlPoint4f;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
 import org.ocx_schema.v310.*;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Point3f;
 import javax.vecmath.Point2d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -84,6 +66,8 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
     // Options for rendering
     private boolean showBoundary = true;
     private boolean limitSurfacesByBoundary = false;
+    private boolean showShipGrid = true;
+    private boolean skipAutoViewOnNextDraw = false;
 
     public Surface3DCollectionPage(SurfaceCollection collection, Page parent) {
         super(collection, parent, "3D View of Surface Collection «" + collection.getId() + "»");
@@ -114,10 +98,16 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
         threeDView.addSurfaceCollectionOptions(
                 showBoundary -> {
                     this.showBoundary = showBoundary;
+                    this.skipAutoViewOnNextDraw = true;
+                    updatedStyle();
                     drawSurfaceCollection();
                 },
                 limitByBoundary -> {
                     this.limitSurfacesByBoundary = limitByBoundary;
+                    drawSurfaceCollection();
+                },
+                showShipGrid -> {
+                    this.showShipGrid = showShipGrid;
                     drawSurfaceCollection();
                 }
         );
@@ -132,6 +122,10 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
     private void drawSurfaceCollection() {
         threeDView.clear();
 
+        if (showShipGrid) {
+            drawShipGrid();
+        }
+
         surfaceGroup = new Group();
         surfaceGroup.setId("surfaces");
 
@@ -141,6 +135,68 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
         threeDView.addGroupToWorld(surfaceGroup, linesGroup);
 
         render(getObject());
+    }
+
+    private void drawShipGrid() {
+        var vessel = WorkingContext.getInstance().getVessel();
+        if (vessel == null || vessel.getCoordinateSystems() == null || vessel.getCoordinateSystems().isEmpty()) {
+            LOG.debug("No vessel/coordinate systems available for ship grid in surface collection view");
+            return;
+        }
+
+        CoordinateSystem coosys = vessel.getCoordinateSystems().stream()
+                .filter(cs -> cs != null && cs.isIsGlobal())
+                .findFirst()
+                .orElse(vessel.getCoordinateSystems().getFirst());
+
+        if (coosys == null || coosys.getXRefPlanes() == null || coosys.getXRefPlanes().getRefPlanes() == null || coosys.getXRefPlanes().getRefPlanes().isEmpty()) {
+            LOG.debug("No usable X reference planes for ship grid in coordinate system {}",
+                    coosys != null ? coosys.getId() : "<null>");
+            return;
+        }
+
+        double minX = -10;
+        double maxX = 150;
+        double breadth = 40;
+        double height = 30;
+
+        for (var rp : coosys.getXRefPlanes().getRefPlanes()) {
+            if (rp == null || !rp.isDisplayGrid() || rp.getReferenceLocation() == null) {
+                continue;
+            }
+            double x = UnitHelper.toDefaultUnit(rp.getReferenceLocation()) / 1000.0;
+            minX = Math.min(x, minX);
+            maxX = Math.max(x, maxX);
+        }
+
+        minX -= 0.1 * Math.abs(maxX);
+        maxX += 0.1 * Math.abs(maxX);
+
+        if (coosys.getYRefPlanes() != null && coosys.getYRefPlanes().getRefPlanes() != null) {
+            for (var rp : coosys.getYRefPlanes().getRefPlanes()) {
+                if (rp == null || !rp.isDisplayGrid() || rp.getReferenceLocation() == null) {
+                    continue;
+                }
+                breadth = Math.max(UnitHelper.toDefaultUnit(rp.getReferenceLocation()) / 500.0, breadth);
+            }
+            breadth *= 1.1;
+        } else {
+            breadth = maxX * 0.2;
+        }
+
+        if (coosys.getZRefPlanes() != null && coosys.getZRefPlanes().getRefPlanes() != null) {
+            for (var rp : coosys.getZRefPlanes().getRefPlanes()) {
+                if (rp == null || !rp.isDisplayGrid() || rp.getReferenceLocation() == null) {
+                    continue;
+                }
+                height = Math.max(UnitHelper.toDefaultUnit(rp.getReferenceLocation()) / 10000.0, height);
+            }
+        } else {
+            height = maxX * 0.2;
+        }
+
+        LOG.debug("Draw ship grid in Surface3DCollectionPage: x {}..{}, b {}, h {}", minX, maxX, breadth, height);
+        threeDView.drawCoordinateSystem(minX, maxX, breadth, height);
     }
 
     /**
@@ -155,6 +211,7 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
         var allBounds = new ArrayList<Point3d>();
 
         // Render each surface in the collection
+        var legends = new HashSet<ThreeDView.LegendEntry>();
         for (JAXBElement<? extends SurfaceT> surfaceElement : collection.getSurfaces()) {
             if (surfaceElement == null || surfaceElement.getValue() == null) {
                 continue;
@@ -163,7 +220,10 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
             SurfaceT surface = surfaceElement.getValue();
 
             // Render the surface itself
-            renderIndividualSurface(surface);
+            var entry = renderIndividualSurface(surface);
+            if ( entry != null) {
+                legends.add(entry);
+            }
 
             // If there's a FaceBoundaryCurve, render it as a boundary line
             if (surface.getFaceBoundaryCurve() != null) {
@@ -178,27 +238,36 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
         }
 
         // Set camera view to show all surfaces
-        if (!allBounds.isEmpty()) {
+        if (!skipAutoViewOnNextDraw && !allBounds.isEmpty()) {
             setViewForBounds(allBounds);
+        }
+        skipAutoViewOnNextDraw = false;
+        if ( ! legends.isEmpty()) {
+            threeDView.setLegend(legends.stream().sorted((o1, o2) -> o1.name().compareTo(o2.name())).toList());
         }
     }
 
     /**
      * Render individual surface based on its type
      */
-    private void renderIndividualSurface(SurfaceT surface) {
+    private ThreeDView.LegendEntry  renderIndividualSurface(SurfaceT surface) {
         try {
-            switch (surface) {
+        var legend =  switch (surface) {
                 case NURBSSurfaceT nurbsSurface -> renderNURBSSurface(nurbsSurface);
-                case Cylinder3DT cylinder -> renderCylinder(cylinder);
-                case Cone3DT cone -> renderCone(cone);
+                case Cylinder3DT cylinder ->  renderCylinder(cylinder);
+                case Cone3DT cone ->  renderCone(cone);
                 case Sphere3DT sphere -> renderSphere(sphere);
                 case ExtrudedSurfaceT extrudedSurface -> renderExtrudedSurface(extrudedSurface);
                 case Plane3DT plane -> renderPlane(plane);
-                default -> LOG.warn("Unsupported surface type in collection: {}", surface.getClass().getName());
-            }
+                default -> {
+                    LOG.warn("Unsupported surface type in collection: {}", surface.getClass().getName());
+                    yield null;
+                }
+            };
+            return legend;
         } catch (Exception exp) {
             LOG.error("Error rendering surface {}: {}", surface.getId(), exp.getMessage(), exp);
+            return null;
         }
     }
 
@@ -326,13 +395,13 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
     // Delegate rendering to appropriate methods (simplified - actual implementation would
     // reference the implementations from Surface3DViewPage)
 
-    private void renderNURBSSurface(NURBSSurfaceT nurbsSurface) {
+    private ThreeDView.LegendEntry renderNURBSSurface(NURBSSurfaceT nurbsSurface) {
         LOG.debug("Rendering NURBS surface {} in collection", nurbsSurface.getId());
         try {
             GeomHelper.checkNURBS(nurbsSurface);
         } catch (IllegalArgumentException exp) {
             LOG.warn("NURBS validation failed for {}: {}", nurbsSurface.getId(), exp.getMessage());
-            return;
+            return null;
         }
 
         final int numCtrlPtsU = (int) nurbsSurface.getUNURBSproperties().getNumCtrlPts();
@@ -411,7 +480,18 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
             }
 
             var meshView = new javafx.scene.shape.MeshView(mesh);
-            meshView.setMaterial(surfaceMaterial);
+
+            var key = "NURBS ";
+            key += StringUtils.isNoneEmpty(nurbsSurface.getName()) ? nurbsSurface.getId() : ", no name";
+            key += StringUtils.isNoneEmpty(nurbsSurface.getId()) ? nurbsSurface.getId() : ", no ID";
+
+            var colour = ColourManager.getColour(key, ObjectType.SURFACE, TargetType.SURFACE, false);
+            final PhongMaterial material = new PhongMaterial();
+            material.setDiffuseColor(colour);
+            material.setSpecularColor(Color.gray(0.1));
+            material.setSpecularPower(8);
+            meshView.setMaterial(material);
+
             meshView.setCullFace(javafx.scene.shape.CullFace.NONE);
             meshView.setOnMouseClicked(event -> {
                 LOG.info("Selected surface: {} ({})", nurbsSurface.getName(), nurbsSurface.getId());
@@ -446,13 +526,17 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
                 }
             }
 
-            threeDView.setView(center, new Vector3d(0, 1, 0), Math.max(2.0 * maxDist, 5.0));
+            //threeDView.setView(center, new Vector3d(0, 1, 0), Math.max(2.0 * maxDist, 5.0));
+
+            return new ThreeDView.LegendEntry(key, colour);
+
         } catch (Exception exp) {
             LOG.error("Error rendering NURBS surface {}: {}", nurbsSurface.getId(), exp.getMessage(), exp);
+            return null;
         }
     }
 
-    private void renderCylinder(Cylinder3DT cylinder) {
+    private ThreeDView.LegendEntry renderCylinder(Cylinder3DT cylinder) {
         LOG.debug("Rendering cylinder {} in collection", cylinder.getId());
         try {
             var origin = UnitHelper.toDefaultUnit(cylinder.getOrigin());
@@ -468,6 +552,17 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
             double radius = UnitHelper.toDefaultUnit(cylinder.getRadius()) / 1000.0;
             double height = UnitHelper.toDefaultUnit(cylinder.getHeight()) / 1000.0;
 
+
+            var key = "Cylinder ";
+            key += StringUtils.isNoneEmpty(cylinder.getName()) ? cylinder.getId() : ", no name";
+            key += StringUtils.isNoneEmpty(cylinder.getId()) ? cylinder.getId() : ", no ID";
+
+            Color colour = ColourManager.getColour(key, ObjectType.SURFACE, TargetType.SURFACE, false);
+            if (colour == null || colour.equals(Color.BLACK)) {
+                colour = surfaceColour;
+            }
+
+
             var cyl = new de.cadoculus.ocxviewer.views.threed.Cylinder3D(
                     cylinder.getId(),
                     origin.x, origin.y, origin.z,
@@ -477,7 +572,7 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
                                     "[li]Radius: %.2f[/li]" +
                                     "[li]Height: %.2f[/li][/ul]",
                             cylinder.getId(), radius, height),
-                    surfaceColour);
+                    colour);
 
             // Add click handler to show surface name/info
             cyl.setOnMouseClicked(event -> {
@@ -487,14 +582,26 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
             });
 
             surfaceGroup.getChildren().add(cyl);
+
+            return new ThreeDView.LegendEntry(key, colour);
         } catch (Exception exp) {
             LOG.error("Error rendering cylinder {}: {}", cylinder.getId(), exp.getMessage());
         }
+        return null;
     }
 
-    private void renderCone(Cone3DT cone) {
+    private ThreeDView.LegendEntry renderCone(Cone3DT cone) {
         LOG.debug("Rendering cone {} in collection", cone.getId());
         try {
+            var key = "Cone ";
+            key += StringUtils.isNoneEmpty(cone.getName()) ? cone.getId() : ", no name";
+            key += StringUtils.isNoneEmpty(cone.getId()) ? cone.getId() : ", no ID";
+
+            Color colour = ColourManager.getColour(key, ObjectType.SURFACE, TargetType.SURFACE, false);
+            if (colour == null || colour.equals(Color.BLACK)) {
+                colour = surfaceColour;
+            }
+
             var origin = UnitHelper.toDefaultUnit(cone.getOrigin());
             origin.scale(1 / 1000.0);
 
@@ -515,7 +622,7 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
                                     "[li]Base radius: %.2f[/li]" +
                                     "[li]Tip radius: %.2f[/li][/ul]",
                             cone.getId(), baseRadius, tipRadius),
-                    surfaceColour);
+                    colour);
 
             // Add click handler
             cone3D.setOnMouseClicked(event -> {
@@ -525,21 +632,33 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
             });
 
             surfaceGroup.getChildren().add(cone3D);
+
+            return new ThreeDView.LegendEntry(key,colour);
         } catch (Exception exp) {
             LOG.error("Error rendering cone {}: {}", cone.getId(), exp.getMessage());
         }
+        return null;
     }
 
-    private void renderSphere(Sphere3DT sphere) {
+    private ThreeDView.LegendEntry renderSphere(Sphere3DT sphere) {
         LOG.debug("Rendering sphere {} in collection", sphere.getId());
         try {
+            var key = "Sphere ";
+            key += StringUtils.isNoneEmpty(sphere.getName()) ? sphere.getId() : ", no name";
+            key += StringUtils.isNoneEmpty(sphere.getId()) ? sphere.getId() : ", no ID";
+
+            Color colour = ColourManager.getColour(key, ObjectType.SURFACE, TargetType.SURFACE, false);
+            if (colour == null || colour.equals(Color.BLACK)) {
+                colour = surfaceColour;
+            }
+
             var radius = UnitHelper.toDefaultUnit(sphere.getRadius()) / 1000.0;
             var origin3DT = sphere.getOrigin();
             var origin = UnitHelper.toDefaultUnit(origin3DT);
             origin.scale(1/1000.0);
 
             var sphere3D = new de.cadoculus.ocxviewer.views.threed.Sphere3D(sphere.getName(), radius, origin.x, origin.y, origin.z,
-                    "center point at " + origin, surfaceColour);
+                    "center point at " + origin, colour);
 
             // Add click handler
             sphere3D.setOnMouseClicked(event -> {
@@ -549,19 +668,27 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
             });
 
             surfaceGroup.getChildren().add(sphere3D);
+
+            return new ThreeDView.LegendEntry(key, colour);
         } catch (Exception exp) {
             LOG.error("Error rendering sphere {}: {}", sphere.getId(), exp.getMessage());
         }
+        return null;
     }
 
-    private void renderExtrudedSurface(ExtrudedSurfaceT extrudedSurface) {
+    private ThreeDView.LegendEntry renderExtrudedSurface(ExtrudedSurfaceT extrudedSurface) {
         LOG.debug("Rendering extruded surface {} in collection", extrudedSurface.getId());
         try {
             final var basePolygon = resolveBasePolygon(extrudedSurface);
             if (basePolygon == null || basePolygon.size() < 3) {
                 LOG.warn("Cannot render extruded surface {}: invalid base polygon", extrudedSurface.getId());
-                return;
+                return null;
             }
+            var key = "Extruded Surface ";
+            key += StringUtils.isNoneEmpty(extrudedSurface.getName()) ? extrudedSurface.getId() : ", no name";
+            key += StringUtils.isNoneEmpty(extrudedSurface.getId()) ? extrudedSurface.getId() : ", no ID";
+
+            var colour = ColourManager.getColour(key, ObjectType.SURFACE, TargetType.SURFACE, false);
 
             boolean closedBaseCurve = isClosedPolygon(basePolygon);
             var meshBasePolygon = closedBaseCurve
@@ -571,7 +698,7 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
             var sweepVector = resolveSweepVector(extrudedSurface);
             if (sweepVector == null || sweepVector.lengthSquared() < 1e-12) {
                 LOG.warn("Cannot render extruded surface {}: invalid sweep vector", extrudedSurface.getId());
-                return;
+                return null;
             }
 
             var topPolygon = new ArrayList<Point3d>(meshBasePolygon.size());
@@ -611,7 +738,11 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
             }
 
             var meshView = new javafx.scene.shape.MeshView(mesh);
-            meshView.setMaterial(surfaceMaterial);
+
+            final PhongMaterial material = new PhongMaterial();
+            material.setDiffuseColor(colour);
+
+            meshView.setMaterial(material);
             meshView.setCullFace(javafx.scene.shape.CullFace.NONE);
             meshView.setOnMouseClicked(event -> {
                 LOG.info("Selected surface: {} ({})", extrudedSurface.getName(), extrudedSurface.getId());
@@ -648,15 +779,25 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
                 radius = Math.max(radius, p.distance(center));
             }
             double sweepLength = sweepVector.length();
-            threeDView.setView(center, viewDirection, Math.max(2.0 * radius, 2.0 * sweepLength));
+
+            return new ThreeDView.LegendEntry(key, colour);
+
         } catch (Exception exp) {
             LOG.error("Error rendering extruded surface {}: {}", extrudedSurface.getId(), exp.getMessage(), exp);
         }
+        return null;
     }
 
-    private void renderPlane(Plane3DT plane) {
+    private ThreeDView.LegendEntry  renderPlane(Plane3DT plane) {
         LOG.debug("Rendering plane {} in collection", plane.getId());
         try {
+
+            var key = "Plane ";
+            key += StringUtils.isNoneEmpty(plane.getName()) ? plane.getId() : ", no name";
+            key += StringUtils.isNoneEmpty(plane.getId()) ? plane.getId() : ", no ID";
+
+            var colour = ColourManager.getColour(key, ObjectType.SURFACE, TargetType.SURFACE, false);
+
             final Vector3DT normal3DT = plane.getNormal();
             var normal = new Vector3d(normal3DT.getDirections().get(0), normal3DT.getDirections().get(1), normal3DT.getDirections().get(2));
             normal.normalize();
@@ -676,22 +817,25 @@ public class Surface3DCollectionPage extends AbstractDataViewSubPage<SurfaceColl
                         event.consume();
                     });
                     surfaceGroup.getChildren().add(boundaryMesh);
-                    return;
+                    return null;
                 }
                 LOG.warn("Plane {} has FaceBoundaryCurve but triangulation failed; fallback to rectangular Plane3D", plane.getId());
             }
 
             var plane3D = new de.cadoculus.ocxviewer.views.threed.Plane3D(
-                    plane.getName(), origin, normal, 10, 10, surfaceColour, Color.RED);
+                    plane.getName(), origin, normal, 10, 10, colour, Color.RED);
             plane3D.setOnMouseClicked(event -> {
                 LOG.info("Selected surface: {} ({})", plane.getName(), plane.getId());
                 threeDView.showInformationProvider(new SurfaceInformationProvider(plane));
                 event.consume();
             });
             surfaceGroup.getChildren().add(plane3D);
+
+            return new ThreeDView.LegendEntry(key, colour);
         } catch (Exception exp) {
             LOG.error("Error rendering plane {}: {}", plane.getId(), exp.getMessage(), exp);
         }
+        return null;
     }
 
     private javafx.scene.shape.MeshView createPlanarBoundaryMesh(List<Point3d> rawBoundaryPoints, Vector3d planeNormal) {

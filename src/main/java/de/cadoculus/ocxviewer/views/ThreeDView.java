@@ -35,6 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.*;
 import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
@@ -48,8 +49,8 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignF;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
 
 import javax.vecmath.Vector3d;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Optional;
 
 import static javafx.scene.input.KeyCombination.*;
 
@@ -69,8 +70,11 @@ class ThreeDView extends BorderPane {
     private static final double ZOOM_CURSOR_DELTA_THRESHOLD = 1.0;
     private static final double KEYBOARD_ZOOM_DELTA = 8.0;
     private static final double KEYBOARD_PAN_DELTA = 25.0;
-    private static final double KEYBOARD_ROTATIONS_STEP_DEG = 30.0;
-    private static final Point3D WORLD_UP = new Point3D(0, 0, 1);
+    private static final double KEYBOARD_ROTATIONS_STEP_DEG = 10.0;
+    private static final Point3D WORLD_X = new Point3D(1, 0, 0);
+    private static final Point3D WORLD_Y = new Point3D(0, 1, 0);
+    private static final Point3D WORLD_Z = new Point3D(0, 0, 1);
+    private static final Point3D WORLD_UP = WORLD_Z;
     private static final double MAX_PITCH_DEG = 85.0;
     private static final double MIN_CAMERA_PIVOT_DISTANCE = 1e-3;
     private static final double BILLBOARD_SCALE = 0.01;
@@ -110,7 +114,15 @@ class ThreeDView extends BorderPane {
     private double csMinX, csMaxX, csBreadth, csHeight;
     private boolean csInitialized = false;
     private MainPlane currentGridPlane = MainPlane.UNDEFINED;
+    private Group coordinateSystemGroup;
+    private final EnumMap<MainPlane, Group> coordinateSystemVariants = new EnumMap<>(MainPlane.class);
     private final java.util.ArrayList<Affine> csBillboardAffines = new java.util.ArrayList<>();
+    private VBox legendContainer;
+    private ScrollPane legendScrollPane;
+    private FontIcon legendToggleIcon;
+    private boolean legendVisibleByUser = true;
+
+    record LegendEntry(String name, Color colour) {}
 
     public ThreeDView() {
         updatedStyle();
@@ -318,18 +330,33 @@ class ThreeDView extends BorderPane {
         infoPaneContainer.setMaxWidth(200);
         infoPaneContainer.setMinHeight(VBox.USE_PREF_SIZE);
         infoPaneContainer.setMaxHeight(VBox.USE_PREF_SIZE);
-        infoPaneContainer.setStyle(
-                "-fx-background-color: rgba(255,255,255,0.85);" +
-                        "-fx-background-radius: 10px;" +
-                        "-fx-border-color: rgba(200,200,200,0.5);" +
-                        "-fx-border-width: 1px;" +
-                        "-fx-border-radius: 10px;" +
-                        "-fx-padding: 14px 16px 14px 16px;"
-        );
         infoPaneContainer.setMouseTransparent(true);
         infoPaneContainer.setManaged(false);
         infoPaneContainer.setVisible(false);
 
+        var legendBox = new VBox(6);
+        legendBox.setId("legendContainer");
+        legendBox.setMinWidth(150);
+        legendBox.setPrefWidth(200);
+        legendBox.setMouseTransparent(false);
+
+        var legendScroll = new ScrollPane(legendBox);
+        legendScroll.setId("legendScrollPane");
+        legendScroll.setFitToWidth(true);
+        legendScroll.setFitToHeight(false);
+        legendScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        legendScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        legendScroll.setMinWidth(150);
+        legendScroll.setMaxWidth(250);
+        legendScroll.setMinHeight(120);
+        legendScroll.setPrefViewportHeight(220);
+        legendScroll.setPrefHeight(220);
+        legendScroll.setMaxHeight(220);
+        legendScroll.setMouseTransparent(false);
+        legendScroll.setManaged(false);
+        legendScroll.setVisible(false);
+        legendContainer = legendBox;
+        legendScrollPane = legendScroll;
 
         // Use a SubScene
         subScene = new SubScene(root, 300, 300, true, SceneAntialiasing.BALANCED);
@@ -485,7 +512,7 @@ class ThreeDView extends BorderPane {
                 amount *= event.isControlDown() ? 0.1 : 1;
                 amount *= event.isShiftDown() ? -1 : 1;
 
-                rotateAroundCurrentRightAxis(amount);
+                rotateAroundGlobalAxis(WORLD_X, amount);
                 event.consume();
                 return;
             }
@@ -494,7 +521,7 @@ class ThreeDView extends BorderPane {
                 amount *= event.isControlDown() ? 0.1 : 1;
                 amount *= event.isShiftDown() ? -1 : 1;
 
-                pitchAroundCurrentViewAxis(amount);
+                rotateAroundGlobalAxis(WORLD_Y, amount);
                 event.consume();
                 return;
             }
@@ -503,7 +530,7 @@ class ThreeDView extends BorderPane {
                 amount *= event.isControlDown() ? 0.1 : 1;
                 amount *= event.isShiftDown() ? -1 : 1;
 
-                rotateAroundCurrentVerticalAxis(amount);
+                rotateAroundGlobalAxis(WORLD_Z, amount);
                 event.consume();
                 return;
             }
@@ -592,13 +619,16 @@ class ThreeDView extends BorderPane {
         SubSceneResizer subSceneHost = new SubSceneResizer(subScene);
         subSceneHost.setMinSize(0, 0);
 
-        StackPane overlayPane = new StackPane(subSceneHost, infoPaneContainer, cornerOverlaySubScene);
+        StackPane overlayPane = new StackPane(subSceneHost, infoPaneContainer, legendScroll, cornerOverlaySubScene);
         infoPaneContainer.toFront();
         overlayPane.setMinSize(0, 0);
         setMinSize(0, 0);
         overlayPane.setPickOnBounds(false);
         StackPane.setAlignment(infoPaneContainer, Pos.TOP_LEFT);
         StackPane.setMargin(infoPaneContainer, new Insets(10, 0, 0, 10));
+        StackPane.setAlignment(legendScroll, Pos.TOP_RIGHT);
+        // Place legend below the top-right orientation/view control box.
+        StackPane.setMargin(legendScroll, new Insets(120, 10, 0, 0));
         StackPane.setAlignment(cornerOverlaySubScene, Pos.TOP_RIGHT);
         StackPane.setMargin(cornerOverlaySubScene, new Insets(10, 10, 0, 0));
         setCenter(overlayPane);
@@ -653,6 +683,22 @@ class ThreeDView extends BorderPane {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        legendToggleIcon = new FontIcon(MaterialDesignE.EYE_OUTLINE);
+        var legendToggleButton = new Button("Legend", legendToggleIcon);
+        legendToggleButton.setTooltip(new Tooltip("Toggle Legend Visibility"));
+        legendToggleButton.setOnAction(_ -> {
+            if (legendContainer != null && legendScrollPane != null && !legendContainer.getChildren().isEmpty()) {
+                legendVisibleByUser = !legendVisibleByUser;
+                legendScrollPane.setVisible(legendVisibleByUser);
+                legendScrollPane.setManaged(legendVisibleByUser);
+                legendContainer.setVisible(legendVisibleByUser);
+                legendContainer.setManaged(legendVisibleByUser);
+                legendToggleIcon.setIconCode(legendVisibleByUser
+                        ? MaterialDesignE.EYE_OUTLINE
+                        : MaterialDesignE.EYE_OFF_OUTLINE);
+            }
+        });
+
         skyboxToggleIcon = new FontIcon(MaterialDesignE.EYE_OUTLINE);
         var skyboxToggleButton = new Button("Skybox", skyboxToggleIcon);
         skyboxToggleButton.setTooltip(new Tooltip("Toggle Skybox Visibility"));
@@ -664,7 +710,7 @@ class ThreeDView extends BorderPane {
                     : MaterialDesignE.EYE_OFF_OUTLINE);
         });
 
-        bottomBar = new ToolBar(pickCoordinateLabel, new Separator(), spacer, skyboxToggleButton);
+        bottomBar = new ToolBar(pickCoordinateLabel, new Separator(), spacer, legendToggleButton, new Separator(), skyboxToggleButton);
         bottomBar.getStyleClass().add("three-d-view-bottom-toolbar");
         setBottom(bottomBar);
 
@@ -803,37 +849,14 @@ class ThreeDView extends BorderPane {
         }
     }
 
-    private void rotateAroundCurrentVerticalAxis(double angleDeg) {
+    private void rotateAroundGlobalAxis(Point3D axis, double angleDeg) {
         if (camera == null || camera.getTransforms().isEmpty()) {
             return;
         }
 
         var base = (Affine) camera.getTransforms().getFirst();
-        Point3D axis = normalize(new Point3D(base.getMxy(), base.getMyy(), base.getMzy()));
-        if (axis.magnitude() < 1e-6) {
-            axis = WORLD_UP;
-        }
-        Point3D pivot = pivotPoint != null ? pivotPoint : Point3D.ZERO;
-
-        Transform rotated = new Rotate(
-                angleDeg,
-                pivot.getX(),
-                pivot.getY(),
-                pivot.getZ(),
-                axis
-        ).createConcatenation(base);
-
-        setCameraAffine(new Affine(rotated));
-    }
-
-    private void rotateAroundCurrentRightAxis(double angleDeg) {
-        if (camera == null || camera.getTransforms().isEmpty()) {
-            return;
-        }
-
-        var base = (Affine) camera.getTransforms().getFirst();
-        Point3D axis = normalize(new Point3D(base.getMxx(), base.getMyx(), base.getMzx()));
-        if (axis.magnitude() < 1e-6) {
+        Point3D axisNorm = normalize(axis);
+        if (axisNorm.magnitude() < 1e-6) {
             return;
         }
         Point3D pivot = pivotPoint != null ? pivotPoint : Point3D.ZERO;
@@ -843,54 +866,7 @@ class ThreeDView extends BorderPane {
                 pivot.getX(),
                 pivot.getY(),
                 pivot.getZ(),
-                axis
-        ).createConcatenation(base);
-
-        setCameraAffine(new Affine(rotated));
-    }
-
-    private void pitchAroundCurrentRightAxis(double angleDeg) {
-        if (camera == null || camera.getTransforms().isEmpty()) {
-            return;
-        }
-
-        var base = (Affine) camera.getTransforms().getFirst();
-        Point3D axis = normalize(new Point3D(base.getMxx(), base.getMyx(), base.getMzx()));
-        if (axis.magnitude() < 1e-6) {
-            return;
-        }
-        Point3D pivot = pivotPoint != null ? pivotPoint : Point3D.ZERO;
-
-        Transform rotated = new Rotate(
-                angleDeg,
-                pivot.getX(),
-                pivot.getY(),
-                pivot.getZ(),
-                axis
-        ).createConcatenation(base);
-
-        setCameraAffine(new Affine(rotated));
-    }
-
-
-    private void pitchAroundCurrentViewAxis(double angleDeg) {
-        if (camera == null || camera.getTransforms().isEmpty()) {
-            return;
-        }
-
-        var base = (Affine) camera.getTransforms().getFirst();
-        Point3D axis = normalize(new Point3D(base.getMxz(), base.getMyz(), base.getMzz()));
-        if (axis.magnitude() < 1e-6) {
-            return;
-        }
-        Point3D pivot = pivotPoint != null ? pivotPoint : Point3D.ZERO;
-
-        Transform rotated = new Rotate(
-                angleDeg,
-                pivot.getX(),
-                pivot.getY(),
-                pivot.getZ(),
-                axis
+                axisNorm
         ).createConcatenation(base);
 
         setCameraAffine(new Affine(rotated));
@@ -1128,6 +1104,10 @@ class ThreeDView extends BorderPane {
             return;
         }
         affine.prependTranslation(move.getX(), move.getY(), move.getZ());
+        // Keep orbit center aligned with panning, otherwise the next rotation jumps back.
+        if (pivotPoint != null) {
+            pivotPoint = pivotPoint.add(move);
+        }
     }
 
     private void rotate(double deltaX, double deltaY) {
@@ -1513,13 +1493,24 @@ class ThreeDView extends BorderPane {
      * @param height  the height
      */
     public void drawCoordinateSystem(double minX, double maxX, double breadth, double height) {
+        invalidateCoordinateSystemGridCache();
         csMinX = minX;
         csMaxX = maxX;
         csBreadth = breadth;
         csHeight = height;
         csInitialized = true;
-        currentGridPlane = MainPlane.UNDEFINED;
         rebuildCoordinateSystemGrid();
+    }
+
+    private void invalidateCoordinateSystemGridCache() {
+        if (world != null && coordinateSystemGroup != null) {
+            world.getChildren().remove(coordinateSystemGroup);
+        }
+        billboardAffines.removeAll(csBillboardAffines);
+        csBillboardAffines.clear();
+        coordinateSystemVariants.clear();
+        coordinateSystemGroup = null;
+        currentGridPlane = MainPlane.UNDEFINED;
     }
 
     private void rebuildCoordinateSystemGrid() {
@@ -1530,30 +1521,38 @@ class ThreeDView extends BorderPane {
         MainPlane plane = GeomHelper.getMainPlane(viewDir);
         if (plane == MainPlane.UNDEFINED) plane = MainPlane.YPLANE;
 
-        if (plane == currentGridPlane) return;
-        currentGridPlane = plane;
+        if (coordinateSystemGroup == null) {
+            coordinateSystemGroup = new Group();
+            coordinateSystemGroup.setId("coordinate-system");
+            world.getChildren().add(coordinateSystemGroup);
 
-        final Optional<Node> gOpt = world.getChildren().stream()
-                .filter(c -> c instanceof Group g && "coordinate-system".equals(g.getId()))
-                .findFirst();
-        if (gOpt.isPresent()) {
-            world.getChildren().remove(gOpt.get());
+            int major = 10;
+            int minor = 5;
+
+            var yzGrid = new Group();
+            drawYZGrid(yzGrid, major, minor);
+            yzGrid.setVisible(false);
+            coordinateSystemVariants.put(MainPlane.XPLANE, yzGrid);
+            coordinateSystemGroup.getChildren().add(yzGrid);
+
+            var xzGrid = new Group();
+            drawXZGrid(xzGrid, major, minor);
+            xzGrid.setVisible(false);
+            coordinateSystemVariants.put(MainPlane.YPLANE, xzGrid);
+            coordinateSystemGroup.getChildren().add(xzGrid);
+
+            var xyGrid = new Group();
+            drawXYGrid(xyGrid, major, minor);
+            xyGrid.setVisible(false);
+            coordinateSystemVariants.put(MainPlane.ZPLANE, xyGrid);
+            coordinateSystemGroup.getChildren().add(xyGrid);
         }
-        billboardAffines.removeAll(csBillboardAffines);
-        csBillboardAffines.clear();
 
-        var cosysGroup = new Group();
-        cosysGroup.setId("coordinate-system");
-        world.getChildren().add(cosysGroup);
-
-        int major = 10;
-        int minor = 5;
-
-        switch (plane) {
-            case XPLANE -> drawYZGrid(cosysGroup, major, minor);
-            case YPLANE -> drawXZGrid(cosysGroup, major, minor);
-            case ZPLANE -> drawXYGrid(cosysGroup, major, minor);
-            default -> drawXZGrid(cosysGroup, major, minor);
+        if (plane != currentGridPlane) {
+            for (var entry : coordinateSystemVariants.entrySet()) {
+                entry.getValue().setVisible(entry.getKey() == plane);
+            }
+            currentGridPlane = plane;
         }
 
         updateBillboards(affine);
@@ -1694,6 +1693,11 @@ class ThreeDView extends BorderPane {
     private void drawXYGrid(Group g, int major, int minor) {
         double length = csMaxX - csMinX;
         double center = (csMaxX + csMinX) / 2.0;
+        double yTickZSign = -1.0;
+        if (camera != null && !camera.getTransforms().isEmpty() && camera.getTransforms().getFirst() instanceof Affine affine) {
+            // Ticks should point away from the viewer: in top view to -Z, in bottom view to +Z.
+            yTickZSign = affine.getMzz() < 0 ? -1.0 : 1.0;
+        }
 
         Box xLine = new Box(length, 0.1, 0.1);
         xLine.getTransforms().add(new Translate(center, 0, 0));
@@ -1721,7 +1725,7 @@ class ThreeDView extends BorderPane {
             double h = y % major == 0 ? 1 : 0.5;
 
             Box tick = new Box(0.1, 0.1, h);
-            tick.getTransforms().add(new Translate(0, y, -0.5 * h));
+            tick.getTransforms().add(new Translate(0, y, yTickZSign * 0.5 * h));
             tick.setMaterial(new PhongMaterial(lineColour));
             g.getChildren().add(tick);
             if (y % major == 0) {
@@ -1729,7 +1733,7 @@ class ThreeDView extends BorderPane {
             }
 
             Box tick2 = new Box(0.1, 0.1, h);
-            tick2.getTransforms().add(new Translate(0, -y, -0.5 * h));
+            tick2.getTransforms().add(new Translate(0, -y, yTickZSign * 0.5 * h));
             tick2.setMaterial(new PhongMaterial(lineColour));
             g.getChildren().add(tick2);
             if (y % major == 0) {
@@ -2061,6 +2065,53 @@ class ThreeDView extends BorderPane {
     public void clear() {
         world.getChildren().clear();
         billboardAffines.clear();
+        coordinateSystemVariants.clear();
+        coordinateSystemGroup = null;
+        csBillboardAffines.clear();
+        currentGridPlane = MainPlane.UNDEFINED;
+    }
+
+    /**
+     * Populate the legend panel with the given entries and make it visible.
+     * Passing {@code null} or an empty list hides the panel.
+     *
+     * @param entries list of name/colour pairs to display
+     */
+    public void setLegend(List<LegendEntry> entries) {
+        if (legendContainer == null || legendScrollPane == null) return;
+        legendContainer.getChildren().clear();
+
+        if (entries == null || entries.isEmpty()) {
+            legendContainer.setVisible(false);
+            legendContainer.setManaged(false);
+            legendScrollPane.setVisible(false);
+            legendScrollPane.setManaged(false);
+            if (legendToggleIcon != null) {
+                legendToggleIcon.setIconCode(MaterialDesignE.EYE_OFF_OUTLINE);
+            }
+            return;
+        }
+
+        for (LegendEntry entry : entries) {
+            Rectangle swatch = new Rectangle(14, 14, entry.colour());
+            swatch.setArcWidth(3);
+            swatch.setArcHeight(3);
+            Label nameLabel = new Label(entry.name());
+            nameLabel.setWrapText(false);
+            HBox row = new HBox(8, swatch, nameLabel);
+            row.setAlignment(Pos.CENTER_LEFT);
+            legendContainer.getChildren().add(row);
+        }
+
+        legendContainer.setManaged(legendVisibleByUser);
+        legendContainer.setVisible(legendVisibleByUser);
+        legendScrollPane.setManaged(legendVisibleByUser);
+        legendScrollPane.setVisible(legendVisibleByUser);
+        if (legendToggleIcon != null) {
+            legendToggleIcon.setIconCode(legendVisibleByUser
+                    ? MaterialDesignE.EYE_OUTLINE
+                    : MaterialDesignE.EYE_OFF_OUTLINE);
+        }
     }
 
     /**
@@ -2068,10 +2119,12 @@ class ThreeDView extends BorderPane {
      *
      * @param showBoundaryCallback   callback when "Show Boundary" is toggled
      * @param limitBySurfaceCallback callback when "Limit by Boundary" is toggled
+     * @param showGridCallback       callback when "Show Ship Grid" is toggled
      */
     public void addSurfaceCollectionOptions(
             java.util.function.Consumer<Boolean> showBoundaryCallback,
-            java.util.function.Consumer<Boolean> limitBySurfaceCallback) {
+            java.util.function.Consumer<Boolean> limitBySurfaceCallback,
+            java.util.function.Consumer<Boolean> showGridCallback) {
 
         if (bottomBar == null || bottomBar.getItems() == null) {
             return;
@@ -2096,6 +2149,15 @@ class ThreeDView extends BorderPane {
             }
         });
 
+        var gridCheckBox = new CheckBox("Show Ship Grid");
+        gridCheckBox.setSelected(true);
+        gridCheckBox.setTooltip(new Tooltip("Toggle visibility of ship coordinate grid"));
+        gridCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (showGridCallback != null) {
+                showGridCallback.accept(newVal);
+            }
+        });
+
         // Add checkboxes before the spacer (before the skybox button)
         int spacerIndex = bottomBar.getItems().indexOf(bottomBar.getItems().stream()
                 .filter(item -> item instanceof Region && HBox.getHgrow((Region) item) == Priority.ALWAYS)
@@ -2106,10 +2168,12 @@ class ThreeDView extends BorderPane {
             bottomBar.getItems().add(spacerIndex, new Separator(Orientation.VERTICAL));
             bottomBar.getItems().add(spacerIndex + 1, boundaryCheckBox);
             bottomBar.getItems().add(spacerIndex + 2, limitCheckBox);
+            bottomBar.getItems().add(spacerIndex + 3, gridCheckBox);
         } else {
             bottomBar.getItems().add(new Separator(Orientation.VERTICAL));
             bottomBar.getItems().add(boundaryCheckBox);
             bottomBar.getItems().add(limitCheckBox);
+            bottomBar.getItems().add(gridCheckBox);
         }
     }
 
@@ -2125,7 +2189,9 @@ class ThreeDView extends BorderPane {
         java.util.List<Control> toRemove = new java.util.ArrayList<>();
         for (Object item : bottomBar.getItems()) {
             if (item instanceof CheckBox checkbox &&
-                    (checkbox.getText().contains("Boundary") || checkbox.getText().contains("Limit"))) {
+                    (checkbox.getText().contains("Boundary")
+                            || checkbox.getText().contains("Limit")
+                            || checkbox.getText().contains("Grid"))) {
                 toRemove.add((Control) item);
             }
         }
@@ -2168,23 +2234,8 @@ class ThreeDView extends BorderPane {
             infoPaneFadeOut.stop();
         }
 
-        // Clear and update the info pane
-        infoPaneContainer.getChildren().clear();
-        infoPaneContainer.setVisible(true);
-        infoPaneContainer.setManaged(true);
-        infoPaneContainer.setOpacity(1.0);
-
-        Label titleLabel = new Label(provider.getName());
-        titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
-        titleLabel.setWrapText(true);
-
-        TextArea infoArea = new TextArea(provider.getInformation());
-        infoArea.setWrapText(true);
-        infoArea.setEditable(false);
-        infoArea.setPrefRowCount(5);
-        VBox.setVgrow(infoArea, Priority.ALWAYS);
-
-        infoPaneContainer.getChildren().addAll(titleLabel, new Separator(), infoArea);
+        // Use the same BBCode rendering path as hover-selection info.
+        updateInfoPane(provider);
 
         // Auto-hide info after 5 seconds
         PauseTransition hideDelay = new PauseTransition(Duration.seconds(5));

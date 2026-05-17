@@ -62,6 +62,11 @@ public class OCXViewerApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
         WorkingContext.getInstance().setMainScene(scene);
         stage.setTitle("OCX Viewer " + BuildVersion.getMvnVersion());
+        stage.getIcons().addAll(
+                new Image(OCXViewerApplication.class.getResourceAsStream("images/favicon-16x16.png")),
+                new Image(OCXViewerApplication.class.getResourceAsStream("images/favicon-32x32.png")),
+                new Image(OCXViewerApplication.class.getResourceAsStream("images/android-chrome-192x192.png"))
+        );
         stage.setMinHeight(600);
         stage.setMinWidth(1024);
         stage.setScene(scene);
