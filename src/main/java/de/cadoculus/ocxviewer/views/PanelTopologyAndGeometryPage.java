@@ -18,9 +18,13 @@ package de.cadoculus.ocxviewer.views;
 import atlantafx.base.theme.Styles;
 import de.cadoculus.ocxviewer.event.DefaultEventBus;
 import de.cadoculus.ocxviewer.event.SelectionEvent;
+import de.cadoculus.ocxviewer.event.ThemeEvent;
+import de.cadoculus.ocxviewer.geom.CurveGeometry;
+import de.cadoculus.ocxviewer.geom.GeometryQuality;
 import de.cadoculus.ocxviewer.geom.MainPlane;
 import de.cadoculus.ocxviewer.models.*;
 import de.cadoculus.ocxviewer.geom.GeomHelper;
+import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
 import jakarta.xml.bind.JAXBElement;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,10 +34,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.BoundingBox;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.fxyz3d.shapes.composites.PolyLine3D;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignB;
@@ -41,6 +48,7 @@ import org.ocx_schema.v310.*;
 
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -533,14 +541,99 @@ public class PanelTopologyAndGeometryPage extends AbstractDataViewSubPage<org.oc
         var tab = new Tab("Boundary Curve");
         tab.setClosable(false);
 
-        var warning = new atlantafx.base.controls.Message(
-                "Warning",
-                "Not implemented yet",
-                new FontIcon(MaterialDesignA.ALERT)
-        );
-        warning.getStyleClass().add(Styles.WARNING);
+        var outerContour = getObject().getOuterContour();
+        if (outerContour == null || outerContour.getCurve3Ds() == null || outerContour.getCurve3Ds().isEmpty()) {
+            var warning = new atlantafx.base.controls.Message(
+                    "Warning",
+                    "No Outer Contour found in this Panel",
+                    new FontIcon(MaterialDesignA.ALERT)
+            );
+            warning.getStyleClass().add(Styles.WARNING);
+            tab.setContent(warning);
+            return tab;
+        }
 
-        tab.setContent(warning);
+        var threeDView = new ThreeDView();
+        threeDView.setId("PanelBoundaryCurve3DView");
+        tab.setContent(threeDView);
+
+        Color[] boundaryColour = {Color.RED};
+        try {
+            CSSRecord cssRecord = CSSUtil.lookup("surfaces");
+            if (cssRecord.colour1() != null) {
+                boundaryColour[0] = cssRecord.colour1();
+            }
+        } catch (Exception exp) {
+            LOG.warn("failed to get colour from CSS for boundary curve, using default", exp);
+        }
+
+        Runnable drawBoundary = () -> {
+            threeDView.clear();
+
+            var linesGroup = new Group();
+            linesGroup.setId("boundaryCurves");
+            threeDView.addGroupToWorld(linesGroup);
+
+            var ocx = WorkingContext.getInstance().getOcx();
+            if (ocx == null) {
+                LOG.warn("No OCX context available for rendering boundary curve of panel {}", getObject().getId());
+                return;
+            }
+
+            var allPoints = new ArrayList<Point3d>();
+
+            for (JAXBElement<? extends Curve3DT> curveElement : outerContour.getCurve3Ds()) {
+                if (curveElement == null || curveElement.getValue() == null) {
+                    continue;
+                }
+                try {
+                    var curvePoints = CurveGeometry.toPoints(ocx, curveElement.getValue(), GeometryQuality.MEDIUM, false);
+                    var segmentPoints = new ArrayList<org.fxyz3d.geometry.Point3D>();
+                    for (var p : curvePoints) {
+                        var converted = new Point3d(p.x / 1000.0, p.y / 1000.0, p.z / 1000.0);
+                        allPoints.add(converted);
+                        segmentPoints.add(new org.fxyz3d.geometry.Point3D(converted.x, converted.y, converted.z));
+                    }
+                    if (!segmentPoints.isEmpty()) {
+                        linesGroup.getChildren().add(new PolyLine3D(segmentPoints, 2.0f, boundaryColour[0], PolyLine3D.LineType.RIBBON));
+                    }
+                } catch (Exception exp) {
+                    LOG.warn("Error rendering boundary curve segment for panel {}: {}", getObject().getId(), exp.getMessage());
+                }
+            }
+
+            if (!allPoints.isEmpty()) {
+                var center = new Point3d(0, 0, 0);
+                for (var p : allPoints) {
+                    center.x += p.x;
+                    center.y += p.y;
+                    center.z += p.z;
+                }
+                center.scale(1.0 / allPoints.size());
+
+                double maxDist = 0;
+                for (var p : allPoints) {
+                    maxDist = Math.max(maxDist, center.distance(p));
+                }
+
+                threeDView.setView(center, new Vector3d(0, 1, 0), Math.max(2.0 * maxDist, 1.0));
+            }
+        };
+
+        drawBoundary.run();
+
+        DefaultEventBus.getInstance().subscribe(ThemeEvent.class, event -> {
+            try {
+                CSSRecord cssRecord = CSSUtil.lookup("surfaces");
+                if (cssRecord.colour1() != null) {
+                    boundaryColour[0] = cssRecord.colour1();
+                }
+            } catch (Exception exp) {
+                LOG.warn("failed to update colour from CSS for boundary curve", exp);
+            }
+            drawBoundary.run();
+        });
+
         return tab;
     }
 

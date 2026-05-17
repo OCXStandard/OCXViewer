@@ -36,6 +36,7 @@ import javafx.scene.layout.RowConstraints;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
 import org.ocx_schema.v310.DescriptionBaseT;
 import org.ocx_schema.v310.SurfaceCollection;
@@ -111,9 +112,25 @@ public class SurfaceCollectionPage extends AbstractDataViewSubPage<SurfaceCollec
         //
         titelLabel = new Label("Surfaces");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
-        gridPane.add(titelLabel, 0, row++, 4, 1);
+        gridPane.add(titelLabel, 0, row, 3, 1);
         GridPane.setHalignment(titelLabel, HPos.LEFT);
         GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
+
+        // 3D View button for the surface collection
+        var viewButton = new Button(null, new FontIcon(MaterialDesignA.AXIS_ARROW));
+        viewButton.setTooltip(new Tooltip("View the surface collection in 3D"));
+        viewButton.getStyleClass().addAll(
+                Styles.BUTTON_ICON, Styles.ACCENT
+        );
+        gridPane.add(viewButton, 3, row, 1, 1);
+        viewButton.setOnAction(ignoreEvent -> {
+            var breadcrumbs = new ArrayList<>(getBreadcrumbs());
+            breadcrumbs.add(new BreadcrumbRecord("3D View " + getObject().getId(), Surface3DCollectionPage.class, null, getObject()));
+
+            var event = new SelectionEvent(breadcrumbs);
+            DefaultEventBus.getInstance().publish(event);
+        });
+        row++;
 
         var filterText = new CustomTextField();
         filterText.setLeft(new FontIcon(MaterialDesignT.TABLE_SEARCH));

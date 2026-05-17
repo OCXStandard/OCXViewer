@@ -20,6 +20,8 @@ import de.cadoculus.ocxviewer.models.CSSRecord;
 import de.cadoculus.ocxviewer.models.InformationProvider;
 import de.cadoculus.ocxviewer.views.threed.Plane3D;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
+import de.cadoculus.ocxviewer.geom.GeomHelper;
+import de.cadoculus.ocxviewer.geom.MainPlane;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.geometry.*;
@@ -101,9 +103,14 @@ class ThreeDView extends BorderPane {
     private Label pickCoordinateLabel;
     private Group skyboxNode;
     private FontIcon skyboxToggleIcon;
+    private ToolBar bottomBar; // Make bottomBar accessible for adding/removing buttons
     private final java.util.ArrayList<Affine> billboardAffines = new java.util.ArrayList<>();
     private Color lineColour = Color.DARKSLATEGREY;
-    private Color textColour=Color.BLACK;
+    private Color textColour = Color.BLACK;
+    private double csMinX, csMaxX, csBreadth, csHeight;
+    private boolean csInitialized = false;
+    private MainPlane currentGridPlane = MainPlane.UNDEFINED;
+    private final java.util.ArrayList<Affine> csBillboardAffines = new java.util.ArrayList<>();
 
     public ThreeDView() {
         updatedStyle();
@@ -119,7 +126,7 @@ class ThreeDView extends BorderPane {
             CSSRecord cssRecord = CSSUtil.lookup("threeDView");
             lineColour = cssRecord.colour1() != null ? cssRecord.colour1() : lineColour;
             textColour = cssRecord.colour2() != null ? cssRecord.colour2() : textColour;
-            
+
         } catch (Exception exp) {
             LOG.warn("failed to update style from CSS, use default values", exp);
         }
@@ -172,11 +179,11 @@ class ThreeDView extends BorderPane {
     }
 
     /**
-     * Adds a group to the world node.
+     * Adds one or more groups to the world node.
      *
-     * @param group group to add (ignored when {@code null})
+     * @param groups groups to add (ignored when {@code null})
      */
-    public void addGroupToWorld(Group ... groups) {
+    public void addGroupToWorld(Group... groups) {
         if (groups == null || world == null) {
             return;
         }
@@ -187,9 +194,9 @@ class ThreeDView extends BorderPane {
      * Sets the camera view so the camera looks at {@code lookAtPoint} from
      * {@code viewDirection} with the given {@code distance}.
      *
-     * @param lookAtPoint world-space point to look at
+     * @param lookAtPoint   world-space point to look at
      * @param viewDirection forward direction (camera -> look-at)
-     * @param distance distance from camera position to look-at point
+     * @param distance      distance from camera position to look-at point
      */
     public void setView(Point3D lookAtPoint, Point3D viewDirection, double distance) {
         if (lookAtPoint == null || !isFinite(lookAtPoint)) {
@@ -290,12 +297,12 @@ class ThreeDView extends BorderPane {
         // TODO: configure from CSS
         var top = new Image(getClass().getResourceAsStream("top.png"));
         var right = new Image(getClass().getResourceAsStream("left.png"));
-        var back= new Image(getClass().getResourceAsStream("fwd.png"));
+        var back = new Image(getClass().getResourceAsStream("fwd.png"));
         var left = new Image(getClass().getResourceAsStream("right.png"));
         var fwd = new Image(getClass().getResourceAsStream("back.png"));
         var bot = new Image(getClass().getResourceAsStream("bot.png"));
 
-        skyboxNode = new Skybox(top,bot,left,right,fwd,back, 3000,camera);
+        skyboxNode = new Skybox(top, bot, left, right, fwd, back, 3000, camera);
         var rsbx = new Rotate(-90, Rotate.X_AXIS);
         skyboxNode.getTransforms().add(rsbx);
         var rsbz = new Rotate(-90, Rotate.Y_AXIS);
@@ -313,11 +320,11 @@ class ThreeDView extends BorderPane {
         infoPaneContainer.setMaxHeight(VBox.USE_PREF_SIZE);
         infoPaneContainer.setStyle(
                 "-fx-background-color: rgba(255,255,255,0.85);" +
-                "-fx-background-radius: 10px;" +
-                "-fx-border-color: rgba(200,200,200,0.5);" +
-                "-fx-border-width: 1px;" +
-                "-fx-border-radius: 10px;" +
-                "-fx-padding: 14px 16px 14px 16px;"
+                        "-fx-background-radius: 10px;" +
+                        "-fx-border-color: rgba(200,200,200,0.5);" +
+                        "-fx-border-width: 1px;" +
+                        "-fx-border-radius: 10px;" +
+                        "-fx-padding: 14px 16px 14px 16px;"
         );
         infoPaneContainer.setMouseTransparent(true);
         infoPaneContainer.setManaged(false);
@@ -475,8 +482,8 @@ class ThreeDView extends BorderPane {
 
             if (event.getCode() == KeyCode.R) {
                 var amount = KEYBOARD_ROTATIONS_STEP_DEG;
-                amount *= event.isControlDown() ? 0.1:1;
-                amount*= event.isShiftDown() ? -1: 1;
+                amount *= event.isControlDown() ? 0.1 : 1;
+                amount *= event.isShiftDown() ? -1 : 1;
 
                 rotateAroundCurrentRightAxis(amount);
                 event.consume();
@@ -493,8 +500,8 @@ class ThreeDView extends BorderPane {
             }
             if (event.getCode() == KeyCode.Y) {
                 var amount = KEYBOARD_ROTATIONS_STEP_DEG;
-                amount *= event.isControlDown() ? 0.1:1;
-                amount*= event.isShiftDown() ? -1: 1;
+                amount *= event.isControlDown() ? 0.1 : 1;
+                amount *= event.isShiftDown() ? -1 : 1;
 
                 rotateAroundCurrentVerticalAxis(amount);
                 event.consume();
@@ -582,7 +589,6 @@ class ThreeDView extends BorderPane {
         });
 
 
-
         SubSceneResizer subSceneHost = new SubSceneResizer(subScene);
         subSceneHost.setMinSize(0, 0);
 
@@ -602,7 +608,7 @@ class ThreeDView extends BorderPane {
         setTop(toolbar);
 
         var fitAllButton = new Button("");
-        fitAllButton.setTooltip( new Tooltip("Fit View, Shortcut: <Ctrl><0>"));
+        fitAllButton.setTooltip(new Tooltip("Fit View, Shortcut: <Ctrl><0>"));
         fitAllButton.setGraphic(new FontIcon(MaterialDesignF.FIT_TO_PAGE));
         fitAllButton.setOnAction(_ -> {
             fitAll(ZOOM_ALL_MARGIN);
@@ -611,7 +617,7 @@ class ThreeDView extends BorderPane {
         toolbar.getItems().add(fitAllButton);
 
         var zoomInButton = new Button("");
-        zoomInButton.setTooltip( new Tooltip("Zoom In, Shortcut: <Ctrl><+>"));
+        zoomInButton.setTooltip(new Tooltip("Zoom In, Shortcut: <Ctrl><+>"));
         zoomInButton.setGraphic(new FontIcon(MaterialDesignM.MAGNIFY_PLUS));
         zoomInButton.setOnAction(_ -> {
             zoom(KEYBOARD_ZOOM_DELTA);
@@ -620,7 +626,7 @@ class ThreeDView extends BorderPane {
         toolbar.getItems().add(zoomInButton);
 
         var zoomOutButton = new Button("");
-        zoomOutButton.setTooltip( new Tooltip("Zoom Out, Shortcut: <Ctrl><->"));
+        zoomOutButton.setTooltip(new Tooltip("Zoom Out, Shortcut: <Ctrl><->"));
         zoomOutButton.setGraphic(new FontIcon(MaterialDesignM.MAGNIFY_MINUS));
         zoomOutButton.setOnAction(_ -> {
             zoom(-KEYBOARD_ZOOM_DELTA);
@@ -658,7 +664,7 @@ class ThreeDView extends BorderPane {
                     : MaterialDesignE.EYE_OFF_OUTLINE);
         });
 
-        var bottomBar = new ToolBar(pickCoordinateLabel, new Separator(), spacer, skyboxToggleButton);
+        bottomBar = new ToolBar(pickCoordinateLabel, new Separator(), spacer, skyboxToggleButton);
         bottomBar.getStyleClass().add("three-d-view-bottom-toolbar");
         setBottom(bottomBar);
 
@@ -679,6 +685,7 @@ class ThreeDView extends BorderPane {
         mainAffine.setOnTransformChanged(_ -> {
             syncCornerCamera(mainAffine);
             updateBillboards(mainAffine);
+            rebuildCoordinateSystemGrid();
         });
 
         // Keep the initial camera view; zoomAll is triggered explicitly by user action.
@@ -1304,11 +1311,11 @@ class ThreeDView extends BorderPane {
         if (width <= 0 || height <= 0) {
             return;
         }
-        if ( width > 3*margin) {
-            width-=2*margin;
+        if (width > 3 * margin) {
+            width -= 2 * margin;
         }
-        if ( height > 3*margin) {
-            height-=2*margin;
+        if (height > 3 * margin) {
+            height -= 2 * margin;
         }
 
         LOG.info("widthxheight {}x{}", width, height);
@@ -1397,8 +1404,8 @@ class ThreeDView extends BorderPane {
             Point3D camPos = new Point3D(finalAffine.getTx(), finalAffine.getTy(), finalAffine.getTz());
             double diag = Math.sqrt(
                     wb.getWidth() * wb.getWidth() +
-                    wb.getHeight() * wb.getHeight() +
-                    wb.getDepth() * wb.getDepth());
+                            wb.getHeight() * wb.getHeight() +
+                            wb.getDepth() * wb.getDepth());
             double distToNearSurface = Math.max(0.001, pivotPoint.distance(camPos) - diag * 0.5);
             camera.setNearClip(distToNearSurface * 0.1);
         }
@@ -1497,100 +1504,278 @@ class ThreeDView extends BorderPane {
     }
 
     /**
-     * Draw a frame, lp and vertical grid with major marks every 10, minor marks every 5.
-     * @param minX the mininal X value (after AP)
-     * @param maxX the maximal X value (before FP)
+     * Draw a coordinate system whose visible axes adapt to the current camera view direction.
+     * When the camera looks mainly along X → YZ plane; along Y → XZ plane; along Z → XY plane.
+     *
+     * @param minX    the minimal X value (after AP)
+     * @param maxX    the maximal X value (before FP)
      * @param breadth the total breadth
-     * @param height the height
+     * @param height  the height
      */
     public void drawCoordinateSystem(double minX, double maxX, double breadth, double height) {
+        csMinX = minX;
+        csMaxX = maxX;
+        csBreadth = breadth;
+        csHeight = height;
+        csInitialized = true;
+        currentGridPlane = MainPlane.UNDEFINED;
+        rebuildCoordinateSystemGrid();
+    }
 
-        final Optional<Node> gOpt = world.getChildren().stream().filter(c -> c instanceof Group g && "coordinate-system".equals(g.getId())).findFirst();
-        if ( gOpt.isPresent()) {
+    private void rebuildCoordinateSystemGrid() {
+        if (!csInitialized || camera == null || camera.getTransforms().isEmpty()) return;
+
+        var affine = (Affine) camera.getTransforms().getFirst();
+        var viewDir = new Vector3d(affine.getMxz(), affine.getMyz(), affine.getMzz());
+        MainPlane plane = GeomHelper.getMainPlane(viewDir);
+        if (plane == MainPlane.UNDEFINED) plane = MainPlane.YPLANE;
+
+        if (plane == currentGridPlane) return;
+        currentGridPlane = plane;
+
+        final Optional<Node> gOpt = world.getChildren().stream()
+                .filter(c -> c instanceof Group g && "coordinate-system".equals(g.getId()))
+                .findFirst();
+        if (gOpt.isPresent()) {
             world.getChildren().remove(gOpt.get());
-            billboardAffines.clear();
         }
+        billboardAffines.removeAll(csBillboardAffines);
+        csBillboardAffines.clear();
+
         var cosysGroup = new Group();
         cosysGroup.setId("coordinate-system");
         world.getChildren().add(cosysGroup);
 
-        var major = 10;
-        var minor = 5;
+        int major = 10;
+        int minor = 5;
 
-        var length = maxX- minX;
-        var center = (maxX+minX)/2.0;
+        switch (plane) {
+            case XPLANE -> drawYZGrid(cosysGroup, major, minor);
+            case YPLANE -> drawXZGrid(cosysGroup, major, minor);
+            case ZPLANE -> drawXYGrid(cosysGroup, major, minor);
+            default -> drawXZGrid(cosysGroup, major, minor);
+        }
 
-        Box xBox = new Box(length, 0.1, 0.1);
-        xBox.getTransforms().add(new Translate(center, 0, 0.0));
-        xBox.setMaterial(new PhongMaterial(lineColour));
-        cosysGroup.getChildren().add(xBox);
+        updateBillboards(affine);
+    }
 
-        var startX = (int) Math.ceil(minX/(1.0*major))*major;
+    /** YPLANE view (camera along Y): draw X, Y and Z axes on the XZ plane (Y=0).
+     *  X ticks → -Z direction, Y ticks → -Z direction, Z ticks → +X direction. */
+    private void drawXZGrid(Group g, int major, int minor) {
+        double length = csMaxX - csMinX;
+        double center = (csMaxX + csMinX) / 2.0;
 
-        for (int x = startX; x < (maxX); x+=minor) {
-            var h = x%major==0? 1: 0.5;
-            xBox = new Box(0.1, 0.1, h);
-            xBox.getTransforms().add(new Translate(x, 0, -0.5*h));
-            xBox.setMaterial(new PhongMaterial(lineColour));
-            cosysGroup.getChildren().add(xBox);
+        Box xLine = new Box(length, 0.1, 0.1);
+        xLine.getTransforms().add(new Translate(center, 0, 0.0));
+        xLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(xLine);
 
-            if ( x%major==0) {
-                Node billboard = createBillboardLabel(Integer.toString(x), x, 0, -1, textColour);
-                cosysGroup.getChildren().add(billboard);
+        int startX = (int) Math.ceil(csMinX / (1.0 * major)) * major;
+        for (int x = startX; x < csMaxX; x += minor) {
+            double h = x % major == 0 ? 1 : 0.5;
+            Box tick = new Box(0.1, 0.1, h);
+            tick.getTransforms().add(new Translate(x, 0, -0.5 * h));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (x % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(x), x, 0, -1));
             }
         }
 
-        Box yBox  = new Box(0.1, breadth, 0.1);
-        yBox.getTransforms().add(new Translate(0, 0, 0));
-        yBox.setMaterial(new PhongMaterial(lineColour));
-        cosysGroup.getChildren().add(yBox);
+        Box yLine = new Box(0.1, csBreadth, 0.1);
+        yLine.getTransforms().add(new Translate(0, 0, 0));
+        yLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(yLine);
 
-        for ( int y = 0; y <  0.5*breadth; y+=minor) {
-            var h = y%major==0? 1: 0.5;
-            xBox = new Box(0.1, 0.1, h);
-            xBox.getTransforms().add(new Translate(0, y, -0.5*h));
-            xBox.setMaterial(new PhongMaterial(lineColour));
-            cosysGroup.getChildren().add(xBox);
+        for (int y = minor; y <= 0.5 * csBreadth; y += minor) {
+            double h = y % major == 0 ? 1 : 0.5;
 
-            if ( y%major==0) {
-                Node billboard = createBillboardLabel(Integer.toString(y), 0, y, -1, textColour);
-                cosysGroup.getChildren().add(billboard);
+            Box tick = new Box(0.1, 0.1, h);
+            tick.getTransforms().add(new Translate(0, y, -0.5 * h));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (y % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(y), 0, y, -1));
             }
 
-            xBox = new Box(0.1, 0.1, h);
-            xBox.getTransforms().add(new Translate(0, -y, -0.5*h));
-            xBox.setMaterial(new PhongMaterial(lineColour));
-            cosysGroup.getChildren().add(xBox);
-
-            if ( y%major==0) {
-                Node billboard = createBillboardLabel(Integer.toString(-y), 0, -y, -1, textColour);
-                cosysGroup.getChildren().add(billboard);
-            }
-
-        }
-
-
-        Box zBox = new Box(0.1, 0.1, height);
-        zBox.getTransforms().add(new Translate(0, 0, height/2.0));
-        zBox.setMaterial(new PhongMaterial(lineColour));
-        cosysGroup.getChildren().add(zBox);
-
-        for (int z = 0; z < height; z+=minor) {
-            var h = z%major==0? 1: 0.5;
-            xBox = new Box(h, 0.1, 0.1);
-            xBox.getTransforms().add(new Translate(-0.5*h, 0, z));
-            xBox.setMaterial(new PhongMaterial(lineColour));
-            cosysGroup.getChildren().add(xBox);
-
-            if (z != 0 &&  z%major==0) {
-                Node billboard = createBillboardLabel(Integer.toString(z), -1, 0, z, textColour);
-                cosysGroup.getChildren().add(billboard);
+            Box tick2 = new Box(0.1, 0.1, h);
+            tick2.getTransforms().add(new Translate(0, -y, -0.5 * h));
+            tick2.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick2);
+            if (y % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(-y), 0, -y, -1));
             }
         }
 
-        if (camera != null && !camera.getTransforms().isEmpty()) {
-            updateBillboards((Affine) camera.getTransforms().getFirst());
+        Box zLine = new Box(0.1, 0.1, csHeight);
+        zLine.getTransforms().add(new Translate(0, 0, csHeight / 2.0));
+        zLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(zLine);
+
+        for (int z = minor; z <= csHeight; z += minor) {
+            double h = z % major == 0 ? 1 : 0.5;
+            Box tick = new Box(h, 0.1, 0.1);
+            tick.getTransforms().add(new Translate(0.5 * h, 0, z));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (z % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(z), 1, 0, z));
+            }
         }
+    }
+
+    /** XPLANE view (camera along X): draw X, Y and Z axes on the YZ plane (X=0).
+     *  X ticks → -Z direction, Y ticks → -Z direction, Z ticks → +Y direction. */
+    private void drawYZGrid(Group g, int major, int minor) {
+        double length = csMaxX - csMinX;
+        double center = (csMaxX + csMinX) / 2.0;
+
+        Box xLine = new Box(length, 0.1, 0.1);
+        xLine.getTransforms().add(new Translate(center, 0, 0.0));
+        xLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(xLine);
+
+        int startX = (int) Math.ceil(csMinX / (1.0 * major)) * major;
+        for (int x = startX; x < csMaxX; x += minor) {
+            double h = x % major == 0 ? 1 : 0.5;
+            Box tick = new Box(0.1, 0.1, h);
+            tick.getTransforms().add(new Translate(x, 0, -0.5 * h));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (x % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(x), x, 0, -1));
+            }
+        }
+
+        Box yLine = new Box(0.1, csBreadth, 0.1);
+        yLine.getTransforms().add(new Translate(0, 0, 0));
+        yLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(yLine);
+
+        for (int y = minor; y <= 0.5 * csBreadth; y += minor) {
+            double h = y % major == 0 ? 1 : 0.5;
+
+            Box tick = new Box(0.1, 0.1, h);
+            tick.getTransforms().add(new Translate(0, y, -0.5 * h));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (y % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(y), 0, y, -1));
+            }
+
+            Box tick2 = new Box(0.1, 0.1, h);
+            tick2.getTransforms().add(new Translate(0, -y, -0.5 * h));
+            tick2.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick2);
+            if (y % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(-y), 0, -y, -1));
+            }
+        }
+
+        Box zLine = new Box(0.1, 0.1, csHeight);
+        zLine.getTransforms().add(new Translate(0, 0, csHeight / 2.0));
+        zLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(zLine);
+
+        for (int z = minor; z <= csHeight; z += minor) {
+            double h = z % major == 0 ? 1 : 0.5;
+            Box tick = new Box(0.1, h, 0.1);
+            tick.getTransforms().add(new Translate(0, 0.5 * h, z));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (z % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(z), 0, 1, z));
+            }
+        }
+    }
+
+    /** ZPLANE view (camera along Z): draw X, Y and Z axes on the XY plane (Z=0).
+     *  X ticks → +Y direction, Y ticks → -Z direction, Z ticks → +X direction. */
+    private void drawXYGrid(Group g, int major, int minor) {
+        double length = csMaxX - csMinX;
+        double center = (csMaxX + csMinX) / 2.0;
+
+        Box xLine = new Box(length, 0.1, 0.1);
+        xLine.getTransforms().add(new Translate(center, 0, 0));
+        xLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(xLine);
+
+        int startX = (int) Math.ceil(csMinX / (1.0 * major)) * major;
+        for (int x = startX; x < csMaxX; x += minor) {
+            double h = x % major == 0 ? 1 : 0.5;
+            Box tick = new Box(0.1, h, 0.1);
+            tick.getTransforms().add(new Translate(x, 0.5 * h, 0));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (x % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(x), x, 1, 0));
+            }
+        }
+
+        Box yLine = new Box(0.1, csBreadth, 0.1);
+        yLine.getTransforms().add(new Translate(0, 0, 0));
+        yLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(yLine);
+
+        for (int y = minor; y <= 0.5 * csBreadth; y += minor) {
+            double h = y % major == 0 ? 1 : 0.5;
+
+            Box tick = new Box(0.1, 0.1, h);
+            tick.getTransforms().add(new Translate(0, y, -0.5 * h));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (y % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(y), 0, y, -1));
+            }
+
+            Box tick2 = new Box(0.1, 0.1, h);
+            tick2.getTransforms().add(new Translate(0, -y, -0.5 * h));
+            tick2.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick2);
+            if (y % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(-y), 0, -y, -1));
+            }
+        }
+
+        Box zLine = new Box(0.1, 0.1, csHeight);
+        zLine.getTransforms().add(new Translate(0, 0, csHeight / 2.0));
+        zLine.setMaterial(new PhongMaterial(lineColour));
+        g.getChildren().add(zLine);
+
+        for (int z = minor; z <= csHeight; z += minor) {
+            double h = z % major == 0 ? 1 : 0.5;
+            Box tick = new Box(h, 0.1, 0.1);
+            tick.getTransforms().add(new Translate(0.5 * h, 0, z));
+            tick.setMaterial(new PhongMaterial(lineColour));
+            g.getChildren().add(tick);
+            if (z % major == 0) {
+                g.getChildren().add(createCsBillboardLabel(Integer.toString(z), 1, 0, z));
+            }
+        }
+    }
+
+    private Node createCsBillboardLabel(String text, double wx, double wy, double wz) {
+        var tm = new Text3DMesh(text, 0.1);
+        tm.setDrawMode(DrawMode.FILL);
+        PhongMaterial textMat = new PhongMaterial(textColour);
+        for (var mv : tm.getMeshes()) {
+            if (mv instanceof javafx.scene.shape.MeshView meshView) {
+                meshView.setMaterial(textMat);
+            }
+        }
+
+        Group billboard = new Group();
+        billboard.getChildren().addAll(tm.getMeshes());
+
+        Affine bbAffine = new Affine();
+        bbAffine.setTx(wx);
+        bbAffine.setTy(wy);
+        bbAffine.setTz(wz);
+        billboard.getTransforms().addFirst(bbAffine);
+        billboardAffines.add(bbAffine);
+        csBillboardAffines.add(bbAffine);
+
+        return billboard;
     }
 
     /**
@@ -1603,10 +1788,10 @@ class ThreeDView extends BorderPane {
      * so it always sticks out and reads correctly when viewed from outside.
      */
     private Node createOrientFace(String text, double faceSize,
-                                                double tx, double ty, double tz,
-                                                Transform faceRotation, double tScale,
-                                                double rx, double ry, double rz,
-                                                double nx, double ny, double nz) {
+                                  double tx, double ty, double tz,
+                                  Transform faceRotation, double tScale,
+                                  double rx, double ry, double rz,
+                                  double nx, double ny, double nz) {
         // --- pickable face panel ---
         double thickness = 0.02;
         Box facePanel = new Box(faceSize, faceSize, thickness);
@@ -1623,7 +1808,7 @@ class ThreeDView extends BorderPane {
         }
 
         // --- 3D text label ---
-        var tm = new Text3DMesh(text,  0.05);
+        var tm = new Text3DMesh(text, 0.05);
         var meshes = tm.getMeshes();
         PhongMaterial textMat = new PhongMaterial(Color.rgb(40, 40, 40));
         for (var mv : meshes) {
@@ -1709,10 +1894,10 @@ class ThreeDView extends BorderPane {
      * Adds a billboard label at the given world coordinates with the specified text and colour.
      * The billboard is transparent and always faces the camera.
      *
-     * @param text      the label text
-     * @param wx        world X coordinate
-     * @param wy        world Y coordinate
-     * @param wz        world Z coordinate
+     * @param text            the label text
+     * @param wx              world X coordinate
+     * @param wy              world Y coordinate
+     * @param wz              world Z coordinate
      * @param billboardColour colour of the text
      */
     public void addBillboard(String text, double wx, double wy, double wz, Color billboardColour) {
@@ -1723,17 +1908,17 @@ class ThreeDView extends BorderPane {
 
     private Node createBillboardLabel(String text, double wx, double wy, double wz, Color billboardColour) {
 
-         var tm = new Text3DMesh(text,0.1);
-         tm.setDrawMode(DrawMode.FILL);
-         PhongMaterial textMat = new PhongMaterial(billboardColour);
-         for (var mv : tm.getMeshes()) {
-             if (mv instanceof javafx.scene.shape.MeshView meshView) {
-                 meshView.setMaterial(textMat);
-             }
-         }
+        var tm = new Text3DMesh(text, 0.1);
+        tm.setDrawMode(DrawMode.FILL);
+        PhongMaterial textMat = new PhongMaterial(billboardColour);
+        for (var mv : tm.getMeshes()) {
+            if (mv instanceof javafx.scene.shape.MeshView meshView) {
+                meshView.setMaterial(textMat);
+            }
+        }
 
-         Group billboard = new Group();
-         billboard.getChildren().addAll(tm.getMeshes());
+        Group billboard = new Group();
+        billboard.getChildren().addAll(tm.getMeshes());
 
         Affine bbAffine = new Affine();
         bbAffine.setTx(wx);
@@ -1784,9 +1969,11 @@ class ThreeDView extends BorderPane {
         newAffine.setOnTransformChanged(_ -> {
             syncCornerCamera(newAffine);
             updateBillboards(newAffine);
+            rebuildCoordinateSystemGrid();
         });
         syncCornerCamera(newAffine);
         updateBillboards(newAffine);
+        rebuildCoordinateSystemGrid();
     }
 
     /**
@@ -1867,12 +2054,146 @@ class ThreeDView extends BorderPane {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
-    /** Remove all children below the 'world' node
+    /**
+     * Remove all children below the 'world' node
      *
-      */
+     */
     public void clear() {
         world.getChildren().clear();
         billboardAffines.clear();
+    }
+
+    /**
+     * Add option buttons for surface collection rendering
+     *
+     * @param showBoundaryCallback   callback when "Show Boundary" is toggled
+     * @param limitBySurfaceCallback callback when "Limit by Boundary" is toggled
+     */
+    public void addSurfaceCollectionOptions(
+            java.util.function.Consumer<Boolean> showBoundaryCallback,
+            java.util.function.Consumer<Boolean> limitBySurfaceCallback) {
+
+        if (bottomBar == null || bottomBar.getItems() == null) {
+            return;
+        }
+
+        // Create buttons for boundary options
+        var boundaryCheckBox = new CheckBox("Show Boundary");
+        boundaryCheckBox.setSelected(true);
+        boundaryCheckBox.setTooltip(new Tooltip("Toggle visibility of face boundary curves"));
+        boundaryCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (showBoundaryCallback != null) {
+                showBoundaryCallback.accept(newVal);
+            }
+        });
+
+        var limitCheckBox = new CheckBox("Limit by Boundary");
+        limitCheckBox.setSelected(false);
+        limitCheckBox.setTooltip(new Tooltip("Limit surfaces by face boundary curves"));
+        limitCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (limitBySurfaceCallback != null) {
+                limitBySurfaceCallback.accept(newVal);
+            }
+        });
+
+        // Add checkboxes before the spacer (before the skybox button)
+        int spacerIndex = bottomBar.getItems().indexOf(bottomBar.getItems().stream()
+                .filter(item -> item instanceof Region && HBox.getHgrow((Region) item) == Priority.ALWAYS)
+                .findFirst()
+                .orElse(null));
+
+        if (spacerIndex >= 0) {
+            bottomBar.getItems().add(spacerIndex, new Separator(Orientation.VERTICAL));
+            bottomBar.getItems().add(spacerIndex + 1, boundaryCheckBox);
+            bottomBar.getItems().add(spacerIndex + 2, limitCheckBox);
+        } else {
+            bottomBar.getItems().add(new Separator(Orientation.VERTICAL));
+            bottomBar.getItems().add(boundaryCheckBox);
+            bottomBar.getItems().add(limitCheckBox);
+        }
+    }
+
+    /**
+     * Remove option buttons for surface collection rendering
+     */
+    public void removeSurfaceCollectionOptions() {
+        if (bottomBar == null || bottomBar.getItems() == null) {
+            return;
+        }
+
+        // Remove the checkboxes and separator(s) that were added
+        java.util.List<Control> toRemove = new java.util.ArrayList<>();
+        for (Object item : bottomBar.getItems()) {
+            if (item instanceof CheckBox checkbox &&
+                    (checkbox.getText().contains("Boundary") || checkbox.getText().contains("Limit"))) {
+                toRemove.add((Control) item);
+            }
+        }
+
+        // Also remove separators before checkboxes if they were added
+        bottomBar.getItems().removeAll(toRemove);
+
+        // Remove trailing separator if present
+        if (!bottomBar.getItems().isEmpty()) {
+            Object lastItem = bottomBar.getItems().get(bottomBar.getItems().size() - 1);
+            if (lastItem instanceof Separator sep && sep.getOrientation() == Orientation.VERTICAL) {
+                // Check if this is our separator
+                int count = 0;
+                for (Object item : bottomBar.getItems()) {
+                    if (item instanceof Separator s && s.getOrientation() == Orientation.VERTICAL) {
+                        count++;
+                    }
+                }
+                if (count > 1) { // Keep the main separator
+                    bottomBar.getItems().remove(lastItem);
+                }
+            }
+        }
+    }
+
+    /**
+     * Show information about a provider in the info pane
+     *
+     * @param provider the information provider
+     */
+    public void showInformationProvider(InformationProvider provider) {
+        if (provider == null || infoPaneContainer == null) {
+            return;
+        }
+
+        selectedProvider = provider;
+
+        // Stop any ongoing fade out animation
+        if (infoPaneFadeOut != null && infoPaneFadeOut.getStatus() == javafx.animation.Animation.Status.RUNNING) {
+            infoPaneFadeOut.stop();
+        }
+
+        // Clear and update the info pane
+        infoPaneContainer.getChildren().clear();
+        infoPaneContainer.setVisible(true);
+        infoPaneContainer.setManaged(true);
+        infoPaneContainer.setOpacity(1.0);
+
+        Label titleLabel = new Label(provider.getName());
+        titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+        titleLabel.setWrapText(true);
+
+        TextArea infoArea = new TextArea(provider.getInformation());
+        infoArea.setWrapText(true);
+        infoArea.setEditable(false);
+        infoArea.setPrefRowCount(5);
+        VBox.setVgrow(infoArea, Priority.ALWAYS);
+
+        infoPaneContainer.getChildren().addAll(titleLabel, new Separator(), infoArea);
+
+        // Auto-hide info after 5 seconds
+        PauseTransition hideDelay = new PauseTransition(Duration.seconds(5));
+        hideDelay.setOnFinished(_ -> {
+            if (infoPaneFadeOut != null) {
+                infoPaneFadeOut.play();
+            }
+        });
+        hideDelay.play();
     }
 }
 

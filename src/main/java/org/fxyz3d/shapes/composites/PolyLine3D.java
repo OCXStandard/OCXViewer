@@ -54,8 +54,8 @@ public class PolyLine3D extends Group {
     private TriangleMesh mesh;
     public MeshView meshView;
     public PhongMaterial material;
-    public static enum LineType {RIBBON, TRIANGLE};
-    
+    public static enum LineType {RIBBON, TRIANGLE, QUADRILATERAL};
+
     @Deprecated
     public PolyLine3D(List<Point3D> points, int width, Color color) {
         this(points, Float.valueOf(width), color);
@@ -77,7 +77,8 @@ public class PolyLine3D extends Group {
         mesh  = new TriangleMesh();
         switch(lineType) {
             case TRIANGLE: buildTriangleTube(); break;
-            case RIBBON: 
+            case QUADRILATERAL: buildQuadrilateralTube(); break;
+            case RIBBON:
             default: buildRibbon(); break;
         }
         //Need to add the mesh to a MeshView before adding to our 3D scene 
@@ -96,6 +97,7 @@ public class PolyLine3D extends Group {
         getChildren().add(light);
         getChildren().add(meshView);           
     }
+
     private void buildTriangleTube() {
         //For each data point add three mesh points as an equilateral triangle
         float half = width / 2.0f;
@@ -148,5 +150,140 @@ public class PolyLine3D extends Group {
             mesh.getFaces().addAll(i+1,0,i-2,0,i,0); //add primary face
             mesh.getFaces().addAll(i-1,0,i-2,0,i+1,0); //add secondary Width face
         }        
-    }    
+    }
+
+    /**
+     * Builds a tube with rectangular (quadrilateral) cross section.
+     *
+     * The local orientation at each polyline point uses incoming/outgoing segment directions,
+     * and start/end are capped with a simple rectangle (two triangles each).
+     */
+    private void buildQuadrilateralTube() {
+        if (points == null || points.size() < 2) {
+            return;
+        }
+
+        float half = width / 2.0f;
+        int count = points.size();
+
+        Point3D[] tangents = new Point3D[count];
+        Point3D[] planeNormals = new Point3D[count];
+
+        // Tangents and turning-plane normals
+        for (int i = 0; i < count; i++) {
+            Point3D prevDir;
+            Point3D nextDir;
+
+            if (i == 0) {
+                prevDir = direction(points.get(0), points.get(1));
+                nextDir = prevDir;
+            } else if (i == count - 1) {
+                prevDir = direction(points.get(i - 1), points.get(i));
+                nextDir = prevDir;
+            } else {
+                prevDir = direction(points.get(i - 1), points.get(i));
+                nextDir = direction(points.get(i), points.get(i + 1));
+            }
+
+            Point3D tangent = normalize(prevDir.add(nextDir));
+            if (isNearZero(tangent)) {
+                tangent = normalize(nextDir);
+            }
+            tangents[i] = tangent;
+
+            Point3D planeNormal = normalize(prevDir.crossProduct(nextDir));
+            if (isNearZero(planeNormal)) {
+                if (i > 0 && planeNormals[i - 1] != null && !isNearZero(planeNormals[i - 1])) {
+                    planeNormal = planeNormals[i - 1];
+                } else {
+                    planeNormal = orthogonalTo(tangent);
+                }
+            }
+            planeNormals[i] = planeNormal;
+        }
+
+        // Four vertices per polyline point
+        for (int i = 0; i < count; i++) {
+            Point3D t = tangents[i];
+            Point3D nPlane = planeNormals[i];
+
+            // One axis lies in the turning plane; the second closes an orthonormal frame
+            Point3D axisA = normalize(nPlane.crossProduct(t));
+            if (isNearZero(axisA)) {
+                axisA = orthogonalTo(t);
+            }
+            Point3D axisB = normalize(t.crossProduct(axisA));
+            if (isNearZero(axisB)) {
+                axisB = orthogonalTo(axisA);
+            }
+
+            Point3D p = points.get(i);
+
+            Point3D p0 = p.add(axisA.multiply(half)).add(axisB.multiply(half));
+            Point3D p1 = p.add(axisA.multiply(-half)).add(axisB.multiply(half));
+            Point3D p2 = p.add(axisA.multiply(-half)).add(axisB.multiply(-half));
+            Point3D p3 = p.add(axisA.multiply(half)).add(axisB.multiply(-half));
+
+            mesh.getPoints().addAll(p0.x, p0.y, p0.z);
+            mesh.getPoints().addAll(p1.x, p1.y, p1.z);
+            mesh.getPoints().addAll(p2.x, p2.y, p2.z);
+            mesh.getPoints().addAll(p3.x, p3.y, p3.z);
+        }
+
+        mesh.getTexCoords().addAll(0, 0);
+
+        // Side quads between successive rings (as two triangles); add both windings for robustness.
+        for (int i = 1; i < count; i++) {
+            int prevBase = (i - 1) * 4;
+            int currBase = i * 4;
+
+            for (int k = 0; k < 4; k++) {
+                int kn = (k + 1) % 4;
+
+                int a = prevBase + k;
+                int b = prevBase + kn;
+                int c = currBase + kn;
+                int d = currBase + k;
+
+                addTwoSidedQuad(a, b, c, d);
+            }
+        }
+
+        // Start cap (rectangle as two triangles, both windings)
+        addTwoSidedQuad(0, 1, 2, 3);
+
+        // End cap
+        int endBase = (count - 1) * 4;
+        addTwoSidedQuad(endBase, endBase + 1, endBase + 2, endBase + 3);
+    }
+
+    private void addTwoSidedQuad(int a, int b, int c, int d) {
+        // front
+        mesh.getFaces().addAll(a, 0, b, 0, c, 0);
+        mesh.getFaces().addAll(a, 0, c, 0, d, 0);
+        // back
+        mesh.getFaces().addAll(c, 0, b, 0, a, 0);
+        mesh.getFaces().addAll(d, 0, c, 0, a, 0);
+    }
+
+    private Point3D direction(Point3D from, Point3D to) {
+        return normalize(to.substract(from));
+    }
+
+    private Point3D normalize(Point3D p) {
+        return p == null ? new Point3D(0, 0, 0) : p.normalize();
+    }
+
+    private boolean isNearZero(Point3D p) {
+        return p == null || p.magnitude() < 1e-6f;
+    }
+
+    private Point3D orthogonalTo(Point3D v) {
+        Point3D ref = Math.abs(v.z) < 0.9f ? new Point3D(0, 0, 1) : new Point3D(0, 1, 0);
+        Point3D ortho = normalize(v.crossProduct(ref));
+        if (isNearZero(ortho)) {
+            ortho = normalize(v.crossProduct(new Point3D(1, 0, 0)));
+        }
+        return ortho;
+    }
 }
