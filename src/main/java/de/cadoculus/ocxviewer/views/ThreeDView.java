@@ -16,12 +16,12 @@ limitations under the License.
 
 package de.cadoculus.ocxviewer.views;
 
-import de.cadoculus.ocxviewer.models.CSSRecord;
-import de.cadoculus.ocxviewer.models.InformationProvider;
-import de.cadoculus.ocxviewer.views.threed.Plane3D;
-import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.geom.GeomHelper;
 import de.cadoculus.ocxviewer.geom.MainPlane;
+import de.cadoculus.ocxviewer.models.CSSRecord;
+import de.cadoculus.ocxviewer.models.InformationProvider;
+import de.cadoculus.ocxviewer.utils.CSSUtil;
+import de.cadoculus.ocxviewer.views.threed.Plane3D;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.geometry.*;
@@ -29,7 +29,10 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.PickResult;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -51,11 +54,17 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
 import javax.vecmath.Vector3d;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 
-import static javafx.scene.input.KeyCombination.*;
+import static javafx.scene.input.KeyCombination.CONTROL_DOWN;
 
 /**
- * The ThreeDView offers a simple widget to show three-dimensional content using JavaFX's capability.
+ * The ThreeDView offers a simple widget to show three-dimensional content using JavaFX's capability  (no OpenGL or Vulcan).
+ * The layout contains three main area:
+ * * a top menu contaning zooming and view direction controls
+ * * the central 3d view
+ * * a bottom menu containing setting menu
+ * There is a popup area on the 3d view, showing detailed information when an item is selected.
  *
  */
 class ThreeDView extends BorderPane {
@@ -83,6 +92,9 @@ class ThreeDView extends BorderPane {
     private static final KeyCodeCombination CTRL_EQUALS = new KeyCodeCombination(KeyCode.EQUALS, CONTROL_DOWN);
     private static final KeyCodeCombination CTRL_MINUS = new KeyCodeCombination(KeyCode.MINUS, CONTROL_DOWN);
     private static final KeyCodeCombination CTRL_SUBTRACT = new KeyCodeCombination(KeyCode.SUBTRACT, CONTROL_DOWN);
+    private final java.util.ArrayList<Affine> billboardAffines = new java.util.ArrayList<>();
+    private final EnumMap<MainPlane, Group> coordinateSystemVariants = new EnumMap<>(MainPlane.class);
+    private final java.util.ArrayList<Affine> csBillboardAffines = new java.util.ArrayList<>();
     private Point3D pivotPoint = new Point3D(0, 0, 0);
     private double panStartMouseX;
     private double panStartMouseY;
@@ -106,29 +118,89 @@ class ThreeDView extends BorderPane {
     private boolean zoomCursorActive;
     private Label pickCoordinateLabel;
     private Group skyboxNode;
-    private FontIcon skyboxToggleIcon;
     private ToolBar bottomBar; // Make bottomBar accessible for adding/removing buttons
-    private final java.util.ArrayList<Affine> billboardAffines = new java.util.ArrayList<>();
     private Color lineColour = Color.DARKSLATEGREY;
     private Color textColour = Color.BLACK;
     private double csMinX, csMaxX, csBreadth, csHeight;
     private boolean csInitialized = false;
     private MainPlane currentGridPlane = MainPlane.UNDEFINED;
     private Group coordinateSystemGroup;
-    private final EnumMap<MainPlane, Group> coordinateSystemVariants = new EnumMap<>(MainPlane.class);
-    private final java.util.ArrayList<Affine> csBillboardAffines = new java.util.ArrayList<>();
     private VBox legendContainer;
     private ScrollPane legendScrollPane;
     private FontIcon legendToggleIcon;
     private boolean legendVisibleByUser = true;
 
-    record LegendEntry(String name, Color colour) {}
+
+
+    private MenuButton viewSettingsMenuButton;
 
     public ThreeDView() {
         updatedStyle();
         createContent();
     }
 
+    /** Acces the bottom bar to add view specific buttons */
+    ToolBar getBottomBar() {
+        return bottomBar;
+    }
+    /** Access the view seetings menu button */
+    MenuButton getViewSettingsMenuButton() {
+        return viewSettingsMenuButton;
+    }
+
+
+    /**
+     * Calculates the bounding box of a 3D node in screen coordinates.
+     *
+     * @param node the 3D node (e.g. worldGroup)
+     * @return Rectangle2D containing the bounding box in screen coordinates
+     */
+    public static Rectangle2D getNodeBoundsInScreen(Node node) {
+        final Point3D[] corners = getPoint3DS(node);
+        double minScreenX = Double.POSITIVE_INFINITY;
+        double minScreenY = Double.POSITIVE_INFINITY;
+        double maxScreenX = Double.NEGATIVE_INFINITY;
+        double maxScreenY = Double.NEGATIVE_INFINITY;
+        for (Point3D p : corners) {
+            Point2D screen = node.localToScreen(p);
+            if (screen != null) {
+                minScreenX = Math.min(minScreenX, screen.getX());
+                minScreenY = Math.min(minScreenY, screen.getY());
+                maxScreenX = Math.max(maxScreenX, screen.getX());
+                maxScreenY = Math.max(maxScreenY, screen.getY());
+            }
+        }
+        if (minScreenX == Double.POSITIVE_INFINITY) {
+            return null; // node is not visible or has no valid bounds
+        }
+        return new Rectangle2D(minScreenX, minScreenY, maxScreenX - minScreenX, maxScreenY - minScreenY);
+    }
+
+    private static Point3D[] getPoint3DS(Node node) {
+        Bounds bounds = node.getBoundsInParent();
+        double minX = bounds.getMinX();
+        double minY = bounds.getMinY();
+        double minZ = bounds.getMinZ();
+        double maxX = bounds.getMaxX();
+        double maxY = bounds.getMaxY();
+        double maxZ = bounds.getMaxZ();
+        // 8 corners of the bounding box
+        Point3D[] corners = new Point3D[]{
+                new Point3D(minX, minY, minZ),
+                new Point3D(minX, minY, maxZ),
+                new Point3D(minX, maxY, minZ),
+                new Point3D(minX, maxY, maxZ),
+                new Point3D(maxX, minY, minZ),
+                new Point3D(maxX, minY, maxZ),
+                new Point3D(maxX, maxY, minZ),
+                new Point3D(maxX, maxY, maxZ)
+        };
+        return corners;
+    }
+
+    public static Color withOpacity(Color color, double opacity) {
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+    }
 
     /**
      * Updates the parameters used in the canvas from CSS.
@@ -269,7 +341,6 @@ class ThreeDView extends BorderPane {
                 distance
         );
     }
-
 
     private void createContent() {
 
@@ -683,34 +754,46 @@ class ThreeDView extends BorderPane {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        legendToggleIcon = new FontIcon(MaterialDesignE.EYE_OUTLINE);
-        var legendToggleButton = new Button("Legend", legendToggleIcon);
-        legendToggleButton.setTooltip(new Tooltip("Toggle Legend Visibility"));
-        legendToggleButton.setOnAction(_ -> {
+        viewSettingsMenuButton = new MenuButton("Visbilities", new FontIcon(MaterialDesignE.EYE_OUTLINE));
+
+        // Legend Visibility
+        var item1 = new CheckMenuItem("Legend");
+        item1.getStyleClass().add("supressDefaultCheckbox");
+        var item1Icon = new FontIcon(MaterialDesignE.EYE_OFF_OUTLINE);
+        item1.setGraphic(item1Icon);
+        item1.selectedProperty().addListener((obs, old, selected) -> {
+            item1Icon.setIconCode(selected ? MaterialDesignE.EYE_OUTLINE : MaterialDesignE.EYE_OFF_OUTLINE);
+        });
+        item1.setOnAction(_ -> {
             if (legendContainer != null && legendScrollPane != null && !legendContainer.getChildren().isEmpty()) {
                 legendVisibleByUser = !legendVisibleByUser;
                 legendScrollPane.setVisible(legendVisibleByUser);
                 legendScrollPane.setManaged(legendVisibleByUser);
                 legendContainer.setVisible(legendVisibleByUser);
                 legendContainer.setManaged(legendVisibleByUser);
-                legendToggleIcon.setIconCode(legendVisibleByUser
-                        ? MaterialDesignE.EYE_OUTLINE
-                        : MaterialDesignE.EYE_OFF_OUTLINE);
             }
         });
 
-        skyboxToggleIcon = new FontIcon(MaterialDesignE.EYE_OUTLINE);
-        var skyboxToggleButton = new Button("Skybox", skyboxToggleIcon);
-        skyboxToggleButton.setTooltip(new Tooltip("Toggle Skybox Visibility"));
-        skyboxToggleButton.setOnAction(_ -> {
+        // Skybox visibility
+        var item2 = new CheckMenuItem("Skybox");
+        item2.getStyleClass().add("supressDefaultCheckbox");
+        var item2Icon = new FontIcon(MaterialDesignE.EYE_OFF_OUTLINE);
+        item2.setGraphic(item2Icon);
+        item2.selectedProperty().addListener((obs, old, selected) -> {
+            item2Icon.setIconCode(selected ? MaterialDesignE.EYE_OUTLINE : MaterialDesignE.EYE_OFF_OUTLINE);
+        });
+        item2.setOnAction(_ -> {
             boolean visible = !skyboxNode.isVisible();
             skyboxNode.setVisible(visible);
-            skyboxToggleIcon.setIconCode(visible
-                    ? MaterialDesignE.EYE_OUTLINE
-                    : MaterialDesignE.EYE_OFF_OUTLINE);
         });
+        //
+        viewSettingsMenuButton.getItems().addAll(item1, item2);
+        for (var menu : viewSettingsMenuButton.lookupAll(".menu")) {
+            ((MenuButton) menu).setPopupSide(Side.TOP);
+        }
+        viewSettingsMenuButton.setPopupSide(Side.TOP);
 
-        bottomBar = new ToolBar(pickCoordinateLabel, new Separator(), spacer, legendToggleButton, new Separator(), skyboxToggleButton);
+        bottomBar = new ToolBar(pickCoordinateLabel, new Separator(), spacer, viewSettingsMenuButton);
         bottomBar.getStyleClass().add("three-d-view-bottom-toolbar");
         setBottom(bottomBar);
 
@@ -741,7 +824,6 @@ class ThreeDView extends BorderPane {
         // BorderPane is this class itself.
     }
 
-
     private void updatePickCoordinateLabel(PickResult pickResult) {
         if (pickCoordinateLabel == null) {
             return;
@@ -753,7 +835,7 @@ class ThreeDView extends BorderPane {
             Point3D hitLocal = pickResult.getIntersectedPoint();
             Point3D hitScene = pickResult.getIntersectedNode().localToScene(hitLocal);
             Point3D hitWorld = world.sceneToLocal(hitScene);
-            pickCoordinateLabel.setText(String.format("(%.2f %.2f %.2f)",
+            pickCoordinateLabel.setText(String.format(Locale.US, "(%.2f %.2f %.2f)",
                     hitWorld.getX(), hitWorld.getY(), hitWorld.getZ()));
         } else {
             pickCoordinateLabel.setText("");
@@ -871,7 +953,6 @@ class ThreeDView extends BorderPane {
 
         setCameraAffine(new Affine(rotated));
     }
-
 
     private void viewFrom(String side) {
 
@@ -1558,8 +1639,10 @@ class ThreeDView extends BorderPane {
         updateBillboards(affine);
     }
 
-    /** YPLANE view (camera along Y): draw X, Y and Z axes on the XZ plane (Y=0).
-     *  X ticks → -Z direction, Y ticks → -Z direction, Z ticks → +X direction. */
+    /**
+     * YPLANE view (camera along Y): draw X, Y and Z axes on the XZ plane (Y=0).
+     * X ticks → -Z direction, Y ticks → -Z direction, Z ticks → +X direction.
+     */
     private void drawXZGrid(Group g, int major, int minor) {
         double length = csMaxX - csMinX;
         double center = (csMaxX + csMinX) / 2.0;
@@ -1623,8 +1706,10 @@ class ThreeDView extends BorderPane {
         }
     }
 
-    /** XPLANE view (camera along X): draw X, Y and Z axes on the YZ plane (X=0).
-     *  X ticks → -Z direction, Y ticks → -Z direction, Z ticks → +Y direction. */
+    /**
+     * XPLANE view (camera along X): draw X, Y and Z axes on the YZ plane (X=0).
+     * X ticks → -Z direction, Y ticks → -Z direction, Z ticks → +Y direction.
+     */
     private void drawYZGrid(Group g, int major, int minor) {
         double length = csMaxX - csMinX;
         double center = (csMaxX + csMinX) / 2.0;
@@ -1688,8 +1773,15 @@ class ThreeDView extends BorderPane {
         }
     }
 
-    /** ZPLANE view (camera along Z): draw X, Y and Z axes on the XY plane (Z=0).
-     *  X ticks → +Y direction, Y ticks → -Z direction, Z ticks → +X direction. */
+    /**
+     * Creates a textured face panel for the orientation cube.
+     * Renders the label text into an image and applies it as diffuse map.
+     */
+
+    /**
+     * ZPLANE view (camera along Z): draw X, Y and Z axes on the XY plane (Z=0).
+     * X ticks → +Y direction, Y ticks → -Z direction, Z ticks → +X direction.
+     */
     private void drawXYGrid(Group g, int major, int minor) {
         double length = csMaxX - csMinX;
         double center = (csMaxX + csMinX) / 2.0;
@@ -1783,10 +1875,6 @@ class ThreeDView extends BorderPane {
     }
 
     /**
-     * Creates a textured face panel for the orientation cube.
-     * Renders the label text into an image and applies it as diffuse map.
-     */
-    /**
      * Creates one face of the orientation cube: a thin Box panel (pickable) with a Text3DMesh label.
      * The text is placed using an Affine built from the face's outward normal and a "right" direction,
      * so it always sticks out and reads correctly when viewed from outside.
@@ -1856,6 +1944,14 @@ class ThreeDView extends BorderPane {
     }
 
     /**
+     * Sets the main camera's Affine transform and re-registers the sync listener for the corner overlay.
+     */
+    /**
+     * Creates a billboard label (a textured thin box) placed at the given world coordinates.
+     * The billboard always faces the camera.
+     */
+
+    /**
      * Walks up from the picked node to find the face group whose id encodes the view name.
      */
     private String findFaceViewName(Node node) {
@@ -1888,13 +1984,6 @@ class ThreeDView extends BorderPane {
     }
 
     /**
-     * Sets the main camera's Affine transform and re-registers the sync listener for the corner overlay.
-     */
-    /**
-     * Creates a billboard label (a textured thin box) placed at the given world coordinates.
-     * The billboard always faces the camera.
-     */
-    /**
      * Adds a billboard label at the given world coordinates with the specified text and colour.
      * The billboard is transparent and always faces the camera.
      *
@@ -1908,7 +1997,6 @@ class ThreeDView extends BorderPane {
         Node billboard = createBillboardLabel(text, wx, wy, wz, billboardColour);
         world.getChildren().add(billboard);
     }
-
 
     private Node createBillboardLabel(String text, double wx, double wy, double wz, Color billboardColour) {
 
@@ -2002,60 +2090,6 @@ class ThreeDView extends BorderPane {
         cornerCameraAffine.setTx(source.getMxz() * (-dist));
         cornerCameraAffine.setTy(source.getMyz() * (-dist));
         cornerCameraAffine.setTz(source.getMzz() * (-dist));
-    }
-
-
-    /**
-     * Calculates the bounding box of a 3D node in screen coordinates.
-     *
-     * @param node the 3D node (e.g. worldGroup)
-     * @return Rectangle2D containing the bounding box in screen coordinates
-     */
-    public static Rectangle2D getNodeBoundsInScreen(Node node) {
-        final Point3D[] corners = getPoint3DS(node);
-        double minScreenX = Double.POSITIVE_INFINITY;
-        double minScreenY = Double.POSITIVE_INFINITY;
-        double maxScreenX = Double.NEGATIVE_INFINITY;
-        double maxScreenY = Double.NEGATIVE_INFINITY;
-        for (Point3D p : corners) {
-            Point2D screen = node.localToScreen(p);
-            if (screen != null) {
-                minScreenX = Math.min(minScreenX, screen.getX());
-                minScreenY = Math.min(minScreenY, screen.getY());
-                maxScreenX = Math.max(maxScreenX, screen.getX());
-                maxScreenY = Math.max(maxScreenY, screen.getY());
-            }
-        }
-        if (minScreenX == Double.POSITIVE_INFINITY) {
-            return null; // node is not visible or has no valid bounds
-        }
-        return new Rectangle2D(minScreenX, minScreenY, maxScreenX - minScreenX, maxScreenY - minScreenY);
-    }
-
-    private static Point3D[] getPoint3DS(Node node) {
-        Bounds bounds = node.getBoundsInParent();
-        double minX = bounds.getMinX();
-        double minY = bounds.getMinY();
-        double minZ = bounds.getMinZ();
-        double maxX = bounds.getMaxX();
-        double maxY = bounds.getMaxY();
-        double maxZ = bounds.getMaxZ();
-        // 8 corners of the bounding box
-        Point3D[] corners = new Point3D[]{
-                new Point3D(minX, minY, minZ),
-                new Point3D(minX, minY, maxZ),
-                new Point3D(minX, maxY, minZ),
-                new Point3D(minX, maxY, maxZ),
-                new Point3D(maxX, minY, minZ),
-                new Point3D(maxX, minY, maxZ),
-                new Point3D(maxX, maxY, minZ),
-                new Point3D(maxX, maxY, maxZ)
-        };
-        return corners;
-    }
-
-    public static Color withOpacity(Color color, double opacity) {
-        return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
     /**
@@ -2246,12 +2280,8 @@ class ThreeDView extends BorderPane {
         });
         hideDelay.play();
     }
+
+    record LegendEntry(String name, Color colour) {
+    }
 }
-
-
-
-
-
-
-
 

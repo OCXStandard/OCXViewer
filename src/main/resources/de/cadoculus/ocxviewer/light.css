@@ -120,6 +120,12 @@
     -fx-background-color: #efefef;
 }
 
+.check-menu-item.supressDefaultCheckbox > .left-container {
+    visibility: hidden;
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+}
+
 
 
 .tree-view, .tree-cell {
@@ -147,7 +153,7 @@
 
 
 #mainBorderPane {
-    -fx-background-color: -color-base-2
+    -fx-background-color: -color-base-1;
 }
 
 #pageTree {

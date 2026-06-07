@@ -21,11 +21,18 @@ import de.cadoculus.ocxviewer.models.CSSRecord;
 import de.cadoculus.ocxviewer.views.threed.Plane3D;
 import de.cadoculus.ocxviewer.utils.CSSUtil;
 import de.cadoculus.ocxviewer.utils.UnitHelper;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignE;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignF;
 import org.ocx_schema.v310.RefPlane;
 import javafx.scene.paint.Color;
 
@@ -52,6 +59,7 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
     private Color oddLPPSBColour = Color.LIGHTGREEN;
     private Color evenLVRTColour = Color.DARKBLUE;
     private Color oddVRTColour = Color.LIGHTBLUE;
+    private BooleanProperty ignoreDisplayGrid = new SimpleBooleanProperty();
 
     private double minX=-10;
     private double maxX=150;
@@ -106,6 +114,24 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
         threeDView = new ThreeDView();
         threeDView.setId(getId() + "_3DView");
         this.setCenter(threeDView);
+
+
+        // Whether to ignore the display grid property
+        var ht = "Honour RefPlane@displayGrid attribute";
+        var it = "Ignoring RefPlane@displayGrid attribute";
+        var item1 = new CheckMenuItem(ht);
+        item1.getStyleClass().add("supressDefaultCheckbox");
+        item1.selectedProperty().bindBidirectional(ignoreDisplayGrid);
+        var item1Icon = new FontIcon(MaterialDesignF.FILTER_OUTLINE);
+        item1.setGraphic(item1Icon);
+        item1.selectedProperty().addListener((obs, old, selected) -> {
+            item1Icon.setIconCode(selected ? MaterialDesignF.FILTER_OFF_OUTLINE : MaterialDesignF.FILTER_OUTLINE);
+            item1.setText(selected ? it :ht);
+        });
+        ignoreDisplayGrid.addListener((obs, old, selected) -> drawFrames());
+        threeDView.getViewSettingsMenuButton().getItems().add(0,new SeparatorMenuItem());
+        threeDView.getViewSettingsMenuButton().getItems().add(0,item1);
+
 
         LOG.info("create framegrid {}-{}, b {}, h {}", minX, maxX,breadth,height);
         threeDView.drawCoordinateSystem(minX, maxX, breadth, height);
@@ -166,7 +192,7 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
         final List<RefPlane> frames = coosys.getXRefPlanes().getRefPlanes();
         for( int i =0; i < frames.size();i++) {
             var refPlane  = frames.get(i);
-            if ( ! refPlane.isDisplayGrid()) {
+            if (!ignoreDisplayGrid.get() && !refPlane.isDisplayGrid()) {
                 continue;
             }
             var x = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
@@ -189,7 +215,7 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
             final List<RefPlane> verticals = coosys.getZRefPlanes().getRefPlanes();
             for (int i = 0; i < verticals.size(); i++) {
                 var refPlane = verticals.get(i);
-                if (!refPlane.isDisplayGrid()) {
+                if (!ignoreDisplayGrid.get() && !refPlane.isDisplayGrid()) {
                     continue;
                 }
                 var z = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());
@@ -211,7 +237,7 @@ public class CoordinateSystem3DViewPage extends AbstractDataViewSubPage<org.ocx_
             final List<RefPlane> longitudinals = coosys.getYRefPlanes().getRefPlanes();
             for (int i = 0; i < longitudinals.size(); i++) {
                 var refPlane = longitudinals.get(i);
-                if (!refPlane.isDisplayGrid()) {
+                if (!ignoreDisplayGrid.get() && !refPlane.isDisplayGrid()) {
                     continue;
                 }
                 var y = (float) UnitHelper.toDefaultUnit(refPlane.getReferenceLocation());

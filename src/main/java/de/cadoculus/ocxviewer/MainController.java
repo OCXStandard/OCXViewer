@@ -28,19 +28,11 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.MotionBlur;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -77,6 +69,7 @@ public class MainController {
      */
     private StackPane stackPane;
     private boolean viewInitialized = false;
+    private PageTree navigationTree;
 
     public MainController() {
         super();
@@ -88,7 +81,7 @@ public class MainController {
         // register for navigation
         DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> initializeViews());
 
-        DefaultEventBus.getInstance().subscribe(HotkeyEvent.class, event->handleHotkeyEvent(event));
+        DefaultEventBus.getInstance().subscribe(HotkeyEvent.class, this::handleHotkeyEvent);
 
         // This is initialized here to start collecting log events when the user opens a file
         final LogPage logPage = new LogPage();
@@ -98,7 +91,7 @@ public class MainController {
 
     /**
      * Generic handler for hotkey events
-     * @param event
+     * @param event the event to handle
      */
     private void handleHotkeyEvent(HotkeyEvent event) {
         LOG.debug("Hotkey event: {}", event);
@@ -141,9 +134,8 @@ public class MainController {
 
             mainBorderPane.setLeft(navigationTreeScrollPane);
 
-            PageTree navigationTree = new PageTree();
+            navigationTree = new PageTree();
             navigationTreeScrollPane.setContent(navigationTree);
-
 
             stackPane = new StackPane();
             stackPane.setId("mainStackPane");
@@ -170,7 +162,7 @@ public class MainController {
     private void selectObjects(SelectionEvent event) {
         LOG.debug("Navigation event: {}", event);
 
-        if (event.getBreadcrumbs() == null || event.getBreadcrumbs().isEmpty()) {
+        if ( event.getBreadcrumbs().isEmpty()) {
             LOG.warn("No breadcrumbs in selection event");
             return;
         }
@@ -424,9 +416,11 @@ public class MainController {
         });
 
         // Now the pages on the right
-        final HeaderPage headerPage = new HeaderPage();
-        pageClass2page.put(HeaderPage.class, headerPage);
-        this.switchPages(new NavigationEvent(HeaderPage.class));
+        navigationTree.selectPage(HeaderPage.class);
+//        final HeaderPage headerPage = new HeaderPage();
+//        pageClass2page.put(HeaderPage.class, headerPage);
+//        this.switchPages(new NavigationEvent(HeaderPage.class));
+
 
     }
 

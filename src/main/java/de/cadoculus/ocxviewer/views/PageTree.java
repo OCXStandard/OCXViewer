@@ -37,6 +37,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A tree view for navigating between pages.
@@ -132,6 +133,56 @@ public final class PageTree extends TreeView<PageRecord> {
 
 
         rootProperty().setValue(root);
+    }
+
+    /**
+     * Finds the tree item whose page class matches {@code pageClass}, selects it
+     * in the tree and scrolls it into view.
+     *
+     * @param pageClass the page class to look for (e.g. {@code HeaderPage.class})
+     * @return {@code true} if a matching item was found and selected
+     */
+    public boolean selectPage(Class<? extends Page> pageClass) {
+        if (pageClass == null || getRoot() == null) {
+            return false;
+        }
+        Optional<TreeItem<PageRecord>> found = findItem(getRoot(), pageClass);
+        found.ifPresent(item -> {
+            // Make sure parent groups are expanded so the item is reachable
+            expandParents(item);
+            int row = getRow(item);
+            getSelectionModel().select(item);
+            scrollTo(Math.max(0, row - 3));
+        });
+        return found.isPresent();
+    }
+
+    /** Recursively searches the subtree rooted at {@code node} for an item with the given page class. */
+    private Optional<TreeItem<PageRecord>> findItem(TreeItem<PageRecord> node,
+                                                     Class<? extends Page> pageClass) {
+        if (node == null) {
+            return Optional.empty();
+        }
+        PageRecord rec = node.getValue();
+        if (rec != null && pageClass.equals(rec.pageClass())) {
+            return Optional.of(node);
+        }
+        for (TreeItem<PageRecord> child : node.getChildren()) {
+            Optional<TreeItem<PageRecord>> result = findItem(child, pageClass);
+            if (result.isPresent()) {
+                return result;
+            }
+        }
+        return Optional.empty();
+    }
+
+    /** Expands all ancestor items of the given item so it becomes visible in the tree. */
+    private void expandParents(TreeItem<PageRecord> item) {
+        TreeItem<PageRecord> parent = item.getParent();
+        while (parent != null && parent != getRoot()) {
+            parent.setExpanded(true);
+            parent = parent.getParent();
+        }
     }
 
     /// ////////////////////////////////////////////////////////////////////////

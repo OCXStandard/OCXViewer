@@ -17,6 +17,14 @@
     -fx-text-fill: black;
 }
 
+#threeDView {
+    /*  colour of frame #0 */
+    -fx-background-color: -color-accent-2;
+    /* even colour, odd colour */
+    -fx-border-color: -color-accent-6,-color-accent-8, -color-warning-6, -color-accent-6;
+    -fx-border-width: 1;
+}
+
 #refPlaneFrames {
     /*  colour of frame #0 */
     -fx-background-color: -color-accent-7;
@@ -33,6 +41,14 @@
      /* even colour, odd colour */
     -fx-border-color: -color-chart-4, -color-chart-5, -color-success-2, -color-success-2;
 }
+#surfaces {
+    /* the surface colour */
+    -fx-background-color: rgba(65, 169, 201, 0.45);
+    /* points, line1, line2 */
+    -fx-border-color: -color-chart-4 -color-chart-1 -color-chart-3 -color-success-2;
+
+}
+
 
 /** some specific pages */
 
@@ -98,7 +114,7 @@
 .text-field {
 
     -fx-padding: 5px;
-    -fx-background-color: -color-base-1;
+    -fx-background-color: -color-base-6;
     -fx-background-radius: 3px;
     -fx-spacing: 1px;
     -fx-border-radius: 3px;
@@ -106,7 +122,13 @@
     -fx-border-color: -color-border-default;
 }
 .text-field:focused {
-    -fx-background-color: #efefef;
+    -fx-background-color: -color-base-7;
+}
+
+.check-menu-item.supressDefaultCheckbox > .left-container {
+    visibility: hidden;
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
 }
 
 
@@ -135,7 +157,7 @@
 
 
 #mainBorderPane {
-    -fx-background-color: -color-base-1;
+    -fx-background-color: -color-accent-9;
 }
 
 #pageTree {
@@ -170,9 +192,19 @@
     -fx-border-color: -color-accent-6;
 }
 
+.three-d-view-bottom-toolbar {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-accent-6;
+    -fx-border-width: 0 1px 1px 1px;
+    -fx-background-radius: 0 0 5px 5px;
+    -fx-border-radius: 0 0 5px 5px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
 .quantity-input-group {
     -fx-padding: 1px;
-    -fx-background-color: -color-base-1;
+    -fx-background-color: -color-base-6;
     -fx-background-radius: 3px;
     -fx-spacing: 1px;
     -fx-border-radius: 3px;
