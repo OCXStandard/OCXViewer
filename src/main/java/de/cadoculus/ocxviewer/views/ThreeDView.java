@@ -127,7 +127,6 @@ class ThreeDView extends BorderPane {
     private Group coordinateSystemGroup;
     private VBox legendContainer;
     private ScrollPane legendScrollPane;
-    private FontIcon legendToggleIcon;
     private boolean legendVisibleByUser = true;
 
 
@@ -185,7 +184,7 @@ class ThreeDView extends BorderPane {
         double maxY = bounds.getMaxY();
         double maxZ = bounds.getMaxZ();
         // 8 corners of the bounding box
-        Point3D[] corners = new Point3D[]{
+        return new Point3D[]{
                 new Point3D(minX, minY, minZ),
                 new Point3D(minX, minY, maxZ),
                 new Point3D(minX, maxY, minZ),
@@ -195,7 +194,6 @@ class ThreeDView extends BorderPane {
                 new Point3D(maxX, maxY, minZ),
                 new Point3D(maxX, maxY, maxZ)
         };
-        return corners;
     }
 
     public static Color withOpacity(Color color, double opacity) {
@@ -603,7 +601,6 @@ class ThreeDView extends BorderPane {
 
                 rotateAroundGlobalAxis(WORLD_Z, amount);
                 event.consume();
-                return;
             }
 
         });
@@ -645,6 +642,28 @@ class ThreeDView extends BorderPane {
                         0, 0, -1)
         );
 
+        // 12 edge bars – one per cube edge, darker than the faces.
+        // Span 2/3 of boxSize along the edge direction, 10% of boxSize in cross-section.
+        double edgeLen = 2.0 / 3.0 * boxSize;
+        double edgeW   = 0.1 * boxSize;
+        // Y-axis edges (Top/Bot × Fore/Aft)
+        cornerOverlayRoot.getChildren().addAll(
+                createOrientEdge("Top-Fore",  half,  0,  half, edgeW, edgeLen, edgeW),
+                createOrientEdge("Top-Aft",  -half,  0,  half, edgeW, edgeLen, edgeW),
+                createOrientEdge("Bot-Fore",  half,  0, -half, edgeW, edgeLen, edgeW),
+                createOrientEdge("Bot-Aft",  -half,  0, -half, edgeW, edgeLen, edgeW),
+                // X-axis edges (Top/Bot × PS/SB)
+                createOrientEdge("Top-PS",  0,  half,  half, edgeLen, edgeW, edgeW),
+                createOrientEdge("Top-SB",  0, -half,  half, edgeLen, edgeW, edgeW),
+                createOrientEdge("Bot-PS",  0,  half, -half, edgeLen, edgeW, edgeW),
+                createOrientEdge("Bot-SB",  0, -half, -half, edgeLen, edgeW, edgeW),
+                // Z-axis edges (Fore/Aft × PS/SB)
+                createOrientEdge("Fore-PS",  half,  half, 0, edgeW, edgeW, edgeLen),
+                createOrientEdge("Fore-SB",  half, -half, 0, edgeW, edgeW, edgeLen),
+                createOrientEdge("Aft-PS",  -half,  half, 0, edgeW, edgeW, edgeLen),
+                createOrientEdge("Aft-SB",  -half, -half, 0, edgeW, edgeW, edgeLen)
+        );
+
         // Camera for the overlay – fixed distance, rotation-only
         PerspectiveCamera cornerCamera = new PerspectiveCamera(true);
         cornerCamera.setNearClip(0.1);
@@ -670,19 +689,21 @@ class ThreeDView extends BorderPane {
             }
         });
 
-        // Highlight face panel on hover
-        PhongMaterial hoverMat = new PhongMaterial(Color.WHITESMOKE);
-        PhongMaterial normalMat = new PhongMaterial(Color.LIGHTGRAY);
+        // Highlight face/edge on hover
+        PhongMaterial faceHoverMat  = new PhongMaterial(Color.WHITESMOKE);
+        PhongMaterial faceNormalMat = new PhongMaterial(Color.LIGHTGRAY);
+        PhongMaterial edgeHoverMat  = new PhongMaterial(Color.GRAY);
+        PhongMaterial edgeNormalMat = new PhongMaterial(Color.DIMGRAY);
         cornerOverlaySubScene.setOnMouseMoved(event -> {
             Node picked = event.getPickResult().getIntersectedNode();
-            String hoveredFace = findFaceViewName(picked);
+            String hoveredName = findFaceViewName(picked);
             for (Node child : cornerOverlayRoot.getChildren()) {
-                highlightOrientFace(child, hoveredFace, hoverMat, normalMat);
+                highlightOrientFace(child, hoveredName, faceHoverMat, faceNormalMat, edgeHoverMat, edgeNormalMat);
             }
         });
         cornerOverlaySubScene.setOnMouseExited(_ -> {
             for (Node child : cornerOverlayRoot.getChildren()) {
-                highlightOrientFace(child, null, hoverMat, normalMat);
+                highlightOrientFace(child, null, faceHoverMat, faceNormalMat, edgeHoverMat, edgeNormalMat);
             }
         });
 
@@ -761,7 +782,7 @@ class ThreeDView extends BorderPane {
         item1.getStyleClass().add("supressDefaultCheckbox");
         var item1Icon = new FontIcon(MaterialDesignE.EYE_OFF_OUTLINE);
         item1.setGraphic(item1Icon);
-        item1.selectedProperty().addListener((obs, old, selected) -> {
+        item1.selectedProperty().addListener((_, _, selected) -> {
             item1Icon.setIconCode(selected ? MaterialDesignE.EYE_OUTLINE : MaterialDesignE.EYE_OFF_OUTLINE);
         });
         item1.setOnAction(_ -> {
@@ -779,7 +800,7 @@ class ThreeDView extends BorderPane {
         item2.getStyleClass().add("supressDefaultCheckbox");
         var item2Icon = new FontIcon(MaterialDesignE.EYE_OFF_OUTLINE);
         item2.setGraphic(item2Icon);
-        item2.selectedProperty().addListener((obs, old, selected) -> {
+        item2.selectedProperty().addListener((_, _, selected) -> {
             item2Icon.setIconCode(selected ? MaterialDesignE.EYE_OUTLINE : MaterialDesignE.EYE_OFF_OUTLINE);
         });
         item2.setOnAction(_ -> {
@@ -1008,6 +1029,79 @@ class ThreeDView extends BorderPane {
                 cameraPos = new Point3D(centerG.getX(), centerG.getY(), centerG.getZ() - 200);
                 cameraDir = new Vector3d(0, 0, 1);
                 cameraUp = new Vector3d(0, 1, 0);   // X+ zeigt nach rechts auf dem Bildschirm
+            }
+            // --- 12 edge bisector views ---
+            case "Top-Fore" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX() + d, centerG.getY(), centerG.getZ() + d);
+                cameraDir = new Vector3d(-1 / Math.sqrt(2), 0, -1 / Math.sqrt(2));
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Top-Aft" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX() - d, centerG.getY(), centerG.getZ() + d);
+                cameraDir = new Vector3d(1 / Math.sqrt(2), 0, -1 / Math.sqrt(2));
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Top-PS" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX(), centerG.getY() + d, centerG.getZ() + d);
+                cameraDir = new Vector3d(0, -1 / Math.sqrt(2), -1 / Math.sqrt(2));
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Top-SB" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX(), centerG.getY() - d, centerG.getZ() + d);
+                cameraDir = new Vector3d(0, 1 / Math.sqrt(2), -1 / Math.sqrt(2));
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Bot-Fore" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX() + d, centerG.getY(), centerG.getZ() - d);
+                cameraDir = new Vector3d(-1 / Math.sqrt(2), 0, 1 / Math.sqrt(2));
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Bot-Aft" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX() - d, centerG.getY(), centerG.getZ() - d);
+                cameraDir = new Vector3d(1 / Math.sqrt(2), 0, 1 / Math.sqrt(2));
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Bot-PS" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX(), centerG.getY() + d, centerG.getZ() - d);
+                cameraDir = new Vector3d(0, -1 / Math.sqrt(2), 1 / Math.sqrt(2));
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Bot-SB" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX(), centerG.getY() - d, centerG.getZ() - d);
+                cameraDir = new Vector3d(0, 1 / Math.sqrt(2), 1 / Math.sqrt(2));
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Fore-PS" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX() + d, centerG.getY() + d, centerG.getZ());
+                cameraDir = new Vector3d(-1 / Math.sqrt(2), -1 / Math.sqrt(2), 0);
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Fore-SB" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX() + d, centerG.getY() - d, centerG.getZ());
+                cameraDir = new Vector3d(-1 / Math.sqrt(2), 1 / Math.sqrt(2), 0);
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Aft-PS" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX() - d, centerG.getY() + d, centerG.getZ());
+                cameraDir = new Vector3d(1 / Math.sqrt(2), -1 / Math.sqrt(2), 0);
+                cameraUp  = new Vector3d(0, 0, -1);
+            }
+            case "Aft-SB" -> {
+                double d = 200 / Math.sqrt(2);
+                cameraPos = new Point3D(centerG.getX() - d, centerG.getY() - d, centerG.getZ());
+                cameraDir = new Vector3d(1 / Math.sqrt(2), 1 / Math.sqrt(2), 0);
+                cameraUp  = new Vector3d(0, 0, -1);
             }
             case null, default -> {
                 LOG.error("got unknown side {}", side);
@@ -1944,6 +2038,20 @@ class ThreeDView extends BorderPane {
     }
 
     /**
+     * Creates a thin bar centred on a cube edge for the orientation widget.
+     * bx/by/bz are the box dimensions: the longest axis runs along the edge direction.
+     */
+    private Node createOrientEdge(String name, double tx, double ty, double tz,
+                                  double bx, double by, double bz) {
+        Box edgeBox = new Box(bx, by, bz);
+        edgeBox.setId("orient-edge-" + name);
+        edgeBox.setMaterial(new PhongMaterial(Color.DIMGRAY));
+        Group edgeGroup = new Group(edgeBox);
+        edgeGroup.getTransforms().add(new Translate(tx, ty, tz));
+        return edgeGroup;
+    }
+
+    /**
      * Sets the main camera's Affine transform and re-registers the sync listener for the corner overlay.
      */
     /**
@@ -1961,24 +2069,33 @@ class ThreeDView extends BorderPane {
             if (id != null && id.startsWith("orient-face-")) {
                 return id.substring("orient-face-".length());
             }
+            if (id != null && id.startsWith("orient-edge-")) {
+                return id.substring("orient-edge-".length());
+            }
             current = current.getParent();
         }
         return null;
     }
 
     /**
-     * Recursively finds Box nodes with "orient-face-" IDs and sets their material
-     * to hoverMat if their face name matches hoveredFace, or normalMat otherwise.
+     * Recursively sets materials on orient-face and orient-edge Box nodes.
      */
-    private void highlightOrientFace(Node node, String hoveredFace, PhongMaterial hoverMat, PhongMaterial normalMat) {
+    private void highlightOrientFace(Node node, String hoveredName,
+                                     PhongMaterial faceHoverMat, PhongMaterial faceNormalMat,
+                                     PhongMaterial edgeHoverMat, PhongMaterial edgeNormalMat) {
         String id = node.getId();
-        if (id != null && id.startsWith("orient-face-") && node instanceof Box box) {
-            String faceName = id.substring("orient-face-".length());
-            box.setMaterial(faceName.equals(hoveredFace) ? hoverMat : normalMat);
+        if (id != null && node instanceof Box box) {
+            if (id.startsWith("orient-face-")) {
+                String name = id.substring("orient-face-".length());
+                box.setMaterial(name.equals(hoveredName) ? faceHoverMat : faceNormalMat);
+            } else if (id.startsWith("orient-edge-")) {
+                String name = id.substring("orient-edge-".length());
+                box.setMaterial(name.equals(hoveredName) ? edgeHoverMat : edgeNormalMat);
+            }
         }
         if (node instanceof Group group) {
             for (Node child : group.getChildren()) {
-                highlightOrientFace(child, hoveredFace, hoverMat, normalMat);
+                highlightOrientFace(child, hoveredName, faceHoverMat, faceNormalMat, edgeHoverMat, edgeNormalMat);
             }
         }
     }
@@ -2120,9 +2237,7 @@ class ThreeDView extends BorderPane {
             legendContainer.setManaged(false);
             legendScrollPane.setVisible(false);
             legendScrollPane.setManaged(false);
-            if (legendToggleIcon != null) {
-                legendToggleIcon.setIconCode(MaterialDesignE.EYE_OFF_OUTLINE);
-            }
+
             return;
         }
 
@@ -2141,11 +2256,7 @@ class ThreeDView extends BorderPane {
         legendContainer.setVisible(legendVisibleByUser);
         legendScrollPane.setManaged(legendVisibleByUser);
         legendScrollPane.setVisible(legendVisibleByUser);
-        if (legendToggleIcon != null) {
-            legendToggleIcon.setIconCode(legendVisibleByUser
-                    ? MaterialDesignE.EYE_OUTLINE
-                    : MaterialDesignE.EYE_OFF_OUTLINE);
-        }
+
     }
 
     /**

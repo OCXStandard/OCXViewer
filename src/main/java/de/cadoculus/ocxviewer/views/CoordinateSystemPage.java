@@ -48,13 +48,6 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
     public static final String NAME = "Coordinate System";
     private static final Logger LOG = LogManager.getLogger(CoordinateSystemPage.class);
 
-
-    private final Label label = new Label();
-    private final InputGroup originGroup;
-    private final InputGroup primAxisGroup;
-    private final InputGroup secAxisGroup;
-
-
     public CoordinateSystemPage(org.ocx_schema.v310.CoordinateSystem coosys, Page parent) {
         super(coosys, parent, "Coordinate System «" + coosys.getId() + "»");
 
@@ -67,8 +60,6 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
 
 
         int row = 0;
-        Label label = null;
-        TextField textField = null;
 
         var titelLabel = new Label("Identification");
         titelLabel.getStyleClass().add(Styles.TITLE_4);
@@ -84,13 +75,13 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         GridPane.setMargin(titelLabel, new Insets(20, 0, 10, 0));
 
 
-        var viewButton = new Button(null ,new FontIcon(MaterialDesignA.AXIS_ARROW));
+        var viewButton = new Button(null, new FontIcon(MaterialDesignA.AXIS_ARROW));
         viewButton.setTooltip(new Tooltip("View the coordinate system in a 3D view"));
         viewButton.getStyleClass().addAll(
                 Styles.BUTTON_ICON, Styles.ACCENT
         );
         gridPane.add(viewButton, 3, row, 1, 1);
-        viewButton.setOnAction(e -> {
+        viewButton.setOnAction(_ -> {
             var robert = new ArrayList<>(getBreadcrumbs());
             robert.add(new BreadcrumbRecord("3D View " + coosys.getId(), CoordinateSystem3DViewPage.class, null, getObject()));
 
@@ -99,17 +90,12 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         });
 
 
-        label = new Label("Id");
+        var label = new Label("Id");
         label.setTooltip(new Tooltip("The coordinate systems's Id"));
         gridPane.add(label, 0, row);
-        textField = new TextField();
+        var textField = new TextField();
         gridPane.add(textField, 1, row++);
         bindToBean(textField.textProperty(), coosys, "id", String.class);
-
-
-
-
-
 
         label = new Label("GUID");
         label.setTooltip(new Tooltip("The GUID of the Coordinate System."));
@@ -134,24 +120,37 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
         GridPane.setHalignment(label, HPos.LEFT);
         GridPane.setMargin(label, new Insets(20, 0, 10, 0));
 
-        label = new Label("Origin");
-        label.setTooltip(new Tooltip("The origin of a local or global coordinate system."));
-        gridPane.add(label, 0, ++row);
-        originGroup = createOrRebind(null, coosys.getLocalCartesian().getOrigin(), true);
-        gridPane.add(originGroup, 1, row);
+        if (coosys.getLocalCartesian() == null) {
+
+            LOG.error("no local cartesian found in coordinate system {}", coosys.getGUIDRef());
+            var warning = new atlantafx.base.controls.Message(
+                    "Warning",
+                    "No Local Cartesian Coordinate System defined for this Coordinate System!",
+                    new FontIcon(MaterialDesignA.ALERT)
+            );
+            warning.getStyleClass().add(Styles.WARNING);
+            gridPane.add(warning, 0, ++row, 4, 1);
+        } else {
+
+            label = new Label("Origin");
+            label.setTooltip(new Tooltip("The origin of a local or global coordinate system."));
+            gridPane.add(label, 0, ++row);
+            InputGroup originGroup = createOrRebind(null, coosys.getLocalCartesian().getOrigin(), true);
+            gridPane.add(originGroup, 1, row);
 
 
-        label = new Label("Primary Axis");
-        label.setTooltip(new Tooltip("The unit vector of the local X-axis (U-Axis) given in global Coordinate System."));
-        gridPane.add(label, 0, ++row);
-        primAxisGroup = createOrRebind(null, coosys.getLocalCartesian().getPrimaryAxis(), true);
-        gridPane.add(primAxisGroup, 1, row);
+            label = new Label("Primary Axis");
+            label.setTooltip(new Tooltip("The unit vector of the local X-axis (U-Axis) given in global Coordinate System."));
+            gridPane.add(label, 0, ++row);
+            InputGroup    primAxisGroup = createOrRebind(null, coosys.getLocalCartesian().getPrimaryAxis(), true);
+            gridPane.add(primAxisGroup, 1, row);
 
-        label = new Label("Secondary Axis");
-        label.setTooltip(new Tooltip("The unit vector of the local Y-axis (V-Axis) given in global Coordinate System."));
-        gridPane.add(label, 2, row);
-        secAxisGroup = createOrRebind(null, coosys.getLocalCartesian().getSecondaryAxis(), true);
-        gridPane.add(secAxisGroup, 3, row);
+            label = new Label("Secondary Axis");
+            label.setTooltip(new Tooltip("The unit vector of the local Y-axis (V-Axis) given in global Coordinate System."));
+            gridPane.add(label, 2, row);
+            InputGroup    secAxisGroup = createOrRebind(null, coosys.getLocalCartesian().getSecondaryAxis(), true);
+            gridPane.add(secAxisGroup, 3, row);
+        }
 
         label = new Label("References Planes");
         label.getStyleClass().add(Styles.TITLE_4);

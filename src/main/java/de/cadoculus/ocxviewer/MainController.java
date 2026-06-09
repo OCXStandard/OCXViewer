@@ -247,6 +247,7 @@ public class MainController {
                     LOG.debug("created a new sub page {} for {}", newPage, trgtBC.object());
                 } catch (Exception exp) {
                     LOG.error("Error creating sub page for trgtBC {}", trgtBC, exp);
+
                     break;
                 }
             } else if (AbstractDataViewPage.class.isAssignableFrom(trgtBC.pageClazz())) {
