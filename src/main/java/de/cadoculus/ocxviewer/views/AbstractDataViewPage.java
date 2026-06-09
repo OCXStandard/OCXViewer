@@ -755,8 +755,8 @@ public abstract class AbstractDataViewPage extends BorderPane implements de.cado
             var unit = "unset";
             var longUnit = "";
             if (quantity.getUnit() instanceof Unit unit1) {
-                unit = unit1.getUnitSymbols().getFirst().getType();
-                longUnit = unit1.getUnitNames().getFirst().getValue();
+                unit = unit1.getUnitSymbols() != null && ! unit1.getUnitSymbols().isEmpty() ? unit1.getUnitSymbols().getFirst().getType() : "no unit symbols available";
+                longUnit = unit1.getUnitNames()!= null && ! unit1.getUnitNames().isEmpty() ? unit1.getUnitNames().getFirst().getValue() : "no unit names available";
             }
 
             LOG.debug("binding quantity {} {}", quantity.getNumericvalue(), quantity.getUnit());
