@@ -28,3 +28,10 @@ target/**
 binaries/**
 /target/
 /test-out/
+
+.idea/sonarlint/
+
+# Runtime log written to the project root
+/log.txt
+
+/out/

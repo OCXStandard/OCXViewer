@@ -7,9 +7,24 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="project-snapshot" />
+      <option name="name" value="Project snapshots" />
+      <option name="url" value="https://artifactory.psad.de/artifactory/project-snapshot" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="project-release" />
+      <option name="name" value="Project releases" />
+      <option name="url" value="https://artifactory.psad.de/artifactory/project-release" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Maven Central repository" />
       <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="opdm-product-release" />
+      <option name="name" value="OpenPDM product releases" />
+      <option name="url" value="https://artifactory.psad.de/artifactory/opdm-product-release" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="jboss.community" />
@@ -18,8 +33,18 @@
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://artifactory.psad.de/artifactory/third-party-libs" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
       <option name="name" value="libs-release" />
       <option name="url" value="http://repo1.maven.org/maven2/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="opdm-product-snapshot" />
+      <option name="name" value="OPDM product snapshots" />
+      <option name="url" value="https://artifactory.psad.de/artifactory/opdm-product-snapshot" />
     </remote-repository>
   </component>
 </project>

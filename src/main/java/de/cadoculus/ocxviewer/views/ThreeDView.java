@@ -436,13 +436,13 @@ class ThreeDView extends BorderPane {
         zoomInCursor = createIconCursor(MaterialDesignM.MAGNIFY_PLUS);
         zoomOutCursor = createIconCursor(MaterialDesignM.MAGNIFY_MINUS);
         zoomCursorReset = new PauseTransition(Duration.millis(ZOOM_CURSOR_RESET_MS));
-        zoomCursorReset.setOnFinished(_ -> {
+        zoomCursorReset.setOnFinished(a -> {
             zoomCursorActive = false;
             applyInteractionCursor();
         });
 
         zoomAllDebounce = new PauseTransition(Duration.millis(ZOOM_ALL_DEBOUNCE_MS));
-        zoomAllDebounce.setOnFinished(_ -> zoomAll(world, 50));
+        zoomAllDebounce.setOnFinished(a -> zoomAll(world, 50));
 
         // now add all the event listeners used to control the 3D view
         subScene.setOnScroll(event -> {
@@ -526,7 +526,7 @@ class ThreeDView extends BorderPane {
             }
             updatePickCoordinateLabel(event.getPickResult());
         });
-        subScene.setOnMouseExited(_ -> {
+        subScene.setOnMouseExited(a -> {
             middlePanActive = false;
             primaryDragActive = false;
             zoomCursorActive = false;
@@ -701,7 +701,7 @@ class ThreeDView extends BorderPane {
                 highlightOrientFace(child, hoveredName, faceHoverMat, faceNormalMat, edgeHoverMat, edgeNormalMat);
             }
         });
-        cornerOverlaySubScene.setOnMouseExited(_ -> {
+        cornerOverlaySubScene.setOnMouseExited(a -> {
             for (Node child : cornerOverlayRoot.getChildren()) {
                 highlightOrientFace(child, null, faceHoverMat, faceNormalMat, edgeHoverMat, edgeNormalMat);
             }
@@ -732,7 +732,7 @@ class ThreeDView extends BorderPane {
         var fitAllButton = new Button("");
         fitAllButton.setTooltip(new Tooltip("Fit View, Shortcut: <Ctrl><0>"));
         fitAllButton.setGraphic(new FontIcon(MaterialDesignF.FIT_TO_PAGE));
-        fitAllButton.setOnAction(_ -> {
+        fitAllButton.setOnAction(a -> {
             fitAll(ZOOM_ALL_MARGIN);
             subScene.requestFocus();
         });
@@ -741,7 +741,7 @@ class ThreeDView extends BorderPane {
         var zoomInButton = new Button("");
         zoomInButton.setTooltip(new Tooltip("Zoom In, Shortcut: <Ctrl><+>"));
         zoomInButton.setGraphic(new FontIcon(MaterialDesignM.MAGNIFY_PLUS));
-        zoomInButton.setOnAction(_ -> {
+        zoomInButton.setOnAction(a -> {
             zoom(KEYBOARD_ZOOM_DELTA);
             subScene.requestFocus();
         });
@@ -750,7 +750,7 @@ class ThreeDView extends BorderPane {
         var zoomOutButton = new Button("");
         zoomOutButton.setTooltip(new Tooltip("Zoom Out, Shortcut: <Ctrl><->"));
         zoomOutButton.setGraphic(new FontIcon(MaterialDesignM.MAGNIFY_MINUS));
-        zoomOutButton.setOnAction(_ -> {
+        zoomOutButton.setOnAction(a -> {
             zoom(-KEYBOARD_ZOOM_DELTA);
             subScene.requestFocus();
         });
@@ -761,7 +761,7 @@ class ThreeDView extends BorderPane {
         viewSelector.setPromptText("View");
         viewSelector.getItems().addAll(views);
         viewSelector.setValue("SB");
-        viewSelector.setOnAction(_ -> applyPresetView(viewSelector.getValue()));
+        viewSelector.setOnAction(a -> applyPresetView(viewSelector.getValue()));
         toolbar.getItems().add(viewSelector);
 
         //Platform.runLater(() -> applyPresetView("SB"));
@@ -782,10 +782,10 @@ class ThreeDView extends BorderPane {
         item1.getStyleClass().add("supressDefaultCheckbox");
         var item1Icon = new FontIcon(MaterialDesignE.EYE_OFF_OUTLINE);
         item1.setGraphic(item1Icon);
-        item1.selectedProperty().addListener((_, _, selected) -> {
+        item1.selectedProperty().addListener((a, b, selected) -> {
             item1Icon.setIconCode(selected ? MaterialDesignE.EYE_OUTLINE : MaterialDesignE.EYE_OFF_OUTLINE);
         });
-        item1.setOnAction(_ -> {
+        item1.setOnAction(a -> {
             if (legendContainer != null && legendScrollPane != null && !legendContainer.getChildren().isEmpty()) {
                 legendVisibleByUser = !legendVisibleByUser;
                 legendScrollPane.setVisible(legendVisibleByUser);
@@ -800,10 +800,10 @@ class ThreeDView extends BorderPane {
         item2.getStyleClass().add("supressDefaultCheckbox");
         var item2Icon = new FontIcon(MaterialDesignE.EYE_OFF_OUTLINE);
         item2.setGraphic(item2Icon);
-        item2.selectedProperty().addListener((_, _, selected) -> {
+        item2.selectedProperty().addListener((a, b, selected) -> {
             item2Icon.setIconCode(selected ? MaterialDesignE.EYE_OUTLINE : MaterialDesignE.EYE_OFF_OUTLINE);
         });
-        item2.setOnAction(_ -> {
+        item2.setOnAction(a -> {
             boolean visible = !skyboxNode.isVisible();
             skyboxNode.setVisible(visible);
         });
@@ -821,7 +821,7 @@ class ThreeDView extends BorderPane {
         infoPaneFadeOut = new FadeTransition(Duration.millis(180), infoPaneContainer);
         infoPaneFadeOut.setFromValue(1.0);
         infoPaneFadeOut.setToValue(0.0);
-        infoPaneFadeOut.setOnFinished(_ -> {
+        infoPaneFadeOut.setOnFinished(a -> {
             if (infoPaneContainer != null) {
                 infoPaneContainer.setVisible(false);
                 infoPaneContainer.setManaged(false);
@@ -832,7 +832,7 @@ class ThreeDView extends BorderPane {
         var mainAffine = (Affine) camera.getTransforms().getFirst();
         syncCornerCamera(mainAffine);
         updateBillboards(mainAffine);
-        mainAffine.setOnTransformChanged(_ -> {
+        mainAffine.setOnTransformChanged(a -> {
             syncCornerCamera(mainAffine);
             updateBillboards(mainAffine);
             rebuildCoordinateSystemGrid();
@@ -2175,7 +2175,7 @@ class ThreeDView extends BorderPane {
     private void setCameraAffine(Affine newAffine) {
         camera.getTransforms().clear();
         camera.getTransforms().setAll(newAffine);
-        newAffine.setOnTransformChanged(_ -> {
+        newAffine.setOnTransformChanged(a -> {
             syncCornerCamera(newAffine);
             updateBillboards(newAffine);
             rebuildCoordinateSystemGrid();
@@ -2384,7 +2384,7 @@ class ThreeDView extends BorderPane {
 
         // Auto-hide info after 5 seconds
         PauseTransition hideDelay = new PauseTransition(Duration.seconds(5));
-        hideDelay.setOnFinished(_ -> {
+        hideDelay.setOnFinished(a -> {
             if (infoPaneFadeOut != null) {
                 infoPaneFadeOut.play();
             }

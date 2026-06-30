@@ -81,7 +81,7 @@ public class CoordinateSystemPage extends AbstractDataViewSubPage<org.ocx_schema
                 Styles.BUTTON_ICON, Styles.ACCENT
         );
         gridPane.add(viewButton, 3, row, 1, 1);
-        viewButton.setOnAction(_ -> {
+        viewButton.setOnAction(a -> {
             var robert = new ArrayList<>(getBreadcrumbs());
             robert.add(new BreadcrumbRecord("3D View " + coosys.getId(), CoordinateSystem3DViewPage.class, null, getObject()));
 

@@ -43,6 +43,8 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 public class MainController {
@@ -78,6 +80,9 @@ public class MainController {
     @FXML
     public void initialize() {
 
+        // store last window size
+        DefaultEventBus.getInstance().subscribe(WindowEvent.class, windowEvent -> storeSize());
+
         // register for navigation
         DefaultEventBus.getInstance().subscribe(OpenEvent.class, event -> initializeViews());
 
@@ -87,6 +92,22 @@ public class MainController {
         final LogPage logPage = new LogPage();
         pageClass2page.put(LogPage.class, logPage);
 
+    }
+
+    private void storeSize()  {
+        Preferences preferences = Preferences.userRoot();
+
+       var  width = (int) mainBorderPane.getWidth();
+       var height = (int)mainBorderPane.getHeight();
+
+        preferences.putInt("OCXV.width", width);
+        preferences.putInt("OCXV.height", height);
+
+        try {
+            preferences.flush();
+        } catch (BackingStoreException e) {
+            LOG.warn("failed to flush preferences", e);
+        }
     }
 
     /**

@@ -2,7 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/binaries/mtavpanellineconverters" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/binaries/mtavpanellineconverters/scripts/opdm-build-scripts-cs" vcs="Git" />
   </component>
 </project>
