@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.prostep.openpdm</groupId>
-    <artifactId>ocxviewer</artifactId>
+    <artifactId>OCXViewer</artifactId>
     <version>0.3.0-SNAPSHOT</version>
     <name>ocxviewer</name>
 
@@ -22,6 +22,16 @@
         <!-- this is used to fill in the build timestamp in mvn.properties -->
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+
+        <!-- For generating the Windows executable with Launch4j and the ZIP delivery -->
+        <skip-launch4j>false</skip-launch4j>
+        <product.name>OCXViewer</product.name>
+        <product.version>0.3.0.0</product.version>
+        <uiApp.exe.name>OCXViewer.exe</uiApp.exe.name>
+        <jre.path>./lib/jre/</jre.path>
+        <zipName>${project.artifactId}-${project.version}.zip</zipName>
+        <installFolder>${project.artifactId}-${project.version}</installFolder>
+        <main-app>de.cadoculus.ocxviewer.Main</main-app>
 
     </properties>
 
@@ -358,6 +368,132 @@
                         <dirty>-dirty</dirty>
                     </gitDescribe>
                 </configuration>
+            </plugin>
+
+            <!--
+                Package a "jar-with-dependencies". JavaFX is bundled inside it and the app is
+                launched through de.cadoculus.ocxviewer.Main, so JavaFX starts cleanly from the classpath.
+            -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main-app}</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <!-- suppress reflection warning due to the multi-release log4j2 jar -->
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Launch4j: wrap the jar into a double-clickable Windows .exe that uses the bundled JRE -->
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.3</version>
+                <executions>
+                    <execution>
+                        <id>launch4j-ocxviewer-ui-app</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip-launch4j}</skip>
+                            <headerType>gui</headerType>
+                            <outfile>target/${uiApp.exe.name}</outfile>
+                            <jar>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</jar>
+                            <errTitle>OCXViewer: Error</errTitle>
+                            <icon>src/main/resources/de/cadoculus/ocxviewer/images/favicon.ico</icon>
+                            <chdir>.</chdir>
+                            <cmdLine>--log data/log4j2.xml</cmdLine>
+                            <classPath>
+                                <mainClass>${main-app}</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <path>${jre.path}</path>
+                                <requires64Bit>true</requires64Bit>
+                                <initialHeapSize>128</initialHeapSize>
+                                <maxHeapSize>2048</maxHeapSize>
+                            </jre>
+                            <versionInfo>
+                                <fileDescription>${product.name}</fileDescription>
+                                <fileVersion>${product.version}</fileVersion>
+                                <txtFileVersion>Version ${product.version}</txtFileVersion>
+                                <copyright>Copyright 2025 Carsten Zerbst et. al.</copyright>
+                                <productVersion>${product.version}</productVersion>
+                                <txtProductVersion>Version ${project.version}</txtProductVersion>
+                                <productName>${product.name}</productName>
+                                <internalName>${project.artifactId}</internalName>
+                                <originalFilename>${uiApp.exe.name}</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Assemble the delivery folder (exe + bundled JRE + data/doc) and zip it -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>createArchiveDir</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip-launch4j}</skip>
+                            <target>
+                                <mkdir dir="target/install"/>
+                                <copy todir="target/install">
+                                    <fileset dir="release"/>
+                                    <fileset dir="target">
+                                        <filename name="${uiApp.exe.name}"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>createZip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip-launch4j}</skip>
+                            <target>
+                                <zip destfile="target/${zipName}">
+                                    <mappedresources>
+                                        <fileset dir="${basedir}/target/install" includes="**/*"/>
+                                        <globmapper from="*" to="${installFolder}/*"/>
+                                    </mappedresources>
+                                </zip>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
