@@ -1,4 +1,4 @@
-<Configuration status="WARN" strict="true" name="XMLConfigTest" packages="org.apache.logging.log4j.test">
+<Configuration status="WARN" strict="true" name="XMLConfigTest" packages="de.cadoculus.ocxviewer.logging">
 
     <Properties>
         <Property name="filename">log.txt</Property>
@@ -19,9 +19,6 @@
         The filtering is applied in the appender itself
         -->
         <Appender type="ListBoxAppender" name="ListBoxAppender" >
-            <Layout type="PatternLayout">
-                <Pattern>%c{1.} :  %m%n</Pattern>
-            </Layout>
         </Appender>
 
     </Appenders>

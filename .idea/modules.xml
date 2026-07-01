@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ocxviewer.iml" filepath="$PROJECT_DIR$/ocxviewer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OCXViewer.iml" filepath="$PROJECT_DIR$/OCXViewer.iml" />
     </modules>
   </component>
 </project>

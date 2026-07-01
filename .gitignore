@@ -35,3 +35,8 @@ binaries/**
 /log.txt
 
 /out/
+
+!release/**
+
+.idea/misc.xml
+*.iml
