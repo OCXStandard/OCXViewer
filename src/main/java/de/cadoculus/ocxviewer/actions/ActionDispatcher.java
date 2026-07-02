@@ -23,12 +23,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.jar.JarFile;
 
 /**
  * Dispatches events from the event bus to actions.
@@ -47,10 +54,8 @@ public class ActionDispatcher {
 
         var packageName = AbstractAction.class.getPackageName();
         ClassLoader classLoader = AbstractAction.class.getClassLoader();
-        InputStream stream = classLoader.getResourceAsStream(packageName.replaceAll("[.]", "/"));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        reader.lines()
-                .filter(line -> line.endsWith(".class"))
+
+        collectActionClassFileNames(packageName, classLoader).stream()
                 .map(line -> getClass(line, packageName))
                 .filter(Objects::nonNull)
                 .filter(clazz -> clazz.getSuperclass() == AbstractAction.class)
@@ -59,6 +64,54 @@ public class ActionDispatcher {
         key2class.entrySet().forEach(entry -> LOG.debug(entry.getKey().toString() + " " + entry.getValue().toString()));
 
 
+    }
+
+    /**
+     * Collect the simple file names of the classes directly in the given package.
+     * This works both when the classes are exploded on disk (javafx:run)
+     * and when they are packaged inside a jar (the launch4j / jar delivery).
+     */
+    private Set<String> collectActionClassFileNames(String packageName, ClassLoader classLoader) {
+        String path = packageName.replace('.', '/');
+        Set<String> classFileNames = new LinkedHashSet<>();
+
+        // Packaged in a jar: enumerate the jar entries directly under the package path.
+        try {
+            Enumeration<URL> resources = classLoader.getResources(path);
+            while (resources.hasMoreElements()) {
+                URL url = resources.nextElement();
+                if ("jar".equals(url.getProtocol())) {
+                    JarURLConnection connection = (JarURLConnection) url.openConnection();
+                    try (JarFile jar = connection.getJarFile()) {
+                        String prefix = path + "/";
+                        var entries = jar.entries();
+                        while (entries.hasMoreElements()) {
+                            String name = entries.nextElement().getName();
+                            if (name.startsWith(prefix) && name.endsWith(".class")
+                                    && name.indexOf('/', prefix.length()) < 0) {
+                                classFileNames.add(name.substring(prefix.length()));
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException exp) {
+            LOG.error("failed to scan jar for action classes in package {}", packageName, exp);
+        }
+
+        // on disk: the package directory can be read as a text listing of file names.
+        InputStream stream = classLoader.getResourceAsStream(path);
+        if (stream != null) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+                reader.lines()
+                        .filter(line -> line.endsWith(".class"))
+                        .forEach(classFileNames::add);
+            } catch (IOException exp) {
+                LOG.error("failed to read action package directory {}", packageName, exp);
+            }
+        }
+
+        return classFileNames;
     }
 
     private void putKey(Class clazz, Scene scene) {
