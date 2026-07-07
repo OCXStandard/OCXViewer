@@ -29,7 +29,7 @@ binaries/**
 /target/
 /test-out/
 
-.idea/sonarlint/
+.idea/
 
 # Runtime log written to the project root
 /log.txt
@@ -38,5 +38,4 @@ binaries/**
 
 !release/**
 
-.idea/misc.xml
 *.iml
