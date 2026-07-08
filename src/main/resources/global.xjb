@@ -15,7 +15,7 @@
 
     </jaxb:globalBindings>
 
-    <jaxb:bindings schemaLocation="OCX_Schema.xsd" >
+    <jaxb:bindings schemaLocation="xsds/v310/OCX_Schema.xsd" >
         <jaxb:schemaBindings>
             <jaxb:package name="org.ocx_schema.v310"/>
         </jaxb:schemaBindings>

@@ -204,6 +204,13 @@
                         </goals>
                         <configuration>
                             <debug>false</debug>
+                            <!-- The JAXB data model is bound to OCX v3.1.0 only. The other
+                                 schema versions under xsds/ are used for raw XML validation
+                                 (SchemaCheckAction) and must not be compiled by XJC. -->
+                            <schemaDirectory>src/main/resources</schemaDirectory>
+                            <schemaIncludes>
+                                <include>xsds/v310/OCX_Schema.xsd</include>
+                            </schemaIncludes>
                             <args>
                                 <arg>-Xinheritance</arg>
                                 <arg>-XpropertyListener</arg>
