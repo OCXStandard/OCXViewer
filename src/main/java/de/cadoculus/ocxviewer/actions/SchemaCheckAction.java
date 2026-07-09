@@ -15,9 +15,12 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.actions;
 
+import de.cadoculus.ocxviewer.ui.SchemaCheckDialogue;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The Schema Check action
@@ -28,12 +31,12 @@ public class SchemaCheckAction extends AbstractAction {
 
     public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN);
     public final static String NAME = "Schema Check";
+    private static final Logger LOG = LogManager.getLogger(SchemaCheckAction.class);
 
-    //TODO: implement a dialogue to select the file and version to check, then run the schema checks
     @Override
     public void run() {
+        LOG.debug("schema check");
 
-
-        System.out.println("Schema Check");
+        new SchemaCheckDialogue().show();
     }
 }

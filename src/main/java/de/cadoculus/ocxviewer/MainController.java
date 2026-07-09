@@ -29,6 +29,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.GaussianBlur;
@@ -72,6 +73,9 @@ public class MainController {
     private StackPane stackPane;
     private boolean viewInitialized = false;
     private PageTree navigationTree;
+    private Node savedLeft;
+    private Node savedCenter;
+    private boolean fullWindowPaneActive = false;
 
     public MainController() {
         super();
@@ -79,6 +83,8 @@ public class MainController {
 
     @FXML
     public void initialize() {
+
+        WorkingContext.getInstance().setMainController(this);
 
         // store last window size
         DefaultEventBus.getInstance().subscribe(WindowEvent.class, windowEvent -> storeSize());
@@ -348,6 +354,40 @@ public class MainController {
         switchToPage((BorderPane) paneToAdd);
     }
 
+
+    /**
+     * Shows the given pane in the full main window, hiding the navigation tree
+     * and the current data view until {@link #restoreMainView()} is called.
+     *
+     * @param pane the pane to show
+     * @return true if the pane was shown
+     */
+    public boolean showFullWindowPane(Node pane) {
+        if (fullWindowPaneActive) {
+            LOG.debug("a full window pane is already active");
+            return false;
+        }
+        fullWindowPaneActive = true;
+        savedLeft = mainBorderPane.getLeft();
+        savedCenter = mainBorderPane.getCenter();
+        mainBorderPane.setLeft(null);
+        mainBorderPane.setCenter(pane);
+        return true;
+    }
+
+    /**
+     * Restores the navigation tree and data view hidden by {@link #showFullWindowPane(Node)}.
+     */
+    public void restoreMainView() {
+        if (!fullWindowPaneActive) {
+            return;
+        }
+        mainBorderPane.setLeft(savedLeft);
+        mainBorderPane.setCenter(savedCenter);
+        savedLeft = null;
+        savedCenter = null;
+        fullWindowPaneActive = false;
+    }
 
     /**
      * This method switches the visible page in the stack pane with an animation.
