@@ -72,8 +72,7 @@ public class SchematronCheckDialogue {
         title.getStyleClass().add(Styles.TITLE_2);
         var description = BBCodeParser.createFormattedText(
                 "Runs a Schematron rules file (.sch) against the raw XML of an OCX file and "
-                        + "lists all violations. An example rules file for OCX 3.1.0 is shipped under "
-                        + "[code]data/schematron/[/code]. Note that the OCX namespace is version specific, "
+                        + "lists all violations. The OCX namespace is version specific, "
                         + "so a rules file only matches files of the version it targets.");
 
         ocxField.setEditable(false);
@@ -168,8 +167,8 @@ public class SchematronCheckDialogue {
                 }
             }
         });
-        severityCol.setPrefWidth(110);
-        severityCol.setMaxWidth(140);
+        severityCol.setPrefWidth(80);
+        severityCol.setMaxWidth(110);
 
         var locationCol = new TableColumn<SchematronIssue, String>("Location");
         locationCol.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().location()));
@@ -189,7 +188,8 @@ public class SchematronCheckDialogue {
                 }
             }
         });
-        locationCol.setPrefWidth(300);
+        locationCol.setPrefWidth(190);
+        locationCol.setMaxWidth(350);
 
         var messageCol = new TableColumn<SchematronIssue, String>("Message");
         messageCol.setCellValueFactory(cd -> new ReadOnlyObjectWrapper<>(cd.getValue().message()));

@@ -17,6 +17,8 @@ package de.cadoculus.ocxviewer.io;
 
 import com.helger.schematron.ISchematronResource;
 import com.helger.schematron.sch.SchematronResourceSCH;
+import com.helger.schematron.svrl.ISVRLLocationBeautifier;
+import com.helger.schematron.svrl.SVRLHelper;
 import com.helger.schematron.svrl.jaxb.FailedAssert;
 import com.helger.schematron.svrl.jaxb.FiredRule;
 import com.helger.schematron.svrl.jaxb.SchematronOutputType;
@@ -49,6 +51,12 @@ import java.util.stream.Collectors;
 public class SchematronValidator {
 
     private static final Logger LOG = LogManager.getLogger(SchematronValidator.class);
+
+    // Shortens the verbose SVRL XPath locations by rendering every OCX element.
+    private static final ISVRLLocationBeautifier OCX_LOCATION_BEAUTIFIER = (namespaceURI, localName) ->
+            namespaceURI != null && namespaceURI.contains("3docx.org") && namespaceURI.contains("ocx_schema")
+                    ? "ocx:" + localName
+                    : null;
 
     private final File ocxFile;
     private final File schematronFile;
@@ -150,9 +158,22 @@ public class SchematronValidator {
     private static SchematronIssue toIssue(FailedAssert failedAssert) {
         return new SchematronIssue(
                 severityOf(failedAssert),
-                failedAssert.getLocation(),
+                beautifyLocation(failedAssert.getLocation()),
                 failedAssert.getTest(),
                 extractMessage(failedAssert));
+    }
+
+    // Turns the raw SVRL XPath location into a shorter form.
+    private static String beautifyLocation(String location) {
+        if (location == null) {
+            return null;
+        }
+        try {
+            return SVRLHelper.getBeautifiedLocation(location, OCX_LOCATION_BEAUTIFIER);
+        } catch (RuntimeException exp) {
+            LOG.debug("could not beautify SVRL location {}", location, exp);
+            return location;
+        }
     }
 
     /**
