@@ -15,9 +15,11 @@ limitations under the License.
 */
 package de.cadoculus.ocxviewer.actions;
 
+import de.cadoculus.ocxviewer.ui.SchematronCheckDialogue;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The Schematron action
@@ -28,11 +30,11 @@ public class SchematronAction extends AbstractAction {
 
     public final static KeyCodeCombination KEYS = new KeyCodeCombination(KeyCode.F5);
     public final static String NAME = "Schematron Check";
+    private static final Logger LOG = LogManager.getLogger(SchematronAction.class);
 
-    //TODO: implement a dialogue to select the file
-    // and rules to check, then run Schematron
     @Override
     public void run() {
-        System.out.println("Schematron Check");
+        LOG.debug("schematron check");
+        new SchematronCheckDialogue().show();
     }
 }

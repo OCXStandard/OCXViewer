@@ -33,8 +33,12 @@ import java.util.prefs.Preferences;
  */
 public class WorkingContext {
 
+    /** Default rules file preselected in the Schematron check until the user picks another one. */
+    private static final String DEFAULT_SCHEMATRON_FILE = "data/schematron/ocx-example-rules.sch";
+
     private static WorkingContext INSTANCE;
     private File ocxFile;
+    private File schematronFile;
     private final Preferences preferences;
     private OcxXMLT ocx;
     private Vessel vessel;
@@ -81,6 +85,35 @@ public class WorkingContext {
                 new File(".").getAbsolutePath();
 
         preferences.put("lastOpenDir", previous);
+    }
+
+    /**
+     * Get the Schematron rules file to preselect in the Schematron check. This is the
+     * last file the user chose, falling back to the example rules shipped under {@code data/schematron/}.
+     * Returns {@code null} if neither is readable.
+     *
+     * @return the rules file to preselect, or null if none is available.
+     */
+    public File getSchematronFile() {
+        if (schematronFile == null) {
+            var stored = preferences.get("schematronFile", DEFAULT_SCHEMATRON_FILE);
+            var candidate = new File(stored);
+            if (candidate.isFile()) {
+                schematronFile = candidate;
+            }
+        }
+        return schematronFile;
+    }
+
+    /**
+     * Set the Schematron rules file and remember it in the preferences so it is
+     * preselected the next time the Schematron check is opened.
+     *
+     * @param schematronFile the rules file the user chose.
+     */
+    public void setSchematronFile(File schematronFile) {
+        this.schematronFile = schematronFile;
+        preferences.put("schematronFile", schematronFile.getAbsolutePath());
     }
 
     /**
