@@ -27,7 +27,8 @@ public enum OCXSchemaVersion {
 
     V300("3.0.0", "V300", "/xsds/v300/OCX_Schema.xsd"),
     V310("3.1.0", "V310", "/xsds/v310/OCX_Schema.xsd"),
-    V320("3.2.0", "V320", "/xsds/v320/OCX_Schema.xsd");
+    // work-in-progress release candidate; replace the file when OCX 3.2.0 is released
+    V320("3.2.0 (rc6)", "V320rc6", "/xsds/v320/OCX_Schema_rc6.xsd");
 
     /**
      * The version segment inside an OCX target namespace, e.g. "V310" in

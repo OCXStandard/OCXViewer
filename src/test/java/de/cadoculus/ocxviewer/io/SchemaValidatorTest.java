@@ -84,7 +84,7 @@ class SchemaValidatorTest {
     void bundledSchemaVersionsAreReportedCorrectly() {
         assertTrue(OCXSchemaVersion.V300.isAvailable(), "v300 XSD is bundled");
         assertTrue(OCXSchemaVersion.V310.isAvailable(), "v310 XSD is bundled");
-        assertFalse(OCXSchemaVersion.V320.isAvailable(), "v320 is declared but not bundled");
+        assertTrue(OCXSchemaVersion.V320.isAvailable(), "v320 XSD is bundled");
     }
 
     @Test
@@ -103,13 +103,6 @@ class SchemaValidatorTest {
         assertNotNull(detected, "the root namespace should be detected");
         assertEquals(Optional.of(OCXSchemaVersion.V310), OCXSchemaVersion.fromNamespace(detected),
                 "the detected namespace should map back to v3.1.0");
-    }
-
-    @Test
-    void unbundledSchemaVersionIsRejected() {
-        var validator = new SchemaValidator(VALID_OCX, OCXSchemaVersion.V320);
-        assertThrows(IllegalArgumentException.class, validator::validate,
-                "validating against a version whose XSD is not bundled must fail fast");
     }
 
     @Test
