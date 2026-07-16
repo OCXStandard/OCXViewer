@@ -36,6 +36,4 @@ binaries/**
 
 /out/
 
-!release/**
-
 *.iml
