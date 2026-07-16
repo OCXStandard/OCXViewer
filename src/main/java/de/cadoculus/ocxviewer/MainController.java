@@ -363,13 +363,11 @@ public class MainController {
      * @return true if the pane was shown
      */
     public boolean showFullWindowPane(Node pane) {
-        if (fullWindowPaneActive) {
-            LOG.debug("a full window pane is already active");
-            return false;
+        if (!fullWindowPaneActive) {
+            savedLeft = mainBorderPane.getLeft();
+            savedCenter = mainBorderPane.getCenter();
+            fullWindowPaneActive = true;
         }
-        fullWindowPaneActive = true;
-        savedLeft = mainBorderPane.getLeft();
-        savedCenter = mainBorderPane.getCenter();
         mainBorderPane.setLeft(null);
         mainBorderPane.setCenter(pane);
         return true;
