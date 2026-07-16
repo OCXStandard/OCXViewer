@@ -79,8 +79,8 @@ the bundled schemas under `src/main/resources/xsds/`.
 ### Schematron
 Runs a Schematron rules file (`.sch`) against the raw XML of an OCX file and lists the
 violations (F5 or the Actions menu). Runs inside the main window: pick the OCX file (the
-currently open one is preselected) and a rules file, then click Validate. An example rules
-file for OCX 3.1.0 is shipped under `data/schematron/ocx-example-rules.sch`.
+currently open one is preselected) and a rules file, then click Validate. No rules file ships
+with the application — supply your own `.sch` (the last one you picked is remembered).
 
 Because the OCX namespace is version specific, a
 rules file only matches files of the version it targets; if no rule fires, the viewer says so

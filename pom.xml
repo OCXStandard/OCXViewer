@@ -491,7 +491,6 @@
                                     <fileset dir="target">
                                         <filename name="${uiApp.exe.name}"/>
                                     </fileset>
-                                    <fileset dir="${basedir}" includes="data/schematron/**"/>
                                 </copy>
                             </target>
                         </configuration>

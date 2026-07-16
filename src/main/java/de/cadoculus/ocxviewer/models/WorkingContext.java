@@ -33,9 +33,6 @@ import java.util.prefs.Preferences;
  */
 public class WorkingContext {
 
-    /** Default rules file preselected in the Schematron check until the user picks another one. */
-    private static final String DEFAULT_SCHEMATRON_FILE = "data/schematron/ocx-example-rules.sch";
-
     private static WorkingContext INSTANCE;
     private File ocxFile;
     private File schematronFile;
@@ -89,17 +86,18 @@ public class WorkingContext {
 
     /**
      * Get the Schematron rules file to preselect in the Schematron check. This is the
-     * last file the user chose, falling back to the example rules shipped under {@code data/schematron/}.
-     * Returns {@code null} if neither is readable.
+     * last file the user chose (remembered in the preferences).
      *
      * @return the rules file to preselect, or null if none is available.
      */
     public File getSchematronFile() {
         if (schematronFile == null) {
-            var stored = preferences.get("schematronFile", DEFAULT_SCHEMATRON_FILE);
-            var candidate = new File(stored);
-            if (candidate.isFile()) {
-                schematronFile = candidate;
+            var stored = preferences.get("schematronFile", null);
+            if (stored != null) {
+                var candidate = new File(stored);
+                if (candidate.isFile()) {
+                    schematronFile = candidate;
+                }
             }
         }
         return schematronFile;

@@ -29,8 +29,8 @@ Select [b]Actions -> XML Schema Check[/b] (or press [b]CTRL+T[/b]), choose an OC
 [heading=3]Schematron Check[/heading]
 Runs a Schematron rules file ([b].sch[/b]) against the raw XML of an OCX file and lists the violations.
 Select [b]Actions -> Schematron Check[/b] (or press [b]F5[/b]), choose the OCX file (the currently open file is
-preselected) and a rules file, then press [b]Validate[/b]. An example rules file for OCX 3.1.0 is shipped under
-[code]data/schematron/ocx-example-rules.sch[/code]. Note that the OCX namespace is version specific: a rules file
+preselected) and a rules file, then press [b]Validate[/b]. No rules file ships with the application, so supply your
+own [b].sch[/b] (the last one you picked is remembered). Note that the OCX namespace is version specific: a rules file
 only matches files of the version it targets, so if no rule fires the rules probably target a different version.
 
 
