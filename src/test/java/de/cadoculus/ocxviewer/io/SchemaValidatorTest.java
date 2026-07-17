@@ -42,6 +42,7 @@ class SchemaValidatorTest {
             "https://3docx.org/fileadmin//ocx_schema//V310//OCX_Schema.xsd";
 
     private static final File VALID_OCX = new File("data/Schema310/Validated/TR03_TC10_psav.3docx");
+    private static final File INVALID_OCX = new File("data/Schema310/Invalidated/invalid_demo.3docx");
 
     @BeforeAll
     static void setUp() {
@@ -81,6 +82,19 @@ class SchemaValidatorTest {
     }
 
     @Test
+    void curatedInvalidFileReportsSchemaErrors() throws Exception {
+        var validator = new SchemaValidator(INVALID_OCX, OCXSchemaVersion.V310);
+        List<SchemaValidationIssue> issues = validator.validate();
+
+        assertFalse(issues.isEmpty(), "the curated invalid sample must produce schema findings");
+        long errors = issues.stream()
+                .filter(i -> i.severity() != SchemaValidationIssue.Severity.WARNING)
+                .count();
+        assertTrue(errors > 0,
+                "the curated invalid sample must produce at least one error/fatal finding: " + issues);
+    }
+
+    @Test
     void bundledSchemaVersionsAreReportedCorrectly() {
         assertTrue(OCXSchemaVersion.V300.isAvailable(), "v300 XSD is bundled");
         assertTrue(OCXSchemaVersion.V310.isAvailable(), "v310 XSD is bundled");
@@ -93,6 +107,9 @@ class SchemaValidatorTest {
                 OCXSchemaVersion.fromNamespace(V310_NAMESPACE));
         assertEquals(Optional.of(OCXSchemaVersion.V300),
                 OCXSchemaVersion.fromNamespace("https://3docx.org/fileadmin//ocx_schema//V300//OCX_Schema.xsd"));
+        // rc-style suffix: the V320 namespace segment is "V320rc6"
+        assertEquals(Optional.of(OCXSchemaVersion.V320),
+                OCXSchemaVersion.fromNamespace("https://3docx.org/fileadmin//ocx_schema//V320rc6//OCX_Schema_rc6.xsd"));
         assertTrue(OCXSchemaVersion.fromNamespace(null).isEmpty());
         assertTrue(OCXSchemaVersion.fromNamespace("urn:something:else").isEmpty());
     }

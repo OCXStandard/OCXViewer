@@ -29,9 +29,11 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -95,10 +97,12 @@ public class SchemaValidator {
         updateProgress(progress, 0.0);
 
         var schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        harden(schemaFactory);
         var schema = schemaFactory.newSchema(schemaResource);
 
         final var issues = new ArrayList<SchemaValidationIssue>();
         var validator = schema.newValidator();
+        harden(validator);
         validator.setErrorHandler(new ErrorHandler() {
             @Override
             public void warning(SAXParseException exp) {
@@ -153,6 +157,7 @@ public class SchemaValidator {
         final var handler = new FindNamespaceHandler();
         try (var fis = new FileInputStream(file)) {
             var factory = SAXParserFactory.newInstance();
+            harden(factory);
             var saxParser = factory.newSAXParser();
             saxParser.parse(fis, handler);
         } catch (FoundNamespaceException e) {
@@ -207,6 +212,45 @@ public class SchemaValidator {
             status.set(newValue);
         } else {
             Platform.runLater(() -> status.set(newValue));
+        }
+    }
+
+    // XXE / DoS hardening for user-supplied documents. The bundled schema is trusted
+    // but xs:import's a sibling XSD (UnitsML) by relative path, so the factory must
+    // allow LOCAL schema access (file when running from target/classes, jar when
+    // running from the packaged app) while blocking remote schema and all DTDs -
+    // enabling secure processing alone would deny the local import and break loading.
+    // The untrusted instance is locked down fully (no external DTD or schema) on the
+    // validator; the namespace pre-scan rejects any DOCTYPE outright. Failures are
+    // logged rather than fatal: the JDK parser supports these consistently, and a
+    // hardening gap must not disable the schema check.
+    private static void harden(SchemaFactory factory) {
+        try {
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file,jar");
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        } catch (SAXException e) {
+            LOG.warn("could not fully harden the schema factory: {}", e.getMessage());
+        }
+    }
+
+    private static void harden(Validator validator) {
+        try {
+            validator.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        } catch (SAXException e) {
+            LOG.warn("could not fully harden the validator: {}", e.getMessage());
+        }
+    }
+
+    private static void harden(SAXParserFactory factory) {
+        try {
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            // strongest XXE mitigation: reject any DOCTYPE in the untrusted file
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        } catch (ParserConfigurationException | SAXException e) {
+            LOG.warn("could not harden the namespace-detection parser: {}", e.getMessage());
         }
     }
 

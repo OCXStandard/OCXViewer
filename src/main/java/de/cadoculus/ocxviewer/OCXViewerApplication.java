@@ -65,9 +65,9 @@ public class OCXViewerApplication extends Application {
         int width = ((int)primaryScreenBounds.getWidth())-100;
         int height = ((int)primaryScreenBounds.getHeight()) -100;
 
-        Preferences preferences = Preferences.userRoot();
-        var pwidth = preferences.getInt("OCXV.width", width);
-        var pheight = preferences.getInt("OCXV.height", height);
+        Preferences preferences = WorkingContext.getInstance().getPreferences();
+        var pwidth = preferences.getInt(WorkingContext.PREF_WINDOW_WIDTH, width);
+        var pheight = preferences.getInt(WorkingContext.PREF_WINDOW_HEIGHT, height);
 
         width = pwidth > width ? width:pwidth;
         height = pheight > height ? height:pheight;

@@ -33,6 +33,12 @@ import java.util.prefs.Preferences;
  */
 public class WorkingContext {
 
+    /** Preference keys, shared so every read/write site uses the same spelling. */
+    public static final String PREF_LAST_OPEN_DIR = "lastOpenDir";
+    public static final String PREF_SCHEMATRON_FILE = "schematronFile";
+    public static final String PREF_WINDOW_WIDTH = "windowWidth";
+    public static final String PREF_WINDOW_HEIGHT = "windowHeight";
+
     private static WorkingContext INSTANCE;
     private File ocxFile;
     private File schematronFile;
@@ -59,6 +65,16 @@ public class WorkingContext {
 
     private WorkingContext() {
         preferences = Preferences.userRoot().node(OCXViewerApplication.class.getName());
+    }
+
+    /**
+     * The application-scoped preferences node. Shared so window geometry and file
+     * paths are stored together here instead of the unscoped user root.
+     *
+     * @return the preferences node
+     */
+    public Preferences getPreferences() {
+        return preferences;
     }
 
     /**
@@ -90,7 +106,7 @@ public class WorkingContext {
                 file.getParentFile().getAbsolutePath() :
                 new File(".").getAbsolutePath();
 
-        preferences.put("lastOpenDir", previous);
+        preferences.put(PREF_LAST_OPEN_DIR, previous);
     }
 
     /**
@@ -101,7 +117,7 @@ public class WorkingContext {
      */
     public File getSchematronFile() {
         if (schematronFile == null) {
-            var stored = preferences.get("schematronFile", null);
+            var stored = preferences.get(PREF_SCHEMATRON_FILE, null);
             if (stored != null) {
                 var candidate = new File(stored);
                 if (candidate.isFile()) {
@@ -120,7 +136,7 @@ public class WorkingContext {
      */
     public void setSchematronFile(File schematronFile) {
         this.schematronFile = schematronFile;
-        preferences.put("schematronFile", schematronFile.getAbsolutePath());
+        preferences.put(PREF_SCHEMATRON_FILE, schematronFile.getAbsolutePath());
     }
 
     /**
@@ -129,7 +145,7 @@ public class WorkingContext {
      * @return the last open directory.
      */
     public String getLastOpenDir() {
-        var previous = preferences.get("lastOpenDir", System.getProperty("user.home"));
+        var previous = preferences.get(PREF_LAST_OPEN_DIR, System.getProperty("user.home"));
 
         if (!new File(previous).isDirectory()) {
             previous = System.getProperty("user.home");

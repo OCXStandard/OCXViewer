@@ -101,13 +101,13 @@ public class MainController {
     }
 
     private void storeSize()  {
-        Preferences preferences = Preferences.userRoot();
+        Preferences preferences = WorkingContext.getInstance().getPreferences();
 
        var  width = (int) mainBorderPane.getWidth();
        var height = (int)mainBorderPane.getHeight();
 
-        preferences.putInt("OCXV.width", width);
-        preferences.putInt("OCXV.height", height);
+        preferences.putInt(WorkingContext.PREF_WINDOW_WIDTH, width);
+        preferences.putInt(WorkingContext.PREF_WINDOW_HEIGHT, height);
 
         try {
             preferences.flush();

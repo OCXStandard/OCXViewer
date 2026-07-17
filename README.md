@@ -42,7 +42,7 @@ java --enable-native-access=javafx.graphics
   de.cadoculus.ocxviewer.Main --log data\log4j2.xml
 ```
 
-The difference are only the module-path separator (``:`` on Linux, ``;`` on Windows) and the path separators (``/`` on Linux, ``\`` on Windows). The ``--log`` argument is optional: a default logging configuration is bundled inside the application, so ``--log <file>`` is only needed to point the app at your own ``log4j2.xml``.
+The differences are only the module-path separator (``:`` on Linux, ``;`` on Windows) and the path separators (``/`` on Linux, ``\`` on Windows). The ``--log`` argument is optional: a default logging configuration is bundled inside the application, so ``--log <file>`` is only needed to point the app at your own ``log4j2.xml``.
 
 ## Windows delivery (jpackage)
 
@@ -86,7 +86,7 @@ tools\install-wix.bat C:\path\to\nupkgs  (offline, from a folder of WiX *.nupkg 
 * The default ``mvn package`` (portable ZIP) needs no WiX at all.
 
 # UI
-The UI is implemented JavaFX. The main components are:
+The UI is implemented in JavaFX. The main components are:
 * A menu bar on the top of the window
 * A navigation tree on the left side of the window
 * A detail view on the right side of the window showing details of the selected element in the navigation tree. In some cases, this detail view allow a drill down to children elements, e.g. follow the panels->panel->stiffener hierachy. 
@@ -130,7 +130,7 @@ violations (F5 or the Actions menu). Runs inside the main window: pick the OCX f
 currently open one is preselected) and a rules file, then click Validate. No rules file ships
 with the application — supply your own `.sch` (the last one you picked is remembered).
 
-Because the OCX namespace is version specific, a
+Because the OCX namespace is version-specific, a
 rules file only matches files of the version it targets; if no rule fires, the viewer says so
 rather than reporting a false "valid".
 
