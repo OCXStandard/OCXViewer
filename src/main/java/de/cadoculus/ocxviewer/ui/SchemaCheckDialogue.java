@@ -248,6 +248,8 @@ public class SchemaCheckDialogue {
             alert.showAndWait();
             return;
         }
+        // remember the directory so the next chooser (here or File > Open) starts here
+        WorkingContext.getInstance().rememberLastOpenDir(file);
         setFile(file);
     }
 

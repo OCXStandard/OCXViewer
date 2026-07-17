@@ -77,8 +77,17 @@ public class WorkingContext {
      */
     public void setOCXFile(File ocxFile) {
         this.ocxFile = ocxFile;
-        var previous = ocxFile.getParent() != null ?
-                ocxFile.getParentFile().getAbsolutePath() :
+        rememberLastOpenDir(ocxFile);
+    }
+
+    /**
+     * Remember the directory of the given file as the last open directory in the
+     * preferences, so the next file chooser starts there.
+     * @param file the file the user just chose.
+     */
+    public void rememberLastOpenDir(File file) {
+        var previous = file.getParent() != null ?
+                file.getParentFile().getAbsolutePath() :
                 new File(".").getAbsolutePath();
 
         preferences.put("lastOpenDir", previous);

@@ -255,6 +255,8 @@ public class SchematronCheckDialogue {
             warn("The selected file is not readable or does not exist.");
             return;
         }
+        // remember the directory so the next chooser (here or File > Open) starts here
+        WorkingContext.getInstance().rememberLastOpenDir(file);
         setOcxFile(file);
     }
 
