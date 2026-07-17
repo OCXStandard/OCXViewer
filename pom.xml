@@ -449,6 +449,24 @@
                 <version>3.1.0</version>
                 <executions>
 
+                    <execution>
+                        <id>clear-readonly-before-clean</id>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <exec executable="attrib" osfamily="windows" failonerror="false">
+                                    <arg value="-R"/>
+                                    <arg value="/S"/>
+                                    <arg value="/D"/>
+                                    <arg value="${project.build.directory}\dist\*"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+
                     <!-- 1) stage jpackage input: the fat jar + an editable copy of log4j2.xml
                             under data/. The same log4j2.xml is ALSO a classpath resource inside
                             the jar (src/main/resources), auto-loaded by log4j as the built-in
