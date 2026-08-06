@@ -33,8 +33,15 @@ import java.util.prefs.Preferences;
  */
 public class WorkingContext {
 
+    /** Preference keys, shared so every read/write site uses the same spelling. */
+    public static final String PREF_LAST_OPEN_DIR = "lastOpenDir";
+    public static final String PREF_SCHEMATRON_FILE = "schematronFile";
+    public static final String PREF_WINDOW_WIDTH = "windowWidth";
+    public static final String PREF_WINDOW_HEIGHT = "windowHeight";
+
     private static WorkingContext INSTANCE;
     private File ocxFile;
+    private File schematronFile;
     private final Preferences preferences;
     private OcxXMLT ocx;
     private Vessel vessel;
@@ -61,6 +68,16 @@ public class WorkingContext {
     }
 
     /**
+     * The application-scoped preferences node. Shared so window geometry and file
+     * paths are stored together here instead of the unscoped user root.
+     *
+     * @return the preferences node
+     */
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    /**
      * Get the OCX file that is currently open.
      *
      * @return the OCX file that is currently open.
@@ -76,11 +93,50 @@ public class WorkingContext {
      */
     public void setOCXFile(File ocxFile) {
         this.ocxFile = ocxFile;
-        var previous = ocxFile.getParent() != null ?
-                ocxFile.getParentFile().getAbsolutePath() :
+        rememberLastOpenDir(ocxFile);
+    }
+
+    /**
+     * Remember the directory of the given file as the last open directory in the
+     * preferences, so the next file chooser starts there.
+     * @param file the file the user just chose.
+     */
+    public void rememberLastOpenDir(File file) {
+        var previous = file.getParent() != null ?
+                file.getParentFile().getAbsolutePath() :
                 new File(".").getAbsolutePath();
 
-        preferences.put("lastOpenDir", previous);
+        preferences.put(PREF_LAST_OPEN_DIR, previous);
+    }
+
+    /**
+     * Get the Schematron rules file to preselect in the Schematron check. This is the
+     * last file the user chose (remembered in the preferences).
+     *
+     * @return the rules file to preselect, or null if none is available.
+     */
+    public File getSchematronFile() {
+        if (schematronFile == null) {
+            var stored = preferences.get(PREF_SCHEMATRON_FILE, null);
+            if (stored != null) {
+                var candidate = new File(stored);
+                if (candidate.isFile()) {
+                    schematronFile = candidate;
+                }
+            }
+        }
+        return schematronFile;
+    }
+
+    /**
+     * Set the Schematron rules file and remember it in the preferences so it is
+     * preselected the next time the Schematron check is opened.
+     *
+     * @param schematronFile the rules file the user chose.
+     */
+    public void setSchematronFile(File schematronFile) {
+        this.schematronFile = schematronFile;
+        preferences.put(PREF_SCHEMATRON_FILE, schematronFile.getAbsolutePath());
     }
 
     /**
@@ -89,7 +145,7 @@ public class WorkingContext {
      * @return the last open directory.
      */
     public String getLastOpenDir() {
-        var previous = preferences.get("lastOpenDir", System.getProperty("user.home"));
+        var previous = preferences.get(PREF_LAST_OPEN_DIR, System.getProperty("user.home"));
 
         if (!new File(previous).isDirectory()) {
             previous = System.getProperty("user.home");

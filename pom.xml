@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.prostep.openpdm</groupId>
-    <artifactId>ocxviewer</artifactId>
+    <artifactId>OCXViewer</artifactId>
     <version>0.3.0-SNAPSHOT</version>
     <name>ocxviewer</name>
 
@@ -22,6 +22,26 @@
         <!-- this is used to fill in the build timestamp in mvn.properties -->
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+
+        <!-- Windows delivery via jpackage: a self-contained app-image (zipped as the
+             portable delivery) + an MSI installer. jpackage invokes jlink to build a
+             minimal runtime from the module set below - NO JRE is checked into the repo. -->
+        <skip-jpackage>false</skip-jpackage>      <!-- skip the whole native-packaging block (app-image + zip + msi) -->
+        <!-- MSI is OFF by default because it needs WiX Toolset (not on most dev boxes).
+             The Jenkins pipeline turns it ON with -Dskip-msi=false on the WiX-equipped agent. -->
+        <skip-msi>true</skip-msi>
+        <product.name>OCXViewer</product.name>
+        <!-- jpackage/MSI require a strictly numeric version (no -SNAPSHOT); bump manually on release -->
+        <jpackage.version>0.3.0</jpackage.version>
+        <jpackage.vendor>OCXViewer</jpackage.vendor>
+        <!-- Stable across releases so MSI upgrades replace the previous install (do NOT change) -->
+        <jpackage.upgradeUuid>e9f9b683-d5c8-42f1-9028-c995bb56b910</jpackage.upgradeUuid>
+        <!-- Minimal JDK module set, validated by launching the app and running a Schematron
+             validation on the trimmed runtime. JavaFX and all 3rd-party libraries travel
+             inside the fat jar (classpath), so only these platform modules are required. -->
+        <jpackage.modules>java.desktop,java.logging,java.management,java.naming,java.sql,java.scripting,jdk.xml.dom,jdk.zipfs,jdk.charsets,jdk.unsupported</jpackage.modules>
+        <zipName>${product.name}-${jpackage.version}.zip</zipName>
+        <main-app>de.cadoculus.ocxviewer.Main</main-app>
 
     </properties>
 
@@ -126,6 +146,19 @@
             <version>12.3.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.helger.schematron</groupId>
+            <artifactId>ph-schematron-xslt</artifactId>
+            <version>8.0.6</version>
+        </dependency>
+        <!-- route the slf4j logging of ph-schematron/ph-commons into log4j2 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>2.25.4</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!--        <dependency>-->
         <!--            <groupId>io.github.mkpaz</groupId>-->
         <!--            <artifactId>devtoolsfx-gui</artifactId>-->
@@ -194,6 +227,13 @@
                         </goals>
                         <configuration>
                             <debug>false</debug>
+                            <!-- The JAXB data model is bound to OCX v3.1.0 only. The other
+                                 schema versions under xsds/ are used for raw XML validation
+                                 (SchemaCheckAction) and must not be compiled by XJC. -->
+                            <schemaDirectory>src/main/resources</schemaDirectory>
+                            <schemaIncludes>
+                                <include>xsds/v310/OCX_Schema.xsd</include>
+                            </schemaIncludes>
                             <args>
                                 <arg>-Xinheritance</arg>
                                 <arg>-XpropertyListener</arg>
@@ -248,7 +288,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.prostep.openpdm.ocxviewer/de.cadoculus.ocxviewer.OCXViewerApplication
+                            <mainClass>ocxviewer/de.cadoculus.ocxviewer.OCXViewerApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
@@ -358,6 +398,193 @@
                         <dirty>-dirty</dirty>
                     </gitDescribe>
                 </configuration>
+            </plugin>
+
+            <!--
+                Package a "jar-with-dependencies". JavaFX is bundled inside it and the app is
+                launched through de.cadoculus.ocxviewer.Main, so JavaFX starts cleanly from the classpath.
+            -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main-app}</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <!-- suppress reflection warning due to the multi-release log4j2 jar -->
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                Windows delivery via jpackage (invoked through antrun <exec>, so no extra
+                Maven plugin is needed). Four ordered steps bound to the package phase:
+                  1. stage the jpackage input (fat jar + external data/ + doc/)
+                  2. build the self-contained app-image (jpackage runs jlink internally to
+                     produce the minimal runtime from ${jpackage.modules})
+                  3. zip the app-image -> portable delivery target/${zipName}
+                  4. build the MSI installer from that app-image (requires WiX Toolset)
+                jpackage is taken from the JDK running Maven (${java.home}); that JDK must be
+                a JEP-493 "linkable runtime" (Temurin 24+ is) so jlink works without a jmods/ dir.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+
+                    <execution>
+                        <id>clear-readonly-before-clean</id>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <exec executable="attrib" osfamily="windows" failonerror="false">
+                                    <arg value="-R"/>
+                                    <arg value="/S"/>
+                                    <arg value="/D"/>
+                                    <arg value="${project.build.directory}\dist\*"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                    <!-- 1) stage jpackage input: the fat jar + an editable copy of log4j2.xml
+                            under data/. The same log4j2.xml is ALSO a classpath resource inside
+                            the jar (src/main/resources), auto-loaded by log4j as the built-in
+                            default/fallback (and used by `mvn javafx:run`). The data/ copy is the
+                            default log config the launcher points the app at (step 2), so end
+                            users can edit it in place or point the app at their own file. If that
+                            file is ever missing, initLogging just falls back to the in-jar config. -->
+                    <execution>
+                        <id>jpackage-stage-input</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip-jpackage}</skip>
+                            <target>
+                                <delete dir="${project.build.directory}/jpackage-input"/>
+                                <delete dir="${project.build.directory}/dist"/>
+                                <mkdir dir="${project.build.directory}/jpackage-input"/>
+                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
+                                      todir="${project.build.directory}/jpackage-input"/>
+                                <copy file="${basedir}/src/main/resources/log4j2.xml"
+                                      todir="${project.build.directory}/jpackage-input/data"/>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                    <!-- 2) app-image: self-contained launcher + minimal jlinked runtime + fat jar.
+                            The arguments option sets the DEFAULT log config the launcher passes
+                            when the user gives no args; $APPDIR expands at runtime to the app dir,
+                            so it resolves data/log4j2.xml regardless of the working directory.
+                            Users override by launching the exe with their own log flag (Main
+                            parses it; explicit launcher args replace these defaults). The
+                            app-content option drops the readme into the image by the launcher. -->
+                    <execution>
+                        <id>jpackage-app-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip-jpackage}</skip>
+                            <target>
+                                <exec executable="${java.home}/bin/jpackage.exe" failonerror="true">
+                                    <arg value="--type"/>          <arg value="app-image"/>
+                                    <arg value="--name"/>          <arg value="${product.name}"/>
+                                    <arg value="--app-version"/>   <arg value="${jpackage.version}"/>
+                                    <arg value="--vendor"/>        <arg value="${jpackage.vendor}"/>
+                                    <arg value="--input"/>         <arg value="${project.build.directory}/jpackage-input"/>
+                                    <arg value="--main-jar"/>      <arg value="${project.artifactId}-${project.version}-jar-with-dependencies.jar"/>
+                                    <arg value="--main-class"/>    <arg value="${main-app}"/>
+                                    <arg value="--add-modules"/>   <arg value="${jpackage.modules}"/>
+                                    <arg value="--jlink-options"/> <arg value="--strip-debug --no-header-files --no-man-pages --compress=zip-6"/>
+                                    <arg value="--arguments"/>     <arg value="--log $APPDIR/data/log4j2.xml"/>
+                                    <arg value="--java-options"/>  <arg value="-Xms128m"/>
+                                    <arg value="--java-options"/>  <arg value="-Xmx2048m"/>
+                                    <arg value="--app-content"/>   <arg value="${basedir}/src/main/dist/readme.txt"/>
+                                    <arg value="--icon"/>          <arg value="${basedir}/src/main/resources/de/cadoculus/ocxviewer/images/favicon.ico"/>
+                                    <arg value="--dest"/>          <arg value="${project.build.directory}/dist"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                    <!-- 3) zip the app-image directory (target/dist/${product.name}) as the portable delivery -->
+                    <execution>
+                        <id>jpackage-zip</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip-jpackage}</skip>
+                            <target>
+                                <zip destfile="${project.build.directory}/${zipName}">
+                                    <fileset dir="${project.build.directory}/dist"/>
+                                </zip>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                    <!-- 4) MSI installer from the pre-built app-image. OFF by default
+                            (skip-msi=true) - only the Jenkins pipeline enables it with
+                            -Dskip-msi=false on the WiX-equipped agent. REQUIRES WiX Toolset on
+                            PATH: jpackage (JDK 24+) auto-detects it and drives WiX v3, v4 or v5.
+                            For WiX v4/v5 the `wix` dotnet tool must be on PATH AND the two
+                            extensions jpackage passes must be added globally (`wix extension add
+                            -g WixToolset.UI.wixext WixToolset.Util.wixext`) - see CLAUDE.md /
+                            README. With skip-msi=false and WiX missing, jpackage fails here by
+                            design (loud, not silently skipped). -->
+                    <execution>
+                        <id>jpackage-msi</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip-msi}</skip>
+                            <target>
+                                <exec executable="${java.home}/bin/jpackage.exe" failonerror="true">
+                                    <arg value="--type"/>             <arg value="msi"/>
+                                    <arg value="--app-image"/>        <arg value="${project.build.directory}/dist/${product.name}"/>
+                                    <arg value="--name"/>             <arg value="${product.name}"/>
+                                    <arg value="--app-version"/>      <arg value="${jpackage.version}"/>
+                                    <arg value="--vendor"/>           <arg value="${jpackage.vendor}"/>
+                                    <arg value="--win-upgrade-uuid"/> <arg value="${jpackage.upgradeUuid}"/>
+                                    <arg value="--win-menu"/>
+                                    <arg value="--win-menu-group"/>   <arg value="${product.name}"/>
+                                    <arg value="--win-shortcut"/>
+                                    <arg value="--win-dir-chooser"/>
+                                    <arg value="--icon"/>             <arg value="${basedir}/src/main/resources/de/cadoculus/ocxviewer/images/favicon.ico"/>
+                                    <arg value="--dest"/>             <arg value="${project.build.directory}"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+
+                </executions>
             </plugin>
 
         </plugins>

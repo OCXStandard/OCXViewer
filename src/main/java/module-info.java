@@ -35,6 +35,10 @@ module ocxviewer {
     requires java.logging;
     requires poly2tri;
     requires org.kordamp.ikonli.core;
+    requires com.helger.schematron;
+    requires com.helger.schematron.xslt;
+    requires com.helger.commons;
+    requires org.slf4j;
 
 
     exports de.cadoculus.ocxviewer;

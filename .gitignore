@@ -28,3 +28,12 @@ target/**
 binaries/**
 /target/
 /test-out/
+
+.idea/
+
+# Runtime log written to the project root
+/log.txt
+
+/out/
+
+*.iml

@@ -22,10 +22,16 @@ the back shortcut (ALT+LEFT) on the keyboard.
 [heading=2]Actions[/heading]
 
 [heading=3]Schema Check[/heading]
-To be implemented. Shall run a schema validation on an OCX file and display errors and warnings.
+Validates an OCX file against the official XSD schema of the selected version and lists the errors and warnings.
+Select [b]Actions -> XML Schema Check[/b] (or press [b]CTRL+T[/b]), choose an OCX file and the schema version
+(the file's declared version is detected automatically) and press [b]Validate[/b].
 
 [heading=3]Schematron Check[/heading]
-To be implemented. Shall run a schematron rule file on an OCX file and display errors and warnings.
+Runs a Schematron rules file ([b].sch[/b]) against the raw XML of an OCX file and lists the violations.
+Select [b]Actions -> Schematron Check[/b] (or press [b]F5[/b]), choose the OCX file (the currently open file is
+preselected) and a rules file, then press [b]Validate[/b]. No rules file ships with the application, so supply your
+own [b].sch[/b] (the last one you picked is remembered). Note that the OCX namespace is version specific: a rules file
+only matches files of the version it targets, so if no rule fires the rules probably target a different version.
 
 
 [heading=2]OCX Version Support[/heading]
@@ -46,6 +52,8 @@ All licenses allow free use, modification, and distribution of the software for 
 [li][b]Ikonli[/b] The [url=https://github.com/kordamp/ikonli]Ikonli[/url] library is published under [url=https://www.apache.org/licenses/LICENSE-2.0]Apache License 2.0[/url].[/li].
 [li][b]Java/JavaFX[/b] Both Java and JavaFX are are published under [url=https://openjdk.org/legal/gplv2+ce.html]GNU General Public License, version 2, with the Classpath Exception[/url].[/li].
 [li][b]Java3d[/b] The Bounds, BoundingBox, and Transform3D classes from the old Java3D package are copied, they are under  [url=https://www.gnu.org/licenses/old-licenses/gpl-2.0.de.html]GNU General Public License, version 2[/url].[/li].
+[li][b]ph-schematron[/b] The [url=https://github.com/phax/ph-schematron]ph-schematron[/url] library used for the Schematron check is licensed under [url=https://www.apache.org/licenses/LICENSE-2.0]Apache License 2.0[/url].[/li].
+[li][b]Saxon-HE[/b] The [url=https://www.saxonica.com]Saxon-HE[/url] XSLT/XPath processor used by the Schematron check is licensed under the [url=https://www.mozilla.org/en-US/MPL/2.0/]Mozilla Public License 2.0[/url].[/li].
 
 [/ul]
 

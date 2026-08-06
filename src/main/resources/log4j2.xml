@@ -15,23 +15,16 @@
             </Layout>
         </Appender>
 
-        <!-- this is a project specifc appender that logs to a ListBox in the GUI
-        The filtering is applied in the appender itself
-        -->
         <Appender type="ListBoxAppender" name="ListBoxAppender" >
         </Appender>
-
     </Appenders>
 
     <Loggers>
-
         <Logger name="de.cadoculus.ocxviewer.models.FlagsEnum" level="debug"/>
-
         <Logger name="de.cadoculus.ocxviewer.views.HeaderPage" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.logging.LoggerHelper" level="info"/>
         <Logger name="de.cadoculus.ocxviewer.MainController" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.actions.ActionDispatcher" level="debug"/>
-
         <Logger name="de.cadoculus.ocxviewer.io.OCXIO" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.io.OCXParser" level="debug"/>
         <Logger name="de.cadoculus.ocxviewer.io.NamespaceReplacingInputStream" level="debug"/>
@@ -40,11 +33,9 @@
         <Logger name="de.cadoculus.ocxviewer.views.BracketPage" level="debug"/>
 
 
-
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>
-            <!-- do not remove the following appender, otherwise the listbox in the UI becomes empty -->
             <AppenderRef ref="ListBoxAppender"/>
         </Root>
     </Loggers>
