@@ -1,0 +1,211 @@
+/*
+ * Copyright 2025 Carsten Zerbst
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package de.cadoculus.ocxviewer.models;
+
+import de.cadoculus.ocxviewer.MainController;
+import de.cadoculus.ocxviewer.OCXViewerApplication;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Scene;
+import org.ocx_schema.v3x.OcxXMLT;
+import org.ocx_schema.v3x.Vessel;
+
+import java.io.File;
+import java.util.prefs.Preferences;
+
+/**
+ * Singleton class to store the working context of the application.
+ *
+ * @author Carsten Zerbst
+ */
+public class WorkingContext {
+
+    /** Preference keys, shared so every read/write site uses the same spelling. */
+    public static final String PREF_LAST_OPEN_DIR = "lastOpenDir";
+    public static final String PREF_SCHEMATRON_FILE = "schematronFile";
+    public static final String PREF_WINDOW_WIDTH = "windowWidth";
+    public static final String PREF_WINDOW_HEIGHT = "windowHeight";
+
+    private static WorkingContext INSTANCE;
+    private File ocxFile;
+    private File schematronFile;
+    private final Preferences preferences;
+    private OcxXMLT ocx;
+    private Vessel vessel;
+    private Scene mainScene;
+    private String targetNamespace;
+    private BooleanProperty darkMode = new SimpleBooleanProperty(false);
+    private MainController mainController;
+
+
+    /**
+     * Get the singleton instance of the working context.
+     *
+     * @return the singleton instance of the working context.
+     */
+    public synchronized static WorkingContext getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new WorkingContext();
+        }
+        return INSTANCE;
+    }
+
+    private WorkingContext() {
+        preferences = Preferences.userRoot().node(OCXViewerApplication.class.getName());
+    }
+
+    /**
+     * The application-scoped preferences node. Shared so window geometry and file
+     * paths are stored together here instead of the unscoped user root.
+     *
+     * @return the preferences node
+     */
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    /**
+     * Get the OCX file that is currently open.
+     *
+     * @return the OCX file that is currently open.
+     */
+    public File getOCXFile() {
+        return ocxFile;
+    }
+
+    /**
+     * Set the OCX file that is currently open. As a side effect, the last open directory is stored in the preferences.
+     *
+     * @param ocxFile the OCX file that is currently open.
+     */
+    public void setOCXFile(File ocxFile) {
+        this.ocxFile = ocxFile;
+        rememberLastOpenDir(ocxFile);
+    }
+
+    /**
+     * Remember the directory of the given file as the last open directory in the
+     * preferences, so the next file chooser starts there.
+     * @param file the file the user just chose.
+     */
+    public void rememberLastOpenDir(File file) {
+        var previous = file.getParent() != null ?
+                file.getParentFile().getAbsolutePath() :
+                new File(".").getAbsolutePath();
+
+        preferences.put(PREF_LAST_OPEN_DIR, previous);
+    }
+
+    /**
+     * Get the Schematron rules file to preselect in the Schematron check. This is the
+     * last file the user chose (remembered in the preferences).
+     *
+     * @return the rules file to preselect, or null if none is available.
+     */
+    public File getSchematronFile() {
+        if (schematronFile == null) {
+            var stored = preferences.get(PREF_SCHEMATRON_FILE, null);
+            if (stored != null) {
+                var candidate = new File(stored);
+                if (candidate.isFile()) {
+                    schematronFile = candidate;
+                }
+            }
+        }
+        return schematronFile;
+    }
+
+    /**
+     * Set the Schematron rules file and remember it in the preferences so it is
+     * preselected the next time the Schematron check is opened.
+     *
+     * @param schematronFile the rules file the user chose.
+     */
+    public void setSchematronFile(File schematronFile) {
+        this.schematronFile = schematronFile;
+        preferences.put(PREF_SCHEMATRON_FILE, schematronFile.getAbsolutePath());
+    }
+
+    /**
+     * Get the last open directory.
+     *
+     * @return the last open directory.
+     */
+    public String getLastOpenDir() {
+        var previous = preferences.get(PREF_LAST_OPEN_DIR, System.getProperty("user.home"));
+
+        if (!new File(previous).isDirectory()) {
+            previous = System.getProperty("user.home");
+        }
+
+        return previous;
+    }
+
+    /**
+     * Get the OCX object that is currently open.
+     *
+     * @return the OCX object that is currently open.
+     */
+    public OcxXMLT getOcx() {
+        return ocx;
+    }
+
+    /**
+     * Set the OCX object that is currently open.
+     *
+     * @param ocx the OCX object that is currently open.
+     */
+    public void setOcx(OcxXMLT ocx) {
+        this.ocx = ocx;
+
+        if (ocx.getForm().getValue() instanceof Vessel) {
+            vessel = (Vessel) ocx.getForm().getValue();
+        }
+    }
+
+    public Vessel getVessel() {
+        return vessel;
+    }
+
+    public BooleanProperty darkModeProperty() {
+        return darkMode;
+    }
+
+    public Scene getMainScene() {
+        return mainScene;
+    }
+
+    public void setMainScene(Scene mainScene) {
+        this.mainScene = mainScene;
+    }
+
+    public void setTargetNamespace(String s) {
+        this.targetNamespace = s;
+    }
+
+    public String getTargetNamespace() {
+        return targetNamespace;
+    }
+
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    public MainController getMainController() {
+        return mainController;
+    }
+}

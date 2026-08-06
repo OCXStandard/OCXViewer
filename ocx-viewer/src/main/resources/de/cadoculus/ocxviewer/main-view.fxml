@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import de.cadoculus.ocxviewer.views.LogoPage?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import org.kordamp.ikonli.javafx.*?>
+<BorderPane fx:id="mainBorderPane"
+            maxHeight="2000" maxWidth="2000"
+            minHeight="600" minWidth="800"
+            prefHeight="1024.0" prefWidth="1400"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.cadoculus.ocxviewer.MainController">
+
+
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem accelerator="ctrl-o" mnemonicParsing="false" onAction="#open" text="Open">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2f-file-outline" iconSize="15"/>
+                            </graphic>
+                        </MenuItem>
+                        <SeparatorMenuItem/>
+                        <MenuItem accelerator="ctrl-q" mnemonicParsing="false" onAction="#exit" text="Exit">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2e-exit-run" iconSize="15"/>
+                            </graphic>
+                        </MenuItem>
+
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="View">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#switchUIMode" text="UI Mode">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2t-theme-light-dark" iconSize="15"/>
+                            </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Back" onAction="#navigateBack" accelerator="alt-left">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2a-arrow-left" iconSize="15"/>
+                            </graphic>
+                        </MenuItem>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Actions">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#schemaCheck" text="XML Schema Check">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2f-file-find-outline" iconSize="15"/>
+                            </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#schematronCheck" text="Schematron Check">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2f-file-find-outline" iconSize="15"/>
+                            </graphic>
+                        </MenuItem>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#help" text="Help">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2h-help" iconSize="15"/>
+                            </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#about" text="About">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2i-information-outline" iconSize="15"/>
+                            </graphic>
+                        </MenuItem>
+
+                    </items>
+                </Menu>
+
+
+            </menus>
+
+        </MenuBar>
+    </top>
+
+    <center>
+        <LogoPage fx:id="logoPage"/>
+    </center>
+
+
+</BorderPane>
